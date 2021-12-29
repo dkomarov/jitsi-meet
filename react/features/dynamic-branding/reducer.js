@@ -82,7 +82,8 @@ const DEFAULT_STATE = {
      * @public
      * @type {string}
      */
-    inviteDomain: '',
+    inviteDomain: 'sidespeak.herokuapp.com',
+    // inviteDomain: '',
 
     /**
      * An object containing the mapping between the language and url where the translation
