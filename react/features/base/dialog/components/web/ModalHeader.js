@@ -8,12 +8,10 @@ import {
     titleIconWrapperStyles,
     TitleText
 } from '@atlaskit/modal-dialog/dist/es2019/styled/Content';
-import { withStyles } from '@material-ui/core/styles';
 import React from 'react';
 
 import { translate } from '../../../i18n';
 import { Icon, IconClose } from '../../../icons';
-import { withPixelLineHeight } from '../../../styles/functions';
 
 const TitleIcon = ({ appearance }: { appearance?: 'danger' | 'warning' }) => {
     if (!appearance) {
@@ -32,7 +30,6 @@ const TitleIcon = ({ appearance }: { appearance?: 'danger' | 'warning' }) => {
 type Props = {
     id: string,
     appearance?: 'danger' | 'warning',
-    classes: Object,
     heading: string,
     hideCloseIconButton: boolean,
     onClose: Function,
@@ -43,6 +40,7 @@ type Props = {
 }
 
 /**
+<<<<<<< HEAD
  * Creates the styles for the component.
  *
  * @param {Object} theme - The current UI theme.
@@ -78,6 +76,9 @@ const styles = theme => {
 
 /**
  * A default header for modal-dialog components.
+=======
+ * A default header for modal-dialog components
+>>>>>>> parent of 1ad8f7717 (feat(dialogs): Redesign Video Quality dialog & change dialog background color)
  *
  * @class ModalHeader
  * @augments {React.Component<Props>}
@@ -126,7 +127,6 @@ class ModalHeader extends React.Component<Props> {
         const {
             id,
             appearance,
-            classes,
             heading,
             hideCloseIconButton,
             onClose,
@@ -141,9 +141,7 @@ class ModalHeader extends React.Component<Props> {
         }
 
         return (
-            <Header
-                className = { classes.header }
-                showKeyline = { showKeyline }>
+            <Header showKeyline = { showKeyline }>
                 <Title>
                     <TitleIcon appearance = { appearance } />
                     <TitleText
@@ -155,21 +153,16 @@ class ModalHeader extends React.Component<Props> {
                 </Title>
 
                 {
-                    !hideCloseIconButton
-                        && <div
-                            className = { classes.closeButton }
-                            id = 'modal-header-close-button'
-                            onClick = { onClose }>
-                            <Icon
-                                ariaLabel = { t('dialog.close') }
-                                onKeyPress = { this._onKeyPress }
-                                role = 'button'
-                                src = { IconClose }
-                                tabIndex = { 0 } />
-                        </div>
+                    !hideCloseIconButton && <Icon
+                        ariaLabel = { t('dialog.close') }
+                        onClick = { onClose }
+                        onKeyPress = { this._onKeyPress }
+                        role = 'button'
+                        src = { IconClose }
+                        tabIndex = { 0 } />
                 }
             </Header>
         );
     }
 }
-export default translate(withStyles(styles)(ModalHeader));
+export default translate(ModalHeader);

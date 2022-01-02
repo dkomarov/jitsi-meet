@@ -9,6 +9,10 @@ export default createWebTheme({
     colorMap,
     spacing,
     shape,
+<<<<<<< HEAD
     typography,
     breakpoints
+=======
+    typography
+>>>>>>> parent of 1ad8f7717 (feat(dialogs): Redesign Video Quality dialog & change dialog background color)
 });
