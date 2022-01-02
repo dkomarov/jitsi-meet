@@ -18,7 +18,6 @@ type Props = AbstractProps & {
     /**
      * HTML ID attribute to add to the root of {@code Label}.
      */
-<<<<<<< HEAD
     id: string,
 
     /**
@@ -30,9 +29,6 @@ type Props = AbstractProps & {
      * Click handler if any.
      */
     onClick?: Function,
-=======
-    id: string
->>>>>>> parent of bad8911fe (feat(Labels): Redo video quality label)
 
 };
 

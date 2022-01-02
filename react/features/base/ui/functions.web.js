@@ -31,7 +31,6 @@ export function createWebTheme({ font, colors, colorMap, shape, spacing, typogra
         breakpoints
     });
 }
-<<<<<<< HEAD
 
 /**
  * Formats the common styles object to be interpreted as proper CSS.
@@ -48,6 +47,3 @@ export function formatCommonClasses(stylesObj: Object) {
 
     return formatted;
 }
-
-=======
->>>>>>> parent of 1ad8f7717 (feat(dialogs): Redesign Video Quality dialog & change dialog background color)

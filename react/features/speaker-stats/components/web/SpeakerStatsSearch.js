@@ -13,7 +13,6 @@ const useStyles = makeStyles(theme => {
     return {
         speakerStatsSearch: {
             position: 'absolute',
-<<<<<<< HEAD:react/features/speaker-stats/components/web/SpeakerStatsSearch.js
             right: '80px',
             top: '8px',
 
@@ -22,10 +21,6 @@ const useStyles = makeStyles(theme => {
                 right: 0,
                 top: 42
             }
-=======
-            right: '50px',
-            top: '-5px'
->>>>>>> parent of 1ad8f7717 (feat(dialogs): Redesign Video Quality dialog & change dialog background color):react/features/speaker-stats/components/SpeakerStatsSearch.js
         }
     };
 });
