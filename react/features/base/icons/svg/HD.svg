@@ -3,16 +3,19 @@
 
 <svg
    version="1.1"
-   width="32"
-   height="32"
-   viewBox="0 0 32 32"
+   width="40"
+   height="40"
+   viewBox="0 0 40 40"
    id="svg6"
    sodipodi:docname="HD.svg"
    inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs10" />
   <sodipodi:namedview
@@ -29,25 +32,35 @@
      inkscape:cy="19.167289"
      inkscape:window-width="1280"
      inkscape:window-height="725"
-     inkscape:window-x="7"
-     inkscape:window-y="55"
+     inkscape:window-x="0"
+     inkscape:window-y="23"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg6" />
+     inkscape:current-layer="svg6"
+     width="40px" />
   <title
      id="title2">HD</title>
   <path
-     d="m 16.500808,25.079744 c -7.1522391,0 -12.9496238,-5.573179 -12.9496238,-12.448816 0,-6.8756367 5.7973847,-12.44881594 12.9496238,-12.44881594 7.152239,0 12.949624,5.57317924 12.949624,12.44881594 0,6.875637 -5.797385,12.448816 -12.949624,12.448816 z M 15.72545,15.743132 V 9.5233929 H 14.352789 V 12.031829 H 11.398655 V 9.5233929 h -1.372659 v 6.2197391 h 1.372659 v -2.599468 h 2.954134 v 2.599468 z m 1.591184,-6.224408 v 6.224408 h 2.581832 c 1.963486,0 3.077154,-1.133621 3.077154,-3.154997 0,-1.94824 -1.127426,-3.069411 -3.077154,-3.069411 z m 1.37266,1.111835 v 3.99996 h 0.990647 c 1.213218,0 1.895501,-0.707248 1.895501,-2.021377 0,-1.258886 -0.704136,-1.978583 -1.895501,-1.978583 z"
+     d="m 20.689384,25.352912 c -7.152239,0 -12.9496235,-5.573179 -12.9496235,-12.448816 0,-6.8756367 5.7973845,-12.44881592 12.9496235,-12.44881592 7.152239,0 12.949624,5.57317922 12.949624,12.44881592 0,6.875637 -5.797385,12.448816 -12.949624,12.448816 z M 19.914026,16.0163 V 9.7965609 H 18.541365 V 12.304997 H 15.587231 V 9.7965609 H 14.214572 V 16.0163 h 1.372659 v -2.599468 h 2.954134 V 16.0163 Z M 21.50521,9.791892 V 16.0163 h 2.581832 c 1.963486,0 3.077154,-1.133621 3.077154,-3.154997 0,-1.94824 -1.127426,-3.069411 -3.077154,-3.069411 z m 1.37266,1.111835 v 3.99996 h 0.990647 c 1.213218,0 1.895501,-0.707248 1.895501,-2.021377 0,-1.258886 -0.704136,-1.978583 -1.895501,-1.978583 z"
      id="path4"
      style="stroke-width:0.793546" />
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:6.66667px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-     x="4.2796321"
-     y="30.503761"
+     style="font-style:normal;font-weight:normal;font-size:8px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+     x="-0.18211226"
+     y="37.788242"
      id="text310"><tspan
        sodipodi:role="line"
        id="tspan308"
-       x="4.2796321"
-       y="30.503761"
-       style="font-size:6.66667px">Quality</tspan></text>
+       x="-0.18211226"
+       y="37.788242"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">QUALITY</tspan></text>
+  <metadata
+     id="metadata16">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>HD</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
 </svg>
