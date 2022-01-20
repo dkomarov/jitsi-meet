@@ -1,3 +1,53 @@
-<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M8.25 2.75H3.66667C3.16041 2.75 2.75 3.16041 2.75 3.66667V8.25H4.58333V4.58333H8.25V2.75ZM13.75 4.58333V2.75H18.3333C18.8396 2.75 19.25 3.16041 19.25 3.66667V8.25H17.4167V4.58333H13.75ZM13.75 17.4167H17.4167V13.75H19.25V18.3333C19.25 18.8396 18.8396 19.25 18.3333 19.25H13.75V17.4167ZM4.58333 13.75V17.4167H8.25V19.25H3.66667C3.16041 19.25 2.75 18.8396 2.75 18.3333V13.75H4.58333Z" />
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="40"
+   height="40"
+   viewBox="0 0 40 40"
+   fill="none"
+   version="1.1"
+   id="svg1500"
+   sodipodi:docname="full-screen.svg"
+   inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1504" />
+  <sodipodi:namedview
+     id="namedview1502"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     width="40px"
+     inkscape:zoom="11.068182"
+     inkscape:cx="10.977413"
+     inkscape:cy="18.205339"
+     inkscape:window-width="1280"
+     inkscape:window-height="709"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1500" />
+  <path
+     fill-rule="evenodd"
+     clip-rule="evenodd"
+     d="M 15.176763,1.0333676 H 6.7034057 c -0.93594,0 -1.6946788,0.6823312 -1.6946788,1.5240188 v 7.6200606 h 3.389339 V 4.0813885 H 15.176763 Z M 25.344798,4.0813885 V 1.0333676 H 33.8181 c 0.936013,0 1.694734,0.6823312 1.694734,1.5240188 V 10.177447 H 32.12355 V 4.0813885 Z m 0,21.3362465 h 6.778752 v -6.096108 h 3.389284 v 7.620011 c 0,0.841754 -0.758721,1.524068 -1.694734,1.524068 H 25.344798 Z M 8.3980659,19.321527 v 6.096108 h 6.7786971 v 3.047971 H 6.7034057 c -0.93594,0 -1.6946788,-0.682314 -1.6946788,-1.524068 v -7.620011 z"
+     id="path1498"
+     style="fill:#ffffff;stroke-width:1.75318" />
+  <text
+     xml:space="preserve"
+     style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;fill:#ffffff"
+     x="5.782341"
+     y="39.482548"
+     id="text2010"><tspan
+       sodipodi:role="line"
+       id="tspan2008"
+       x="5.782341"
+       y="39.482548"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">FULL</tspan></text>
 </svg>
