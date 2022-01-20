@@ -32,17 +32,17 @@
      inkscape:window-maximized="0"
      inkscape:current-layer="svg12350" />
   <path
-     d="M 7.3769303,3.0540071 5.9983622,3.1978619 V 4.357607 17.067403 c 0,3.170717 1.956721,6.117835 5.1776918,7.798373 l 8.15207,4.253239 0.834093,0.435112 0.834094,-0.435112 8.152086,-4.253239 c 3.221018,-1.680538 5.177676,-4.627656 5.177676,-7.798373 V 4.357607 3.1978619 L 32.947457,3.0540071 20.357364,1.7402651 20.162217,1.7199022 19.967071,1.7402651 Z"
+     d="M 8.1009187,2.7425206 6.7672035,2.8805868 V 3.9936651 16.192033 c 0,3.043131 1.8930574,5.87166 5.0092305,7.484575 l 7.886836,4.082094 0.806955,0.417603 0.806956,-0.417603 7.886851,-4.082094 c 3.116219,-1.612915 5.009216,-4.441444 5.009216,-7.484575 V 3.9936651 2.8805868 L 32.839486,2.7425206 20.659023,1.4816421 20.470225,1.4620986 20.281428,1.4816421 Z"
      fill="url(#paint0_linear)"
      stroke="#ffffff"
-     stroke-width="2.87577"
+     stroke-width="2.77111"
      id="path12334"
      style="fill:url(#paint0_linear)" />
   <path
-     d="m 32.752312,4.357607 v 12.709796 c 0,2.71787 -1.677158,5.243933 -4.438008,6.68432 l -8.152087,4.253239 V 3.043865 Z"
+     d="M 32.65069,3.9936651 V 16.192033 c 0,2.608506 -1.62259,5.032923 -4.293613,6.41535 l -7.886852,4.082094 V 2.7327866 Z"
      fill="url(#paint1_linear)"
      id="path12336"
-     style="fill:url(#paint1_linear);stroke-width:1.43789" />
+     style="fill:url(#paint1_linear);stroke-width:1.38556" />
   <defs
      id="defs12348">
     <linearGradient
@@ -52,7 +52,7 @@
        x2="11.8143"
        y2="23"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.5737617,0,0,1.313742,1.2770771,-0.89736096)">
+       gradientTransform="matrix(1.522558,0,0,1.2608785,2.1995295,-1.0498488)">
       <stop
          stop-color="#FFB800"
          id="stop12338" />
@@ -68,7 +68,7 @@
        x2="11.8143"
        y2="23"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.5737617,0,0,1.313742,1.2770771,-0.89736096)">
+       gradientTransform="matrix(1.522558,0,0,1.2608785,2.1995295,-1.0498488)">
       <stop
          stop-color="#FF8A00"
          id="stop12343" />
@@ -80,7 +80,7 @@
   </defs>
   <text
      xml:space="preserve"
-     style="font-size:9.33333px;line-height:1.25;font-family:sans-serif"
+     style="font-size:9.33333px;line-height:1.25;font-family:sans-serif;fill:#ffffff"
      x="-0.20533973"
      y="39.219715"
      id="text12840"><tspan
@@ -88,5 +88,5 @@
        id="tspan12838"
        x="-0.20533973"
        y="39.219715"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9.33333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#000000">SECURE</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9.33333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">SECURE</tspan></text>
 </svg>
