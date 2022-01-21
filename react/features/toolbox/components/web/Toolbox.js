@@ -76,8 +76,8 @@ import {
     setToolbarHovered,
     showToolbox
 } from '../../actions';
-import { THRESHOLDS, NOT_APPLICABLE, DRAWER_MAX_HEIGHT } from '../../constants';
-import { isToolboxVisible } from '../../functions';
+import { THRESHOLDS, NOT_APPLICABLE, DRAWER_MAX_HEIGHT, NOTIFY_CLICK_MODE } from '../../constants';
+import { isDesktopShareButtonDisabled, isToolboxVisible } from '../../functions';
 import DownloadButton from '../DownloadButton';
 import HangupButton from '../HangupButton';
 import HelpButton from '../HelpButton';
@@ -106,7 +106,7 @@ type Props = {
     /**
      * Toolbar buttons which have their click exposed through the API.
      */
-    _buttonsWithNotifyClick: Array<string>,
+    _buttonsWithNotifyClick: Array<string | Object>,
 
     /**
      * Whether or not the chat feature is currently displayed.
@@ -122,6 +122,11 @@ type Props = {
      * The {@code JitsiConference} for the current conference.
      */
     _conference: Object,
+
+    /**
+     * Whether or not screensharing button is disabled.
+     */
+    _desktopSharingButtonDisabled: boolean,
 
     /**
      * The tooltip key to use when screensharing is disabled. Or undefined
@@ -537,6 +542,7 @@ class Toolbox extends Component<Props> {
     _doToggleScreenshare() {
         const {
             _backgroundType,
+            _desktopSharingButtonDisabled,
             _desktopSharingEnabled,
             _localVideo,
             _virtualSource,
@@ -558,7 +564,7 @@ class Toolbox extends Component<Props> {
             return;
         }
 
-        if (_desktopSharingEnabled) {
+        if (_desktopSharingEnabled && !_desktopSharingButtonDisabled) {
             dispatch(startScreenShareFlow());
         }
     }
@@ -819,22 +825,31 @@ class Toolbox extends Component<Props> {
     }
 
     /**
-     * Overwrites click handlers for buttons in case click is exposed through the iframe API.
+     * Sets the notify click mode for the buttons.
      *
      * @param {Object} buttons - The list of toolbar buttons.
      * @returns {void}
      */
-    _overwriteButtonsClickHandlers(buttons) {
+    _setButtonsNotifyClickMode(buttons) {
         if (typeof APP === 'undefined' || !this.props._buttonsWithNotifyClick?.length) {
             return;
         }
 
         Object.values(buttons).forEach((button: any) => {
-            if (
-                typeof button === 'object'
-                && this.props._buttonsWithNotifyClick.includes(button.key)
-            ) {
-                button.handleClick = () => APP.API.notifyToolbarButtonClicked(button.key);
+            if (typeof button === 'object') {
+                const notify = this.props._buttonsWithNotifyClick.find(
+                    (btn: string | Object) =>
+                        (typeof btn === 'string' && btn === button.key)
+                        || (typeof btn === 'object' && btn.key === button.key)
+                );
+
+                if (notify) {
+                    const notifyMode = typeof notify === 'string' || notify.preventExecution
+                        ? NOTIFY_CLICK_MODE.PREVENT_AND_NOTIFY
+                        : NOTIFY_CLICK_MODE.ONLY_NOTIFY;
+
+                    button.notifyMode = notifyMode;
+                }
             }
         });
     }
@@ -854,7 +869,7 @@ class Toolbox extends Component<Props> {
 
         const buttons = this._getAllButtons();
 
-        this._overwriteButtonsClickHandlers(buttons);
+        this._setButtonsNotifyClickMode(buttons);
         const isHangupVisible = isToolbarButtonEnabled('hangup', _toolbarButtons);
         const { order } = THRESHOLDS.find(({ width }) => _clientWidth > width)
             || THRESHOLDS[THRESHOLDS.length - 1];
@@ -1050,6 +1065,10 @@ class Toolbox extends Component<Props> {
      * @returns {void}
      */
     _onShortcutToggleScreenshare() {
+        // Ignore the shortcut if the button is disabled.
+        if (this.props._desktopSharingButtonDisabled) {
+            return;
+        }
         sendAnalytics(createShortcutEvent(
                 'toggle.screen.sharing',
                 ACTION_SHORTCUT_TRIGGERED,
@@ -1265,6 +1284,7 @@ class Toolbox extends Component<Props> {
                         {mainMenuButtons.map(({ Content, key, ...rest }) => Content !== Separator && (
                             <Content
                                 { ...rest }
+                                buttonKey = { key }
                                 key = { key } />))}
 
                         {Boolean(overflowMenuButtons.length) && (
@@ -1292,6 +1312,7 @@ class Toolbox extends Component<Props> {
                                                 {showSeparator && <Separator key = { `hr${group}` } />}
                                                 <Content
                                                     { ...rest }
+                                                    buttonKey = { key }
                                                     key = { key }
                                                     showLabel = { true } />
                                             </Fragment>
@@ -1366,6 +1387,7 @@ function _mapStateToProps(state, ownProps) {
         _clientWidth: clientWidth,
         _conference: conference,
         _desktopSharingEnabled: desktopSharingEnabled,
+        _desktopSharingButtonDisabled: isDesktopShareButtonDisabled(state),
         _desktopSharingDisabledTooltipKey: desktopSharingDisabledTooltipKey,
         _dialog: Boolean(state['features/base/dialog'].component),
         _feedbackConfigured: Boolean(callStatsID),

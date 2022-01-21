@@ -1,16 +1,19 @@
 // @flow
 
-import { translate } from '../../base/i18n';
+import { translate } from "../../base/i18n";
 import {
     IconVideoQualityAudioOnly,
     IconVideoQualityHD,
     IconVideoQualityLD,
-    IconVideoQualitySD
-} from '../../base/icons';
-import { connect } from '../../base/redux';
-import { AbstractButton, type AbstractButtonProps } from '../../base/toolbox/components';
-import { VIDEO_QUALITY_LEVELS } from '../constants';
-import { findNearestQualityLevel } from '../functions';
+    IconVideoQualitySD,
+} from "../../base/icons";
+import { connect } from "../../base/redux";
+import {
+    AbstractButton,
+    type AbstractButtonProps,
+} from "../../base/toolbox/components";
+import { VIDEO_QUALITY_LEVELS } from "../constants";
+import { findNearestQualityLevel } from "../functions";
 
 /**
  * A map of of selectable receive resolutions to corresponding icons.
@@ -22,7 +25,7 @@ const VIDEO_QUALITY_TO_ICON = {
     [VIDEO_QUALITY_LEVELS.ULTRA]: IconVideoQualityHD,
     [VIDEO_QUALITY_LEVELS.HIGH]: IconVideoQualityHD,
     [VIDEO_QUALITY_LEVELS.STANDARD]: IconVideoQualitySD,
-    [VIDEO_QUALITY_LEVELS.LOW]: IconVideoQualityLD
+    [VIDEO_QUALITY_LEVELS.LOW]: IconVideoQualityLD,
 };
 
 /**
@@ -30,7 +33,6 @@ const VIDEO_QUALITY_TO_ICON = {
  * {@link VideoQualityButton}.
  */
 type Props = AbstractButtonProps & {
-
     /**
      * Whether or not audio only mode is currently enabled.
      */
@@ -45,7 +47,7 @@ type Props = AbstractButtonProps & {
     /**
      * Invoked to obtain translated strings.
      */
-    t: Function
+    t: Function,
 };
 
 /**
@@ -56,9 +58,9 @@ type Props = AbstractButtonProps & {
  * @augments Component
  */
 class VideoQualityButton extends AbstractButton<Props, *> {
-    accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
-    label = 'toolbar.callQuality';
-    tooltip = 'toolbar.callQuality';
+    accessibilityLabel = "toolbar.accessibilityLabel.callQuality";
+    label = "toolbar.callQuality";
+    tooltip = "toolbar.callQuality";
 
     /**
      * Dynamically retrieves the icon.
@@ -68,9 +70,10 @@ class VideoQualityButton extends AbstractButton<Props, *> {
 
         const videoQualityLevel = findNearestQualityLevel(_videoQuality);
 
-        const icon = _audioOnly || !videoQualityLevel
-            ? IconVideoQualityAudioOnly
-            : VIDEO_QUALITY_TO_ICON[videoQualityLevel];
+        const icon =
+            _audioOnly || !videoQualityLevel
+                ? IconVideoQualityAudioOnly
+                : VIDEO_QUALITY_TO_ICON[videoQualityLevel];
 
         return icon;
     }
@@ -115,10 +118,9 @@ class VideoQualityButton extends AbstractButton<Props, *> {
  */
 function _mapStateToProps(state) {
     return {
-        _audioOnly: state['features/base/audio-only'].enabled,
-        _videoQuality: state['features/video-quality'].preferredVideoQuality
+        _audioOnly: state["features/base/audio-only"].enabled,
+        _videoQuality: state["features/video-quality"].preferredVideoQuality,
     };
 }
 
-export default translate(
-    connect(_mapStateToProps)(VideoQualityButton));
+export default translate(connect(_mapStateToProps)(VideoQualityButton));

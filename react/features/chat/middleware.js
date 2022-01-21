@@ -314,12 +314,16 @@ function _handleReceivedMessage({ dispatch, getState },
     // Provide a default for for the case when a message is being
     // backfilled for a participant that has left the conference.
     const participant = getParticipantById(state, id) || {};
+
     const localParticipant = getLocalParticipant(getState);
     const displayName = getParticipantDisplayName(state, id);
     const hasRead = participant.local || isChatOpen;
     const timestampToDate = timestamp ? new Date(timestamp) : new Date();
     const millisecondsTimestamp = timestampToDate.getTime();
-    const shouldShowNotification = userSelectedNotifications['notify.chatMessages'] && !hasRead && !isReaction;
+
+    // skip message notifications on join (the messages having timestamp - coming from the history)
+    const shouldShowNotification = userSelectedNotifications['notify.chatMessages']
+        && !hasRead && !isReaction && !timestamp;
 
     dispatch(addMessage({
         displayName,

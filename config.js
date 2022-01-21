@@ -615,41 +615,61 @@ var config = {
     //     alwaysVisible: false
     // },
 
-    // Toolbar buttons which have their click event exposed through the API on
-    // `toolbarButtonClicked` event instead of executing the normal click routine.
+    // Toolbar buttons which have their click/tap event exposed through the API on
+    // `toolbarButtonClicked`. Passing a string for the button key will
+    // prevent execution of the click/tap routine; passing an object with `key` and
+    // `preventExecution` flag on false will not prevent execution of the click/tap
+    // routine. Below array with mixed mode for passing the buttons.
     // buttonsWithNotifyClick: [
-    //    'camera',
-    //    'chat',
-    //    'closedcaptions',
-    //    'desktop',
-    //    'download',
-    //    'embedmeeting',
-    //    'etherpad',
-    //    'feedback',
-    //    'filmstrip',
-    //    'fullscreen',
-    //    'hangup',
-    //    'help',
-    //    'invite',
-    //    'livestreaming',
-    //    'microphone',
-    //    'mute-everyone',
-    //    'mute-video-everyone',
-    //    'participants-pane',
-    //    'profile',
-    //    'raisehand',
-    //    'recording',
-    //    'security',
-    //    'select-background',
-    //    'settings',
-    //    'shareaudio',
-    //    'sharedvideo',
-    //    'shortcuts',
-    //    'stats',
-    //    'tileview',
-    //    'toggle-camera',
-    //    'videoquality',
-    //    '__end'
+    //     'camera',
+    //     {
+    //         key: 'chat',
+    //         preventExecution: false
+    //     },
+    //     {
+    //         key: 'closedcaptions',
+    //         preventExecution: true
+    //     },
+    //     'desktop',
+    //     'download',
+    //     'embedmeeting',
+    //     'etherpad',
+    //     'feedback',
+    //     'filmstrip',
+    //     'fullscreen',
+    //     'hangup',
+    //     'help',
+    //     {
+    //         key: 'invite',
+    //         preventExecution: false
+    //     },
+    //     'livestreaming',
+    //     'microphone',
+    //     'mute-everyone',
+    //     'mute-video-everyone',
+    //     'participants-pane',
+    //     'profile',
+    //     {
+    //         key: 'raisehand',
+    //         preventExecution: true
+    //     },
+    //     'recording',
+    //     'security',
+    //     'select-background',
+    //     'settings',
+    //     'shareaudio',
+    //     'sharedvideo',
+    //     'shortcuts',
+    //     'stats',
+    //     'tileview',
+    //     'toggle-camera',
+    //     'videoquality',
+    //     // The add passcode button from the security dialog.
+    //     {
+    //         key: 'add-passcode',
+    //         preventExecution: false
+    //     }
+    //     '__end'
     // ],
 
     // List of pre meeting screens buttons to hide. The values must be one or more of the 5 allowed buttons:
@@ -1025,7 +1045,8 @@ var config = {
     // If true, tile view will not be enabled automatically when the participants count threshold is reached.
     // disableTileView: true,
 
-    // If true, the tiles will be displayed contained within the available space rather than enlarged to cover it.
+    // If true, the tiles will be displayed contained within the available space rather than enlarged to cover it,
+    // with a 16:9 aspect ratio (old behaviour).
     // disableTileEnlargement: true,
 
     // Controls the visibility and behavior of the top header conference info labels.

@@ -71,6 +71,7 @@ import { isScreenAudioSupported, isScreenVideoShared } from '../../react/feature
 import { startScreenShareFlow, startAudioScreenShareFlow } from '../../react/features/screen-share/actions';
 import { toggleScreenshotCaptureSummary } from '../../react/features/screenshot-capture';
 import { playSharedVideo, stopSharedVideo } from '../../react/features/shared-video/actions.any';
+import { extractYoutubeIdOrURL } from '../../react/features/shared-video/functions';
 import { toggleTileView, setTileView } from '../../react/features/video-layout';
 import { muteAllParticipants } from '../../react/features/video-menu/actions';
 import { setVideoQuality } from '../../react/features/video-quality';
@@ -382,7 +383,11 @@ function initCommands() {
         'start-share-video': url => {
             logger.debug('Share video command received');
             sendAnalytics(createApiEvent('share.video.start'));
-            APP.store.dispatch(playSharedVideo(url));
+            const id = extractYoutubeIdOrURL(url);
+
+            if (id) {
+                APP.store.dispatch(playSharedVideo(id));
+            }
         },
 
         'stop-share-video': () => {
@@ -476,7 +481,9 @@ function initCommands() {
                 return;
             }
 
-            if (isScreenVideoShared(APP.store.getState())) {
+            const enableScreenshotCapture = state['features/base/config'].enableScreenshotCapture;
+
+            if (enableScreenshotCapture && isScreenVideoShared(state)) {
                 APP.store.dispatch(toggleScreenshotCaptureSummary(true));
             }
             conference.startRecording(recordingConfig);
@@ -507,7 +514,9 @@ function initCommands() {
             const activeSession = getActiveSession(state, mode);
 
             if (activeSession && activeSession.id) {
-                APP.store.dispatch(toggleScreenshotCaptureSummary(false));
+                if (state['features/base/config'].enableScreenshotCapture) {
+                    APP.store.dispatch(toggleScreenshotCaptureSummary(false));
+                }
                 conference.stopRecording(activeSession.id);
             } else {
                 logger.error('No recording or streaming session found');
@@ -1521,12 +1530,14 @@ class API {
      * Notify external application ( if API is enabled) that a toolbar button was clicked.
      *
      * @param {string} key - The key of the toolbar button.
+     * @param {boolean} preventExecution - Whether execution of the button click was prevented or not.
      * @returns {void}
      */
-    notifyToolbarButtonClicked(key: string) {
+    notifyToolbarButtonClicked(key: string, preventExecution: boolean) {
         this._sendEvent({
             name: 'toolbar-button-clicked',
-            key
+            key,
+            preventExecution
         });
     }
 
