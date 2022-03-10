@@ -1,8 +1,7 @@
 // @flow
 
 import { ColorSchemeRegistry, schemeColor } from '../../../base/color-scheme';
-import { BoxModel } from '../../../base/styles';
-import BaseTheme from '../../../base/ui/components/BaseTheme';
+import BaseTheme from '../../../base/ui/components/BaseTheme.native';
 
 const BUTTON_SIZE = 48;
 
@@ -19,7 +18,7 @@ const toolbarButton = {
     height: BUTTON_SIZE,
     justifyContent: 'center',
     marginHorizontal: 6,
-    marginTop: 6,
+    marginVertical: 6,
     width: BUTTON_SIZE
 };
 
@@ -65,7 +64,7 @@ const reactionMenu = {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: BaseTheme.palette.bottomSheet,
-    padding: 16
+    padding: BaseTheme.spacing[3]
 };
 
 /**
@@ -87,22 +86,19 @@ const styles = {
         borderTopLeftRadius: 3,
         borderTopRightRadius: 3,
         flexDirection: 'row',
-        flexGrow: 0,
-        justifyContent: 'space-between',
-        paddingHorizontal: BoxModel.margin,
-        paddingVertical: 8
+        justifyContent: 'space-between'
     },
 
     /**
      * The style of the root/top-level container of {@link Toolbox}.
      */
     toolboxContainer: {
+        backgroundColor: BaseTheme.palette.uiBackground,
         flexDirection: 'column',
-        flexGrow: 0,
-        width: '100%',
         maxWidth: 580,
         marginLeft: 'auto',
-        marginRight: 'auto'
+        marginRight: 'auto',
+        width: '100%'
     }
 };
 

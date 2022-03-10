@@ -1,24 +1,23 @@
 // @flow
 
-import React from 'react';
+import React from "react";
 
-import { translate } from '../../base/i18n';
-import { Label } from '../../base/label';
-import { MEDIA_TYPE } from '../../base/media';
-import { connect } from '../../base/redux';
-import { Tooltip } from '../../base/tooltip';
-import { getTrackByMediaTypeAndParticipant } from '../../base/tracks';
-import { shouldDisplayTileView } from '../../video-layout';
+import { translate } from "../../base/i18n";
+import { Label } from "../../base/label";
+import { MEDIA_TYPE } from "../../base/media";
+import { connect } from "../../base/redux";
+import { Tooltip } from "../../base/tooltip";
+import { getTrackByMediaTypeAndParticipant } from "../../base/tracks";
+import { shouldDisplayTileView } from "../../video-layout";
 
 import AbstractVideoQualityLabel, {
     _abstractMapStateToProps,
-    type Props as AbstractProps
-} from './AbstractVideoQualityLabel';
+    type Props as AbstractProps,
+} from "./AbstractVideoQualityLabel";
 
 declare var interfaceConfig: Object;
 
 type Props = AbstractProps & {
-
     /**
      * The message to show within the label.
      */
@@ -27,7 +26,7 @@ type Props = AbstractProps & {
     /**
      * Whether to show video quality label or not.
      */
-     _showVideoQualityLabel: boolean,
+    _showVideoQualityLabel: boolean,
 
     /**
      * The message to show within the label's tooltip.
@@ -51,9 +50,9 @@ type Props = AbstractProps & {
  * @type {Object}
  */
 const RESOLUTION_TO_TRANSLATION_KEY = {
-    '720': 'videoStatus.hd',
-    '360': 'videoStatus.sd',
-    '180': 'videoStatus.ld'
+    "720": "videoStatus.hd",
+    "360": "videoStatus.sd",
+    "180": "videoStatus.ld",
 };
 
 /**
@@ -62,10 +61,9 @@ const RESOLUTION_TO_TRANSLATION_KEY = {
  *
  * @type {number[]}
  */
-const RESOLUTIONS
-    = Object.keys(RESOLUTION_TO_TRANSLATION_KEY)
-        .map(resolution => parseInt(resolution, 10))
-        .sort((a, b) => a - b);
+const RESOLUTIONS = Object.keys(RESOLUTION_TO_TRANSLATION_KEY)
+    .map((resolution) => parseInt(resolution, 10))
+    .sort((a, b) => a - b);
 
 /**
  * React {@code Component} responsible for displaying a label that indicates
@@ -75,7 +73,6 @@ const RESOLUTIONS
  * being displayed.
  */
 export class VideoQualityLabel extends AbstractVideoQualityLabel<Props> {
-
     /**
      * Implements React's {@link Component#render()}.
      *
@@ -83,15 +80,8 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<Props> {
      * @returns {ReactElement}
      */
     render() {
-        const {
-            _audioOnly,
-            _labelKey,
-            _tooltipKey,
-            _videoTrack,
-            _visible,
-            t
-        } = this.props;
-
+        const { _audioOnly, _labelKey, _tooltipKey, _videoTrack, _visible, t } =
+            this.props;
 
         if (!_visible) {
             return null;
@@ -100,28 +90,28 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<Props> {
         let className, labelContent, tooltipKey;
 
         if (_audioOnly) {
-            className = 'audio-only';
-            labelContent = t('videoStatus.audioOnly');
-            tooltipKey = 'videoStatus.labelTooltipAudioOnly';
+            className = "audio-only";
+            labelContent = t("videoStatus.audioOnly");
+            tooltipKey = "videoStatus.labelTooltipAudioOnly";
         } else if (!_videoTrack || _videoTrack.muted) {
-            className = 'no-video';
-            labelContent = t('videoStatus.audioOnly');
-            tooltipKey = 'videoStatus.labelTooiltipNoVideo';
+            className = "no-video";
+            labelContent = t("videoStatus.audioOnly");
+            tooltipKey = "videoStatus.labelTooiltipNoVideo";
         } else {
-            className = 'current-video-quality';
+            className = "current-video-quality";
             labelContent = t(_labelKey);
             tooltipKey = _tooltipKey;
         }
 
+        const onClick = () => dispatch(openDialog(VideoQualityDialog));
 
         return (
-            <Tooltip
-                content = { t(tooltipKey) }
-                position = { 'bottom' }>
+            <Tooltip content={t(tooltipKey)} position={"bottom"}>
                 <Label
-                    className = { className }
-                    id = 'videoResolutionLabel'
-                    text = { labelContent } />
+                    className={className}
+                    id="videoResolutionLabel"
+                    text={labelContent}
+                />
             </Tooltip>
         );
     }
@@ -152,12 +142,11 @@ function _mapResolutionToTranslationsKeys(resolution) {
         }
     }
 
-    const labelKey
-        = RESOLUTION_TO_TRANSLATION_KEY[highestMatchingResolution];
+    const labelKey = RESOLUTION_TO_TRANSLATION_KEY[highestMatchingResolution];
 
     return {
         labelKey,
-        tooltipKey: `${labelKey}Tooltip`
+        tooltipKey: `${labelKey}Tooltip`,
     };
 }
 
@@ -174,23 +163,27 @@ function _mapResolutionToTranslationsKeys(resolution) {
  * }}
  */
 function _mapStateToProps(state) {
-    const { enabled: audioOnly } = state['features/base/audio-only'];
-    const { resolution, participantId } = state['features/large-video'];
+    const { enabled: audioOnly } = state["features/base/audio-only"];
+    const { resolution, participantId } = state["features/large-video"];
     const videoTrackOnLargeVideo = getTrackByMediaTypeAndParticipant(
-        state['features/base/tracks'],
+        state["features/base/tracks"],
         MEDIA_TYPE.VIDEO,
         participantId
     );
 
-    const translationKeys
-        = audioOnly ? {} : _mapResolutionToTranslationsKeys(resolution);
+    const translationKeys = audioOnly
+        ? {}
+        : _mapResolutionToTranslationsKeys(resolution);
 
     return {
         ..._abstractMapStateToProps(state),
         _labelKey: translationKeys.labelKey,
         _tooltipKey: translationKeys.tooltipKey,
         _videoTrack: videoTrackOnLargeVideo,
-        _visible: !(shouldDisplayTileView(state) || interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED)
+        _visible: !(
+            shouldDisplayTileView(state) ||
+            interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
+        ),
     };
 }
 

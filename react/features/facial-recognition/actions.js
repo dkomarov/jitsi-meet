@@ -1,8 +1,9 @@
 // @flow
-import { getLocalVideoTrack } from '../base/tracks';
-
 import 'image-capture';
 import './createImageBitmap';
+
+import { getLocalVideoTrack } from '../base/tracks';
+import { getBaseUrl } from '../base/util';
 
 import {
     ADD_FACIAL_EXPRESSION,
@@ -13,8 +14,10 @@ import {
     STOP_FACIAL_RECOGNITION
 } from './actionTypes';
 import {
-    CPU_TIME_INTERVAL,
-    WEBGL_TIME_INTERVAL,
+    CLEAR_TIMEOUT,
+    FACIAL_EXPRESSION_MESSAGE,
+    INIT_WORKER,
+    INTERVAL_MESSAGE,
     WEBHOOK_SEND_TIME_INTERVAL
 } from './constants';
 import { sendDataToWorker, sendFacialExpressionsWebhook } from './functions';
@@ -63,15 +66,9 @@ export function loadWorker() {
 
             return;
         }
-        let baseUrl = '';
-        const app: Object = document.querySelector('script[src*="app.bundle.min.js"]');
 
-        if (app) {
-            const idx = app.src.lastIndexOf('/');
-
-            baseUrl = `${app.src.substring(0, idx)}/`;
-        }
-        let workerUrl = `${baseUrl}facial-expressions-worker.min.js`;
+        const baseUrl = getBaseUrl();
+        let workerUrl = `${baseUrl}libs/facial-expressions-worker.min.js`;
 
         const workerBlob = new Blob([ `importScripts("${workerUrl}");` ], { type: 'application/javascript' });
 
@@ -82,19 +79,12 @@ export function loadWorker() {
 
             // receives a message indicating what type of backend tfjs decided to use.
             // it is received after as a response to the first message sent to the worker.
-            if (type === 'tf-backend' && value) {
-                let detectionTimeInterval = -1;
-
-                if (value === 'webgl') {
-                    detectionTimeInterval = WEBGL_TIME_INTERVAL;
-                } else if (value === 'cpu') {
-                    detectionTimeInterval = CPU_TIME_INTERVAL;
-                }
-                dispatch(setDetectionTimeInterval(detectionTimeInterval));
+            if (type === INTERVAL_MESSAGE) {
+                value && dispatch(setDetectionTimeInterval(value));
             }
 
             // receives a message with the predicted facial expression.
-            if (type === 'facial-expression') {
+            if (type === FACIAL_EXPRESSION_MESSAGE) {
                 sendDataToWorker(worker, imageCapture);
                 if (!value) {
                     return;
@@ -118,8 +108,12 @@ export function loadWorker() {
             }
         };
         worker.postMessage({
-            id: 'SET_MODELS_URL',
-            url: baseUrl
+            type: INIT_WORKER,
+            url: baseUrl,
+            windowScreenSize: window.screen ? {
+                width: window.screen.width,
+                height: window.screen.height
+            } : undefined
         });
         dispatch(startFacialRecognition());
     };
@@ -133,9 +127,10 @@ export function loadWorker() {
  */
 export function startFacialRecognition() {
     return async function(dispatch: Function, getState: Function) {
-        if (worker === undefined || worker === null) {
+        if (!worker) {
             return;
         }
+
         const state = getState();
         const { recognitionActive } = state['features/facial-recognition'];
 
@@ -187,7 +182,7 @@ export function stopFacialRecognition() {
         }
         imageCapture = null;
         worker.postMessage({
-            id: 'CLEAR_TIMEOUT'
+            type: CLEAR_TIMEOUT
         });
 
         if (lastFacialExpression && lastFacialExpressionTimestamp) {

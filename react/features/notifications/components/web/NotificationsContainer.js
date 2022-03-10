@@ -106,6 +106,10 @@ const useStyles = theme => {
                     backgroundColor: theme.palette.iconError
                 },
 
+                '&.success': {
+                    backgroundColor: theme.palette.success01
+                },
+
                 '&.warning': {
                     backgroundColor: theme.palette.warning01
                 }
@@ -145,24 +149,6 @@ class NotificationsContainer extends Component<Props> {
             onDismissed: this._onDismissed,
             dismissAllowed: () => true
         };
-    }
-
-    /**
-     * Sets a timeout for each notification, where applicable.
-     *
-     * @inheritdoc
-     */
-    componentDidMount() {
-        this._updateTimeouts();
-    }
-
-    /**
-     * Sets a timeout for each notification, where applicable.
-     *
-     * @inheritdoc
-     */
-    componentDidUpdate() {
-        this._updateTimeouts();
     }
 
     /**
@@ -248,31 +234,6 @@ class NotificationsContainer extends Component<Props> {
                 </CSSTransition>
             );
         });
-    }
-
-    /**
-     * Updates the timeouts for every notification.
-     *
-     * @returns {void}
-     */
-    _updateTimeouts() {
-        const { _notifications } = this.props;
-
-        for (const notification of _notifications) {
-            if (notification.timeout
-                    && notification.props.isDismissAllowed !== false
-                    && !this._timeouts.has(notification.uid)) {
-                const {
-                    timeout,
-                    uid
-                } = notification;
-                const timerID = setTimeout(() => {
-                    this._onDismissed(uid);
-                }, timeout);
-
-                this._timeouts.set(uid, timerID);
-            }
-        }
     }
 }
 

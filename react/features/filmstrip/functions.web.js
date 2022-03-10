@@ -1,6 +1,7 @@
 // @flow
 
-import { JitsiParticipantConnectionStatus } from '../base/lib-jitsi-meet';
+import { getSourceNameSignalingFeatureFlag } from '../base/config';
+import { isMobileBrowser } from '../base/environment/utils';
 import { MEDIA_TYPE } from '../base/media';
 import {
     getLocalParticipant,
@@ -15,25 +16,28 @@ import {
     isLocalTrackMuted,
     isRemoteTrackMuted
 } from '../base/tracks/functions';
-import { LAYOUTS } from '../video-layout';
+import { isTrackStreamingStatusActive, isParticipantConnectionStatusActive } from '../connection-indicator/functions';
+import { getCurrentLayout, LAYOUTS } from '../video-layout';
 
 import {
     ASPECT_RATIO_BREAKPOINT,
+    DEFAULT_FILMSTRIP_WIDTH,
+    DEFAULT_LOCAL_TILE_ASPECT_RATIO,
     DISPLAY_AVATAR,
     DISPLAY_VIDEO,
+    FILMSTRIP_GRID_BREAKPOINT,
     INDICATORS_TOOLTIP_POSITION,
     SCROLL_SIZE,
     SQUARE_TILE_ASPECT_RATIO,
-    STAGE_VIEW_THUMBNAIL_HORIZONTAL_BORDER,
     TILE_ASPECT_RATIO,
     TILE_HORIZONTAL_MARGIN,
+    TILE_MIN_HEIGHT_LARGE,
+    TILE_MIN_HEIGHT_SMALL,
+    TILE_PORTRAIT_ASPECT_RATIO,
     TILE_VERTICAL_MARGIN,
     TILE_VIEW_GRID_HORIZONTAL_MARGIN,
     TILE_VIEW_GRID_VERTICAL_MARGIN,
-    VERTICAL_FILMSTRIP_MIN_HORIZONTAL_MARGIN,
-    TILE_MIN_HEIGHT_LARGE,
-    TILE_MIN_HEIGHT_SMALL,
-    TILE_PORTRAIT_ASPECT_RATIO
+    VERTICAL_VIEW_HORIZONTAL_MARGIN
 } from './constants';
 
 export * from './functions.any';
@@ -105,7 +109,7 @@ export function isVideoPlayable(stateful: Object | Function, id: String) {
     const tracks = state['features/base/tracks'];
     const participant = id ? getParticipantById(state, id) : getLocalParticipant(state);
     const isLocal = participant?.local ?? true;
-    const { connectionStatus } = participant || {};
+
     const videoTrack
         = isLocal ? getLocalVideoTrack(tracks) : getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.VIDEO, id);
     const isAudioOnly = Boolean(state['features/base/audio-only'].enabled);
@@ -118,8 +122,13 @@ export function isVideoPlayable(stateful: Object | Function, id: String) {
     } else if (!participant?.isFakeParticipant) { // remote participants excluding shared video
         const isVideoMuted = isRemoteTrackMuted(tracks, MEDIA_TYPE.VIDEO, id);
 
-        isPlayable = Boolean(videoTrack) && !isVideoMuted && !isAudioOnly
-            && connectionStatus === JitsiParticipantConnectionStatus.ACTIVE;
+        if (getSourceNameSignalingFeatureFlag(state)) {
+            isPlayable = Boolean(videoTrack) && !isVideoMuted && !isAudioOnly
+                && isTrackStreamingStatusActive(videoTrack);
+        } else {
+            isPlayable = Boolean(videoTrack) && !isVideoMuted && !isAudioOnly
+                && isParticipantConnectionStatusActive(participant);
+        }
     }
 
     return isPlayable;
@@ -133,7 +142,8 @@ export function isVideoPlayable(stateful: Object | Function, id: String) {
  */
 export function calculateThumbnailSizeForHorizontalView(clientHeight: number = 0) {
     const topBottomMargin = 15;
-    const availableHeight = Math.min(clientHeight, (interfaceConfig.FILM_STRIP_MAX_HEIGHT || 120) + topBottomMargin);
+    const availableHeight = Math.min(clientHeight,
+        (interfaceConfig.FILM_STRIP_MAX_HEIGHT || DEFAULT_FILMSTRIP_WIDTH) + topBottomMargin);
     const height = availableHeight - topBottomMargin;
 
     return {
@@ -152,23 +162,26 @@ export function calculateThumbnailSizeForHorizontalView(clientHeight: number = 0
  * Calculates the size for thumbnails when in vertical view layout.
  *
  * @param {number} clientWidth - The height of the app window.
+ * @param {number} filmstripWidth - The width of the filmstrip.
+ * @param {boolean} isResizable - Whether the filmstrip is resizable or not.
  * @returns {{local: {height, width}, remote: {height, width}}}
  */
-export function calculateThumbnailSizeForVerticalView(clientWidth: number = 0) {
-    const horizontalMargin
-        = VERTICAL_FILMSTRIP_MIN_HORIZONTAL_MARGIN + SCROLL_SIZE
-            + TILE_HORIZONTAL_MARGIN + STAGE_VIEW_THUMBNAIL_HORIZONTAL_BORDER;
+export function calculateThumbnailSizeForVerticalView(clientWidth: number = 0,
+        filmstripWidth: number = 0, isResizable = false) {
     const availableWidth = Math.min(
-        Math.max(clientWidth - horizontalMargin, 0),
-        interfaceConfig.FILM_STRIP_MAX_HEIGHT || 120);
+        Math.max(clientWidth - VERTICAL_VIEW_HORIZONTAL_MARGIN, 0),
+        (isResizable ? filmstripWidth : interfaceConfig.FILM_STRIP_MAX_HEIGHT) || DEFAULT_FILMSTRIP_WIDTH);
 
     return {
         local: {
-            height: Math.floor(availableWidth / interfaceConfig.LOCAL_THUMBNAIL_RATIO),
+            height: Math.floor(availableWidth
+                / (interfaceConfig.LOCAL_THUMBNAIL_RATIO || DEFAULT_LOCAL_TILE_ASPECT_RATIO)),
             width: availableWidth
         },
         remote: {
-            height: Math.floor(availableWidth / interfaceConfig.REMOTE_THUMBNAIL_RATIO),
+            height: isResizable
+                ? DEFAULT_FILMSTRIP_WIDTH
+                : Math.floor(availableWidth / interfaceConfig.REMOTE_THUMBNAIL_RATIO),
             width: availableWidth
         }
     };
@@ -187,7 +200,8 @@ export function calculateThumbnailSizeForTileView({
     clientWidth,
     clientHeight,
     disableResponsiveTiles,
-    disableTileEnlargement
+    disableTileEnlargement,
+    isVerticalFilmstrip = false
 }: Object) {
     let aspectRatio = TILE_ASPECT_RATIO;
 
@@ -196,7 +210,8 @@ export function calculateThumbnailSizeForTileView({
     }
 
     const minHeight = clientWidth < ASPECT_RATIO_BREAKPOINT ? TILE_MIN_HEIGHT_SMALL : TILE_MIN_HEIGHT_LARGE;
-    const viewWidth = clientWidth - (columns * TILE_HORIZONTAL_MARGIN) - TILE_VIEW_GRID_HORIZONTAL_MARGIN;
+    const viewWidth = clientWidth - (columns * TILE_HORIZONTAL_MARGIN)
+        - (isVerticalFilmstrip ? 0 : TILE_VIEW_GRID_HORIZONTAL_MARGIN);
     const viewHeight = clientHeight - (minVisibleRows * TILE_VERTICAL_MARGIN) - TILE_VIEW_GRID_VERTICAL_MARGIN;
     const initialWidth = viewWidth / columns;
     const initialHeight = viewHeight / minVisibleRows;
@@ -279,7 +294,7 @@ export function getVerticalFilmstripVisibleAreaWidth() {
     // TODO: Check if we can remove the left margins and paddings from the CSS.
     // FIXME: This function is used to calculate the size of the large video, etherpad or shared video. Once everything
     // is reactified this calculation will need to move to the corresponding components.
-    const filmstripMaxWidth = (interfaceConfig.FILM_STRIP_MAX_HEIGHT || 120) + 18;
+    const filmstripMaxWidth = (interfaceConfig.FILM_STRIP_MAX_HEIGHT || DEFAULT_FILMSTRIP_WIDTH) + 18;
 
     return Math.min(filmstripMaxWidth, window.innerWidth);
 }
@@ -358,4 +373,53 @@ export function getDisplayModeInput(props: Object, state: Object) {
  */
 export function getIndicatorsTooltipPosition(currentLayout: string) {
     return INDICATORS_TOOLTIP_POSITION[currentLayout] || 'top';
+}
+
+/**
+ * Returns whether or not the filmstrip is resizable.
+ *
+ * @param {Object} state - Redux state.
+ * @returns {boolean}
+ */
+export function isFilmstripResizable(state: Object) {
+    const { filmstrip } = state['features/base/config'];
+    const _currentLayout = getCurrentLayout(state);
+
+    return !filmstrip?.disableResizable && !isMobileBrowser()
+        && _currentLayout === LAYOUTS.VERTICAL_FILMSTRIP_VIEW;
+}
+
+/**
+ * Whether or not grid should be displayed in the vertical filmstrip.
+ *
+ * @param {Object} state - Redux state.
+ * @returns {boolean}
+ */
+export function showGridInVerticalView(state) {
+    const resizableFilmstrip = isFilmstripResizable(state);
+    const { width } = state['features/filmstrip'];
+
+    return resizableFilmstrip && ((width.current ?? 0) > FILMSTRIP_GRID_BREAKPOINT);
+}
+
+/**
+ * Gets the vertical filmstrip max width.
+ *
+ * @param {Object} state - Redux state.
+ * @returns {number}
+ */
+export function getVerticalViewMaxWidth(state) {
+    const { width } = state['features/filmstrip'];
+    const _resizableFilmstrip = isFilmstripResizable(state);
+    const _verticalViewGrid = showGridInVerticalView(state);
+    let maxWidth = _resizableFilmstrip
+        ? width.current || DEFAULT_FILMSTRIP_WIDTH
+        : interfaceConfig.FILM_STRIP_MAX_HEIGHT || DEFAULT_FILMSTRIP_WIDTH;
+
+    // Adding 4px for the border-right and margin-right.
+    // On non-resizable filmstrip add 4px for the left margin and border.
+    // Also adding 7px for the scrollbar. Also adding 9px for the drag handle.
+    maxWidth += (_verticalViewGrid ? 0 : 11) + (_resizableFilmstrip ? 9 : 4);
+
+    return maxWidth;
 }

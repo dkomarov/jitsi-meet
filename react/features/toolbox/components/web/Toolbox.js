@@ -27,7 +27,6 @@ import { connect } from '../../../base/redux';
 import { getLocalVideoTrack } from '../../../base/tracks';
 import { toggleChat } from '../../../chat';
 import { ChatButton } from '../../../chat/components';
-import { DominantSpeakerName } from '../../../display-name';
 import { EmbedMeetingButton } from '../../../embed-meeting';
 import { SharedDocumentButton } from '../../../etherpad';
 import { FeedbackButton } from '../../../feedback';
@@ -86,6 +85,7 @@ import MuteEveryonesVideoButton from '../MuteEveryonesVideoButton';
 
 import AudioSettingsButton from './AudioSettingsButton';
 import FullscreenButton from './FullscreenButton';
+import LinkToSalesforceButton from './LinkToSalesforceButton';
 import OverflowMenuButton from './OverflowMenuButton';
 import ProfileButton from './ProfileButton';
 import Separator from './Separator';
@@ -145,6 +145,11 @@ type Props = {
     _dialog: boolean,
 
     /**
+     * Whether or not the toolbox is disabled. It is for recorders.
+     */
+    _disabled: boolean,
+
+    /**
      * Whether or not call feedback can be sent.
      */
     _feedbackConfigured: boolean,
@@ -153,6 +158,11 @@ type Props = {
      * Whether or not the app is currently in full screen.
      */
     _fullScreen: boolean,
+
+    /**
+     * Whether the app has Salesforce integration.
+     */
+    _hasSalesforce: boolean,
 
     /**
      * Whether or not the app is running in an ios mobile browser.
@@ -249,11 +259,6 @@ type Props = {
      * Invoked to active other features of the app.
      */
     dispatch: Function,
-
-    /**
-     * If the dominant speaker name should be displayed or not.
-     */
-    showDominantSpeakerName?: boolean,
 
     /**
      * Invoked to obtain translated strings.
@@ -447,6 +452,10 @@ class Toolbox extends Component<Props> {
      * @returns {ReactElement}
      */
     render() {
+        if (this.props._disabled) {
+            return null;
+        }
+
         const { _chatOpen, _visible, _toolbarButtons } = this.props;
         const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${
             _toolbarButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
@@ -600,6 +609,7 @@ class Toolbox extends Component<Props> {
             _feedbackConfigured,
             _isIosMobile,
             _isMobile,
+            _hasSalesforce,
             _screenSharing
         } = this.props;
 
@@ -712,6 +722,12 @@ class Toolbox extends Component<Props> {
             group: 2
         };
 
+        const linkToSalesforce = _hasSalesforce && {
+            key: 'linktosalesforce',
+            Content: LinkToSalesforceButton,
+            group: 2
+        };
+
         const muteEveryone = {
             key: 'mute-everyone',
             Content: MuteEveryoneButton,
@@ -808,6 +824,7 @@ class Toolbox extends Component<Props> {
             recording,
             localRecording,
             livestreaming,
+            linkToSalesforce,
             muteEveryone,
             muteVideoEveryone,
             shareVideo,
@@ -1259,7 +1276,6 @@ class Toolbox extends Component<Props> {
             _reactionsEnabled,
             _toolbarButtons,
             classes,
-            showDominantSpeakerName,
             t
         } = this.props;
 
@@ -1277,8 +1293,6 @@ class Toolbox extends Component<Props> {
                         onMouseOut: this._onMouseOut,
                         onMouseOver: this._onMouseOver
                     }) }>
-
-                    { showDominantSpeakerName && <DominantSpeakerName /> }
 
                     <div className = 'toolbox-content-items'>
                         {mainMenuButtons.map(({ Content, key, ...rest }) => Content !== Separator && (
@@ -1346,10 +1360,13 @@ function _mapStateToProps(state, ownProps) {
     const { conference } = state['features/base/conference'];
     let desktopSharingEnabled = JitsiMeetJS.isDesktopSharingEnabled();
     const {
+        buttonsWithNotifyClick,
         callStatsID,
         disableProfile,
         enableFeaturesBasedOnToken,
-        buttonsWithNotifyClick
+        iAmRecorder,
+        iAmSipGateway,
+        salesforceUrl
     } = state['features/base/config'];
     const {
         fullScreen,
@@ -1390,12 +1407,14 @@ function _mapStateToProps(state, ownProps) {
         _desktopSharingButtonDisabled: isDesktopShareButtonDisabled(state),
         _desktopSharingDisabledTooltipKey: desktopSharingDisabledTooltipKey,
         _dialog: Boolean(state['features/base/dialog'].component),
+        _disabled: Boolean(iAmRecorder || iAmSipGateway),
         _feedbackConfigured: Boolean(callStatsID),
         _fullScreen: fullScreen,
         _isProfileDisabled: Boolean(disableProfile),
         _isIosMobile: isIosMobileBrowser(),
         _isMobile: isMobileBrowser(),
         _isVpaasMeeting: isVpaasMeeting(state),
+        _hasSalesforce: Boolean(salesforceUrl),
         _localParticipantID: localParticipant?.id,
         _localVideo: localVideo,
         _overflowMenuVisible: overflowMenuVisible,

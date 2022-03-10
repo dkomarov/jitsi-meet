@@ -27,17 +27,21 @@ const ALWAYS_ON_TOP_FILENAMES = [
  * commands expected by jitsi-meet.
  */
 const commands = {
+    addBreakoutRoom: 'add-breakout-room',
     answerKnockingParticipant: 'answer-knocking-participant',
     approveVideo: 'approve-video',
     askToUnmute: 'ask-to-unmute',
+    autoAssignToBreakoutRooms: 'auto-assign-to-breakout-rooms',
     avatarUrl: 'avatar-url',
     cancelPrivateChat: 'cancel-private-chat',
+    closeBreakoutRoom: 'close-breakout-room',
     displayName: 'display-name',
     e2eeKey: 'e2ee-key',
     email: 'email',
     toggleLobby: 'toggle-lobby',
     hangup: 'video-hangup',
     initiatePrivateChat: 'initiate-private-chat',
+    joinBreakoutRoom: 'join-breakout-room',
     localSubject: 'local-subject',
     kickParticipant: 'kick-participant',
     muteEveryone: 'mute-everyone',
@@ -45,9 +49,11 @@ const commands = {
     password: 'password',
     pinParticipant: 'pin-participant',
     rejectParticipant: 'reject-participant',
+    removeBreakoutRoom: 'remove-breakout-room',
     resizeLargeVideo: 'resize-large-video',
     sendChatMessage: 'send-chat-message',
     sendEndpointTextMessage: 'send-endpoint-text-message',
+    sendParticipantToRoom: 'send-participant-to-room',
     sendTones: 'send-tones',
     setFollowMe: 'set-follow-me',
     setLargeVideoParticipant: 'set-large-video-participant',
@@ -68,6 +74,7 @@ const commands = {
     toggleE2EE: 'toggle-e2ee',
     toggleFilmStrip: 'toggle-film-strip',
     toggleModeration: 'toggle-moderation',
+    toggleParticipantsPane: 'toggle-participants-pane',
     toggleRaiseHand: 'toggle-raise-hand',
     toggleShareAudio: 'toggle-share-audio',
     toggleShareScreen: 'toggle-share-screen',
@@ -163,6 +170,7 @@ function changeParticipantNumber(APIInstance, number) {
  * configuration options defined in interface_config.js to be overridden.
  * @param {string} [options.jwt] - The JWT token if needed by jitsi-meet for
  * authentication.
+ * @param {string} [options.lang] - The meeting's default language.
  * @param {string} [options.roomName] - The name of the room to join.
  * @returns {string} The URL.
  */
@@ -201,7 +209,8 @@ function parseArguments(args) {
             configOverwrite,
             interfaceConfigOverwrite,
             jwt,
-            onload
+            onload,
+            lang
         ] = args;
 
         return {
@@ -212,7 +221,8 @@ function parseArguments(args) {
             configOverwrite,
             interfaceConfigOverwrite,
             jwt,
-            onload
+            onload,
+            lang
         };
     }
     case 'object': // new arguments format
@@ -273,6 +283,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
      * configuration options defined in interface_config.js to be overridden.
      * @param {string} [options.jwt] - The JWT token if needed by jitsi-meet for
      * authentication.
+     * @param {string} [options.lang] - The meeting's default language.
      * @param {string} [options.onload] - The onload function that will listen
      * for iframe onload event.
      * @param {Array<Object>} [options.invitees] - Array of objects containing
@@ -294,6 +305,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             configOverwrite = {},
             interfaceConfigOverwrite = {},
             jwt = undefined,
+            lang = undefined,
             onload = undefined,
             invitees,
             devices,
@@ -307,6 +319,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             configOverwrite,
             interfaceConfigOverwrite,
             jwt,
+            lang,
             roomName,
             devices,
             userInfo,
@@ -941,6 +954,18 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
     }
 
     /**
+     * Returns whether the participants pane is open.
+     *
+     * @returns {Promise} - Resolves with true if the participants pane is open
+     * and with false if not.
+     */
+    isParticipantsPaneOpen() {
+        return this._transport.sendRequest({
+            name: 'is-participants-pane-open'
+        });
+    }
+
+    /**
      * Returns screen sharing status.
      *
      * @returns {Promise} - Resolves with screensharing status and rejects on failure.
@@ -1038,6 +1063,17 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
     isVideoMuted() {
         return this._transport.sendRequest({
             name: 'is-video-muted'
+        });
+    }
+
+    /**
+     * Returns the list of breakout rooms.
+     *
+     * @returns {Promise} Resolves with the list of breakout rooms.
+     */
+    listBreakoutRooms() {
+        return this._transport.sendRequest({
+            name: 'list-breakout-rooms'
         });
     }
 

@@ -1,10 +1,11 @@
 import { ColorSchemeRegistry, schemeColor } from '../../../base/color-scheme';
-import { BoxModel, fixAndroidViewClipping } from '../../../base/styles';
+import { fixAndroidViewClipping } from '../../../base/styles';
 import BaseTheme from '../../../base/ui/components/BaseTheme.native';
 
 export const INSECURE_ROOM_NAME_LABEL_COLOR = BaseTheme.palette.actionDanger;
 
 const TITLE_BAR_BUTTON_SIZE = 24;
+const HEADER_ACTION_BUTTON_SIZE = 17;
 
 
 /**
@@ -36,13 +37,26 @@ export default {
     },
 
     headerNavigationIcon: {
-        marginLeft: 12
+        marginLeft: 14
     },
 
     headerNavigationButton: {
         height: BaseTheme.spacing[6],
         marginTop: 20,
         width: BaseTheme.spacing[6]
+    },
+
+    headerNavigationText: {
+        color: BaseTheme.palette.text01,
+        fontSize: HEADER_ACTION_BUTTON_SIZE,
+        marginHorizontal: BaseTheme.spacing[3]
+    },
+
+    headerNavigationTextBold: {
+        ...BaseTheme.typography.labelButton,
+        color: BaseTheme.palette.text01,
+        fontSize: HEADER_ACTION_BUTTON_SIZE,
+        marginHorizontal: BaseTheme.spacing[3]
     },
 
     /**
@@ -87,11 +101,11 @@ export default {
     lonelyMeetingContainer: {
         alignSelf: 'stretch',
         alignItems: 'center',
-        padding: BoxModel.padding * 2
+        padding: BaseTheme.spacing[3]
     },
 
     lonelyMessage: {
-        paddingVertical: 12
+        paddingVertical: BaseTheme.spacing[2]
     },
 
     pipButtonContainer: {
@@ -132,7 +146,6 @@ export default {
     },
 
     alwaysOnTitleBar: {
-        padding: 4,
         paddingRight: 0,
         borderRadius: 6,
         backgroundColor: 'rgba(0, 0, 0, .5)',
@@ -141,7 +154,11 @@ export default {
         alignSelf: 'flex-start',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: BaseTheme.spacing[2]
+        marginTop: BaseTheme.spacing[2],
+
+        '&:not(:empty)': {
+            padding: 4
+        }
     },
 
     expandedLabelWrapper: {
