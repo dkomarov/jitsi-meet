@@ -23,12 +23,12 @@
      inkscape:pagecheckerboard="0"
      showgrid="false"
      inkscape:zoom="11.295455"
-     inkscape:cx="23.682093"
-     inkscape:cy="22.531187"
+     inkscape:cx="10.579476"
+     inkscape:cy="22.575452"
      inkscape:window-width="1280"
-     inkscape:window-height="725"
-     inkscape:window-x="6"
-     inkscape:window-y="24"
+     inkscape:window-height="706"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg12"
      width="40px" />
@@ -41,12 +41,12 @@
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none"
-     x="-0.22447346"
+     x="7.9166288"
      y="39.579918"
      id="text4467"><tspan
        sodipodi:role="line"
        id="tspan4465"
-       x="-0.22447346"
+       x="7.9166288"
        y="39.579918"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">AUDIO</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">MIC</tspan></text>
 </svg>

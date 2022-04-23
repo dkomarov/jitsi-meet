@@ -25,10 +25,10 @@
      showgrid="false"
      width="40px"
      inkscape:zoom="11.068182"
-     inkscape:cx="10.977413"
-     inkscape:cy="18.205339"
+     inkscape:cx="11.067762"
+     inkscape:cy="18.250513"
      inkscape:window-width="1280"
-     inkscape:window-height="709"
+     inkscape:window-height="706"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
@@ -60,12 +60,12 @@
   <text
      xml:space="preserve"
      style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;fill:#ffffff"
-     x="6.9568787"
+     x="7.5155859"
      y="39.211498"
      id="text6490"><tspan
        sodipodi:role="line"
        id="tspan6488"
-       x="6.9568787"
+       x="7.5155859"
        y="39.211498"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">EXIT</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">MIN</tspan></text>
 </svg>
