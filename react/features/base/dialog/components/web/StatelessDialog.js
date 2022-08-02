@@ -1,12 +1,12 @@
 // @flow
 
-import ButtonGroup from '@atlaskit/button/button-group';
-import Button from '@atlaskit/button/standard-button';
 import Modal, { ModalFooter } from '@atlaskit/modal-dialog';
 import _ from 'lodash';
 import React, { Component } from 'react';
 
 import { translate } from '../../../i18n/functions';
+import Button from '../../../ui/components/web/Button';
+import { BUTTON_TYPES } from '../../../ui/constants';
 import type { DialogProps } from '../../constants';
 
 import ModalHeader from './ModalHeader';
@@ -104,6 +104,28 @@ type Props = DialogProps & {
 };
 
 /**
+ * Creates the styles for the component.
+ *
+ * @param {Object} theme - The theme.
+ * @returns {Object}
+ */
+const styles = theme => {
+    return {
+        footer: {
+            boxShadow: 'none'
+        },
+
+        buttonContainer: {
+            display: 'flex',
+
+            '& > button:first-child': {
+                marginRight: `${theme.spacing(2)}px`
+            }
+        }
+    };
+};
+
+/**
  * Web dialog that uses atlaskit modal-dialog to display dialogs.
  */
 class StatelessDialog extends Component<Props> {
@@ -198,8 +220,8 @@ class StatelessDialog extends Component<Props> {
         // Filter out falsy (null) values because {@code ButtonGroup} will error
         // if passed in anything but buttons with valid type props.
         const buttons = [
-            this._renderOKButton(),
-            this._renderCancelButton()
+            this._renderCancelButton(),
+            this._renderOKButton()
         ].filter(Boolean);
 
         if (this.props.disableFooter) {
@@ -215,9 +237,9 @@ class StatelessDialog extends Component<Props> {
                      */
                 }
                 <span />
-                <ButtonGroup>
+                <div className = { this.props.classes.buttonContainer }>
                     { buttons }
-                </ButtonGroup>
+                </div>
             </ModalFooter>
         );
     }
@@ -286,13 +308,12 @@ class StatelessDialog extends Component<Props> {
 
         return (
             <Button
-                appearance = 'subtle'
                 id = { CANCEL_BUTTON_ID }
-                key = 'cancel'
+                key = { CANCEL_BUTTON_ID }
+                label = { t(this.props.cancelKey || 'dialog.Cancel') }
                 onClick = { onDecline || this._onCancel }
-                type = 'button'>
-                { t(this.props.cancelKey || 'dialog.Cancel') }
-            </Button>
+                size = 'small'
+                type = { BUTTON_TYPES.TERTIARY } />
         );
     }
 
@@ -313,15 +334,12 @@ class StatelessDialog extends Component<Props> {
 
         return (
             <Button
-                appearance = 'primary'
-                form = 'modal-dialog-form'
+                disabled = { this.props.okDisabled }
                 id = { OK_BUTTON_ID }
-                isDisabled = { this.props.okDisabled }
-                key = 'submit'
+                key = { OK_BUTTON_ID }
+                label = { t(this.props.okKey || 'dialog.Ok') }
                 onClick = { this._onSubmit }
-                type = 'button'>
-                { t(this.props.okKey || 'dialog.Ok') }
-            </Button>
+                size = 'small' />
         );
     }
 

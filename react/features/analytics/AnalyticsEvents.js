@@ -641,18 +641,20 @@ export function createSharedVideoEvent(action, attributes = {}) {
  * of ACTION_SHORTCUT_PRESSED, ACTION_SHORTCUT_RELEASED
  * or ACTION_SHORTCUT_TRIGGERED).
  * @param {Object} attributes - Attributes to attach to the event.
+ * @param {string} source - The event's source.
  * @returns {Object} The event in a format suitable for sending via
  * sendAnalytics.
  */
 export function createShortcutEvent(
         shortcut,
         action = ACTION_SHORTCUT_TRIGGERED,
-        attributes = {}) {
+        attributes = {},
+        source = 'keyboard.shortcut') {
     return {
         action,
         actionSubjectId: shortcut,
         attributes,
-        source: 'keyboard.shortcut',
+        source,
         type: TYPE_UI
     };
 }
@@ -688,7 +690,7 @@ export function createStartSilentEvent() {
 /**
  * Creates an event which indicates that HTMLAudioElement.play has failed.
  *
- * @param {sting} elementID - The ID of the HTMLAudioElement.
+ * @param {string} elementID - The ID of the HTMLAudioElement.
  * @returns {Object} The event in a format suitable for sending via sendAnalytics.
  */
 export function createAudioPlayErrorEvent(elementID) {
@@ -701,9 +703,9 @@ export function createAudioPlayErrorEvent(elementID) {
 }
 
 /**
- * Creates an event which indicates that HTMLAudioElement.play has succeded after a prior failure.
+ * Creates an event which indicates that HTMLAudioElement.play has succeeded after a prior failure.
  *
- * @param {sting} elementID - The ID of the HTMLAudioElement.
+ * @param {string} elementID - The ID of the HTMLAudioElement.
  * @returns {Object} The event in a format suitable for sending via sendAnalytics.
  */
 export function createAudioPlaySuccessEvent(elementID) {
@@ -897,5 +899,17 @@ export function createBreakoutRoomsEvent(actionSubject) {
         action: 'clicked',
         actionSubject: `${actionSubject}.button`,
         source: 'breakout.rooms'
+    };
+}
+
+/**
+ * Creates an event which indicates a GIF was sent.
+ *
+ * @returns {Object} The event in a format suitable for sending via
+ * sendAnalytics.
+ */
+export function createGifSentEvent() {
+    return {
+        action: 'gif.sent'
     };
 }

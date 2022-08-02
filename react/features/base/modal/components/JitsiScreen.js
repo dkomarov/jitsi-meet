@@ -23,6 +23,11 @@ type Props = {
     children: React$Node,
 
     /**
+     * Disabled forced keyboard dismiss?
+     */
+    disableForcedKeyboardDismiss?: boolean,
+
+    /**
      * Optional function that renders a footer component, if needed.
      */
     footerComponent?: Function,
@@ -38,6 +43,11 @@ type Props = {
     hasTabNavigator?: boolean,
 
     /**
+     * Insets for the SafeAreaView.
+     */
+    safeAreaInsets?: Array,
+
+    /**
      * Additional style to be appended to the KeyboardAvoidingView containing the content of the modal.
      */
     style?: StyleType
@@ -49,23 +59,22 @@ const JitsiScreen = ({
     footerComponent,
     hasTabNavigator = false,
     hasBottomTextInput = false,
+    disableForcedKeyboardDismiss = false,
+    safeAreaInsets = [ 'left', 'right' ],
     style
 }: Props) => (
     <View
         style = { styles.jitsiScreenContainer }>
         <JitsiKeyboardAvoidingView
             contentContainerStyle = { contentContainerStyle }
+            disableForcedKeyboardDismiss = { disableForcedKeyboardDismiss }
             hasBottomTextInput = { hasBottomTextInput }
             hasTabNavigator = { hasTabNavigator }
             style = { style }>
             <SafeAreaView
-                edges = { [
-                    'bottom',
-                    'left',
-                    'right'
-                ] }
+                edges = { safeAreaInsets }
                 style = { styles.safeArea }>
-                { children }
+                {children}
             </SafeAreaView>
             { footerComponent && footerComponent() }
         </JitsiKeyboardAvoidingView>

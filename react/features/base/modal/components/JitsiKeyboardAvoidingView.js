@@ -1,8 +1,9 @@
 // @flow
 
 import { useHeaderHeight } from '@react-navigation/elements';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
+    Keyboard,
     KeyboardAvoidingView,
     Platform,
     StatusBar
@@ -22,6 +23,11 @@ type Props = {
      * Additional style to be appended to the KeyboardAvoidingView content container.
      */
     contentContainerStyle?: StyleType,
+
+    /**
+     * Disable forced keyboard dismiss?
+     */
+    disableForcedKeyboardDismiss?: boolean,
 
     /**
      * Is a text input rendered at the bottom of the screen?
@@ -45,6 +51,7 @@ const JitsiKeyboardAvoidingView = (
             contentContainerStyle,
             hasTabNavigator,
             hasBottomTextInput,
+            disableForcedKeyboardDismiss,
             style
         }: Props) => {
     const headerHeight = useHeaderHeight();
@@ -55,8 +62,8 @@ const JitsiKeyboardAvoidingView = (
         // This useEffect is needed because insets are undefined at first for some reason
         // https://github.com/th3rdwave/react-native-safe-area-context/issues/54
         setBottomPadding(insets.bottom);
-
     }, [ insets.bottom ]);
+
 
     const tabNavigatorPadding
         = hasTabNavigator ? headerHeight : 0;
@@ -65,6 +72,10 @@ const JitsiKeyboardAvoidingView = (
         = headerHeight + noNotchDevicePadding + tabNavigatorPadding;
     const androidVerticalOffset = hasBottomTextInput
         ? headerHeight + StatusBar.currentHeight : headerHeight;
+
+    // Tells the view what to do with taps
+    const shouldSetResponse = useCallback(() => !disableForcedKeyboardDismiss);
+    const onRelease = useCallback(() => Keyboard.dismiss());
 
     return (
         <KeyboardAvoidingView
@@ -76,6 +87,8 @@ const JitsiKeyboardAvoidingView = (
                     ? iosVerticalOffset
                     : androidVerticalOffset
             }
+            onResponderRelease = { onRelease }
+            onStartShouldSetResponder = { shouldSetResponse }
             style = { style }>
             { children }
         </KeyboardAvoidingView>

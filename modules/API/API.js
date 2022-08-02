@@ -39,7 +39,9 @@ import {
     raiseHand,
     isParticipantModerator,
     isLocalParticipantModerator,
-    hasRaisedHand
+    hasRaisedHand,
+    grantModerator,
+    overwriteParticipantsNames
 } from '../../react/features/base/participants';
 import { updateSettings } from '../../react/features/base/settings';
 import { isToggleCameraEnabled, toggleCamera } from '../../react/features/base/tracks';
@@ -74,6 +76,12 @@ import {
 } from '../../react/features/large-video/actions.web';
 import { toggleLobbyMode, answerKnockingParticipant } from '../../react/features/lobby/actions';
 import {
+    hideNotification,
+    NOTIFICATION_TIMEOUT_TYPE,
+    NOTIFICATION_TYPE,
+    showNotification
+} from '../../react/features/notifications';
+import {
     close as closeParticipantsPane,
     open as openParticipantsPane
 } from '../../react/features/participants-pane/actions';
@@ -86,6 +94,8 @@ import { toggleScreenshotCaptureSummary } from '../../react/features/screenshot-
 import { isScreenshotCaptureEnabled } from '../../react/features/screenshot-capture/functions';
 import { playSharedVideo, stopSharedVideo } from '../../react/features/shared-video/actions.any';
 import { extractYoutubeIdOrURL } from '../../react/features/shared-video/functions';
+import { toggleRequestingSubtitles, setRequestingSubtitles } from '../../react/features/subtitles/actions';
+import { isAudioMuteButtonDisabled } from '../../react/features/toolbox/functions';
 import { toggleTileView, setTileView } from '../../react/features/video-layout';
 import { muteAllParticipants } from '../../react/features/video-menu/actions';
 import { setVideoQuality } from '../../react/features/video-quality';
@@ -163,6 +173,14 @@ function initCommands() {
                 return;
             }
             APP.store.dispatch(autoAssignToBreakoutRooms());
+        },
+        'grant-moderator': participantId => {
+            if (!isLocalParticipantModerator(APP.store.getState())) {
+                logger.error('Missing moderator rights to grant moderator right to another participant');
+
+                return;
+            }
+            APP.store.dispatch(grantModerator(participantId));
         },
         'display-name': displayName => {
             sendAnalytics(createApiEvent('display.name.changed'));
@@ -362,6 +380,12 @@ function initCommands() {
             sendAnalytics(createApiEvent('screen.sharing.toggled'));
             toggleScreenSharing(options.enable);
         },
+        'toggle-subtitles': () => {
+            APP.store.dispatch(toggleRequestingSubtitles());
+        },
+        'set-subtitles': enabled => {
+            APP.store.dispatch(setRequestingSubtitles(enabled));
+        },
         'toggle-tile-view': () => {
             sendAnalytics(createApiEvent('tile-view.toggled'));
 
@@ -411,6 +435,11 @@ function initCommands() {
                 logger.error('Failed sending endpoint text message', err);
             }
         },
+        'overwrite-names': participantList => {
+            logger.debug('Overwrite names command received');
+
+            APP.store.dispatch(overwriteParticipantsNames(participantList));
+        },
         'toggle-e2ee': enabled => {
             logger.debug('Toggle E2EE key command received');
             APP.store.dispatch(toggleE2EE(enabled));
@@ -441,6 +470,58 @@ function initCommands() {
         },
 
         /**
+         * Shows a custom in-meeting notification.
+         *
+         * @param { string } arg.title - Notification title.
+         * @param { string } arg.description - Notification description.
+         * @param { string } arg.uid - Optional unique identifier for the notification.
+         * @param { string } arg.type - Notification type, either `error`, `info`, `normal`, `success` or `warning`.
+         * Defaults to "normal" if not provided.
+         * @param { string } arg.timeout - Timeout type, either `short`, `medium`, `long` or `sticky`.
+         * Defaults to "short" if not provided.
+         * @returns {void}
+         */
+        'show-notification': ({
+            title,
+            description,
+            uid,
+            type = NOTIFICATION_TYPE.NORMAL,
+            timeout = NOTIFICATION_TIMEOUT_TYPE.SHORT
+        }) => {
+            const validTypes = Object.values(NOTIFICATION_TYPE);
+            const validTimeouts = Object.values(NOTIFICATION_TIMEOUT_TYPE);
+
+            if (!validTypes.includes(type)) {
+                logger.error(`Invalid notification type "${type}". Expecting one of ${validTypes}`);
+
+                return;
+            }
+
+            if (!validTimeouts.includes(timeout)) {
+                logger.error(`Invalid notification timeout "${timeout}". Expecting one of ${validTimeouts}`);
+
+                return;
+            }
+
+            APP.store.dispatch(showNotification({
+                uid,
+                title,
+                description,
+                appearance: type
+            }, timeout));
+        },
+
+        /**
+         * Removes a notification given a unique identifier.
+         *
+         * @param { string } uid - Unique identifier for the notification to be removed.
+         * @returns {void}
+         */
+        'hide-notification': uid => {
+            APP.store.dispatch(hideNotification(uid));
+        },
+
+        /**
          * Starts a file recording or streaming session depending on the passed on params.
          * For RTMP streams, `rtmpStreamKey` must be passed on. `rtmpBroadcastID` is optional.
          * For youtube streams, `youtubeStreamKey` must be passed on. `youtubeBroadcastID` is optional.
@@ -451,11 +532,11 @@ function initCommands() {
          * @param { string } arg.mode - Recording mode, either `file` or `stream`.
          * @param { string } arg.dropboxToken - Dropbox oauth2 token.
          * @param { string } arg.rtmpStreamKey - The RTMP stream key.
-         * @param { string } arg.rtmpBroadcastID - The RTMP braodcast ID.
+         * @param { string } arg.rtmpBroadcastID - The RTMP broadcast ID.
          * @param { boolean } arg.shouldShare - Whether the recording should be shared with the participants or not.
          * Only applies to certain jitsi meet deploys.
          * @param { string } arg.youtubeStreamKey - The youtube stream key.
-         * @param { string } arg.youtubeBroadcastID - The youtube broacast ID.
+         * @param { string } arg.youtubeBroadcastID - The youtube broadcast ID.
          * @returns {void}
          */
         'start-recording': ({
@@ -684,6 +765,9 @@ function initCommands() {
         case 'is-audio-muted':
             callback(APP.conference.isLocalAudioMuted());
             break;
+        case 'is-audio-disabled':
+            callback(isAudioMuteButtonDisabled(APP.store.getState()));
+            break;
         case 'is-moderation-on': {
             const { mediaType } = request;
             const type = mediaType || MEDIA_TYPE.AUDIO;
@@ -715,6 +799,9 @@ function initCommands() {
             break;
         case 'is-sharing-screen':
             callback(Boolean(APP.conference.isSharingScreen));
+            break;
+        case 'is-start-silent':
+            callback(Boolean(APP.store.getState()['features/base/config'].startSilent));
             break;
         case 'get-content-sharing-participants': {
             const tracks = getState()['features/base/tracks'];
@@ -1133,6 +1220,21 @@ class API {
     }
 
     /**
+     * Notify external application (if API is enabled) that some face landmark data is available.
+     *
+     * @param {Object | undefined} faceBox - Detected face(s) bounding box (left, right, width).
+     * @param {string} faceExpression - Detected face expression.
+     * @returns {void}
+     */
+    notifyFaceLandmarkDetected(faceBox: Object, faceExpression: string) {
+        this._sendEvent({
+            name: 'face-landmark-detected',
+            faceBox,
+            faceExpression
+        });
+    }
+
+    /**
      * Notify external application (if API is enabled) that the list of sharing participants changed.
      *
      * @param {Object} data - The event data.
@@ -1418,6 +1520,22 @@ class API {
     }
 
     /**
+     * Notify external application (if API is enabled) that the iframe
+     * docked state has been changed. The responsibility for implementing
+     * the dock / undock functionality lies with the external application.
+     *
+     * @param {boolean} docked - Whether or not the iframe has been set to
+     * be docked or undocked.
+     * @returns {void}
+     */
+    notifyIframeDockStateChanged(docked: boolean) {
+        this._sendEvent({
+            name: 'iframe-dock-state-changed',
+            docked
+        });
+    }
+
+    /**
      * Notify external application of a participant, remote or local, being
      * removed from the conference by another participant.
      *
@@ -1539,7 +1657,7 @@ class API {
      * Notify external application (if API is enabled) that recording has started or stopped.
      *
      * @param {boolean} on - True if recording is on, false otherwise.
-     * @param {string} mode - Stream or file.
+     * @param {string} mode - Stream or file or local.
      * @param {string} error - Error type or null if success.
      * @returns {void}
      */
@@ -1582,7 +1700,7 @@ class API {
     }
 
     /**
-     * Notify external application (if API is enabled) that an error occured.
+     * Notify external application (if API is enabled) that an error occurred.
      *
      * @param {Object} error - The error.
      * @returns {void}
@@ -1610,7 +1728,7 @@ class API {
     }
 
     /**
-     * Notify external application (if API is enabled) wether the used browser is supported or not.
+     * Notify external application (if API is enabled) whether the used browser is supported or not.
      *
      * @param {boolean} supported - If browser is supported or not.
      * @returns {void}
@@ -1619,6 +1737,32 @@ class API {
         this._sendEvent({
             name: 'browser-support',
             supported
+        });
+    }
+
+    /**
+     * Notify external application that the breakout rooms changed.
+     *
+     * @param {Array} rooms - Array of breakout rooms.
+     * @returns {void}
+     */
+    notifyBreakoutRoomsUpdated(rooms) {
+        this._sendEvent({
+            name: 'breakout-rooms-updated',
+            rooms
+        });
+    }
+
+    /**
+     * Notify the external application that the state of the participants pane changed.
+     *
+     * @param {boolean} open - Whether the panel is open or not.
+     * @returns {void}
+     */
+    notifyParticipantsPaneToggled(open) {
+        this._sendEvent({
+            name: 'participants-pane-toggled',
+            open
         });
     }
 

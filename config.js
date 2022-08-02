@@ -1,5 +1,9 @@
+/* eslint-disable comma-dangle, no-unused-vars, no-var */
 
-/* eslint-disable no-unused-vars, no-var */
+/*
+ * NOTE: If you add a new option please remember to document it here:
+ * https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-configuration
+ */
 
 var config = {
     // Connection
@@ -19,7 +23,7 @@ var config = {
         // focus: 'focus.jitsi-meet.example.com',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
-        muc: 'conference.jitsi-meet.example.com'
+        muc: 'conference.jitsi-meet.example.com',
     },
 
     // BOSH URL. FIXME: use XEP-0156 to discover it.
@@ -47,18 +51,18 @@ var config = {
         // enableThumbnailReordering: true,
 
         // Enables XMPP WebSocket (as opposed to BOSH) for the given amount of users.
-        // mobileXmppWsThreshold: 10 // enable XMPP WebSockets on mobile for 10% of the users
+        // mobileXmppWsThreshold: 10, // enable XMPP WebSockets on mobile for 10% of the users
 
         // P2P test mode disables automatic switching to P2P when there are 2
         // participants in the conference.
         // p2pTestMode: false,
 
         // Enables the test specific features consumed by jitsi-meet-torture
-        // testMode: false
+        // testMode: false,
 
         // Disables the auto-play behavior of *all* newly created video element.
         // This is useful when the client runs on a host with limited resources.
-        // noAutoPlayVideo: false
+        // noAutoPlayVideo: false,
 
         // Enable / disable 500 Kbps bitrate cap on desktop tracks. When enabled,
         // simulcast is turned off for the desktop share. If presenter is turned
@@ -67,18 +71,31 @@ var config = {
         // the probability for this to be enabled. This setting has been deprecated.
         // desktopSharingFrameRate.max now determines whether simulcast will be enabled
         // or disabled for the screenshare.
-        // capScreenshareBitrate: 1 // 0 to disable - deprecated.
+        // capScreenshareBitrate: 1, // 0 to disable - deprecated.
+
+        // Whether to use fake constraints (height: 99999, width: 99999) when calling getDisplayMedia on
+        // Chromium based browsers. This is intended as a workaround for
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=1056311
+        // setScreenSharingResolutionConstraints: true,
 
         // Enable callstats only for a percentage of users.
         // This takes a value between 0 and 100 which determines the probability for
         // the callstats to be enabled.
-        // callStatsThreshold: 5 // enable callstats for 5% of the users.
+        // callStatsThreshold: 5, // enable callstats for 5% of the users.
     },
 
     // Feature Flags.
     flags: {
         // Enables source names in the signaling.
         // sourceNameSignaling: false,
+
+        // Enables sending multiple video streams, i.e., camera and desktop tracks can be shared in the conference
+        // separately as two different streams instead of one composite stream.
+        // sendMultipleVideoStreams: false,
+
+        // Signal that this client supports receiving multiple video streams. Without this flag jicofo will enable
+        // multi-stream backward compatibility.
+        receiveMultipleVideoStreams: true,
     },
 
     // Disables moderator indicators.
@@ -107,7 +124,7 @@ var config = {
     //      Can be either 'recording' - screensharing screenshots are taken
     //      only when the recording is also on,
     //      or 'always' - screensharing screenshots are always taken.
-    //      mode: 'recording'
+    //      mode: 'recording',
     // }
 
     // Disables ICE/UDP by filtering out local and remote UDP candidates in
@@ -129,6 +146,7 @@ var config = {
 
     // Disable measuring of audio levels.
     // disableAudioLevels: false,
+
     // audioLevelsInterval: 200,
 
     // Enabling this will run the lib-jitsi-meet no audio detection module which
@@ -164,7 +182,7 @@ var config = {
 
     // Enabling it (with #params) will disable local audio output of remote
     // participants and to enable it back a reload is needed.
-    // startSilent: false
+    // startSilent: false,
 
     // Enables support for opus-red (redundancy for Opus).
     // enableOpusRed: false,
@@ -173,7 +191,7 @@ var config = {
     // Beware, by doing so, you are disabling echo cancellation, noise suppression and AGC.
     // audioQuality: {
     //     stereo: false,
-    //     opusMaxAverageBitrate: null // Value to fit the 6000 to 510000 range.
+    //     opusMaxAverageBitrate: null, // Value to fit the 6000 to 510000 range.
     // },
 
     // Video
@@ -192,7 +210,7 @@ var config = {
     //  'role', <- Moderators on top
     //  'name', <- Alphabetically by name
     //  'hasLeft', <- The ones that have left in the bottom
-    // ] <- the order of the array elements determines priority
+    // ], <- the order of the array elements determines priority
 
     // How many participants while in the tile view mode, before the receiving video quality is reduced from HD to SD.
     // Use -1 to disable.
@@ -208,9 +226,9 @@ var config = {
     //         height: {
     //             ideal: 720,
     //             max: 720,
-    //             min: 240
-    //         }
-    //     }
+    //             min: 240,
+    //         },
+    //     },
     // },
 
     // Enable / disable simulcast support.
@@ -245,7 +263,7 @@ var config = {
     // Optional desktop sharing frame rate options. Default value: min:5, max:5.
     // desktopSharingFrameRate: {
     //     min: 5,
-    //     max: 5
+    //     max: 5,
     // },
 
     // This option has been deprecated since it is no longer supported as per the w3c spec.
@@ -257,48 +275,106 @@ var config = {
 
     // Recording
 
-    // Whether to enable file recording or not.
+    // DEPRECATED. Use recordingService.enabled instead.
     // fileRecordingsEnabled: false,
+
     // Enable the dropbox integration.
     // dropbox: {
-    //     appKey: '<APP_KEY>' // Specify your app key here.
+    //     appKey: '<APP_KEY>', // Specify your app key here.
     //     // A URL to redirect the user to, after authenticating
     //     // by default uses:
     //     // 'https://jitsi-meet.example.com/static/oauth.html'
     //     redirectURI:
-    //          'https://jitsi-meet.example.com/subfolder/static/oauth.html'
+    //          'https://jitsi-meet.example.com/subfolder/static/oauth.html',
     // },
-    // When integrations like dropbox are enabled only that will be shown,
-    // by enabling fileRecordingsServiceEnabled, we show both the integrations
-    // and the generic recording service (its configuration and storage type
-    // depends on jibri configuration)
+
+    // recordingService: {
+    //     // When integrations like dropbox are enabled only that will be shown,
+    //     // by enabling fileRecordingsServiceEnabled, we show both the integrations
+    //     // and the generic recording service (its configuration and storage type
+    //     // depends on jibri configuration)
+    //     enabled: false,
+
+    //     // Whether to show the possibility to share file recording with other people
+    //     // (e.g. meeting participants), based on the actual implementation
+    //     // on the backend.
+    //     sharingEnabled: false,
+
+    //     // Hide the warning that says we only store the recording for 24 hours.
+    //     hideStorageWarning: false,
+    // },
+
+    // DEPRECATED. Use recordingService.enabled instead.
     // fileRecordingsServiceEnabled: false,
-    // Whether to show the possibility to share file recording with other people
-    // (e.g. meeting participants), based on the actual implementation
-    // on the backend.
+
+    // DEPRECATED. Use recordingService.sharingEnabled instead.
     // fileRecordingsServiceSharingEnabled: false,
 
-    // Whether to enable live streaming or not.
+    // Local recording configuration.
+    // localRecording: {
+    //     // Whether to disable local recording or not.
+    //     disable: false,
+
+    //     // Whether to notify all participants when a participant is recording locally.
+    //     notifyAllParticipants: false,
+
+    //     // Whether to disable the self recording feature (only local participant streams).
+    //     disableSelfRecording: false,
+    // },
+
+    // Customize the Live Streaming dialog. Can be modified for a non-YouTube provider.
+    // liveStreaming: {
+    //    // Whether to enable live streaming or not.
+    //    enabled: false,
+    //    // Terms link
+    //    termsLink: 'https://www.youtube.com/t/terms',
+    //    // Data privacy link
+    //    dataPrivacyLink: 'https://policies.google.com/privacy',
+    //    // RegExp string that validates the stream key input field
+    //    validatorRegExpString: '^(?:[a-zA-Z0-9]{4}(?:-(?!$)|$)){4}',
+    //    // Documentation reference for the live streaming feature.
+    //    helpLink: 'https://jitsi.org/live'
+    // },
+
+    // DEPRECATED. Use liveStreaming.enabled instead.
     // liveStreamingEnabled: false,
 
-    // Transcription (in interface_config,
-    // subtitles and buttons can be configured)
+    // DEPRECATED. Use transcription.enabled instead.
     // transcribingEnabled: false,
 
-    // If true transcriber will use the application language.
-    // The application language is either explicitly set by participants in their settings or automatically
-    // detected based on the environment, e.g. if the app is opened in a chrome instance which is using french as its
-    // default language then transcriptions for that participant will be in french.
-    // Defaults to true.
+    // DEPRECATED. Use transcription.useAppLanguage instead.
     // transcribeWithAppLanguage: true,
 
-    // Transcriber language. This settings will only work if "transcribeWithAppLanguage" is explicitly set to false.
-    // Available languages can be found in
-    // ./src/react/features/transcribing/transcriber-langs.json.
+    // DEPRECATED. Use transcription.preferredLanguage instead.
     // preferredTranscribeLanguage: 'en-US',
 
-    // Enables automatic turning on captions when recording is started
+    // DEPRECATED. Use transcription.autoCaptionOnRecord instead.
     // autoCaptionOnRecord: false,
+
+    // Transcription options.
+    // transcription: {
+    //     // Whether the feature should be enabled or not.
+    //     enabled: false,
+
+    //     // If true transcriber will use the application language.
+    //     // The application language is either explicitly set by participants in their settings or automatically
+    //     // detected based on the environment, e.g. if the app is opened in a chrome instance which
+    //     // is using french as its default language then transcriptions for that participant will be in french.
+    //     // Defaults to true.
+    //     useAppLanguage: true,
+
+    //     // Transcriber language. This settings will only work if "useAppLanguage"
+    //     // is explicitly set to false.
+    //     // Available languages can be found in
+    //     // ./src/react/features/transcribing/transcriber-langs.json.
+    //     preferredLanguage: 'en-US',
+
+    //     // Disable start transcription for all participants.
+    //     disableStartForAll: false,
+
+    //     // Enables automatic turning on captions when recording is started
+    //     autoCaptionOnRecord: false,
+    // },
 
     // Misc
 
@@ -332,7 +408,7 @@ var config = {
     //     30: 15,
     //     50: 10,
     //     70: 5,
-    //     90: 2
+    //     90: 2,
     // },
 
     // Provides a way to translate the legacy bridge signaling messages, 'LastNChangedEvent',
@@ -361,7 +437,7 @@ var config = {
     //    // This will result in Safari not being able to decode video from endpoints sending VP9 video.
     //    // When set to false, the conference falls back to VP8 whenever there is an endpoint that doesn't support the
     //    // preferred codec and goes back to the preferred codec when that endpoint leaves.
-    //    // enforcePreferredCodec: false,
+    //    enforcePreferredCodec: false,
     //
     //    // Provides a way to configure the maximum bitrates that will be enforced on the simulcast streams for
     //    // video tracks. The keys in the object represent the type of the stream (LD, SD or HD) and the values
@@ -372,18 +448,18 @@ var config = {
     //          H264: {
     //              low: 200000,
     //              standard: 500000,
-    //              high: 1500000
+    //              high: 1500000,
     //          },
     //          VP8 : {
     //              low: 200000,
     //              standard: 500000,
-    //              high: 1500000
+    //              high: 1500000,
     //          },
     //          VP9: {
     //              low: 100000,
     //              standard: 300000,
-    //              high: 1200000
-    //          }
+    //              high: 1200000,
+    //          },
     //    },
     //
     //    // The options can be used to override default thresholds of video thumbnail heights corresponding to
@@ -398,19 +474,19 @@ var config = {
     //    // the high quality.
     //    minHeightForQualityLvl: {
     //        360: 'standard',
-    //        720: 'high'
+    //        720: 'high',
     //    },
     //
     //    // Provides a way to resize the desktop track to 720p (if it is greater than 720p) before creating a canvas
     //    // for the presenter mode (camera picture-in-picture mode with screenshare).
-    //    resizeDesktopForPresenter: false
+    //    resizeDesktopForPresenter: false,
     // },
 
     // Notification timeouts
     // notificationTimeouts: {
     //     short: 2500,
     //     medium: 5000,
-    //     long: 10000
+    //     long: 10000,
     // },
 
     // // Options for the recording limit notification.
@@ -425,7 +501,7 @@ var config = {
     //    appName: 'Unlimited recordings APP',
     //
     //    // The URL of the app with unlimited recordings.
-    //    appURL: 'https://unlimited.recordings.app.com/'
+    //    appURL: 'https://unlimited.recordings.app.com/',
     // },
 
     // Disables or enables RTX (RFC 4588) (defaults to false).
@@ -529,8 +605,8 @@ var config = {
     // enableFeaturesBasedOnToken: false,
 
     // When enabled the password used for locking a room is restricted to up to the number of digits specified
-    // roomPasswordNumberOfDigits: 10,
     // default: roomPasswordNumberOfDigits: false,
+    // roomPasswordNumberOfDigits: 10,
 
     // Message to show the users. Example: 'The service will be down for
     // maintenance at 01:00 AM GMT,
@@ -545,12 +621,16 @@ var config = {
     //     // When 'true', it shows an intermediate page before joining, where the user can configure their devices.
     //     // This replaces `prejoinPageEnabled`.
     //     enabled: true,
+    //     // Hides the participant name editing field in the prejoin screen.
+    //     // If requireDisplayName is also set as true, a name should still be provided through
+    //     // either the jwt or the userInfo from the iframe api init object in order for this to have an effect.
+    //     hideDisplayName: false,
     //     // List of buttons to hide from the extra join options dropdown.
-    //     hideExtraJoinButtons: ['no-audio', 'by-phone']
+    //     hideExtraJoinButtons: ['no-audio', 'by-phone'],
     // },
 
     // When 'true', the user cannot edit the display name.
-    // (Mainly useful when used in conjuction with the JWT so the JWT name becomes read only.)
+    // (Mainly useful when used in conjunction with the JWT so the JWT name becomes read only.)
     // readOnlyName: false,
 
     // If etherpad integration is enabled, setting this to true will
@@ -572,8 +652,17 @@ var config = {
     // Array with avatar URL prefixes that need to use CORS.
     // corsAvatarURLs: [ 'https://www.gravatar.com/avatar/' ],
 
-    // Base URL for a Gravatar-compatible service. Defaults to libravatar.
-    // gravatarBaseURL: 'https://seccdn.libravatar.org/avatar/',
+    // Base URL for a Gravatar-compatible service. Defaults to Gravatar.
+    // DEPRECATED! Use `gravatar.baseUrl` instead.
+    // gravatarBaseURL: 'https://www.gravatar.com/avatar/',
+
+    // Setup for Gravatar-compatible services.
+    // gravatar: {
+    //     // Defaults to Gravatar.
+    //     baseUrl: 'https://www.gravatar.com/avatar/',
+    //     // True if Gravatar should be disabled.
+    //     disabled: false,
+    // },
 
     // App name to be displayed in the invitation email subject, as an alternative to
     // interfaceConfig.APP_NAME.
@@ -595,6 +684,7 @@ var config = {
     //    'chat',
     //    'closedcaptions',
     //    'desktop',
+    //    'dock-iframe'
     //    'download',
     //    'embedmeeting',
     //    'etherpad',
@@ -603,11 +693,12 @@ var config = {
     //    'fullscreen',
     //    'hangup',
     //    'help',
+    //    'highlight',
     //    'invite',
+    //    'linktosalesforce',
     //    'livestreaming',
     //    'microphone',
-    //    'mute-everyone',
-    //    'mute-video-everyone',
+    //    'noisesuppression',
     //    'participants-pane',
     //    'profile',
     //    'raisehand',
@@ -621,8 +712,8 @@ var config = {
     //    'stats',
     //    'tileview',
     //    'toggle-camera',
+    //    'undock-iframe',
     //    'videoquality',
-    //    '__end'
     // ],
 
     // Holds values related to toolbar visibility control.
@@ -635,7 +726,9 @@ var config = {
     //     timeout: 4000,
     //     // Moved from interfaceConfig.TOOLBAR_ALWAYS_VISIBLE
     //     // Whether toolbar should be always visible or should hide after x miliseconds.
-    //     alwaysVisible: false
+    //     alwaysVisible: false,
+    //     // Indicates whether the toolbar should still autohide when chat is open
+    //     autoHideWhileChatIsOpen: false,
     // },
 
     // Toolbar buttons which have their click/tap event exposed through the API on
@@ -670,6 +763,7 @@ var config = {
     //     'microphone',
     //     'mute-everyone',
     //     'mute-video-everyone',
+    //     'noisesuppression',
     //     'participants-pane',
     //     'profile',
     //     {
@@ -691,8 +785,7 @@ var config = {
     //     {
     //         key: 'add-passcode',
     //         preventExecution: false
-    //     }
-    //     '__end'
+    //     },
     // ],
 
     // List of pre meeting screens buttons to hide. The values must be one or more of the 5 allowed buttons:
@@ -732,10 +825,10 @@ var config = {
     //         pbxID: "PBX Identifier. Example, walmart.",
     //         pbxExtensionID: "PBX Extension Identifier. Example, 5625.",
     //         fqExtensionID: "Fully qualified Extension Identifier. Example, +71 (US) +5625.",
-    //         sessionID: "Session Identifier. Example, session-12-34"
+    //         sessionID: "Session Identifier. Example, session-12-34",
     //     },
     //     collectLegacyStats: true, //enables the collection of legacy stats in chrome browser
-    //     collectIP: true //enables the collection localIP address
+    //     collectIP: true, //enables the collection localIP address
     // },
 
     // Enables sending participants' display names to callstats
@@ -744,21 +837,24 @@ var config = {
     // Enables sending participants' emails (if available) to callstats and other analytics
     // enableEmailInStats: false,
 
-    // Enables detecting faces of participants and get their expression and send it to other participants
-    // enableFacialRecognition: true,
+    // faceLandmarks: {
+    //     // Enables sharing your face coordinates. Used for centering faces within a video.
+    //     enableFaceCentering: false,
 
-    // Enables displaying facial expressions in speaker stats
-    // enableDisplayFacialExpressions: true,
+    //     // Enables detecting face expressions and sharing data with other participants
+    //     enableFaceExpressionsDetection: false,
 
-    // faceCoordinatesSharing: {
-    //     // Enables sharing your face cordinates. Used for centering faces within a video.
-    //     enabled: false,
+    //     // Enables displaying face expressions in speaker stats
+    //     enableDisplayFaceExpressions: false,
 
-    //     // Minimum required face movement percentage threshold for sending new face coordinates data.
-    //     threshold: 10,
+    //     // Enable rtc stats for face landmarks
+    //     enableRTCStats: false,
 
-    //     // Miliseconds for processing a new image capture in order to detect face coordinates if they exist.
-    //     captureInterval: 100
+    //     // Minimum required face movement percentage threshold for sending new face centering coordinates data.
+    //     faceCenteringThreshold: 10,
+
+    //     // Milliseconds for processing a new image capture in order to detect face coordinates if they exist.
+    //     captureInterval: 1000,
     // },
 
     // Controls the percentage of automatic feedback shown to participants when callstats is enabled.
@@ -820,8 +916,8 @@ var config = {
         stunServers: [
 
             // { urls: 'stun:jitsi-meet.example.com:3478' },
-            { urls: 'stun:meet-jit-si-turnrelay.jitsi.net:443' }
-        ]
+            { urls: 'stun:meet-jit-si-turnrelay.jitsi.net:443' },
+        ],
     },
 
     analytics: {
@@ -829,14 +925,18 @@ var config = {
         // disabled: false,
 
         // The Google Analytics Tracking ID:
-        // googleAnalyticsTrackingId: 'your-tracking-id-UA-123456-1'
+        // googleAnalyticsTrackingId: 'your-tracking-id-UA-123456-1',
 
         // Matomo configuration:
         // matomoEndpoint: 'https://your-matomo-endpoint/',
         // matomoSiteID: '42',
 
         // The Amplitude APP Key:
-        // amplitudeAPPKey: '<APP_KEY>'
+        // amplitudeAPPKey: '<APP_KEY>',
+
+        // Obfuscates room name sent to analytics (amplitude, rtcstats)
+        // Default value is false.
+        // obfuscateRoomName: false,
 
         // Configuration for the rtcstats server:
         // By enabling rtcstats server every time a conference is joined the rtcstats
@@ -856,7 +956,7 @@ var config = {
         // Array of script URLs to load as lib-jitsi-meet "analytics handlers".
         // scriptURLs: [
         //      "libs/analytics-ga.min.js", // google-analytics
-        //      "https://example.com/my-custom-analytics.js"
+        //      "https://example.com/my-custom-analytics.js",
         // ],
     },
 
@@ -865,11 +965,11 @@ var config = {
 
     // Information about the jitsi-meet instance we are connecting to, including
     // the user region as seen by the server.
-    deploymentInfo: {
-        // shard: "shard1",
-        // region: "europe",
-        // userRegion: "asia"
-    },
+    // deploymentInfo: {
+    //     shard: "shard1",
+    //     region: "europe",
+    //     userRegion: "asia",
+    // },
 
     // Array<string> of disabled sounds.
     // Possible values:
@@ -912,49 +1012,42 @@ var config = {
     // chromeExtensionBanner: {
     //     // The chrome extension to be installed address
     //     url: 'https://chrome.google.com/webstore/detail/jitsi-meetings/kglhbbefdnlheedjiejgomgmfplipfeb',
+    //     edgeUrl: 'https://microsoftedge.microsoft.com/addons/detail/jitsi-meetings/eeecajlpbgjppibfledfihobcabccihn',
 
     //     // Extensions info which allows checking if they are installed or not
     //     chromeExtensionsInfo: [
     //         {
     //             id: 'kglhbbefdnlheedjiejgomgmfplipfeb',
-    //             path: 'jitsi-logo-48x48.png'
-    //         }
+    //             path: 'jitsi-logo-48x48.png',
+    //         },
+    //         // Edge extension info
+    //         {
+    //             id: 'eeecajlpbgjppibfledfihobcabccihn',
+    //             path: 'jitsi-logo-48x48.png',
+    //         },
     //     ]
     // },
 
-    // Local Recording
-    //
-
-    // localRecording: {
-    // Enables local recording.
-    // Additionally, 'localrecording' (all lowercase) needs to be added to
-    // the `toolbarButtons`-array for the Local Recording button to show up
-    // on the toolbar.
-    //
-    //     enabled: true,
-    //
-
-    // The recording format, can be one of 'ogg', 'flac' or 'wav'.
-    //     format: 'flac'
-    //
-
-    // },
     // e2ee: {
     //   labels,
-    //   externallyManagedKey: false
+    //   externallyManagedKey: false,
     // },
 
     // Options related to end-to-end (participant to participant) ping.
     // e2eping: {
-    //   // The interval in milliseconds at which pings will be sent.
-    //   // Defaults to 10000, set to <= 0 to disable.
-    //   pingInterval: 10000,
+    //   // Whether ene-to-end pings should be enabled.
+    //   enabled: false,
     //
-    //   // The interval in milliseconds at which analytics events
-    //   // with the measured RTT will be sent. Defaults to 60000, set
-    //   // to <= 0 to disable.
-    //   analyticsInterval: 60000,
-    //   },
+    //   // The number of responses to wait for.
+    //   numRequests: 5,
+    //
+    //   // The max conference size in which e2e pings will be sent.
+    //   maxConferenceSize: 200,
+    //
+    //   // The maximum number of e2e ping messages per second for the whole conference to aim for.
+    //   // This is used to contol the pacing of messages in order to reduce the load on the backend.
+    //   maxMessagesPerSecond: 250,
+    // },
 
     // If set, will attempt to use the provided video input device label when
     // triggering a screenshare, instead of proceeding through the normal flow
@@ -980,7 +1073,8 @@ var config = {
     // Disables all invite functions from the app (share, invite, dial out...etc)
     // disableInviteFunctions: true,
 
-    // Disables storing the room name to the recents list
+    // Disables storing the room name to the recents list. When in an iframe this is ignored and
+    // the room is never stored in the recents list.
     // doNotStoreRoom: true,
 
     // Deployment specific URLs.
@@ -990,15 +1084,19 @@ var config = {
     //    userDocumentationURL: 'https://docs.example.com/video-meetings.html',
     //    // If specified a 'Download our apps' button will be displayed in the overflow menu with a link
     //    // to the specified URL for an app download page.
-    //    downloadAppsUrl: 'https://docs.example.com/our-apps.html'
+    //    downloadAppsUrl: 'https://docs.example.com/our-apps.html',
     // },
 
     // Options related to the remote participant menu.
     // remoteVideoMenu: {
+    //     // Whether the remote video context menu to be rendered or not.
+    //     disabled: true,
     //     // If set to true the 'Kick out' button will be disabled.
     //     disableKick: true,
     //     // If set to true the 'Grant moderator' button will be disabled.
-    //     disableGrantModerator: true
+    //     disableGrantModerator: true,
+    //     // If set to true the 'Send private message' button will be disabled.
+    //     disablePrivateChat: true,
     // },
 
     // Endpoint that enables support for salesforce integration with in-meeting resource linking
@@ -1014,7 +1112,7 @@ var config = {
     // disableRemoteMute: true,
 
     // Enables support for lip-sync for this client (if the browser supports it).
-    // enableLipSync: false
+    // enableLipSync: false,
 
     /**
      External API url used to receive branding specific information.
@@ -1057,15 +1155,15 @@ var config = {
                 field02Hover: 'red',
                 action01: 'green',
                 action01Hover: 'lightgreen',
-                action02Disabled: 'beige',
+                disabled01: 'beige',
                 success02: 'cadetblue',
-                action02Hover: 'aliceblue'
+                action02Hover: 'aliceblue',
             },
             typography: {
                 labelRegular: {
                     fontSize: 25,
                     lineHeight: 30,
-                    fontWeight: 500
+                    fontWeight: 500,
                 }
             }
         }
@@ -1073,12 +1171,24 @@ var config = {
     */
     // dynamicBrandingUrl: '',
 
+    // Options related to the participants pane.
+    // participantsPane: {
+    //     // Hides the moderator settings tab.
+    //     hideModeratorSettingsTab: false,
+    //     // Hides the more actions button.
+    //     hideMoreActionsButton: false,
+    //     // Hides the mute all button.
+    //     hideMuteAllButton: false,
+    // },
+
     // Options related to the breakout rooms feature.
     // breakoutRooms: {
     //     // Hides the add breakout room button. This replaces `hideAddRoomButton`.
     //     hideAddRoomButton: false,
+    //     // Hides the auto assign participants button.
+    //     hideAutoAssignButton: false,
     //     // Hides the join breakout room button.
-    //     hideJoinRoomButton: false
+    //     hideJoinRoomButton: false,
     // },
 
     // When true the user cannot add more images to be used as virtual background.
@@ -1107,7 +1217,7 @@ var config = {
     // If a label's id is not in any of the 2 arrays, it will not be visible at all on the header.
     // conferenceInfo: {
     //     // those labels will not be hidden in tandem with the toolbox.
-    //     alwaysVisible: ['recording', 'local-recording', 'raised-hands-count'],
+    //     alwaysVisible: ['recording', 'raised-hands-count'],
     //     // those labels will be auto-hidden in tandem with the toolbox buttons.
     //     autoHide: [
     //         'subject',
@@ -1116,7 +1226,9 @@ var config = {
     //         'e2ee',
     //         'transcribing',
     //         'video-quality',
-    //         'insecure-room'
+    //         'insecure-room',
+    //         'highlight-moment',
+    //         'top-panel-toggle',
     //     ]
     // },
 
@@ -1143,12 +1255,23 @@ var config = {
     // is not persisting the local storage inside the iframe.
     // useHostPageLocalStorage: true,
 
-    // etherpad ("shared document") integration.
+    // Etherpad ("shared document") integration.
     //
-
     // If set, add a "Open shared document" link to the bottom right menu that
     // will open an etherpad document.
     // etherpad_base: 'https://your-etherpad-installati.on/p/',
+
+    // To enable information about dial-in access to meetings you need to provide
+    // dialInNumbersUrl and dialInConfCodeUrl.
+    // dialInNumbersUrl returns a json array of numbers that can be used for dial-in.
+    // {"countryCode":"US","tollFree":false,"formattedNumber":"+1 123-456-7890"}
+    // dialInConfCodeUrl is the conference mapper converting a meeting id to a PIN used for dial-in
+    // or the other way around (more info in resources/cloud-api.swagger)
+    //
+    // For JaaS customers the default values are:
+    // dialInNumbersUrl: 'https://conference-mapper.jitsi.net/v1/access/dids',
+    // dialInConfCodeUrl: 'https://conference-mapper.jitsi.net/v1/access',
+    //
 
     // List of undocumented settings used in jitsi-meet
     /**
@@ -1156,8 +1279,6 @@ var config = {
      debug
      debugAudioLevels
      deploymentInfo
-     dialInConfCodeUrl
-     dialInNumbersUrl
      dialOutAuthUrl
      dialOutCodesUrl
      disableRemoteControl
@@ -1242,7 +1363,6 @@ var config = {
     //     'liveStreaming.unavailableTitle', // shown when livestreaming service is not reachable
     //     'lobby.joinRejectedMessage', // shown when while in a lobby, user's request to join is rejected
     //     'lobby.notificationTitle', // shown when lobby is toggled and when join requests are allowed / denied
-    //     'localRecording.localRecording', // shown when a local recording is started
     //     'notify.chatMessages', // shown when receiving chat messages while the chat window is closed
     //     'notify.disconnected', // shown when a participant has left
     //     'notify.connectedOneMember', // show when a participant joined
@@ -1272,6 +1392,7 @@ var config = {
     //     'notify.raisedHand', // shown when a partcipant used raise hand,
     //     'notify.startSilentTitle', // shown when user joined with no audio
     //     'notify.unmute', // shown to moderator when user raises hand during AV moderation
+    //     'notify.hostAskedUnmute', // shown to participant when host asks them to unmute
     //     'prejoin.errorDialOut',
     //     'prejoin.errorDialOutDisconnected',
     //     'prejoin.errorDialOutFailed',
@@ -1284,8 +1405,11 @@ var config = {
     //     'toolbar.noAudioSignalTitle', // shown when a broken mic is detected
     //     'toolbar.noisyAudioInputTitle', // shown when noise is detected for the current microphone
     //     'toolbar.talkWhileMutedPopup', // shown when user tries to speak while muted
-    //     'transcribing.failedToStart' // shown when transcribing fails to start
+    //     'transcribing.failedToStart', // shown when transcribing fails to start
     // ],
+
+    // List of notifications to be disabled. Works in tandem with the above setting.
+    // disabledNotifications: [],
 
     // Prevent the filmstrip from autohiding when screen width is under a certain threshold
     // disableFilmstripAutohiding: false,
@@ -1294,17 +1418,41 @@ var config = {
     //     // Disables user resizable filmstrip. Also, allows configuration of the filmstrip
     //     // (width, tiles aspect ratios) through the interfaceConfig options.
     //     disableResizable: false,
-    // }
 
+    //     // Disables the stage filmstrip
+    //     // (displaying multiple participants on stage besides the vertical filmstrip)
+    //     disableStageFilmstrip: false,
+
+    //     // Disables the top panel (only shown when a user is sharing their screen).
+    //     disableTopPanel: false,
+
+    //     // The minimum number of participants that must be in the call for
+    //     // the top panel layout to be used.
+    //     minParticipantCountForTopPanel: 50,
+    // },
+
+    // Tile view related config options.
+    // tileView: {
+    //     // The optimal number of tiles that are going to be shown in tile view. Depending on the screen size it may
+    //     // not be possible to show the exact number of participants specified here.
+    //     numberOfVisibleTiles: 25,
+    // },
 
     // Specifies whether the chat emoticons are disabled or not
     // disableChatSmileys: false,
 
-    // Allow all above example options to include a trailing comma and
-    // prevent fear when commenting out the last value.
-    makeJsonParserHappy: 'even if last key had a trailing comma'
-
-    // no configuration value should follow this line.
+    // Settings for the GIPHY integration.
+    // giphy: {
+    //     // Whether the feature is enabled or not.
+    //     enabled: false,
+    //     // SDK API Key from Giphy.
+    //     sdkKey: '',
+    //     // Display mode can be one of:
+    //     // - tile: show the GIF on the tile of the participant that sent it.
+    //     // - chat: show the GIF as a message in chat
+    //     // - all: all of the above. This is the default option
+    //     displayMode: 'all',
+    //     // How long the GIF should be displayed on the tile (in miliseconds).
+    //     tileTime: 5000,
+    // },
 };
-
-/* eslint-enable no-unused-vars, no-var */

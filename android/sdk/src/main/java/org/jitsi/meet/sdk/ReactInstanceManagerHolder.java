@@ -46,6 +46,8 @@ import java.util.Arrays;
 import java.util.List;
 
 class ReactInstanceManagerHolder {
+    private static final String TAG = ReactInstanceManagerHolder.class.getSimpleName();
+
     /**
      * FIXME (from linter): Do not place Android context classes in static
      * fields (static reference to ReactInstanceManager which has field
@@ -115,7 +117,6 @@ class ReactInstanceManagerHolder {
             new com.oblador.performance.PerformancePackage(),
             new com.reactnativecommunity.slider.ReactSliderPackage(),
             new com.brentvatne.react.ReactVideoPackage(),
-            new com.swmansion.reanimated.ReanimatedPackage(),
             new org.reactnative.maskedview.RNCMaskedViewPackage(),
             new com.reactnativecommunity.webview.RNCWebViewPackage(),
             new com.kevinresol.react_native_default_preference.RNDefaultPreferencePackage(),
@@ -145,6 +146,17 @@ class ReactInstanceManagerHolder {
             packages.add((ReactPackage)constructor.newInstance());
         } catch (Exception e) {
             // Ignore any error, the module is not compiled when LIBRE_BUILD is enabled.
+            Log.d(TAG, "Not loading AmplitudeReactNativePackage");
+        }
+
+        // GiphyReactNativeSdkPackage
+        try {
+            Class<?> giphyPackageClass = Class.forName("com.giphyreactnativesdk.GiphyReactNativeSdkPackage");
+            Constructor constructor = giphyPackageClass.getConstructor();
+            packages.add((ReactPackage)constructor.newInstance());
+        } catch (Exception e) {
+            // Ignore any error, the module is not compiled when LIBRE_BUILD is enabled.
+            Log.d(TAG, "Not loading GiphyReactNativeSdkPackage");
         }
 
         // RNGoogleSignInPackage
@@ -154,6 +166,7 @@ class ReactInstanceManagerHolder {
             packages.add((ReactPackage)constructor.newInstance());
         } catch (Exception e) {
             // Ignore any error, the module is not compiled when LIBRE_BUILD is enabled.
+            Log.d(TAG, "Not loading RNGoogleSignInPackage");
         }
 
         return packages;
@@ -239,7 +252,7 @@ class ReactInstanceManagerHolder {
             return;
         }
 
-        Log.d(ReactInstanceManagerHolder.class.getCanonicalName(), "initializing RN with Application");
+        Log.d(TAG, "initializing RN with Application");
 
         reactInstanceManager
             = ReactInstanceManager.builder()

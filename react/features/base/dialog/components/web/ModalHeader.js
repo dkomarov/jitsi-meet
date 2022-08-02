@@ -11,7 +11,10 @@ import {
 import React from 'react';
 
 import { translate } from '../../../i18n';
-import { Icon, IconClose } from '../../../icons';
+import { IconClose } from '../../../icons/svg/index';
+import { withPixelLineHeight } from '../../../styles/functions';
+import Button from '../../../ui/components/web/Button';
+import { BUTTON_TYPES } from '../../../ui/constants';
 
 const TitleIcon = ({ appearance }: { appearance?: 'danger' | 'warning' }) => {
     if (!appearance) {
@@ -40,45 +43,7 @@ type Props = {
 }
 
 /**
-<<<<<<< HEAD
- * Creates the styles for the component.
- *
- * @param {Object} theme - The current UI theme.
- *
- * @returns {Object}
- */
-const styles = theme => {
-    return {
-        closeButton: {
-            borderRadius: theme.shape.borderRadius,
-            cursor: 'pointer',
-            padding: 13,
-
-            [theme.breakpoints.down('480')]: {
-                background: theme.palette.action02
-            },
-
-            '&:hover': {
-                background: theme.palette.action02
-            }
-        },
-        header: {
-            boxShadow: 'none',
-
-            '& h4': {
-                ...withPixelLineHeight(theme.typography.heading5),
-                color: theme.palette.text01
-            }
-        }
-    };
-};
-
-
-/**
- * A default header for modal-dialog components.
-=======
  * A default header for modal-dialog components
->>>>>>> parent of 1ad8f7717 (feat(dialogs): Redesign Video Quality dialog & change dialog background color)
  *
  * @class ModalHeader
  * @augments {React.Component<Props>}
@@ -153,13 +118,13 @@ class ModalHeader extends React.Component<Props> {
                 </Title>
 
                 {
-                    !hideCloseIconButton && <Icon
-                        ariaLabel = { t('dialog.close') }
+                    !hideCloseIconButton && <Button
+                        accessibilityLabel = { t('dialog.close') }
+                        icon = { IconClose }
+                        id = 'modal-header-close-button'
                         onClick = { onClose }
-                        onKeyPress = { this._onKeyPress }
-                        role = 'button'
-                        src = { IconClose }
-                        tabIndex = { 0 } />
+                        size = 'large'
+                        type = { BUTTON_TYPES.TERTIARY } />
                 }
             </Header>
         );

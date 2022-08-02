@@ -16,11 +16,19 @@ import {
 import {
     CLEAR_RECORDING_SESSIONS,
     RECORDING_SESSION_UPDATED,
+    SET_MEETING_HIGHLIGHT_BUTTON_STATE,
     SET_PENDING_RECORDING_NOTIFICATION_UID,
     SET_SELECTED_RECORDING_SERVICE,
-    SET_STREAM_KEY
+    SET_STREAM_KEY,
+    START_LOCAL_RECORDING,
+    STOP_LOCAL_RECORDING
 } from './actionTypes';
-import { getRecordingLink, getResourceId, isSavingRecordingOnDropbox } from './functions';
+import {
+    getRecordingLink,
+    getResourceId,
+    isSavingRecordingOnDropbox,
+    sendMeetingHighlight
+} from './functions';
 import logger from './logger';
 
 declare var APP: Object;
@@ -35,6 +43,21 @@ declare var APP: Object;
 export function clearRecordingSessions() {
     return {
         type: CLEAR_RECORDING_SESSIONS
+    };
+}
+
+/**
+ * Sets the meeting highlight button disable state.
+ *
+ * @param {boolean} disabled - The disabled state value.
+ * @returns {{
+ *     type: CLEAR_RECORDING_SESSIONS
+ * }}
+ */
+export function setHighlightMomentButtonState(disabled: boolean) {
+    return {
+        type: SET_MEETING_HIGHLIGHT_BUTTON_STATE,
+        disabled
     };
 }
 
@@ -102,6 +125,30 @@ export function showPendingRecordingNotification(streamType: string) {
         if (notification) {
             dispatch(_setPendingRecordingNotificationUid(notification.uid, streamType));
         }
+    };
+}
+
+/**
+ * Highlights a meeting moment.
+ *
+ * {@code stream}).
+ *
+ * @returns {Function}
+ */
+export function highlightMeetingMoment() {
+    return async (dispatch: Function, getState: Function) => {
+        dispatch(setHighlightMomentButtonState(true));
+
+        const success = await sendMeetingHighlight(getState());
+
+        if (success) {
+            dispatch(showNotification({
+                descriptionKey: 'recording.highlightMomentSucessDescription',
+                titleKey: 'recording.highlightMomentSuccess'
+            }, NOTIFICATION_TIMEOUT_TYPE.SHORT));
+        }
+
+        dispatch(setHighlightMomentButtonState(false));
     };
 }
 
@@ -285,5 +332,29 @@ function _setPendingRecordingNotificationUid(uid: ?number, streamType: string) {
         type: SET_PENDING_RECORDING_NOTIFICATION_UID,
         streamType,
         uid
+    };
+}
+
+/**
+ * Starts local recording.
+ *
+ * @param {boolean} onlySelf - Whether to only record the local streams.
+ * @returns {Object}
+ */
+export function startLocalVideoRecording(onlySelf) {
+    return {
+        type: START_LOCAL_RECORDING,
+        onlySelf
+    };
+}
+
+/**
+ * Stops local recording.
+ *
+ * @returns {Object}
+ */
+export function stopLocalVideoRecording() {
+    return {
+        type: STOP_LOCAL_RECORDING
     };
 }

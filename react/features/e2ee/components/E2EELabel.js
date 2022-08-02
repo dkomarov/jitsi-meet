@@ -12,7 +12,7 @@ import { _mapStateToProps, type Props } from './AbstractE2EELabel';
 
 
 /**
- * React {@code Component} for displaying a label when everyone has E2EE enabled in a conferene.
+ * React {@code Component} for displaying a label when everyone has E2EE enabled in a conference.
  *
  * @augments Component
  */

@@ -104,15 +104,17 @@ export function showErrorNotification(props: Object, type: ?string) {
  * Queues a notification for display.
  *
  * @param {Object} props - The props needed to show the notification component.
- * @param {string} type - Notification type.
+ * @param {string} type - Timeout type.
  * @returns {Function}
  */
 export function showNotification(props: Object = {}, type: ?string) {
     return function(dispatch: Function, getState: Function) {
-        const { notifications, notificationTimeouts } = getState()['features/base/config'];
+        const { disabledNotifications = [], notifications, notificationTimeouts } = getState()['features/base/config'];
         const enabledFlag = getFeatureFlag(getState(), NOTIFICATIONS_ENABLED, true);
 
         const shouldDisplay = enabledFlag
+            && !(disabledNotifications.includes(props.descriptionKey)
+                || disabledNotifications.includes(props.titleKey))
             && (!notifications
                 || notifications.includes(props.descriptionKey)
                 || notifications.includes(props.titleKey));
