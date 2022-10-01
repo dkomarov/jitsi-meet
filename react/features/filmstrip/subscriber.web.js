@@ -9,14 +9,14 @@ import { setFilmstripVisible } from '../filmstrip/actions';
 import { selectParticipantInLargeVideo } from '../large-video/actions.any';
 import { getParticipantsPaneOpen } from '../participants-pane/functions';
 import { setOverflowDrawer } from '../toolbox/actions.web';
-import { getCurrentLayout, shouldDisplayTileView, LAYOUTS } from '../video-layout';
+import { LAYOUTS, getCurrentLayout, shouldDisplayTileView } from '../video-layout';
 
 import {
     clearStageParticipants,
     setHorizontalViewDimensions,
+    setScreenshareFilmstripParticipant,
     setScreensharingTileDimensions,
     setStageFilmstripViewDimensions,
-    setScreenshareFilmstripParticipant,
     setTileViewDimensions,
     setVerticalViewDimensions
 } from './actions.web';
@@ -72,11 +72,16 @@ StateListenerRegistry.register(
     },
     /* listener */ ({ layout }, store) => {
         switch (layout) {
-        case LAYOUTS.TILE_VIEW:
+        case LAYOUTS.TILE_VIEW: {
+            const { pinnedParticipant } = store.getState()['features/base/participants'];
+
+            if (pinnedParticipant) {
+                store.dispatch(pinParticipant(null));
+            }
             store.dispatch(clearStageParticipants());
-            store.dispatch(pinParticipant(null));
             store.dispatch(setTileViewDimensions());
             break;
+        }
         case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW:
             store.dispatch(setHorizontalViewDimensions());
             break;

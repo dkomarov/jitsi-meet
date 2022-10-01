@@ -11,9 +11,10 @@ import { getTrackByMediaTypeAndParticipant } from "../../base/tracks";
 import { shouldDisplayTileView } from "../../video-layout";
 
 import AbstractVideoQualityLabel, {
-    _abstractMapStateToProps,
     type Props as AbstractProps,
-} from "./AbstractVideoQualityLabel";
+    _abstractMapStateToProps
+} from './AbstractVideoQualityLabel';
+import VideoQualityDialog from './VideoQualityDialog.web';
 
 declare var interfaceConfig: Object;
 

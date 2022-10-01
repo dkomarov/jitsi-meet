@@ -18,12 +18,12 @@ import {
     isLocalTrackMuted,
     isRemoteTrackMuted
 } from '../base/tracks/functions';
-import { isTrackStreamingStatusActive, isParticipantConnectionStatusActive } from '../connection-indicator/functions';
+import { isParticipantConnectionStatusActive, isTrackStreamingStatusActive } from '../connection-indicator/functions';
 import { isSharingStatus } from '../shared-video/functions';
 import {
+    LAYOUTS,
     getCurrentLayout,
-    getNotResponsiveTileViewGridDimensions,
-    LAYOUTS
+    getNotResponsiveTileViewGridDimensions
 } from '../video-layout';
 
 import {
@@ -751,7 +751,7 @@ export function isStageFilmstripTopPanel(state, minParticipantCount = 0) {
 export function isStageFilmstripEnabled(state) {
     const { filmstrip } = state['features/base/config'];
 
-    return !(filmstrip?.disableStageFilmstrip ?? true) && interfaceConfig.VERTICAL_FILMSTRIP;
+    return !filmstrip?.disableStageFilmstrip && interfaceConfig.VERTICAL_FILMSTRIP;
 }
 
 /**
@@ -776,6 +776,24 @@ export function getThumbnailTypeFromLayout(currentLayout, filmstripType) {
 
         return THUMBNAIL_TYPE.VERTICAL;
     }
+}
+
+/**
+ * Returns the id of the participant displayed on the screen share filmstrip.
+ *
+ * @param {Object} state - Redux state.
+ * @returns {string} - The participant id.
+ */
+export function getScreenshareFilmstripParticipantId(state) {
+    const { screenshareFilmstripParticipantId } = state['features/filmstrip'];
+    const screenshares = state['features/video-layout'].remoteScreenShares;
+    let id = screenshares.find(sId => sId === screenshareFilmstripParticipantId);
+
+    if (!id && screenshares.length) {
+        id = screenshares[0];
+    }
+
+    return id;
 }
 
 /**

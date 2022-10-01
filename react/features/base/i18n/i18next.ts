@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-var
-declare var APP: any;
+declare let APP: any;
 
 import COUNTRIES_RESOURCES from 'i18n-iso-countries/langs/en.json';
 import i18next from 'i18next';
@@ -8,6 +7,7 @@ import _ from 'lodash';
 
 import LANGUAGES_RESOURCES from '../../../../lang/languages.json';
 import MAIN_RESOURCES from '../../../../lang/main.json';
+import TRANSLATION_LANGUAGES_RESOURCES from '../../../../lang/translation-languages.json';
 
 import { I18NEXT_INITIALIZED, LANGUAGE_CHANGED } from './actionTypes';
 // eslint-disable-next-line lines-around-comment
@@ -37,6 +37,22 @@ const COUNTRIES = _.merge({}, COUNTRIES_RESOURCES, COUNTRIES_RESOURCES_OVERRIDES
 export const LANGUAGES: Array<string> = Object.keys(LANGUAGES_RESOURCES);
 
 /**
+ * The available/supported translation languages.
+ *
+ * @public
+ * @type {Array<string>}
+ */
+export const TRANSLATION_LANGUAGES: Array<string> = Object.keys(TRANSLATION_LANGUAGES_RESOURCES);
+
+/**
+ * The available/supported translation languages head. (Languages displayed on the top ).
+ *
+ * @public
+ * @type {Array<string>}
+ */
+export const TRANSLATION_LANGUAGES_HEAD: Array<string> = [ 'en' ];
+
+/**
  * The default language.
  *
  * English is the default language.
@@ -61,7 +77,7 @@ const options = {
         escapeValue: false // not needed for react as it escapes by default
     },
     load: 'languageOnly',
-    ns: [ 'main', 'languages', 'countries' ],
+    ns: [ 'main', 'languages', 'countries', 'translation-languages' ],
     react: {
         // re-render when a new resource bundle is added
         bindI18nStore: 'added',
@@ -91,6 +107,12 @@ i18next.addResourceBundle(
     DEFAULT_LANGUAGE,
     'languages',
     LANGUAGES_RESOURCES,
+    /* deep */ true,
+    /* overwrite */ true);
+i18next.addResourceBundle(
+    DEFAULT_LANGUAGE,
+    'translation-languages',
+    TRANSLATION_LANGUAGES_RESOURCES,
     /* deep */ true,
     /* overwrite */ true);
 i18next.addResourceBundle(

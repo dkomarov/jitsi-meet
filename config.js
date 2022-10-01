@@ -1,9 +1,28 @@
-/* eslint-disable comma-dangle, no-unused-vars, no-var */
+/* eslint-disable comma-dangle, no-unused-vars, no-var, prefer-template, vars-on-top */
 
 /*
  * NOTE: If you add a new option please remember to document it here:
  * https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-configuration
  */
+
+var subdir = '<!--# echo var="subdir" default="" -->';
+var subdomain = '<!--# echo var="subdomain" default="" -->';
+
+if (subdomain) {
+    subdomain = subdomain.substr(0, subdomain.length - 1).split('.')
+        .join('_')
+        .toLowerCase() + '.';
+}
+
+// In case of no ssi provided by the webserver, use empty strings
+if (subdir.startsWith('<!--')) {
+    subdir = '';
+}
+if (subdomain.startsWith('<!--')) {
+    subdomain = '';
+}
+
+var enableJaaS = false;
 
 var config = {
     // Connection
@@ -23,14 +42,14 @@ var config = {
         // focus: 'focus.jitsi-meet.example.com',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
-        muc: 'conference.jitsi-meet.example.com',
+        muc: 'conference.' + subdomain + 'jitsi-meet.example.com',
     },
 
     // BOSH URL. FIXME: use XEP-0156 to discover it.
-    bosh: '//jitsi-meet.example.com/http-bind',
+    bosh: '//jitsi-meet.example.com/' + subdir + 'http-bind',
 
     // Websocket URL
-    // websocket: 'wss://jitsi-meet.example.com/xmpp-websocket',
+    // websocket: 'wss://jitsi-meet.example.com/' + subdir + 'xmpp-websocket',
 
     // The real JID of focus participant - can be overridden here
     // Do not change username - FIXME: Make focus username configurable
@@ -95,7 +114,7 @@ var config = {
 
         // Signal that this client supports receiving multiple video streams. Without this flag jicofo will enable
         // multi-stream backward compatibility.
-        receiveMultipleVideoStreams: true,
+        // receiveMultipleVideoStreams: true,
     },
 
     // Disables moderator indicators.
@@ -356,6 +375,14 @@ var config = {
     //     // Whether the feature should be enabled or not.
     //     enabled: false,
 
+    //     // Translation languages.
+    //     // Available languages can be found in
+    //     // ./src/react/features/transcribing/translation-languages.json.
+    //     translationLanguages: ['en', 'es', 'fr', 'ro'],
+
+    //     // Important languages to show on the top of the language list.
+    //     translationLanguagesHead: ['en'],
+
     //     // If true transcriber will use the application language.
     //     // The application language is either explicitly set by participants in their settings or automatically
     //     // detected based on the environment, e.g. if the app is opened in a chrome instance which
@@ -601,9 +628,6 @@ var config = {
     // Hides the email section under profile settings.
     // hideEmailInSettings: false,
 
-    // Whether or not some features are checked based on token.
-    // enableFeaturesBasedOnToken: false,
-
     // When enabled the password used for locking a room is restricted to up to the number of digits specified
     // default: roomPasswordNumberOfDigits: false,
     // roomPasswordNumberOfDigits: 10,
@@ -684,7 +708,7 @@ var config = {
     //    'chat',
     //    'closedcaptions',
     //    'desktop',
-    //    'dock-iframe'
+    //    'dock-iframe',
     //    'download',
     //    'embedmeeting',
     //    'etherpad',
@@ -719,13 +743,13 @@ var config = {
     // Holds values related to toolbar visibility control.
     // toolbarConfig: {
     //     // Moved from interfaceConfig.INITIAL_TOOLBAR_TIMEOUT
-    //     // The initial numer of miliseconds for the toolbar buttons to be visible on screen.
+    //     // The initial number of milliseconds for the toolbar buttons to be visible on screen.
     //     initialTimeout: 20000,
     //     // Moved from interfaceConfig.TOOLBAR_TIMEOUT
-    //     // Number of miliseconds for the toolbar buttons to be visible on screen.
+    //     // Number of milliseconds for the toolbar buttons to be visible on screen.
     //     timeout: 4000,
     //     // Moved from interfaceConfig.TOOLBAR_ALWAYS_VISIBLE
-    //     // Whether toolbar should be always visible or should hide after x miliseconds.
+    //     // Whether toolbar should be always visible or should hide after x milliseconds.
     //     alwaysVisible: false,
     //     // Indicates whether the toolbar should still autohide when chat is open
     //     autoHideWhileChatIsOpen: false,
@@ -808,6 +832,7 @@ var config = {
     // Application ID and Secret.
     // callStatsID: '',
     // callStatsSecret: '',
+    // callStatsApplicationLogsDisabled: false,
 
     // The callstats initialize config params as described in the API:
     // https://docs.callstats.io/docs/javascript#callstatsinitialize-with-app-secret
@@ -944,14 +969,19 @@ var config = {
         // PeerConnection states along with getStats metrics polled at the specified
         // interval.
         // rtcstatsEnabled: false,
+        // rtcstatsStoreLogs: false,
 
         // In order to enable rtcstats one needs to provide a endpoint url.
         // rtcstatsEndpoint: wss://rtcstats-server-pilot.jitsi.net/,
 
-        // The interval at which rtcstats will poll getStats, defaults to 1000ms.
+        // The interval at which rtcstats will poll getStats, defaults to 10000ms.
         // If the value is set to 0 getStats won't be polled and the rtcstats client
         // will only send data related to RTCPeerConnection events.
-        // rtcstatsPolIInterval: 1000,
+        // rtcstatsPollInterval: 10000,
+
+        // This determines if rtcstats sends the SDP to the rtcstats server or replaces
+        // all SDPs with an empty string instead.
+        // rtcstatsSendSdp: false,
 
         // Array of script URLs to load as lib-jitsi-meet "analytics handlers".
         // scriptURLs: [
@@ -1045,7 +1075,7 @@ var config = {
     //   maxConferenceSize: 200,
     //
     //   // The maximum number of e2e ping messages per second for the whole conference to aim for.
-    //   // This is used to contol the pacing of messages in order to reduce the load on the backend.
+    //   // This is used to control the pacing of messages in order to reduce the load on the backend.
     //   maxMessagesPerSecond: 250,
     // },
 
@@ -1141,7 +1171,7 @@ var config = {
         // For a list of all possible theme tokens and their current defaults, please check:
         // https://github.com/jitsi/jitsi-meet/tree/master/resources/custom-theme/custom-theme.json
         // For a short explanations on each of the tokens, please check:
-        // https://github.com/jitsi/jitsi-meet/blob/master/react/features/base/ui/Tokens.js
+        // https://github.com/jitsi/jitsi-meet/blob/master/react/features/base/ui/Tokens.ts
         // IMPORTANT!: This is work in progress so many of the various tokens are not yet applied in code
         // or they are partially applied.
         customTheme: {
@@ -1267,11 +1297,6 @@ var config = {
     // {"countryCode":"US","tollFree":false,"formattedNumber":"+1 123-456-7890"}
     // dialInConfCodeUrl is the conference mapper converting a meeting id to a PIN used for dial-in
     // or the other way around (more info in resources/cloud-api.swagger)
-    //
-    // For JaaS customers the default values are:
-    // dialInNumbersUrl: 'https://conference-mapper.jitsi.net/v1/access/dids',
-    // dialInConfCodeUrl: 'https://conference-mapper.jitsi.net/v1/access',
-    //
 
     // List of undocumented settings used in jitsi-meet
     /**
@@ -1372,6 +1397,7 @@ var config = {
     //     'notify.leftTwoMembers', // show when two participants left simultaneously
     //     'notify.leftThreePlusMembers', // show when more than 2 participants left simultaneously
     //     'notify.grantedTo', // shown when moderator rights were granted to a participant
+    //     'notify.hostAskedUnmute', // shown to participant when host asks them to unmute
     //     'notify.invitedOneMember', // shown when 1 participant has been invited
     //     'notify.invitedThreePlusMembers', // shown when 3+ participants have been invited
     //     'notify.invitedTwoMembers', // shown when 2 participants have been invited
@@ -1392,7 +1418,7 @@ var config = {
     //     'notify.raisedHand', // shown when a partcipant used raise hand,
     //     'notify.startSilentTitle', // shown when user joined with no audio
     //     'notify.unmute', // shown to moderator when user raises hand during AV moderation
-    //     'notify.hostAskedUnmute', // shown to participant when host asks them to unmute
+    //     'notify.videoMutedRemotelyTitle', // shown when user's video is muted by a remote party,
     //     'prejoin.errorDialOut',
     //     'prejoin.errorDialOutDisconnected',
     //     'prejoin.errorDialOutFailed',
@@ -1423,6 +1449,10 @@ var config = {
     //     // (displaying multiple participants on stage besides the vertical filmstrip)
     //     disableStageFilmstrip: false,
 
+    //     // Default number of participants that can be displayed on stage.
+    //     // The user can change this in settings. Number must be between 1 and 6.
+    //     stageFilmstripParticipants: 1,
+
     //     // Disables the top panel (only shown when a user is sharing their screen).
     //     disableTopPanel: false,
 
@@ -1452,7 +1482,40 @@ var config = {
     //     // - chat: show the GIF as a message in chat
     //     // - all: all of the above. This is the default option
     //     displayMode: 'all',
-    //     // How long the GIF should be displayed on the tile (in miliseconds).
+    //     // How long the GIF should be displayed on the tile (in milliseconds).
     //     tileTime: 5000,
     // },
+
+    // Logging
+    // logging: {
+    //      // Default log level for the app and lib-jitsi-meet.
+    //      defaultLogLevel: 'trace',
+    //      // Option to disable LogCollector (which stores the logs on CallStats).
+    //      //disableLogCollector: true,
+    //      // Individual loggers are customizable.
+    //      loggers: {
+    //      // The following are too verbose in their logging with the default level.
+    //      'modules/RTC/TraceablePeerConnection.js': 'info',
+    //      'modules/statistics/CallStats.js': 'info',
+    //      'modules/xmpp/strophe.util.js': 'log',
+    // },
+
+    // Application logo url
+    // defaultLogoUrl: 'images/watermark.svg',
+
+    // Settings for the Excalidraw whiteboard integration.
+    // whiteboard: {
+    //     // Whether the feature is enabled or not.
+    //     enabled: true,
+    //     // The server used to support whiteboard collaboration.
+    //     // https://github.com/jitsi/excalidraw-backend
+    //     collabServerBaseUrl: 'https://excalidraw-backend.example.com',
+    // },
 };
+
+// Set the default values for JaaS customers
+if (enableJaaS) {
+    config.dialInNumbersUrl = 'https://conference-mapper.jitsi.net/v1/access/dids';
+    config.dialInConfCodeUrl = 'https://conference-mapper.jitsi.net/v1/access';
+    config.roomPasswordNumberOfDigits = 10; // skip re-adding it (do not remove comment)
+}

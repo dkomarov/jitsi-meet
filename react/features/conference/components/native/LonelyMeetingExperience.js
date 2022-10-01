@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Text, View } from 'react-native';
 
-import { getFeatureFlag, INVITE_ENABLED } from '../../../base/flags';
+import { INVITE_ENABLED, getFeatureFlag } from '../../../base/flags';
 import { translate } from '../../../base/i18n';
 import { Icon, IconAddPeople } from '../../../base/icons';
 import { getParticipantCountWithFake } from '../../../base/participants';
@@ -21,7 +21,7 @@ type Props = {
     /**
      * True if currently in a breakout room.
      */
-     _isInBreakoutRoom: boolean,
+    _isInBreakoutRoom: boolean,
 
     /**
      * True if the invite functions (dial out, invite, share...etc) are disabled.
@@ -98,8 +98,8 @@ class LonelyMeetingExperience extends PureComponent<Props> {
                     <Button
                         accessibilityLabel = 'lonelyMeetingExperience.button'
                         icon = { this._renderAddPeopleIcon }
-                        label = 'lonelyMeetingExperience.button'
-                        onPress = { this._onPress }
+                        labelKey = 'lonelyMeetingExperience.button'
+                        onClick = { this._onPress }
                         style = { styles.lonelyButton }
                         type = { BUTTON_TYPES.PRIMARY } />
                 ) }

@@ -5,18 +5,18 @@ import { batch } from 'react-redux';
 import VideoLayout from '../../../modules/UI/videolayout/VideoLayout';
 import {
     DOMINANT_SPEAKER_CHANGED,
+    PARTICIPANT_JOINED,
+    PARTICIPANT_LEFT,
     getDominantSpeakerParticipant,
     getLocalParticipant,
-    getLocalScreenShareParticipant,
-    PARTICIPANT_JOINED,
-    PARTICIPANT_LEFT
+    getLocalScreenShareParticipant
 } from '../base/participants';
 import { MiddlewareRegistry } from '../base/redux';
 import { CLIENT_RESIZED } from '../base/responsive-ui';
 import { SETTINGS_UPDATED } from '../base/settings';
 import {
-    getCurrentLayout,
     LAYOUTS,
+    getCurrentLayout,
     setTileView
 } from '../video-layout';
 
@@ -24,7 +24,7 @@ import {
     ADD_STAGE_PARTICIPANT,
     CLEAR_STAGE_PARTICIPANTS,
     REMOVE_STAGE_PARTICIPANT,
-    SET_MAX_STAGE_PARTICIPANTS,
+    RESIZE_FILMSTRIP,
     SET_USER_FILMSTRIP_WIDTH,
     TOGGLE_PIN_STAGE_PARTICIPANT
 } from './actionTypes';
@@ -45,13 +45,13 @@ import {
     TOP_FILMSTRIP_HEIGHT
 } from './constants';
 import {
-    isFilmstripResizable,
-    isTopPanelEnabled,
-    isStageFilmstripAvailable,
-    updateRemoteParticipants,
-    updateRemoteParticipantsOnLeave,
     getActiveParticipantsIds,
-    getPinnedActiveParticipants
+    getPinnedActiveParticipants,
+    isFilmstripResizable,
+    isStageFilmstripAvailable,
+    isStageFilmstripTopPanel,
+    updateRemoteParticipants,
+    updateRemoteParticipantsOnLeave
 } from './functions.web';
 import './subscriber';
 
@@ -136,17 +136,38 @@ MiddlewareRegistry.register(store => next => action => {
                 }
             }
         }
+        if (action.settings?.maxStageParticipants !== undefined) {
+            const maxParticipants = action.settings.maxStageParticipants;
+            const { activeParticipants } = store.getState()['features/filmstrip'];
+            const newMax = Math.min(MAX_ACTIVE_PARTICIPANTS, maxParticipants);
+
+            if (newMax < activeParticipants.length) {
+                const toRemove = activeParticipants.slice(0, activeParticipants.length - newMax);
+
+                batch(() => {
+                    toRemove.forEach(p => store.dispatch(removeStageParticipant(p.participantId)));
+                });
+            }
+        }
         break;
     }
     case SET_USER_FILMSTRIP_WIDTH: {
         VideoLayout.refreshLayout();
         break;
     }
+    case RESIZE_FILMSTRIP: {
+        const { width = 0 } = action;
+
+        store.dispatch(setFilmstripWidth(width));
+
+        break;
+    }
     case ADD_STAGE_PARTICIPANT: {
         const { dispatch, getState } = store;
         const { participantId, pinned } = action;
         const state = getState();
-        const { activeParticipants, maxStageParticipants } = state['features/filmstrip'];
+        const { activeParticipants } = state['features/filmstrip'];
+        const { maxStageParticipants } = state['features/base/settings'];
         let queue;
 
         if (activeParticipants.find(p => p.participantId === participantId)) {
@@ -228,8 +249,9 @@ MiddlewareRegistry.register(store => next => action => {
         const stageFilmstrip = isStageFilmstripAvailable(state);
         const local = getLocalParticipant(state);
         const currentLayout = getCurrentLayout(state);
+        const dominantSpeaker = getDominantSpeakerParticipant(state);
 
-        if (id === local.id || currentLayout === LAYOUTS.TILE_VIEW) {
+        if (dominantSpeaker?.id === id || id === local.id || currentLayout === LAYOUTS.TILE_VIEW) {
             break;
         }
 
@@ -255,22 +277,6 @@ MiddlewareRegistry.register(store => next => action => {
         }
         break;
     }
-    case SET_MAX_STAGE_PARTICIPANTS: {
-        const { maxParticipants } = action;
-        const { activeParticipants } = store.getState()['features/filmstrip'];
-        const newMax = Math.min(MAX_ACTIVE_PARTICIPANTS, maxParticipants);
-
-        action.maxParticipants = newMax;
-
-        if (newMax < activeParticipants.length) {
-            const toRemove = activeParticipants.slice(0, activeParticipants.length - newMax);
-
-            batch(() => {
-                toRemove.forEach(p => store.dispatch(removeStageParticipant(p.participantId)));
-            });
-        }
-        break;
-    }
     case TOGGLE_PIN_STAGE_PARTICIPANT: {
         const { dispatch, getState } = store;
         const state = getState();
@@ -278,7 +284,7 @@ MiddlewareRegistry.register(store => next => action => {
         const pinnedParticipants = getPinnedActiveParticipants(state);
         const dominant = getDominantSpeakerParticipant(state);
 
-        if (isTopPanelEnabled(state)) {
+        if (isStageFilmstripTopPanel(state, 2)) {
             const screenshares = state['features/video-layout'].remoteScreenShares;
 
             if (screenshares.find(sId => sId === participantId)) {

@@ -1,64 +1,59 @@
 /* eslint-disable lines-around-comment */
 import React, { Component } from 'react';
+import { WithTranslation } from 'react-i18next';
 import type { Dispatch } from 'redux';
 
-// @ts-ignore
-import { createE2EEEvent, sendAnalytics } from '../../analytics';
-// @ts-ignore
-import { translate } from '../../base/i18n';
+import { createE2EEEvent } from '../../analytics/AnalyticsEvents';
+import { sendAnalytics } from '../../analytics/functions';
+import { IState } from '../../app/types';
+import { translate } from '../../base/i18n/functions';
 import { connect } from '../../base/redux/functions';
 import Switch from '../../base/ui/components/web/Switch';
 // @ts-ignore
 import { toggleE2EE } from '../actions';
-// @ts-ignore
 import { MAX_MODE } from '../constants';
 // @ts-ignore
 import { doesEveryoneSupportE2EE } from '../functions';
 
-type Props = {
+interface Props extends WithTranslation {
 
     /**
      * The resource for the description, computed based on the maxMode and whether the switch is toggled or not.
      */
-    _descriptionResource: string,
+    _descriptionResource: string;
 
     /**
      * Custom e2ee labels.
      */
-    _e2eeLabels: any,
+    _e2eeLabels: any;
 
     /**
      * Whether the switch is currently enabled or not.
      */
-    _enabled: boolean,
+    _enabled: boolean;
 
     /**
      * Indicates whether all participants in the conference currently support E2EE.
      */
-    _everyoneSupportE2EE: boolean,
+    _everyoneSupportE2EE: boolean;
 
     /**
      * Whether E2EE is currently enabled or not.
      */
-    _toggled: boolean,
+    _toggled: boolean;
 
     /**
      * The redux {@code dispatch} function.
      */
-    dispatch: Dispatch<any>,
-
-    /**
-     * Invoked to obtain translated strings.
-     */
-    t: Function
-};
+    dispatch: Dispatch<any>;
+}
 
 type State = {
 
     /**
      * True if the switch is toggled on.
      */
-    toggled: boolean
+    toggled: boolean;
 };
 
 /**
@@ -162,11 +157,11 @@ class E2EESection extends Component<Props, State> {
  * @private
  * @returns {Props}
  */
-function mapStateToProps(state: any) {
+function mapStateToProps(state: IState) {
     const { enabled: e2eeEnabled, maxMode } = state['features/e2ee'];
     const { e2eeLabels } = state['features/base/config'];
 
-    let descriptionResource: string|undefined = '';
+    let descriptionResource: string | undefined = '';
 
     if (e2eeLabels) {
         // When e2eeLabels are present, the descriptionResouse is ignored.

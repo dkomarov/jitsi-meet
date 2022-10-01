@@ -1,23 +1,20 @@
 /* eslint-disable lines-around-comment */
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@mui/styles';
 import React, { Component } from 'react';
-import { batch, connect } from 'react-redux';
+import { WithTranslation } from 'react-i18next';
+import { batch } from 'react-redux';
 
-// @ts-ignore
+import { IState } from '../../../app/types';
 import ContextMenu from '../../../base/components/context-menu/ContextMenu';
-// @ts-ignore
 import ContextMenuItemGroup from '../../../base/components/context-menu/ContextMenuItemGroup';
-// @ts-ignore
 import { isMobileBrowser } from '../../../base/environment/utils';
 // @ts-ignore
 import { translate } from '../../../base/i18n';
-import { IconHorizontalPoints } from '../../../base/icons/svg/index';
-import {
-    getLocalParticipant
-    // @ts-ignore
-} from '../../../base/participants';
+import { IconHorizontalPoints } from '../../../base/icons/svg';
+import { getLocalParticipant } from '../../../base/participants/functions';
 // @ts-ignore
 import { Popover } from '../../../base/popover';
+import { connect } from '../../../base/redux/functions';
 // @ts-ignore
 import { setParticipantContextMenuOpen } from '../../../base/responsive-ui/actions';
 // @ts-ignore
@@ -27,8 +24,7 @@ import { getLocalVideoTrack } from '../../../base/tracks';
 import Button from '../../../base/ui/components/web/Button';
 // @ts-ignore
 import ConnectionIndicatorContent from '../../../connection-indicator/components/web/ConnectionIndicatorContent';
-// @ts-ignore
-import { THUMBNAIL_TYPE } from '../../../filmstrip';
+import { THUMBNAIL_TYPE } from '../../../filmstrip/constants';
 // @ts-ignore
 import { isStageFilmstripAvailable } from '../../../filmstrip/functions.web';
 // @ts-ignore
@@ -47,85 +43,80 @@ import TogglePinToStageButton from './TogglePinToStageButton';
  * The type of the React {@code Component} props of
  * {@link LocalVideoMenuTriggerButton}.
  */
-type Props = {
+interface Props extends WithTranslation {
 
     /**
      * The id of the local participant.
      */
-    _localParticipantId: string,
+    _localParticipantId: string;
 
     /**
      * The position relative to the trigger the local video menu should display
      * from. Valid values are those supported by AtlasKit
      * {@code InlineDialog}.
      */
-    _menuPosition: string,
+    _menuPosition: string;
 
     /**
      * Whether to display the Popover as a drawer.
      */
-    _overflowDrawer: boolean,
+    _overflowDrawer: boolean;
 
     /**
      * Whether to render the connection info pane.
      */
-    _showConnectionInfo: boolean,
+    _showConnectionInfo: boolean;
 
     /**
      * Whether to render the hide self view button.
      */
-    _showHideSelfViewButton: boolean,
+    _showHideSelfViewButton: boolean;
 
     /**
      * Shows/hides the local video flip button.
      */
-    _showLocalVideoFlipButton: boolean,
+    _showLocalVideoFlipButton: boolean;
 
     /**
      * Whether to render the pin to stage button.
      */
-    _showPinToStage: boolean,
+    _showPinToStage: boolean;
 
     /**
      * Whether or not the button should be visible.
      */
-    buttonVisible: boolean,
+    buttonVisible: boolean;
 
     /**
      * An object containing the CSS classes.
      */
-    classes: any,
+    classes: any;
 
     /**
      * The redux dispatch function.
      */
-    dispatch: Function,
+    dispatch: Function;
 
     /**
      * Hides popover.
      */
-    hidePopover: Function,
+    hidePopover: Function;
 
     /**
      * Whether the popover is visible or not.
      */
-    popoverVisible: boolean,
+    popoverVisible: boolean;
 
     /**
      * Shows popover.
      */
-    showPopover: Function,
-
-    /**
-     * Invoked to obtain translated strings.
-     */
-    t: Function,
+    showPopover: Function;
 
     /**
      * The type of the thumbnail.
      */
-    thumbnailType: string
-};
+    thumbnailType: string;
+}
 
 const styles = () => {
     return {
@@ -135,7 +126,7 @@ const styles = () => {
         },
 
         contextMenu: {
-            position: 'relative',
+            position: 'relative' as const,
             marginTop: 0,
             right: 'auto',
             padding: '0',
@@ -282,7 +273,7 @@ class LocalVideoMenuTriggerButton extends Component<Props> {
  * @private
  * @returns {Props}
  */
-function _mapStateToProps(state: any, ownProps: Partial<Props>) {
+function _mapStateToProps(state: IState, ownProps: Partial<Props>) {
     const { thumbnailType } = ownProps;
     const localParticipant = getLocalParticipant(state);
     const { disableLocalVideoFlip, disableSelfViewSettings } = state['features/base/config'];
@@ -312,11 +303,10 @@ function _mapStateToProps(state: any, ownProps: Partial<Props>) {
         _showLocalVideoFlipButton: !disableLocalVideoFlip && videoTrack?.videoType !== 'desktop',
         _showHideSelfViewButton: showHideSelfViewButton,
         _overflowDrawer: overflowDrawer,
-        _localParticipantId: localParticipant.id,
+        _localParticipantId: localParticipant?.id,
         _showConnectionInfo: showConnectionInfo,
         _showPinToStage: isStageFilmstripAvailable(state)
     };
 }
 
-// @ts-ignore
 export default translate(connect(_mapStateToProps)(withStyles(styles)(LocalVideoMenuTriggerButton)));

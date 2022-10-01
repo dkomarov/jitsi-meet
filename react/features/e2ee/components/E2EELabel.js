@@ -8,7 +8,7 @@ import { Label } from '../../base/label';
 import { connect } from '../../base/redux';
 import { Tooltip } from '../../base/tooltip';
 
-import { _mapStateToProps, type Props } from './AbstractE2EELabel';
+import { type Props, _mapStateToProps } from './AbstractE2EELabel';
 
 
 /**

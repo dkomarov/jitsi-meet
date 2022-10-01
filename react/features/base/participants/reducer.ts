@@ -18,8 +18,8 @@ import {
     SET_LOADABLE_AVATAR_URL
 } from './actionTypes';
 import { LOCAL_PARTICIPANT_DEFAULT_ID, PARTICIPANT_ROLE } from './constants';
-// @ts-ignore
 import { isParticipantModerator } from './functions';
+import { LocalParticipant, Participant } from './types';
 
 /**
  * Participant object.
@@ -37,43 +37,6 @@ import { isParticipantModerator } from './functions';
  * {@code false}.
  * @property {string} email - Participant email.
  */
-
-interface Participant {
-    avatarURL?: string;
-    botType?: string;
-    conference?: Object;
-    connectionStatus?: string;
-    dominantSpeaker?: boolean;
-    e2eeSupported?: boolean;
-    email?: string;
-    features?: {
-        'screen-sharing'?: boolean;
-    };
-    id: string;
-    isFakeParticipant?: boolean;
-    isJigasi?: boolean;
-    isLocalScreenShare?: boolean;
-    isReplacing?: number;
-    isVirtualScreenshareParticipant?: boolean;
-    loadableAvatarUrl?: string;
-    loadableAvatarUrlUseCORS?: boolean;
-    local?: boolean;
-    name: string;
-    pinned?: boolean;
-    presence?: string;
-    role?: string;
-    supportsRemoteControl?: boolean;
-}
-
-interface LocalParticipant extends Participant {
-    audioOutputDeviceId?: string;
-    cameraDeviceId?: string;
-    micDeviceId?: string;
-    startWithAudioMuted?: boolean;
-    startWithVideoMuted?: boolean;
-    userSelectedMicDeviceId?: string;
-    userSelectedMicDeviceLabel?: string;
-}
 
 /**
  * The participant properties which cannot be updated through
@@ -99,7 +62,6 @@ const DEFAULT_STATE = {
     dominantSpeaker: undefined,
     everyoneIsModerator: false,
     fakeParticipants: new Map(),
-    haveParticipantWithScreenSharingFeature: false,
     local: undefined,
     localScreenShare: undefined,
     overwrittenNameList: {},
@@ -116,12 +78,11 @@ export interface IParticipantsState {
     dominantSpeaker?: string;
     everyoneIsModerator: boolean;
     fakeParticipants: Map<string, Participant>;
-    haveParticipantWithScreenSharingFeature: boolean;
     local?: LocalParticipant;
     localScreenShare?: Participant;
-    overwrittenNameList: Object;
+    overwrittenNameList: { [id: string]: string; };
     pinnedParticipant?: string;
-    raisedHandsQueue: Array<{ id: string; raisedHandTimestamp: number;}>;
+    raisedHandsQueue: Array<{ id: string; raisedHandTimestamp: number; }>;
     remote: Map<string, Participant>;
     sortedRemoteParticipants: Map<string, string>;
     sortedRemoteScreenshares: Map<string, string>;
@@ -140,7 +101,8 @@ export interface IParticipantsState {
  * added/removed/modified.
  * @returns {Participant[]}
  */
-ReducerRegistry.register('features/base/participants', (state: IParticipantsState = DEFAULT_STATE, action) => {
+ReducerRegistry.register<IParticipantsState>('features/base/participants',
+(state = DEFAULT_STATE, action): IParticipantsState => {
     switch (action.type) {
     case PARTICIPANT_ID_CHANGED: {
         const { local } = state;
@@ -234,7 +196,7 @@ ReducerRegistry.register('features/base/participants', (state: IParticipantsStat
             id = LOCAL_PARTICIPANT_DEFAULT_ID;
         }
 
-        let newParticipant: Participant|null = null;
+        let newParticipant: Participant | null = null;
 
         if (state.remote.has(id)) {
             newParticipant = _participant(state.remote.get(id), action);
@@ -252,14 +214,6 @@ ReducerRegistry.register('features/base/participants', (state: IParticipantsStat
                 state.everyoneIsModerator = false;
             } else if (!state.everyoneIsModerator && isModerator) {
                 state.everyoneIsModerator = _isEveryoneModerator(state);
-            }
-
-            // haveParticipantWithScreenSharingFeature calculation:
-            const { features = {} } = participant;
-
-            // Currently we use only PARTICIPANT_UPDATED to set a feature to enabled and we never disable it.
-            if (String(features['screen-sharing']) === 'true') {
-                state.haveParticipantWithScreenSharingFeature = true;
             }
         }
 
@@ -349,7 +303,7 @@ ReducerRegistry.register('features/base/participants', (state: IParticipantsStat
         if (isVirtualScreenshareParticipant) {
             const sortedRemoteVirtualScreenshareParticipants = [ ...state.sortedRemoteVirtualScreenshareParticipants ];
 
-            sortedRemoteVirtualScreenshareParticipants.push([ id, name ]);
+            sortedRemoteVirtualScreenshareParticipants.push([ id, name ?? '' ]);
             sortedRemoteVirtualScreenshareParticipants.sort((a, b) => a[1].localeCompare(b[1]));
 
             state.sortedRemoteVirtualScreenshareParticipants = new Map(sortedRemoteVirtualScreenshareParticipants);
@@ -397,26 +351,6 @@ ReducerRegistry.register('features/base/participants', (state: IParticipantsStat
 
         if (!state.everyoneIsModerator && !isParticipantModerator(oldParticipant)) {
             state.everyoneIsModerator = _isEveryoneModerator(state);
-        }
-
-        const { features = {} } = oldParticipant || {};
-
-        if (state.haveParticipantWithScreenSharingFeature && String(features['screen-sharing']) === 'true') {
-            const { features: localFeatures = {} } = state.local || {};
-
-            if (String(localFeatures['screen-sharing']) !== 'true') {
-                state.haveParticipantWithScreenSharingFeature = false;
-
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                for (const [ key, participant ] of state.remote) {
-                    const { features: f = {} } = participant;
-
-                    if (String(f['screen-sharing']) === 'true') {
-                        state.haveParticipantWithScreenSharingFeature = true;
-                        break;
-                    }
-                }
-            }
         }
 
         if (dominantSpeaker === id) {
@@ -532,9 +466,7 @@ function _isEveryoneModerator(state: IParticipantsState) {
  * @private
  * @returns {Participant}
  */
-function _participant(state: Participant|LocalParticipant = {
-    id: '',
-    name: '' }, action: any): Participant|LocalParticipant {
+function _participant(state: Participant | LocalParticipant = { id: '' }, action: any): Participant | LocalParticipant {
     switch (action.type) {
     case SET_LOADABLE_AVATAR_URL:
     case PARTICIPANT_UPDATED: {
@@ -570,7 +502,7 @@ function _participant(state: Participant|LocalParticipant = {
  * base/participants after the reduction of the specified
  * {@code action}.
  */
-function _participantJoined({ participant }: {participant: Participant}) {
+function _participantJoined({ participant }: { participant: Participant; }) {
     const {
         avatarURL,
         botType,
@@ -582,6 +514,7 @@ function _participantJoined({ participant }: {participant: Participant}) {
         isLocalScreenShare,
         isReplacing,
         isJigasi,
+        isWhiteboard,
         loadableAvatarUrl,
         local,
         name,
@@ -616,6 +549,7 @@ function _participantJoined({ participant }: {participant: Participant}) {
         isLocalScreenShare,
         isReplacing,
         isJigasi,
+        isWhiteboard,
         loadableAvatarUrl,
         local: local || false,
         name,

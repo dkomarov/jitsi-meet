@@ -52,6 +52,7 @@ const commands = {
     pinParticipant: 'pin-participant',
     rejectParticipant: 'reject-participant',
     removeBreakoutRoom: 'remove-breakout-room',
+    resizeFilmStrip: 'resize-film-strip',
     resizeLargeVideo: 'resize-large-video',
     sendChatMessage: 'send-chat-message',
     sendEndpointTextMessage: 'send-endpoint-text-message',
@@ -60,6 +61,7 @@ const commands = {
     setFollowMe: 'set-follow-me',
     setLargeVideoParticipant: 'set-large-video-participant',
     setMediaEncryptionKey: 'set-media-encryption-key',
+    setNoiseSuppressionEnabled: 'set-noise-suppression-enabled',
     setParticipantVolume: 'set-participant-volume',
     setSubtitles: 'set-subtitles',
     setTileView: 'set-tile-view',
@@ -79,9 +81,9 @@ const commands = {
     toggleFilmStrip: 'toggle-film-strip',
     toggleLobby: 'toggle-lobby',
     toggleModeration: 'toggle-moderation',
+    toggleNoiseSuppression: 'toggle-noise-suppression',
     toggleParticipantsPane: 'toggle-participants-pane',
     toggleRaiseHand: 'toggle-raise-hand',
-    toggleShareAudio: 'toggle-share-audio',
     toggleShareScreen: 'toggle-share-screen',
     toggleSubtitles: 'toggle-subtitles',
     toggleTileView: 'toggle-tile-view',
@@ -97,6 +99,7 @@ const events = {
     'avatar-changed': 'avatarChanged',
     'audio-availability-changed': 'audioAvailabilityChanged',
     'audio-mute-status-changed': 'audioMuteStatusChanged',
+    'audio-or-video-sharing-toggled': 'audioOrVideoSharingToggled',
     'breakout-rooms-updated': 'breakoutRoomsUpdated',
     'browser-support': 'browserSupport',
     'camera-error': 'cameraError',
@@ -130,6 +133,7 @@ const events = {
     'participant-role-changed': 'participantRoleChanged',
     'participants-pane-toggled': 'participantsPaneToggled',
     'password-required': 'passwordRequired',
+    'prejoin-screen-loaded': 'prejoinScreenLoaded',
     'proxy-connection-event': 'proxyConnectionEvent',
     'raise-hand-updated': 'raiseHandUpdated',
     'recording-link-available': 'recordingLinkAvailable',
@@ -354,7 +358,8 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             this.invite(invitees);
         }
         this._tmpE2EEKey = e2eeKey;
-        this._isLargeVideoVisible = true;
+        this._isLargeVideoVisible = false;
+        this._isPrejoinVideoVisible = false;
         this._numberOfParticipants = 0;
         this._participants = {};
         this._myUserID = undefined;
@@ -463,6 +468,24 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
     }
 
     /**
+     * Getter for the prejoin video element in Jitsi Meet.
+     *
+     * @returns {HTMLElement|undefined} - The prejoin video.
+     */
+    _getPrejoinVideo() {
+        const iframe = this.getIFrame();
+
+        if (!this._isPrejoinVideoVisible
+                || !iframe
+                || !iframe.contentWindow
+                || !iframe.contentWindow.document) {
+            return;
+        }
+
+        return iframe.contentWindow.document.getElementById('prejoinVideo');
+    }
+
+    /**
      * Getter for participant specific video element in Jitsi Meet.
      *
      * @param {string|undefined} participantId - Id of participant to return the video for.
@@ -530,6 +553,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
 
                 this._myUserID = userID;
                 this._participants[userID] = {
+                    email: data.email,
                     avatarURL: data.avatarURL
                 };
             }
@@ -580,12 +604,25 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
                 this._isLargeVideoVisible = data.isVisible;
                 this.emit('largeVideoChanged');
                 break;
+            case 'prejoin-screen-loaded':
+                this._participants[userID] = {
+                    displayName: data.displayName,
+                    formattedDisplayName: data.formattedDisplayName
+                };
+                break;
+            case 'on-prejoin-video-changed':
+                this._isPrejoinVideoVisible = data.isVisible;
+                this.emit('prejoinVideoChanged');
+                break;
             case 'video-conference-left':
                 changeParticipantNumber(this, -1);
                 delete this._participants[this._myUserID];
                 break;
             case 'video-quality-changed':
                 this._videoQuality = data.videoQuality;
+                break;
+            case 'breakout-rooms-updated':
+                this.updateNumberOfParticipants(data.rooms);
                 break;
             case 'local-storage-changed':
                 jitsiLocalStorage.setItem('jitsiLocalStorage', data.localStorageContent);
@@ -603,6 +640,40 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             }
 
             return false;
+        });
+    }
+
+    /**
+     * Update number of participants based on all rooms.
+     *
+     * @param {Object} rooms - Rooms available rooms in the conference.
+     * @returns {void}
+     */
+    updateNumberOfParticipants(rooms) {
+        if (!rooms || !Object.keys(rooms).length) {
+            return;
+        }
+
+        const allParticipants = Object.keys(rooms).reduce((prev, roomItemKey) => {
+            if (rooms[roomItemKey]?.participants) {
+                return Object.keys(rooms[roomItemKey].participants).length + prev;
+            }
+
+            return prev;
+        }, 0);
+
+        this._numberOfParticipants = allParticipants;
+    }
+
+
+    /**
+     * Returns the rooms info in the conference.
+     *
+     * @returns {Object} Rooms info.
+     */
+    async getRoomsInfo() {
+        return this._transport.sendRequest({
+            name: 'rooms-info'
         });
     }
 
@@ -1069,7 +1140,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
     }
 
     /**
-     * Returns the number of participants in the conference. The local
+     * Returns the number of participants in the conference from all rooms. The local
      * participant is included.
      *
      * @returns {int} The number of participants in the conference.

@@ -3,11 +3,8 @@
 import InlineDialog from '@atlaskit/inline-dialog';
 import React, { Component } from 'react';
 
-import { LoginDialog, WaitForOwnerDialog } from '../../authentication/components';
 import { Avatar } from '../../base/avatar';
-import { getRoomName } from '../../base/conference';
 import { isNameReadOnly } from '../../base/config';
-import { isDialogOpen } from '../../base/dialog/functions';
 import { translate } from '../../base/i18n';
 import { IconArrowDown, IconArrowUp, IconPhone, IconVolumeOff } from '../../base/icons';
 import { isVideoMutedByUser } from '../../base/media';
@@ -16,8 +13,6 @@ import { ActionButton, InputField, PreMeetingScreen } from '../../base/premeetin
 import { connect } from '../../base/redux';
 import { getDisplayName, updateSettings } from '../../base/settings';
 import { getLocalJitsiVideoTrack } from '../../base/tracks';
-import { getIsLobbyVisible } from '../../lobby/functions';
-import { PasswordRequiredPrompt } from '../../room-lock/components';
 import {
     joinConference as joinConferenceAction,
     joinConferenceWithoutAudio as joinConferenceWithoutAudioAction,
@@ -50,11 +45,6 @@ type Props = {
      * If join by phone button should be visible.
      */
     hasJoinByPhoneButton: boolean,
-
-    /**
-     * Whether authentication is taking place or not.
-     */
-    isAuthInProgress: boolean,
 
     /**
      * Joins the current meeting.
@@ -90,11 +80,6 @@ type Props = {
      * Whether the name input should be read only or not.
      */
     readOnlyName: boolean,
-
-    /**
-     * The name of the meeting that is about to be joined.
-     */
-    roomName: string,
 
     /**
      * Sets visibility of the 'JoinByPhoneDialog'.
@@ -351,7 +336,6 @@ class Prejoin extends Component<Props, State> {
         const {
             deviceStatusVisible,
             hasJoinByPhoneButton,
-            isAuthInProgress,
             joinConference,
             joinConferenceWithoutAudio,
             name,
@@ -388,7 +372,7 @@ class Prejoin extends Component<Props, State> {
                     data-testid = 'prejoin.screen'>
                     {this.showDisplayNameField ? (<InputField
                         autoComplete = { 'name' }
-                        autoFocus = { !isAuthInProgress }
+                        autoFocus = { true }
                         className = { showError ? 'error' : '' }
                         hasError = { showError }
                         onChange = { _setName }
@@ -460,21 +444,15 @@ function mapStateToProps(state): Object {
     const name = getDisplayName(state);
     const showErrorOnJoin = isDisplayNameRequired(state) && !name;
     const { id: participantId } = getLocalParticipant(state);
-    const isLobbyVisible = getIsLobbyVisible(state);
-    const isAuthInProgress = isDialogOpen(state, WaitForOwnerDialog)
-        || isDialogOpen(state, LoginDialog) || isDialogOpen(state, PasswordRequiredPrompt)
-        || isLobbyVisible;
 
     return {
         canEditDisplayName: isPrejoinDisplayNameVisible(state),
         deviceStatusVisible: isDeviceStatusVisible(state),
         hasJoinByPhoneButton: isJoinByPhoneButtonVisible(state),
-        isAuthInProgress,
         name,
         participantId,
         prejoinConfig: state['features/base/config'].prejoinConfig,
         readOnlyName: isNameReadOnly(state),
-        roomName: getRoomName(state),
         showCameraPreview: !isVideoMutedByUser(state),
         showDialog: isJoinByPhoneDialogVisible(state),
         showErrorOnJoin,

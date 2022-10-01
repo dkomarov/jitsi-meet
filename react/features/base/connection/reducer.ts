@@ -1,11 +1,8 @@
-/* eslint-disable import/order */
-
+/* eslint-disable lines-around-comment */
 import { SET_ROOM } from '../conference/actionTypes';
-
-// @ts-ignore
 import { JitsiConnectionErrors } from '../lib-jitsi-meet';
-import { assign, set } from '../redux/functions';
 import ReducerRegistry from '../redux/ReducerRegistry';
+import { assign, set } from '../redux/functions';
 
 import {
     CONNECTION_DISCONNECTED,
@@ -15,13 +12,14 @@ import {
     SET_LOCATION_URL,
     SHOW_CONNECTION_INFO
 } from './actionTypes';
-
-// @ts-ignore
 import { ConnectionFailedError } from './actions.native';
 
 export interface IConnectionState {
     connecting?: Object;
-    connection?: Object;
+    connection?: {
+        getJid: () => string;
+        getLogs: () => Object;
+    };
     error?: ConnectionFailedError;
     locationURL?: URL;
     passwordRequired?: Object;
@@ -32,9 +30,9 @@ export interface IConnectionState {
 /**
  * Reduces the Redux actions of the feature base/connection.
  */
-ReducerRegistry.register(
+ReducerRegistry.register<IConnectionState>(
     'features/base/connection',
-    (state: IConnectionState = {}, action: any) => {
+    (state = {}, action): IConnectionState => {
         switch (action.type) {
         case CONNECTION_DISCONNECTED:
             return _connectionDisconnected(state, action);
@@ -73,7 +71,7 @@ ReducerRegistry.register(
  */
 function _connectionDisconnected(
         state: IConnectionState,
-        { connection }: { connection: Object }) {
+        { connection }: { connection: Object; }) {
     const connection_ = _getCurrentConnection(state);
 
     if (connection_ !== connection) {
@@ -100,8 +98,8 @@ function _connectionDisconnected(
 function _connectionEstablished(
         state: IConnectionState,
         { connection, timeEstablished }: {
-            connection: Object,
-            timeEstablished: number
+            connection: any;
+            timeEstablished: number;
         }) {
     return assign(state, {
         connecting: undefined,
@@ -125,8 +123,8 @@ function _connectionEstablished(
 function _connectionFailed(
         state: IConnectionState,
         { connection, error }: {
-            connection: Object,
-            error: ConnectionFailedError
+            connection: Object;
+            error: ConnectionFailedError;
         }) {
     const connection_ = _getCurrentConnection(state);
 
@@ -156,7 +154,7 @@ function _connectionFailed(
  */
 function _connectionWillConnect(
         state: IConnectionState,
-        { connection }: { connection: Object }) {
+        { connection }: { connection: Object; }) {
     return assign(state, {
         connecting: connection,
 
@@ -179,7 +177,7 @@ function _connectionWillConnect(
  * @returns {JitsiConnection} - The current {@code JitsiConnection} if any.
  * @private
  */
-function _getCurrentConnection(baseConnectionState: IConnectionState): IConnectionState|undefined {
+function _getCurrentConnection(baseConnectionState: IConnectionState): IConnectionState | undefined {
     return baseConnectionState.connection || baseConnectionState.connecting;
 }
 
@@ -195,7 +193,7 @@ function _getCurrentConnection(baseConnectionState: IConnectionState): IConnecti
  */
 function _setLocationURL(
         state: IConnectionState,
-        { locationURL }: { locationURL?: URL }) {
+        { locationURL }: { locationURL?: URL; }) {
     return set(state, 'locationURL', locationURL);
 }
 
@@ -227,6 +225,6 @@ function _setRoom(state: IConnectionState) {
  */
 function _setShowConnectionInfo(
         state: IConnectionState,
-        { showConnectionInfo }: { showConnectionInfo: boolean }) {
+        { showConnectionInfo }: { showConnectionInfo: boolean; }) {
     return set(state, 'showConnectionInfo', showConnectionInfo);
 }

@@ -1,4 +1,3 @@
-// @ts-ignore
 import JitsiMeetJS from '../lib-jitsi-meet';
 import Platform from '../react/Platform.web';
 
@@ -26,8 +25,7 @@ const browserNameToCheck = {
     safari: browser.isSafari.bind(browser)
 };
 
-// eslint-disable-next-line no-var
-declare var interfaceConfig: any;
+declare let interfaceConfig: any;
 
 /**
  * Returns whether or not jitsi is optimized and targeted for the  provided

@@ -1,15 +1,9 @@
-/* eslint-disable import/order */
-// @ts-ignore
-import { LOCKED_LOCALLY, LOCKED_REMOTELY } from '../../room-lock';
-
-// @ts-ignore
-import { CONNECTION_WILL_CONNECT, SET_LOCATION_URL } from '../connection';
-
-// @ts-ignore
+/* eslint-disable lines-around-comment */
+import { LOCKED_LOCALLY, LOCKED_REMOTELY } from '../../room-lock/constants';
+import { CONNECTION_WILL_CONNECT, SET_LOCATION_URL } from '../connection/actionTypes';
 import { JitsiConferenceErrors } from '../lib-jitsi-meet';
-
-import { assign, set } from '../redux/functions';
 import ReducerRegistry from '../redux/ReducerRegistry';
+import { assign, set } from '../redux/functions';
 
 import {
     AUTH_STATUS_CHANGED,
@@ -31,8 +25,6 @@ import {
     SET_START_MUTED_POLICY,
     SET_START_REACTIONS_MUTED
 } from './actionTypes';
-
-// @ts-ignore
 import { isRoomValid } from './functions';
 
 const DEFAULT_STATE = {
@@ -46,24 +38,57 @@ const DEFAULT_STATE = {
     passwordRequired: undefined
 };
 
+export interface IJitsiConference {
+    addTrack: Function;
+    avModerationApprove: Function;
+    avModerationReject: Function;
+    disableAVModeration: Function;
+    enableAVModeration: Function;
+    getBreakoutRooms: Function;
+    getLocalTracks: Function;
+    grantOwner: Function;
+    isAVModerationSupported: Function;
+    isEndConferenceSupported: Function;
+    isLobbySupported: Function;
+    kickParticipant: Function;
+    muteParticipant: Function;
+    myLobbyUserId: Function;
+    myUserId: Function;
+    on: Function;
+    removeTrack: Function;
+    replaceTrack: Function;
+    sendCommand: Function;
+    sendEndpointMessage: Function;
+    sendLobbyMessage: Function;
+    sessionId: string;
+    setDisplayName: Function;
+    setLocalParticipantProperty: Function;
+}
+
 export interface IConferenceState {
-    authEnabled?: boolean|undefined;
-    authLogin?: string|undefined;
+    authEnabled?: boolean;
+    authLogin?: string;
     authRequired?: Object;
-    conference: Object|undefined;
+    conference?: IJitsiConference;
     conferenceTimestamp?: number;
-    e2eeSupported: boolean|undefined;
+    e2eeSupported?: boolean;
+    error?: Error;
     followMeEnabled?: boolean;
-    joining: Object|undefined;
-    leaving: Object|undefined;
+    joining?: Object;
+    leaving?: Object;
     localSubject?: string;
-    locked: string|undefined;
-    membersOnly: boolean|undefined;
-    password: string|undefined;
-    passwordRequired: boolean|undefined;
+    locked?: string;
+    membersOnly?: Object;
+    obfuscatedRoom?: string;
+    obfuscatedRoomSource?: string;
+    p2p?: Object;
+    password?: string;
+    passwordRequired?: Object;
     pendingSubjectChange?: string;
-    room?: Object;
+    room?: string;
+    startAudioMutedPolicy?: boolean;
     startReactionsMuted?: boolean;
+    startVideoMutedPolicy?: boolean;
     subject?: string;
 }
 
@@ -71,9 +96,8 @@ export interface IConferenceState {
  * Listen for actions that contain the conference object, so that it can be
  * stored for use by other action creators.
  */
-ReducerRegistry.register(
-    'features/base/conference',
-    (state: IConferenceState = DEFAULT_STATE, action: any) => {
+ReducerRegistry.register<IConferenceState>('features/base/conference',
+    (state = DEFAULT_STATE, action): IConferenceState => {
         switch (action.type) {
         case AUTH_STATUS_CHANGED:
             return _authStatusChanged(state, action);
@@ -154,7 +178,8 @@ ReducerRegistry.register(
  * @returns {Object} The new state of the feature base/conference after the
  * reduction of the specified action.
  */
-function _authStatusChanged(state: any, { authEnabled, authLogin }: {authEnabled: boolean, authLogin: string}) {
+function _authStatusChanged(state: IConferenceState,
+        { authEnabled, authLogin }: { authEnabled: boolean; authLogin: string; }) {
     return assign(state, {
         authEnabled,
         authLogin
@@ -171,7 +196,7 @@ function _authStatusChanged(state: any, { authEnabled, authLogin }: {authEnabled
  * @returns {Object} The new state of the feature base/conference after the
  * reduction of the specified action.
  */
-function _conferenceFailed(state: any, { conference, error }: {conference: Object, error: any}) {
+function _conferenceFailed(state: IConferenceState, { conference, error }: { conference: Object; error: Error; }) {
     // The current (similar to getCurrentConference in
     // base/conference/functions.any.js) conference which is joining or joined:
     const conference_ = state.conference || state.joining;
@@ -237,13 +262,13 @@ function _conferenceFailed(state: any, { conference, error }: {conference: Objec
  * @returns {Object} The new state of the feature base/conference after the
  * reduction of the specified action.
  */
-function _conferenceJoined(state: any, { conference }: {conference: any}) {
+function _conferenceJoined(state: IConferenceState, { conference }: { conference: any; }) {
     // FIXME The indicator which determines whether a JitsiConference is locked
     // i.e. password-protected is private to lib-jitsi-meet. However, the
     // library does not fire LOCK_STATE_CHANGED upon joining a JitsiConference
     // with a password.
     // FIXME Technically JitsiConference.room is a private field.
-    const locked = conference.room && conference.room.locked ? LOCKED_REMOTELY : undefined;
+    const locked = conference.room?.locked ? LOCKED_REMOTELY : undefined;
 
     return assign(state, {
         authRequired: undefined,
@@ -283,7 +308,8 @@ function _conferenceJoined(state: any, { conference }: {conference: any}) {
  * @returns {Object} The next/new state of the feature base/conference after the
  * reduction of the specified action.
  */
-function _conferenceLeftOrWillLeave(state: any, { conference, type }: {conference: Object, type: string}) {
+function _conferenceLeftOrWillLeave(state: IConferenceState, { conference, type }:
+    { conference: Object; type: string; }) {
     const nextState = { ...state };
 
     // The redux action CONFERENCE_LEFT is the last time that we should be
@@ -295,8 +321,8 @@ function _conferenceLeftOrWillLeave(state: any, { conference, type }: {conferenc
     // due clean-up like leaving the associated room, but the instance is no
     // longer the focus of the attention of the user and, consequently, the app.
     for (const p in state) {
-        if (state[p] === conference) {
-            nextState[p] = undefined;
+        if (state[p as keyof IConferenceState] === conference) {
+            nextState[p as keyof IConferenceState] = undefined;
 
             switch (p) {
             case 'conference':
@@ -337,7 +363,7 @@ function _conferenceLeftOrWillLeave(state: any, { conference, type }: {conferenc
  * @returns {Object} The new state of the feature base/conference after the
  * reduction of the specified action.
  */
-function _conferenceWillJoin(state: any, { conference }: {conference: Object}) {
+function _conferenceWillJoin(state: IConferenceState, { conference }: { conference: Object; }) {
     return assign(state, {
         error: undefined,
         joining: conference
@@ -354,7 +380,7 @@ function _conferenceWillJoin(state: any, { conference }: {conference: Object}) {
  * @returns {Object} The new state of the feature base/conference after the
  * reduction of the specified action.
  */
-function _lockStateChanged(state: any, { conference, locked }: {conference: Object, locked: boolean}) {
+function _lockStateChanged(state: IConferenceState, { conference, locked }: { conference: Object; locked: boolean; }) {
     if (state.conference !== conference) {
         return state;
     }
@@ -375,7 +401,7 @@ function _lockStateChanged(state: any, { conference, locked }: {conference: Obje
  * @returns {Object} The new state of the feature base/conference after the
  * reduction of the specified action.
  */
-function _p2pStatusChanged(state: any, action: any) {
+function _p2pStatusChanged(state: IConferenceState, action: any) {
     return set(state, 'p2p', action.p2p);
 }
 
@@ -388,8 +414,8 @@ function _p2pStatusChanged(state: any, action: any) {
  * @returns {Object} The new state of the feature base/conference after the
  * reduction of the specified action.
  */
-function _setPassword(state: any, { conference, method, password }
-    : {conference: any, method: Object, password: string}) {
+function _setPassword(state: IConferenceState, { conference, method, password }: {
+    conference: any; method: Object; password: string; }) {
     switch (method) {
     case conference.join:
         return assign(state, {
@@ -436,7 +462,7 @@ function _setPassword(state: any, { conference, method, password }
  * @returns {Object} The new state of the feature base/conference after the
  * reduction of the specified action.
  */
-function _setRoom(state: any, action: any) {
+function _setRoom(state: IConferenceState, action: any) {
     let { room } = action;
 
     if (!isRoomValid(room)) {

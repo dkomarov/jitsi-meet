@@ -6,8 +6,7 @@ import _ from 'lodash';
 import { APP_WILL_MOUNT } from '../app/actionTypes';
 import PersistenceRegistry from '../redux/PersistenceRegistry';
 import ReducerRegistry from '../redux/ReducerRegistry';
-// @ts-ignore
-import { assignIfDefined } from '../util';
+import { assignIfDefined } from '../util/helpers';
 
 import { SETTINGS_UPDATED } from './actionTypes';
 
@@ -27,6 +26,7 @@ const DEFAULT_STATE: ISettingsState = {
     displayName: undefined,
     email: undefined,
     localFlipX: true,
+    maxStageParticipants: 1,
     micDeviceId: undefined,
     serverURL: undefined,
     hideShareAudioHelper: false,
@@ -52,19 +52,21 @@ const DEFAULT_STATE: ISettingsState = {
 };
 
 export interface ISettingsState {
-    audioOutputDeviceId?: string|boolean;
-    avatarURL?: string|boolean;
-    cameraDeviceId?: string|boolean;
+    audioOutputDeviceId?: string | boolean;
+    audioSettingsVisible?: boolean;
+    avatarURL?: string;
+    cameraDeviceId?: string | boolean;
     disableCallIntegration?: boolean;
     disableCrashReporting?: boolean;
     disableP2P?: boolean;
     disableSelfView?: boolean;
-    displayName?: string|boolean;
-    email?: string|boolean;
+    displayName?: string;
+    email?: string;
     hideShareAudioHelper?: boolean;
     localFlipX?: boolean;
-    micDeviceId?: string|boolean;
-    serverURL?: string|boolean;
+    maxStageParticipants?: number;
+    micDeviceId?: string | boolean;
+    serverURL?: string;
     soundsIncomingMessage?: boolean;
     soundsParticipantJoined?: boolean;
     soundsParticipantKnocking?: boolean;
@@ -74,16 +76,18 @@ export interface ISettingsState {
     startAudioOnly?: boolean;
     startWithAudioMuted?: boolean;
     startWithVideoMuted?: boolean;
-    userSelectedAudioOutputDeviceId?: string|boolean;
-    userSelectedAudioOutputDeviceLabel?: string|boolean;
-    userSelectedCameraDeviceId?: string|boolean;
-    userSelectedCameraDeviceLabel?: string|boolean;
-    userSelectedMicDeviceId?: string|boolean;
-    userSelectedMicDeviceLabel?: string|boolean;
+    userSelectedAudioOutputDeviceId?: string;
+    userSelectedAudioOutputDeviceLabel?: string;
+    userSelectedCameraDeviceId?: string;
+    userSelectedCameraDeviceLabel?: string;
+    userSelectedMicDeviceId?: string;
+    userSelectedMicDeviceLabel?: string;
     userSelectedNotifications?: {
         [key: string]: boolean;
-    }|boolean,
+    } | boolean;
     userSelectedSkipPrejoin?: boolean;
+    videoSettingsVisible?: boolean;
+    visible?: boolean;
 }
 
 const STORE_NAME = 'features/base/settings';
@@ -97,6 +101,7 @@ const filterSubtree: ISettingsState = {};
 Object.keys(DEFAULT_STATE).forEach(key => {
     const key1 = key as keyof typeof filterSubtree;
 
+    // @ts-ignore
     filterSubtree[key1] = true;
 });
 
@@ -108,7 +113,7 @@ filterSubtree.micDeviceId = false;
 
 PersistenceRegistry.register(STORE_NAME, filterSubtree, DEFAULT_STATE);
 
-ReducerRegistry.register(STORE_NAME, (state: ISettingsState = DEFAULT_STATE, action) => {
+ReducerRegistry.register<ISettingsState>(STORE_NAME, (state = DEFAULT_STATE, action): ISettingsState => {
     switch (action.type) {
     case APP_WILL_MOUNT:
         return _initSettings(state);
