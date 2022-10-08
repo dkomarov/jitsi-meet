@@ -1,17 +1,14 @@
-import { Theme } from '@mui/material';
-import { withStyles } from '@mui/styles';
-import clsx from 'clsx';
-import React from 'react';
+import { Theme } from "@mui/material";
+import { withStyles } from "@mui/styles";
+import clsx from "clsx";
+import React from "react";
 
-import Icon from '../../../icons/components/Icon';
-import { withPixelLineHeight } from '../../../styles/functions.web';
-import { COLORS } from '../../constants';
-import AbstractLabel, {
-    type Props as AbstractProps
-} from '../AbstractLabel';
+import Icon from "../../../icons/components/Icon";
+import { withPixelLineHeight } from "../../../styles/functions.web";
+import { COLORS } from "../../constants";
+import AbstractLabel, { type Props as AbstractProps } from "../AbstractLabel";
 
 type Props = AbstractProps & {
-
     /**
      * Own CSS class name.
      */
@@ -27,7 +24,6 @@ type Props = AbstractProps & {
      */
     color?: string;
 
-
     /**
      * Color for the icon.
      */
@@ -42,7 +38,6 @@ type Props = AbstractProps & {
      * Click handler if any.
      */
     onClick?: (e?: React.MouseEvent) => void;
-
 };
 
 /**
@@ -56,38 +51,37 @@ const styles = (theme: Theme) => {
     return {
         label: {
             ...withPixelLineHeight(theme.typography.labelRegular),
-            alignItems: 'center',
+            alignItems: "center",
             background: theme.palette.ui04,
             borderRadius: Number(theme.shape.borderRadius) / 2,
             color: theme.palette.text01,
-            display: 'flex',
+            display: "flex",
             height: 28,
-            margin: '0 0 4px 4px',
-            padding: '0 8px'
+            margin: "0 0 4px 4px",
+            padding: "0 8px",
         },
         withIcon: {
-            marginLeft: 8
+            marginLeft: 8,
         },
         clickable: {
-            cursor: 'pointer'
+            cursor: "pointer",
         },
         [COLORS.white]: {
             background: theme.palette.text01,
             color: theme.palette.ui04,
 
-            '& svg': {
-                fill: theme.palette.ui04
-            }
+            "& svg": {
+                fill: theme.palette.ui04,
+            },
         },
         [COLORS.green]: {
-            background: theme.palette.success02
+            background: theme.palette.success02,
         },
         [COLORS.red]: {
-            background: theme.palette.actionDanger
-        }
+            background: theme.palette.actionDanger,
+        },
     };
 };
-
 
 /**
  * React Component for showing short text in a circle.
@@ -102,25 +96,31 @@ class Label extends AbstractLabel<Props, any> {
      */
     render() {
         const {
+            classes,
             className,
+            color,
             icon,
             iconColor,
             id,
-            text
+            onClick,
+            text,
         } = this.props;
-
-        const labelClassName = icon ? 'label-text-with-icon' : '';
+        const labelClassName = clsx(
+            classes.label,
+            onClick && classes.clickable,
+            color && classes[color],
+            className
+        );
 
         return (
-            <div
-                className = { `label ${className}` }
-                id = { id }>
-                { icon && <Icon
-                    color = { iconColor }
-                    size = '16'
-                    src = { icon } /> }
-                { text && <span className = { labelClassName }>{text}</span> }
+            <div className={labelClassName} id={id} onClick={onClick}>
+                {icon && <Icon color={iconColor} size="16" src={icon} />}
+                {text && (
+                    <span className={icon && classes.withIcon}>{text}</span>
+                )}
             </div>
         );
     }
 }
+
+export default withStyles(styles)(Label);

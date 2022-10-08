@@ -1,33 +1,30 @@
 /* eslint-disable lines-around-comment */
-import { Theme } from '@mui/material';
-import { withStyles } from '@mui/styles';
-import clsx from 'clsx';
-import React, { Component } from 'react';
-import { WithTranslation } from 'react-i18next';
-import type { Dispatch } from 'redux';
+import { Theme } from "@mui/material";
+import { withStyles } from "@mui/styles";
+import clsx from "clsx";
+import React, { Component } from "react";
+import { WithTranslation } from "react-i18next";
+import type { Dispatch } from "redux";
 
-import { createToolbarEvent } from '../../analytics/AnalyticsEvents';
-import { sendAnalytics } from '../../analytics/functions';
-import { IState } from '../../app/types';
+import { createToolbarEvent } from "../../analytics/AnalyticsEvents";
+import { sendAnalytics } from "../../analytics/functions";
+import { IState } from "../../app/types";
 // @ts-ignore
-import { setAudioOnly } from '../../base/audio-only';
-import { translate } from '../../base/i18n/functions';
+import { setAudioOnly } from "../../base/audio-only";
+import { translate } from "../../base/i18n/functions";
 // @ts-ignore
-import { getLastNForQualityLevel, setLastN } from '../../base/lastn';
-import { connect } from '../../base/redux/functions';
-import { withPixelLineHeight } from '../../base/styles/functions.web';
+import { getLastNForQualityLevel, setLastN } from "../../base/lastn";
+import { connect } from "../../base/redux/functions";
+import { withPixelLineHeight } from "../../base/styles/functions.web";
 // @ts-ignore
-import { setPreferredVideoQuality } from '../actions';
-import { DEFAULT_LAST_N, VIDEO_QUALITY_LEVELS } from '../constants';
+import { setPreferredVideoQuality } from "../actions";
+import { DEFAULT_LAST_N, VIDEO_QUALITY_LEVELS } from "../constants";
 // @ts-ignore
-import logger from '../logger';
+import logger from "../logger";
 
-const {
-    ULTRA,
-    HIGH,
-    STANDARD,
-    LOW
-} = VIDEO_QUALITY_LEVELS;
+import Slider from "./Slider";
+
+const { ULTRA, HIGH, STANDARD, LOW } = VIDEO_QUALITY_LEVELS;
 
 /**
  * Creates an analytics event for a press of one of the buttons in the video
@@ -37,19 +34,16 @@ const {
  * @returns {Object} The event in a format suitable for sending via
  *      sendAnalytics.
  */
-const createEvent = function(quality: string) {
-    return createToolbarEvent(
-        'video.quality',
-        {
-            quality
-        });
+const createEvent = function (quality: string) {
+    return createToolbarEvent("video.quality", {
+        quality,
+    });
 };
 
 /**
  * The type of the React {@code Component} props of {@link VideoQualitySlider}.
  */
 interface Props extends WithTranslation {
-
     /**
      * Whether or not the conference is in audio only mode.
      */
@@ -92,26 +86,25 @@ interface Props extends WithTranslation {
 const styles = (theme: Theme) => {
     return {
         dialog: {
-            color: theme.palette.text01
+            color: theme.palette.text01,
         },
         dialogDetails: {
             ...withPixelLineHeight(theme.typography.bodyShortRegularLarge),
-            marginBottom: 16
+            marginBottom: 16,
         },
         dialogContents: {
             background: theme.palette.ui01,
-            padding: '16px 16px 48px 16px'
+            padding: "16px 16px 48px 16px",
         },
         sliderDescription: {
             ...withPixelLineHeight(theme.typography.heading6),
 
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: 40
-        }
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: 40,
+        },
     };
 };
-
 
 /**
  * Implements a React {@link Component} which displays a slider for selecting a
@@ -135,9 +128,10 @@ class VideoQualitySlider extends Component<Props> {
         this._enableAudioOnly = this._enableAudioOnly.bind(this);
         this._enableHighDefinition = this._enableHighDefinition.bind(this);
         this._enableLowDefinition = this._enableLowDefinition.bind(this);
-        this._enableStandardDefinition
-            = this._enableStandardDefinition.bind(this);
-        this._enableUltraHighDefinition = this._enableUltraHighDefinition.bind(this);
+        this._enableStandardDefinition =
+            this._enableStandardDefinition.bind(this);
+        this._enableUltraHighDefinition =
+            this._enableUltraHighDefinition.bind(this);
         this._onSliderChange = this._onSliderChange.bind(this);
 
         /**
@@ -153,23 +147,23 @@ class VideoQualitySlider extends Component<Props> {
             {
                 audioOnly: true,
                 onSelect: this._enableAudioOnly,
-                textKey: 'audioOnly.audioOnly'
+                textKey: "audioOnly.audioOnly",
             },
             {
                 onSelect: this._enableLowDefinition,
-                textKey: 'videoStatus.lowDefinition',
-                videoQuality: LOW
+                textKey: "videoStatus.lowDefinition",
+                videoQuality: LOW,
             },
             {
                 onSelect: this._enableStandardDefinition,
-                textKey: 'videoStatus.standardDefinition',
-                videoQuality: STANDARD
+                textKey: "videoStatus.standardDefinition",
+                videoQuality: STANDARD,
             },
             {
                 onSelect: this._enableUltraHighDefinition,
-                textKey: 'videoStatus.highDefinition',
-                videoQuality: ULTRA
-            }
+                textKey: "videoStatus.highDefinition",
+                videoQuality: ULTRA,
+            },
         ];
     }
 
@@ -180,77 +174,31 @@ class VideoQualitySlider extends Component<Props> {
      * @returns {ReactElement}
      */
     render() {
-        const { t } = this.props;
+        const { classes, t } = this.props;
         const activeSliderOption = this._mapCurrentQualityToSliderValue();
 
         return (
-            <div className = { 'video-quality-dialog' }>
-                <h3 className = 'video-quality-dialog-title'>
-                    { t('videoStatus.callQuality') }
-                </h3>
-                <div className = 'video-quality-dialog-contents'>
-                    <div className = 'video-quality-dialog-slider-container'>
-                        { /* FIXME: onChange and onMouseUp are both used for
-                           * compatibility with IE11. This workaround can be
-                           * removed after upgrading to React 16.
-                           */ }
-                        <input
-                            aria-label = { t('videoStatus.callQuality') }
-                            className = 'video-quality-dialog-slider'
-                            max = { this._sliderOptions.length - 1 }
-                            min = '0'
-                            onChange = { this._onSliderChange }
-                            onMouseUp = { this._onSliderChange }
-                            step = '1'
-                            type = 'range'
-                            value
-                                = { activeSliderOption } />
-
+            <div className={clsx("video-quality-dialog", classes.dialog)}>
+                <div className={classes.dialogDetails}>
+                    {t("videoStatus.adjustFor")}
+                </div>
+                <div className={classes.dialogContents}>
+                    <div className={classes.sliderDescription}>
+                        <span>{t("videoStatus.bestPerformance")}</span>
+                        <span>{t("videoStatus.highestQuality")}</span>
                     </div>
-                    <div className = 'video-quality-dialog-labels'>
-                        { this._createLabels(activeSliderOption) }
-                    </div>
+                    <Slider
+                        ariaLabel={t("videoStatus.callQuality")}
+                        max={this._sliderOptions.length - 1}
+                        min={0}
+                        onChange={this._onSliderChange}
+                        step={1}
+                        value={activeSliderOption}
+                    />
                 </div>
             </div>
         );
     }
-
-    /**
-     * Creates React Elements to display mock tick marks with associated labels.
-     *
-     * @param {number} activeLabelIndex - Which of the sliderOptions should
-     * display as currently active.
-     * @private
-     * @returns {ReactElement[]}
-     */
-    _createLabels(activeLabelIndex) {
-        const labelsCount = this._sliderOptions.length;
-        const maxWidthOfLabel = `${100 / labelsCount}%`;
-
-        return this._sliderOptions.map((sliderOption, index) => {
-            const style = {
-                maxWidth: maxWidthOfLabel,
-                left: `${(index * 100) / (labelsCount - 1)}%`
-            };
-
-            const isActiveClass = activeLabelIndex === index ? 'active' : '';
-            const className
-                = `video-quality-dialog-label-container ${isActiveClass}`;
-
-            return (
-                <div
-                    className = { className }
-                    key = { index }
-                    style = { style }>
-                    <div className = 'video-quality-dialog-label'>
-                        { this.props.t(sliderOption.textKey) }
-                    </div>
-                </div>
-            );
-        });
-    }
-
-    _enableAudioOnly: () => void;
 
     /**
      * Dispatches an action to enable audio only mode.
@@ -259,8 +207,8 @@ class VideoQualitySlider extends Component<Props> {
      * @returns {void}
      */
     _enableAudioOnly() {
-        sendAnalytics(createEvent('audio.only'));
-        logger.log('Video quality: audio only enabled');
+        sendAnalytics(createEvent("audio.only"));
+        logger.log("Video quality: audio only enabled");
         this.props.dispatch(setAudioOnly(true));
     }
 
@@ -273,8 +221,8 @@ class VideoQualitySlider extends Component<Props> {
      * @returns {void}
      */
     _enableHighDefinition() {
-        sendAnalytics(createEvent('high'));
-        logger.log('Video quality: high enabled');
+        sendAnalytics(createEvent("high"));
+        logger.log("Video quality: high enabled");
         this._setPreferredVideoQuality(HIGH);
     }
 
@@ -286,8 +234,8 @@ class VideoQualitySlider extends Component<Props> {
      * @returns {void}
      */
     _enableLowDefinition() {
-        sendAnalytics(createEvent('low'));
-        logger.log('Video quality: low enabled');
+        sendAnalytics(createEvent("low"));
+        logger.log("Video quality: low enabled");
         this._setPreferredVideoQuality(LOW);
     }
 
@@ -299,8 +247,8 @@ class VideoQualitySlider extends Component<Props> {
      * @returns {void}
      */
     _enableStandardDefinition() {
-        sendAnalytics(createEvent('standard'));
-        logger.log('Video quality: standard enabled');
+        sendAnalytics(createEvent("standard"));
+        logger.log("Video quality: standard enabled");
         this._setPreferredVideoQuality(STANDARD);
     }
 
@@ -312,8 +260,8 @@ class VideoQualitySlider extends Component<Props> {
      * @returns {void}
      */
     _enableUltraHighDefinition() {
-        sendAnalytics(createEvent('ultra high'));
-        logger.log('Video quality: ultra high enabled');
+        sendAnalytics(createEvent("ultra high"));
+        logger.log("Video quality: ultra high enabled");
         this._setPreferredVideoQuality(ULTRA);
     }
 
@@ -330,7 +278,8 @@ class VideoQualitySlider extends Component<Props> {
 
         if (_audioOnly) {
             const audioOnlyOption = _sliderOptions.find(
-                ({ audioOnly }: any) => audioOnly);
+                ({ audioOnly }: any) => audioOnly
+            );
 
             // @ts-ignore
             return _sliderOptions.indexOf(audioOnlyOption);
@@ -361,13 +310,18 @@ class VideoQualitySlider extends Component<Props> {
             // @ts-ignore
             onSelect,
             // @ts-ignore
-            videoQuality
-        } = this._sliderOptions[event.target.value as keyof typeof this._sliderOptions];
+            videoQuality,
+        } =
+            this._sliderOptions[
+                event.target.value as keyof typeof this._sliderOptions
+            ];
 
         // Take no action if the newly chosen option does not change audio only
         // or video quality state.
-        if ((_audioOnly && audioOnly)
-            || (!_audioOnly && videoQuality === _sendrecvVideoQuality)) {
+        if (
+            (_audioOnly && audioOnly) ||
+            (!_audioOnly && videoQuality === _sendrecvVideoQuality)
+        ) {
             return;
         }
 
@@ -409,17 +363,19 @@ class VideoQualitySlider extends Component<Props> {
  * @returns {Props}
  */
 function _mapStateToProps(state: IState) {
-    const { enabled: audioOnly } = state['features/base/audio-only'];
-    const { p2p } = state['features/base/conference'];
-    const { preferredVideoQuality } = state['features/video-quality'];
-    const { channelLastN } = state['features/base/config'];
+    const { enabled: audioOnly } = state["features/base/audio-only"];
+    const { p2p } = state["features/base/conference"];
+    const { preferredVideoQuality } = state["features/video-quality"];
+    const { channelLastN } = state["features/base/config"];
 
     return {
         _audioOnly: audioOnly,
         _channelLastN: channelLastN,
         _p2p: p2p,
-        _sendrecvVideoQuality: preferredVideoQuality
+        _sendrecvVideoQuality: preferredVideoQuality,
     };
 }
 
-export default translate(connect(_mapStateToProps)(VideoQualitySlider));
+export default translate(
+    connect(_mapStateToProps)(withStyles(styles)(VideoQualitySlider))
+);
