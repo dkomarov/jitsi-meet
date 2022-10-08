@@ -1,4 +1,25 @@
-import { CFG_LVL_TO_APP_QUALITY_LVL, VIDEO_QUALITY_LEVELS } from './constants';
+import { CFG_LVL_TO_APP_QUALITY_LVL, VIDEO_QUALITY_LEVELS } from "./constants";
+
+const { LOW, STANDARD, HIGH, ULTRA } = VIDEO_QUALITY_LEVELS;
+const videoQualityLevels = [LOW, STANDARD, HIGH, ULTRA];
+
+/**
+ * Finds the nearest video quality level to the passed video quality.
+ *
+ * @param {number} videoQuality - The video quality.
+ * @returns {number|undefined} - The found quality level.
+ */
+export function findNearestQualityLevel(videoQuality: number) {
+    for (let i = 0; i < videoQualityLevels.length; i++) {
+        const level = videoQualityLevels[i];
+
+        if (level >= videoQuality) {
+            return level;
+        }
+    }
+
+    return undefined;
+}
 
 /**
  * Selects {@code VIDEO_QUALITY_LEVELS} for the given {@link availableHeight} and threshold to quality mapping.
@@ -8,10 +29,13 @@ import { CFG_LVL_TO_APP_QUALITY_LVL, VIDEO_QUALITY_LEVELS } from './constants';
  * ascending order.
  * @returns {number} The matching value from {@code VIDEO_QUALITY_LEVELS}.
  */
-export function getReceiverVideoQualityLevel(availableHeight: number, heightToLevel: Map<number, number>): number {
+export function getReceiverVideoQualityLevel(
+    availableHeight: number,
+    heightToLevel: Map<number, number>
+): number {
     let selectedLevel = VIDEO_QUALITY_LEVELS.LOW;
 
-    for (const [ levelThreshold, level ] of heightToLevel.entries()) {
+    for (const [levelThreshold, level] of heightToLevel.entries()) {
         if (availableHeight >= levelThreshold) {
             selectedLevel = level;
         }
@@ -30,20 +54,23 @@ export function getReceiverVideoQualityLevel(availableHeight: number, heightToLe
  * {@code undefined} if the map contains invalid values.
  */
 export function validateMinHeightForQualityLvl(minHeightForQualityLvl) {
-    if (typeof minHeightForQualityLvl !== 'object'
-        || Object.keys(minHeightForQualityLvl).map(lvl => Number(lvl))
-            .find(lvl => lvl === null || isNaN(lvl) || lvl < 0)) {
+    if (
+        typeof minHeightForQualityLvl !== "object" ||
+        Object.keys(minHeightForQualityLvl)
+            .map((lvl) => Number(lvl))
+            .find((lvl) => lvl === null || isNaN(lvl) || lvl < 0)
+    ) {
         return undefined;
     }
 
-    const levelsSorted
-        = Object.keys(minHeightForQualityLvl)
-            .map(k => Number(k))
-            .sort((a, b) => a - b);
+    const levelsSorted = Object.keys(minHeightForQualityLvl)
+        .map((k) => Number(k))
+        .sort((a, b) => a - b);
     const map = new Map();
 
-    Object.values(VIDEO_QUALITY_LEVELS).sort()
-        .forEach(value => {
+    Object.values(VIDEO_QUALITY_LEVELS)
+        .sort()
+        .forEach((value) => {
             if (value > VIDEO_QUALITY_LEVELS.NONE) {
                 map.set(value, value);
             }
