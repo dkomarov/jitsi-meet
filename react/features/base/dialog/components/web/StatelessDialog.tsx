@@ -1,30 +1,30 @@
 /* eslint-disable lines-around-comment */
-import Modal, { ModalFooter } from '@atlaskit/modal-dialog';
-import { Theme } from '@mui/material';
-import { withStyles } from '@mui/styles';
-import React, { Component, ReactElement } from 'react';
-import { WithTranslation } from 'react-i18next';
+import Modal, { ModalFooter } from "@atlaskit/modal-dialog";
+import { Theme } from "@mui/material";
+import { withStyles } from "@mui/styles";
+import React, { Component, ReactElement } from "react";
+import { WithTranslation } from "react-i18next";
 
-import { translate } from '../../../i18n/functions';
-import Button from '../../../ui/components/web/Button';
-import { BUTTON_TYPES } from '../../../ui/constants';
-import type { DialogProps } from '../../constants';
+import { translate } from "../../../i18n/functions";
+import Button from "../../../ui/components/web/Button";
+import { BUTTON_TYPES } from "../../../ui/constants";
+import type { DialogProps } from "../../constants";
 
-import ModalHeader from './ModalHeader';
+import ModalHeader from "./ModalHeader";
 
 /**
  * The ID to be used for the cancel button if enabled.
  *
  * @type {string}
  */
-const CANCEL_BUTTON_ID = 'modal-dialog-cancel-button';
+const CANCEL_BUTTON_ID = "modal-dialog-cancel-button";
 
 /**
  * The ID to be used for the ok button if enabled.
  *
  * @type {string}
  */
-const OK_BUTTON_ID = 'modal-dialog-ok-button';
+const OK_BUTTON_ID = "modal-dialog-ok-button";
 
 /**
  * The type of the React {@code Component} props of {@link StatelessDialog}.
@@ -32,7 +32,6 @@ const OK_BUTTON_ID = 'modal-dialog-ok-button';
  * @static
  */
 interface Props extends DialogProps, WithTranslation {
-
     /**
      * An object containing the CSS classes.
      */
@@ -111,16 +110,16 @@ interface Props extends DialogProps, WithTranslation {
 const styles = (theme: Theme) => {
     return {
         footer: {
-            boxShadow: 'none'
+            boxShadow: "none",
         },
 
         buttonContainer: {
-            display: 'flex',
+            display: "flex",
 
-            '& > button:first-child': {
-                marginRight: theme.spacing(2)
-            }
-        }
+            "& > button:first-child": {
+                marginRight: theme.spacing(2),
+            },
+        },
     };
 };
 
@@ -129,7 +128,7 @@ const styles = (theme: Theme) => {
  */
 class StatelessDialog extends Component<Props> {
     static defaultProps = {
-        hideCloseIconButton: false
+        hideCloseIconButton: false,
     };
 
     /**
@@ -164,36 +163,39 @@ class StatelessDialog extends Component<Props> {
             t,
             titleString,
             titleKey,
-            width
+            width,
         } = this.props;
 
         return (
             <Modal
-                autoFocus = { true }
-                components = {{
+                autoFocus={true}
+                components={{
                     // @ts-ignore
-                    Header: customHeader ? customHeader : props => (
-                        // @ts-ignore
-                        <ModalHeader
-                            { ...props }
-                            heading = { titleString || t(titleKey ?? '') }
-                            hideCloseIconButton = { hideCloseIconButton } />
-                    )
+                    Header: customHeader
+                        ? customHeader
+                        : (props) => (
+                              // @ts-ignore
+                              <ModalHeader
+                                  {...props}
+                                  heading={titleString || t(titleKey ?? "")}
+                                  hideCloseIconButton={hideCloseIconButton}
+                              />
+                          ),
                 }}
-                footer = { this._renderFooter }
-                i18n = { this.props.i18n }
-                onClose = { this._onDialogDismissed }
-                onDialogDismissed = { this._onDialogDismissed }
-                shouldCloseOnEscapePress = { true }
-                width = { width || 'medium' }>
-                <div
-                    onKeyPress = { this._onKeyPress }
-                    ref = { this._onDialogRef }>
+                footer={this._renderFooter}
+                i18n={this.props.i18n}
+                onClose={this._onDialogDismissed}
+                onDialogDismissed={this._onDialogDismissed}
+                shouldCloseOnEscapePress={true}
+                width={width || "medium"}
+            >
+                <div onKeyPress={this._onKeyPress} ref={this._onDialogRef}>
                     <form
-                        className = 'modal-dialog-form'
-                        id = 'modal-dialog-form'
-                        onSubmit = { this._onSubmit }>
-                        { children }
+                        className="modal-dialog-form"
+                        id="modal-dialog-form"
+                        onSubmit={this._onSubmit}
+                    >
+                        {children}
                     </form>
                 </div>
             </Modal>
@@ -213,7 +215,7 @@ class StatelessDialog extends Component<Props> {
         // if passed in anything but buttons with valid type props.
         const buttons = [
             this._renderCancelButton(),
-            this._renderOKButton()
+            this._renderOKButton(),
         ].filter(Boolean);
 
         if (this.props.disableFooter) {
@@ -221,16 +223,16 @@ class StatelessDialog extends Component<Props> {
         }
 
         return (
-            <ModalFooter showKeyline = { propsFromModalFooter.showKeyline } >
-                {
-
-                    /**
-                     * Atlaskit has this empty span (JustifySim) so...
-                     */
-                }
+            <ModalFooter
+                className={this.props.classes.footer}
+                showKeyline={propsFromModalFooter.showKeyline}
+            >
+                {/**
+                 * Atlaskit has this empty span (JustifySim) so...
+                 */}
                 <span />
-                <div className = { this.props.classes.buttonContainer }>
-                    { buttons }
+                <div className={this.props.classes.buttonContainer}>
+                    {buttons}
                 </div>
             </ModalFooter>
         );
@@ -281,26 +283,26 @@ class StatelessDialog extends Component<Props> {
      * not modal.
      */
     _renderCancelButton() {
-        if (this.props.cancelDisabled
-            || this.props.isModal
-            || this.props.hideCancelButton) {
+        if (
+            this.props.cancelDisabled ||
+            this.props.isModal ||
+            this.props.hideCancelButton
+        ) {
             return null;
         }
 
-        const {
-            t,
-            onDecline
-        } = this.props;
+        const { t, onDecline } = this.props;
 
         return (
             <Button
-                accessibilityLabel = { t(this.props.cancelKey || 'dialog.Cancel') }
-                id = { CANCEL_BUTTON_ID }
-                key = { CANCEL_BUTTON_ID }
-                label = { t(this.props.cancelKey || 'dialog.Cancel') }
-                onClick = { onDecline || this._onCancel }
-                size = 'small'
-                type = { BUTTON_TYPES.TERTIARY } />
+                accessibilityLabel={t(this.props.cancelKey || "dialog.Cancel")}
+                id={CANCEL_BUTTON_ID}
+                key={CANCEL_BUTTON_ID}
+                label={t(this.props.cancelKey || "dialog.Cancel")}
+                onClick={onDecline || this._onCancel}
+                size="small"
+                type={BUTTON_TYPES.TERTIARY}
+            />
         );
     }
 
@@ -311,10 +313,7 @@ class StatelessDialog extends Component<Props> {
      * @returns {ReactElement|null} The OK button if enabled.
      */
     _renderOKButton() {
-        const {
-            submitDisabled,
-            t
-        } = this.props;
+        const { submitDisabled, t } = this.props;
 
         if (submitDisabled) {
             return null;
@@ -322,13 +321,14 @@ class StatelessDialog extends Component<Props> {
 
         return (
             <Button
-                accessibilityLabel = { t(this.props.okKey || 'dialog.Ok') }
-                disabled = { this.props.okDisabled }
-                id = { OK_BUTTON_ID }
-                key = { OK_BUTTON_ID }
-                label = { t(this.props.okKey || 'dialog.Ok') }
-                onClick = { this._onSubmit }
-                size = 'small' />
+                accessibilityLabel={t(this.props.okKey || "dialog.Ok")}
+                disabled={this.props.okDisabled}
+                id={OK_BUTTON_ID}
+                key={OK_BUTTON_ID}
+                label={t(this.props.okKey || "dialog.Ok")}
+                onClick={this._onSubmit}
+                size="small"
+            />
         );
     }
 
@@ -359,7 +359,7 @@ class StatelessDialog extends Component<Props> {
             return;
         }
 
-        if (event.key === 'Enter' && !this.props.disableEnter) {
+        if (event.key === "Enter" && !this.props.disableEnter) {
             event.preventDefault();
             event.stopPropagation();
 
@@ -372,4 +372,4 @@ class StatelessDialog extends Component<Props> {
     }
 }
 
-export default translate(StatelessDialog);
+export default translate(withStyles(styles)(StatelessDialog));
