@@ -1,4 +1,3 @@
-/* eslint-disable lines-around-comment */
 import { batch } from 'react-redux';
 
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app/actionTypes';
@@ -19,7 +18,6 @@ import StateListenerRegistry from '../base/redux/StateListenerRegistry';
 import { playSound, registerSound, unregisterSound } from '../base/sounds/actions';
 import { hideNotification, showNotification } from '../notifications/actions';
 import { NOTIFICATION_TIMEOUT_TYPE } from '../notifications/constants';
-// @ts-ignore
 import { muteLocal } from '../video-menu/actions.any';
 
 import {
@@ -50,7 +48,6 @@ import {
     ASKED_TO_UNMUTE_NOTIFICATION_ID,
     ASKED_TO_UNMUTE_SOUND_ID,
     AUDIO_MODERATION_NOTIFICATION_ID,
-    CS_MODERATION_NOTIFICATION_ID,
     VIDEO_MODERATION_NOTIFICATION_ID
 } from './constants';
 import {
@@ -59,8 +56,6 @@ import {
     isParticipantPending
 } from './functions';
 import { ASKED_TO_UNMUTE_FILE } from './sounds';
-
-declare const APP: any;
 
 MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
     const { type } = action;
@@ -91,11 +86,6 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
         case MEDIA_TYPE.VIDEO: {
             titleKey = 'notify.moderationInEffectVideoTitle';
             uid = VIDEO_MODERATION_NOTIFICATION_ID;
-            break;
-        }
-        case MEDIA_TYPE.PRESENTER: {
-            titleKey = 'notify.moderationInEffectCSTitle';
-            uid = CS_MODERATION_NOTIFICATION_ID;
             break;
         }
         }

@@ -1,7 +1,5 @@
-// @flow
-
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { StyleType } from '../../styles';
@@ -13,6 +11,11 @@ import styles from './styles';
 type Props = {
 
     /**
+     * Adds bottom padding.
+     */
+    addBottomPadding: boolean,
+
+    /**
      * Additional style to be appended to the KeyboardAvoidingView content container.
      */
     contentContainerStyle?: StyleType,
@@ -20,7 +23,7 @@ type Props = {
     /**
      * The children component(s) of the Modal, to be rendered.
      */
-    children: React$Node,
+    children: React.ReactNode,
 
     /**
      * Disabled forced keyboard dismiss?
@@ -48,17 +51,13 @@ type Props = {
     safeAreaInsets?: Array,
 
     /**
-     * Enable scroll for JitsiScreen.
-     */
-    scrollEnabled?: boolean,
-
-    /**
      * Additional style to be appended to the KeyboardAvoidingView containing the content of the modal.
      */
     style?: StyleType
 }
 
 const JitsiScreen = ({
+    addBottomPadding,
     contentContainerStyle,
     children,
     footerComponent,
@@ -66,11 +65,11 @@ const JitsiScreen = ({
     hasBottomTextInput = false,
     disableForcedKeyboardDismiss = false,
     safeAreaInsets = [ 'left', 'right' ],
-    scrollEnabled = false,
     style
 }: Props) => {
     const renderContent = () => (
         <JitsiKeyboardAvoidingView
+            addBottomPadding = { addBottomPadding }
             contentContainerStyle = { contentContainerStyle }
             disableForcedKeyboardDismiss = { disableForcedKeyboardDismiss }
             hasBottomTextInput = { hasBottomTextInput }
@@ -84,16 +83,6 @@ const JitsiScreen = ({
             { footerComponent && footerComponent() }
         </JitsiKeyboardAvoidingView>
     );
-
-    if (scrollEnabled) {
-        return (
-            <ScrollView
-                bounces = { false }
-                style = { styles.jitsiScreenContainer }>
-                { renderContent() }
-            </ScrollView>
-        );
-    }
 
     return (
         <View style = { styles.jitsiScreenContainer }>

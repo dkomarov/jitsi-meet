@@ -1,8 +1,7 @@
 /* eslint-disable lines-around-comment */
 // @ts-ignore
 import { translate } from '../../../base/i18n';
-// @ts-ignore
-import { IconClose, IconHangup } from '../../../base/icons';
+import { IconCloseLarge, IconHangup } from '../../../base/icons/svg';
 // @ts-ignore
 import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
 
@@ -29,7 +28,7 @@ class HangupToggleButton extends AbstractButton<Props, any, any> {
     accessibilityLabel = 'toolbar.accessibilityLabel.hangup';
     icon = IconHangup;
     label = 'toolbar.hangup';
-    toggledIcon = IconClose;
+    toggledIcon = IconCloseLarge;
     toggledLabel = 'toolbar.hangup';
     props: Props;
 

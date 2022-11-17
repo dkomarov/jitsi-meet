@@ -1,13 +1,12 @@
-import { Theme } from '@mui/material';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { isMobileBrowser } from '../../../environment/utils';
 import Icon from '../../../icons/components/Icon';
-import { IconCheckMark } from '../../../icons/svg';
+import { IconCheck } from '../../../icons/svg';
 import { withPixelLineHeight } from '../../../styles/functions.web';
 
-interface CheckboxProps {
+interface ICheckboxProps {
 
     /**
      * Whether the input is checked or not.
@@ -40,7 +39,7 @@ interface CheckboxProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(theme => {
     return {
         formControl: {
             ...withPixelLineHeight(theme.typography.bodyLongRegular),
@@ -149,7 +148,7 @@ const Checkbox = ({
     label,
     name,
     onChange
-}: CheckboxProps) => {
+}: ICheckboxProps) => {
     const { classes: styles, cx, theme } = useStyles();
     const isMobile = isMobileBrowser();
 
@@ -166,7 +165,7 @@ const Checkbox = ({
                     className = 'checkmark'
                     color = { disabled ? theme.palette.icon03 : theme.palette.icon01 }
                     size = { 18 }
-                    src = { IconCheckMark } />
+                    src = { IconCheck } />
             </label>
             <label>{label}</label>
         </div>

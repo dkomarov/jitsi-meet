@@ -15,7 +15,6 @@ import { NOTIFICATION_TIMEOUT_TYPE, showErrorNotification, showWarningNotificati
 import { CONNECTION_ESTABLISHED, CONNECTION_FAILED, connectionDisconnected } from '../connection';
 import { validateJwt } from '../jwt';
 import { JitsiConferenceErrors } from '../lib-jitsi-meet';
-import { MEDIA_TYPE } from '../media';
 import {
     PARTICIPANT_ROLE,
     PARTICIPANT_UPDATED,
@@ -135,7 +134,7 @@ function _conferenceFailed({ dispatch, getState }, next, action) {
         }, NOTIFICATION_TIMEOUT_TYPE.LONG));
 
         if (TRIGGER_READY_TO_CLOSE_REASONS.includes(reason)) {
-            if (typeof APP === undefined) {
+            if (typeof APP === 'undefined') {
                 dispatch(readyToClose());
             } else {
                 APP.API.notifyReadyToClose();
@@ -547,9 +546,7 @@ function _trackAddedOrRemoved(store, next, action) {
     const track = action.track;
 
     // TODO All track swapping should happen here instead of conference.js.
-    // Since we swap the tracks for the web client in conference.js, ignore
-    // presenter tracks here and do not add/remove them to/from the conference.
-    if (track && track.local && track.mediaType !== MEDIA_TYPE.PRESENTER) {
+    if (track?.local) {
         return (
             _syncConferenceLocalTracksWithState(store, action)
                 .then(() => next(action)));

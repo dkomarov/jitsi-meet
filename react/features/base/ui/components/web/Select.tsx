@@ -1,4 +1,3 @@
-import { Theme } from '@mui/material';
 import React, { ChangeEvent } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -7,7 +6,7 @@ import Icon from '../../../icons/components/Icon';
 import { IconArrowDown } from '../../../icons/svg';
 import { withPixelLineHeight } from '../../../styles/functions.web';
 
-interface SelectProps {
+interface ISelectProps {
 
     /**
      * Helper text to be displayed below the select.
@@ -53,7 +52,7 @@ interface SelectProps {
     value: number | string;
 }
 
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(theme => {
     return {
         container: {
             display: 'flex',
@@ -144,7 +143,7 @@ const Select = ({
     label,
     onChange,
     options,
-    value }: SelectProps) => {
+    value }: ISelectProps) => {
     const { classes, cx, theme } = useStyles();
     const isMobile = isMobileBrowser();
 

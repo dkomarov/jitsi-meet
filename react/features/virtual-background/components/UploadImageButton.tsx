@@ -1,6 +1,3 @@
-/* eslint-disable lines-around-comment */
-
-import { Theme } from '@mui/material';
 import React, { useCallback, useRef } from 'react';
 import { WithTranslation } from 'react-i18next';
 import { makeStyles } from 'tss-react/mui';
@@ -8,14 +5,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { translate } from '../../base/i18n/functions';
 import Icon from '../../base/icons/components/Icon';
-import { IconPlusCircle } from '../../base/icons/svg';
+import { IconPlus } from '../../base/icons/svg';
 import { type Image, VIRTUAL_BACKGROUND_TYPE } from '../constants';
-// @ts-ignore
 import { resizeImage } from '../functions';
-// @ts-ignore
 import logger from '../logger';
 
-interface Props extends WithTranslation {
+interface IProps extends WithTranslation {
 
     /**
      * Callback used to set the 'loading' state of the parent component.
@@ -43,8 +38,7 @@ interface Props extends WithTranslation {
     storedImages: Array<Image>;
 }
 
-// @ts-ignore
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(theme => {
     return {
         addBackground: {
             marginRight: theme.spacing(2)
@@ -54,9 +48,8 @@ const useStyles = makeStyles()((theme: Theme) => {
         },
         label: {
             fontSize: '14px',
-            fontWeight: '600',
+            fontWeight: 600,
             lineHeight: '20px',
-            marginLeft: '-10px',
             marginTop: theme.spacing(3),
             marginBottom: theme.spacing(2),
             color: '#669aec',
@@ -79,7 +72,7 @@ function UploadImageButton({
     showLabel,
     storedImages,
     t
-}: Props) {
+}: IProps) {
     const { classes } = useStyles();
     const uploadImageButton = useRef<HTMLInputElement>(null);
     const uploadImageKeyPress = useCallback(e => {
@@ -132,7 +125,7 @@ function UploadImageButton({
                 <Icon
                     className = { classes.addBackground }
                     size = { 20 }
-                    src = { IconPlusCircle } />
+                    src = { IconPlus } />
                 {t('virtualBackground.addBackground')}
             </label>}
 

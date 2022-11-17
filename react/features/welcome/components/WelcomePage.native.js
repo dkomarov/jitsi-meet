@@ -1,21 +1,15 @@
-// @flow
-
 import React from 'react';
-import {
-    Animated,
-    SafeAreaView,
-    TextInput,
-    TouchableHighlight,
-    View
-} from 'react-native';
+import { Animated, SafeAreaView, TouchableHighlight, View } from 'react-native';
 
 import { getName } from '../../app/functions';
 import { translate } from '../../base/i18n';
 import { Icon, IconWarning } from '../../base/icons';
-import JitsiStatusBar from '../../base/modal/components/JitsiStatusBar';
 import { LoadingIndicator, Text } from '../../base/react';
 import { connect } from '../../base/redux';
-import BaseTheme from '../../base/ui/components/BaseTheme';
+import BaseTheme from '../../base/ui/components/BaseTheme.native';
+import Button from '../../base/ui/components/native/Button';
+import Input from '../../base/ui/components/native/Input';
+import { BUTTON_TYPES } from '../../base/ui/constants.native';
 import WelcomePageTabs
     from '../../mobile/navigation/components/welcome/components/WelcomePageTabs';
 
@@ -24,8 +18,7 @@ import {
     AbstractWelcomePage,
     _mapStateToProps as _abstractMapStateToProps
 } from './AbstractWelcomePage';
-import styles, { PLACEHOLDER_TEXT_COLOR } from './styles';
-
+import styles from './styles';
 
 type Props = AbstractProps & {
 
@@ -251,7 +244,7 @@ class WelcomePage extends AbstractWelcomePage<*> {
             .start();
     }
 
-    _renderHintBox: () => React$Element<any>;
+    _renderHintBox: () => React.ReactElement;
 
     /**
      * Renders the hint box if necessary.
@@ -288,38 +281,39 @@ class WelcomePage extends AbstractWelcomePage<*> {
      */
     _renderJoinButton() {
         const { t } = this.props;
-        let children;
+        let joinButton;
 
 
         if (this.state.joining) {
             // TouchableHighlight is picky about what its children can be, so
             // wrap it in a native component, i.e. View to avoid having to
             // modify non-native children.
-            children = (
-                <View>
-                    <LoadingIndicator
-                        color = { styles.buttonText.color }
-                        size = 'small' />
-                </View>
+            joinButton = (
+                <TouchableHighlight
+                    accessibilityLabel =
+                        { t('welcomepage.accessibilityLabel.join') }
+                    onPress = { this._onJoin }
+                    style = { styles.button }>
+                    <View>
+                        <LoadingIndicator
+                            color = { BaseTheme.palette.icon01 }
+                            size = 'small' />
+                    </View>
+                </TouchableHighlight>
             );
         } else {
-            children = (
-                <Text style = { styles.buttonText }>
-                    { this.props.t('welcomepage.join') }
-                </Text>
+            joinButton = (
+                <Button
+                    accessibilityLabel = { 'welcomepage.accessibilityLabel.join' }
+                    labelKey = { 'welcomepage.join' }
+                    labelStyle = { styles.joinButtonLabel }
+                    onClick = { this._onJoin }
+                    style = { styles.buttonText }
+                    type = { BUTTON_TYPES.PRIMARY } />
             );
         }
 
-        return (
-            <TouchableHighlight
-                accessibilityLabel =
-                    { t('welcomepage.accessibilityLabel.join') }
-                onPress = { this._onJoin }
-                style = { styles.button }
-                underlayColor = { BaseTheme.palette.ui12 }>
-                { children }
-            </TouchableHighlight>
-        );
+        return joinButton;
     }
 
     /**
@@ -344,22 +338,19 @@ class WelcomePage extends AbstractWelcomePage<*> {
                         <Text style = { styles.enterRoomText }>
                             { t('welcomepage.roomname') }
                         </Text>
-                        <TextInput
+                        <Input
                             accessibilityLabel = { t(roomnameAccLabel) }
                             autoCapitalize = { 'none' }
                             autoComplete = { 'off' }
                             autoCorrect = { false }
                             autoFocus = { false }
+                            customStyles = {{ input: styles.customInput }}
                             onBlur = { this._onFieldBlur }
-                            onChangeText = { this._onRoomChange }
+                            onChange = { this._onRoomChange }
                             onFocus = { this._onFieldFocus }
                             onSubmitEditing = { this._onJoin }
                             placeholder = { this.state.roomPlaceholder }
-                            placeholderTextColor = { PLACEHOLDER_TEXT_COLOR }
                             returnKeyType = { 'go' }
-                            spellCheck = { false }
-                            style = { styles.textInput }
-                            underlineColorAndroid = 'transparent'
                             value = { this.state.room } />
                         {
                             this._renderInsecureRoomNameWarning()
@@ -381,7 +372,6 @@ class WelcomePage extends AbstractWelcomePage<*> {
     _renderFullUI() {
         return (
             <>
-                <JitsiStatusBar />
                 { this._renderRoomNameInput() }
                 <View style = { styles.welcomePage }>
                     <WelcomePageTabs

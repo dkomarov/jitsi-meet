@@ -3,9 +3,9 @@ import { IStore } from '../app/types';
 // @ts-ignore
 import { createVirtualBackgroundEffect } from '../stream-effects/virtual-background';
 
-import { BACKGROUND_ENABLED, SET_VIRTUAL_BACKGROUND, VIRTUAL_BACKGROUND_TRACK_CHANGED } from './actionTypes';
+import { BACKGROUND_ENABLED, SET_VIRTUAL_BACKGROUND } from './actionTypes';
 import logger from './logger';
-import { VirtualBackgroundOptions } from './types';
+import { IVirtualBackgroundOptions } from './types';
 
 /**
  * Signals the local participant activate the virtual background video or not.
@@ -14,7 +14,7 @@ import { VirtualBackgroundOptions } from './types';
  * @param {Object} jitsiTrack - Represents the jitsi track that will have backgraund effect applied.
  * @returns {Promise}
  */
-export function toggleBackgroundEffect(options: VirtualBackgroundOptions, jitsiTrack: any) {
+export function toggleBackgroundEffect(options: IVirtualBackgroundOptions, jitsiTrack: any) {
     return async function(dispatch: IStore['dispatch'], getState: IStore['getState']) {
         await dispatch(backgroundEnabled(options.enabled));
         await dispatch(setVirtualBackground(options));
@@ -48,7 +48,7 @@ export function toggleBackgroundEffect(options: VirtualBackgroundOptions, jitsiT
  *     type: string,
  * }}
  */
-export function setVirtualBackground(options?: VirtualBackgroundOptions) {
+export function setVirtualBackground(options?: IVirtualBackgroundOptions) {
     return {
         type: SET_VIRTUAL_BACKGROUND,
         virtualSource: options?.url,
@@ -71,18 +71,5 @@ export function backgroundEnabled(backgroundEffectEnabled: boolean) {
     return {
         type: BACKGROUND_ENABLED,
         backgroundEffectEnabled
-    };
-}
-
-/**
- * Signals if the local track was changed due to a changes of the virtual background.
- *
- * @returns {{
- *    type: VIRTUAL_BACKGROUND_TRACK_CHANGED
- * }}
- */
-export function virtualBackgroundTrackChanged() {
-    return {
-        type: VIRTUAL_BACKGROUND_TRACK_CHANGED
     };
 }

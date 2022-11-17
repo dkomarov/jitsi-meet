@@ -1,6 +1,3 @@
-/* eslint-disable lines-around-comment */
-
-import { Theme } from '@mui/material';
 import React, { ReactElement, useCallback } from 'react';
 import { WithTranslation } from 'react-i18next';
 import { makeStyles } from 'tss-react/mui';
@@ -21,7 +18,7 @@ import {
 
 import { RaisedHandIndicator } from './RaisedHandIndicator';
 
-interface Props extends WithTranslation {
+interface IProps extends WithTranslation {
 
     /**
      * Type of trigger for the participant actions.
@@ -99,7 +96,7 @@ interface Props extends WithTranslation {
     youText?: string;
 }
 
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(theme => {
     return {
         nameContainer: {
             display: 'flex',
@@ -123,7 +120,7 @@ const useStyles = makeStyles()((theme: Theme) => {
 /**
  * A component representing a participant entry in ParticipantPane and Lobby.
  *
- * @param {Props} props - The props of the component.
+ * @param {IProps} props - The props of the component.
  * @returns {ReactNode}
  */
 function ParticipantItem({
@@ -143,7 +140,7 @@ function ParticipantItem({
     t,
     videoMediaState = MEDIA_STATE.NONE,
     youText
-}: Props) {
+}: IProps) {
     const onClick = useCallback(
         () => openDrawerForParticipant?.({
             participantID,

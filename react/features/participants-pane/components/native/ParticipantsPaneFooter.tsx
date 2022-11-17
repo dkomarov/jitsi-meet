@@ -3,16 +3,13 @@ import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-// @ts-ignore
-import { openDialog, openSheet } from '../../../base/dialog';
-import { IconHorizontalPoints } from '../../../base/icons/svg';
-import IconButton from '../../../base/react/components/native/IconButton';
+import { openDialog, openSheet } from '../../../base/dialog/actions';
+import { IconDotsHorizontal } from '../../../base/icons/svg';
 import Button from '../../../base/ui/components/native/Button';
-import { BUTTON_TYPES } from '../../../base/ui/constants';
-import MuteEveryoneDialog
+import IconButton from '../../../base/ui/components/native/IconButton';
+import { BUTTON_TYPES } from '../../../base/ui/constants.native';
 // @ts-ignore
-    from '../../../video-menu/components/native/MuteEveryoneDialog';
-// @ts-ignore
+import MuteEveryoneDialog from '../../../video-menu/components/native/MuteEveryoneDialog';
 import { isMoreActionsVisible, isMuteAllVisible } from '../../functions';
 
 // @ts-ignore
@@ -49,7 +46,7 @@ const ParticipantsPaneFooter = (): JSX.Element => {
                 showMoreActions && (
                     <IconButton
                         onPress = { openMoreMenu }
-                        src = { IconHorizontalPoints }
+                        src = { IconDotsHorizontal }
                         style = { styles.moreButton }
                         type = { BUTTON_TYPES.SECONDARY } />
                 )

@@ -1,4 +1,3 @@
-/* eslint-disable lines-around-comment */
 import { AnyAction } from 'redux';
 
 import { IStore } from '../app/types';
@@ -8,16 +7,14 @@ import {
     CONFERENCE_UNIQUE_ID_SET,
     CONFERENCE_WILL_LEAVE,
     E2E_RTT_CHANGED
-    // @ts-ignore
-} from '../base/conference';
+} from '../base/conference/actionTypes';
 import { LIB_WILL_INIT } from '../base/lib-jitsi-meet/actionTypes';
 import { DOMINANT_SPEAKER_CHANGED } from '../base/participants/actionTypes';
 import MiddlewareRegistry from '../base/redux/MiddlewareRegistry';
 import { TRACK_ADDED, TRACK_UPDATED } from '../base/tracks/actionTypes';
 import { getCurrentRoomId, isInBreakoutRoom } from '../breakout-rooms/functions';
-// @ts-ignore
 import { extractFqnFromPath } from '../dynamic-branding/functions.any';
-import { ADD_FACE_EXPRESSION, FACE_LANDMARK_DETECTION_STOPPED } from '../face-landmarks/actionTypes';
+import { ADD_FACE_EXPRESSION } from '../face-landmarks/actionTypes';
 
 import RTCStats from './RTCStats';
 import {
@@ -121,8 +118,16 @@ MiddlewareRegistry.register((store: IStore) => (next: Function) => (action: AnyA
     }
     case TRACK_UPDATED: {
         if (canSendRtcstatsData(state)) {
-            const { videoType, jitsiTrack } = action?.track || { };
-            const { ssrc } = jitsiTrack || { };
+            const { videoType, jitsiTrack, muted } = action?.track || { };
+            const { ssrc, isLocal, videoType: trackVideoType, conference } = jitsiTrack || { };
+
+            if (trackVideoType === 'camera' && conference && isLocal()) {
+                RTCStats.sendFaceLandmarksData({
+                    duration: 0,
+                    faceLandmarks: muted ? 'camera-off' : 'camera-on',
+                    timestamp: Date.now()
+                });
+            }
 
             // if the videoType of the remote track has changed we expect to find it in track.videoType. grep for
             // trackVideoTypeChanged.
@@ -160,18 +165,16 @@ MiddlewareRegistry.register((store: IStore) => (next: Function) => (action: AnyA
         break;
     }
     case ADD_FACE_EXPRESSION:
-    case FACE_LANDMARK_DETECTION_STOPPED: {
         if (canSendFaceLandmarksRtcstatsData(state)) {
             const { duration, faceExpression, timestamp } = action;
 
             RTCStats.sendFaceLandmarksData({
-                duration: duration ?? 0,
-                faceLandmarks: faceExpression ?? 'detection-off',
+                duration,
+                faceLandmarks: faceExpression,
                 timestamp
             });
         }
         break;
-    }
     case CONFERENCE_TIMESTAMP_CHANGED: {
         if (canSendRtcstatsData(state)) {
             const { conferenceTimestamp } = action;

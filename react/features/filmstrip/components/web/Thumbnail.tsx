@@ -8,11 +8,9 @@ import { connect } from 'react-redux';
 
 import { createScreenSharingIssueEvent } from '../../../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../../../analytics/functions';
-import { IState } from '../../../app/types';
+import { IReduxState } from '../../../app/types';
 // @ts-ignore
 import { Avatar } from '../../../base/avatar';
-// @ts-ignore
-import { getMultipleVideoSupportFeatureFlag, getSourceNameSignalingFeatureFlag } from '../../../base/config';
 import { isMobileBrowser } from '../../../base/environment/utils';
 import { JitsiTrackEvents } from '../../../base/lib-jitsi-meet';
 // @ts-ignore
@@ -27,23 +25,17 @@ import {
     isScreenShareParticipant,
     isWhiteboardParticipant
 } from '../../../base/participants/functions';
-import { Participant } from '../../../base/participants/types';
+import { IParticipant } from '../../../base/participants/types';
 import { ASPECT_RATIO_NARROW } from '../../../base/responsive-ui/constants';
-// @ts-ignore
-import { isTestModeEnabled } from '../../../base/testing';
+import { isTestModeEnabled } from '../../../base/testing/functions';
+import { trackStreamingStatusChanged, updateLastTrackVideoMediaEvent } from '../../../base/tracks/actions';
 import {
     getLocalAudioTrack,
-    getLocalVideoTrack,
     getTrackByMediaTypeAndParticipant,
-    getVirtualScreenshareParticipantTrack,
-    trackStreamingStatusChanged,
-    updateLastTrackVideoMediaEvent
-    // @ts-ignore
-} from '../../../base/tracks';
+    getVideoTrackByParticipant
+} from '../../../base/tracks/functions';
 import { getVideoObjectPosition } from '../../../face-landmarks/functions';
-// @ts-ignore
 import { hideGif, showGif } from '../../../gifs/actions';
-// @ts-ignore
 import { getGifDisplayMode, getGifForParticipant } from '../../../gifs/functions';
 // @ts-ignore
 import { PresenceLabel } from '../../../presence-status';
@@ -78,12 +70,10 @@ import ThumbnailTopIndicators from './ThumbnailTopIndicators';
 // @ts-ignore
 import VirtualScreenshareParticipant from './VirtualScreenshareParticipant';
 
-declare let interfaceConfig: any;
-
 /**
  * The type of the React {@code Component} state of {@link Thumbnail}.
  */
-export type State = {
+export interface IState {
 
     /**
      * Indicates that the canplay event has been received.
@@ -104,12 +94,12 @@ export type State = {
      * Whether popover is visible or not.
      */
     popoverVisible: boolean;
-};
+}
 
 /**
  * The type of the React {@code Component} props of {@link Thumbnail}.
  */
-export type Props = {
+export interface IProps {
 
     /**
      * The audio track related to the participant.
@@ -201,17 +191,12 @@ export type Props = {
     /**
      * An object with information about the participant related to the thumbnail.
      */
-    _participant: Participant;
+    _participant: IParticipant;
 
     /**
      * Whether or not the participant has the hand raised.
      */
     _raisedHand: boolean;
-
-    /**
-     * Whether source name signaling is enabled.
-     */
-    _sourceNameSignalingEnabled: boolean;
 
     /**
      * Whether or not the current layout is stage filmstrip layout.
@@ -280,7 +265,7 @@ export type Props = {
      * there is empty space.
      */
     width?: number;
-};
+}
 
 const defaultStyles = (theme: Theme) => {
     return {
@@ -316,15 +301,11 @@ const defaultStyles = (theme: Theme) => {
             overflow: 'hidden',
 
             '&:not(:empty)': {
-                padding: '2px'
+                padding: '4px 8px'
             },
 
             '& > *:not(:last-child)': {
-                marginRight: '4px'
-            },
-
-            '&:not(.top-indicators) > span:last-child': {
-                marginRight: '6px'
+                marginRight: '8px'
             }
         },
 
@@ -343,7 +324,8 @@ const defaultStyles = (theme: Theme) => {
             width: '100%',
             height: '100%',
             zIndex: 9,
-            borderRadius: '4px'
+            borderRadius: '4px',
+            pointerEvents: 'none' as const
         },
 
         borderIndicatorOnTop: {
@@ -366,7 +348,6 @@ const defaultStyles = (theme: Theme) => {
             position: 'absolute' as const,
             width: '100%',
             height: '100%',
-            zIndex: 11,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -388,7 +369,7 @@ const defaultStyles = (theme: Theme) => {
  *
  * @augments Component
  */
-class Thumbnail extends Component<Props, State> {
+class Thumbnail extends Component<IProps, IState> {
     /**
      * The long touch setTimeout handler.
      */
@@ -406,7 +387,7 @@ class Thumbnail extends Component<Props, State> {
      * @param {Object} props - The read-only React Component props with which
      * the new instance is to be initialized.
      */
-    constructor(props: Props) {
+    constructor(props: IProps) {
         super(props);
 
         const state = {
@@ -455,9 +436,9 @@ class Thumbnail extends Component<Props, State> {
         // Listen to track streaming status changed event to keep it updated.
         // TODO: after converting this component to a react function component,
         // use a custom hook to update local track streaming status.
-        const { _videoTrack, dispatch, _sourceNameSignalingEnabled } = this.props;
+        const { _videoTrack, dispatch } = this.props;
 
-        if (_sourceNameSignalingEnabled && _videoTrack && !_videoTrack.local) {
+        if (_videoTrack && !_videoTrack.local) {
             _videoTrack.jitsiTrack.on(JitsiTrackEvents.TRACK_STREAMING_STATUS_CHANGED,
                 this.handleTrackStreamingStatusChanged);
             dispatch(trackStreamingStatusChanged(_videoTrack.jitsiTrack,
@@ -474,9 +455,9 @@ class Thumbnail extends Component<Props, State> {
     componentWillUnmount() {
         // TODO: after converting this component to a react function component,
         // use a custom hook to update local track streaming status.
-        const { _videoTrack, dispatch, _sourceNameSignalingEnabled } = this.props;
+        const { _videoTrack, dispatch } = this.props;
 
-        if (_sourceNameSignalingEnabled && _videoTrack && !_videoTrack.local) {
+        if (_videoTrack && !_videoTrack.local) {
             _videoTrack.jitsiTrack.off(JitsiTrackEvents.TRACK_STREAMING_STATUS_CHANGED,
                 this.handleTrackStreamingStatusChanged);
             dispatch(trackStreamingStatusChanged(_videoTrack.jitsiTrack,
@@ -491,17 +472,16 @@ class Thumbnail extends Component<Props, State> {
      * @inheritdoc
      * @returns {void}
      */
-    componentDidUpdate(prevProps: Props, prevState: State) {
+    componentDidUpdate(prevProps: IProps, prevState: IState) {
         if (prevState.displayMode !== this.state.displayMode) {
             this._onDisplayModeChanged();
         }
 
         // TODO: after converting this component to a react function component,
         // use a custom hook to update local track streaming status.
-        const { _videoTrack, dispatch, _sourceNameSignalingEnabled } = this.props;
+        const { _videoTrack, dispatch } = this.props;
 
-        if (_sourceNameSignalingEnabled
-            && prevProps._videoTrack?.jitsiTrack?.getSourceName() !== _videoTrack?.jitsiTrack?.getSourceName()) {
+        if (prevProps._videoTrack?.jitsiTrack?.getSourceName() !== _videoTrack?.jitsiTrack?.getSourceName()) {
             if (prevProps._videoTrack && !prevProps._videoTrack.local) {
                 prevProps._videoTrack.jitsiTrack.off(JitsiTrackEvents.TRACK_STREAMING_STATUS_CHANGED,
                     this.handleTrackStreamingStatusChanged);
@@ -571,7 +551,7 @@ class Thumbnail extends Component<Props, State> {
      *
      * @inheritdoc
      */
-    static getDerivedStateFromProps(props: Props, prevState: State) {
+    static getDerivedStateFromProps(props: IProps, prevState: IState) {
         if (!props._videoTrack && prevState.canPlayEventReceived) {
             const newState = {
                 ...prevState,
@@ -1172,29 +1152,20 @@ class Thumbnail extends Component<Props, State> {
  * @param {Object} state - The Redux state.
  * @param {Object} ownProps - The own props of the component.
  * @private
- * @returns {Props}
+ * @returns {IProps}
  */
-function _mapStateToProps(state: IState, ownProps: any): Object {
+function _mapStateToProps(state: IReduxState, ownProps: any): Object {
     const { participantID, filmstripType = FILMSTRIP_TYPE.MAIN } = ownProps;
 
     const participant = getParticipantByIdOrUndefined(state, participantID);
-    const id = participant?.id;
+    const id = participant?.id ?? '';
     const isLocal = participant?.local ?? true;
-    const multipleVideoSupportEnabled = getMultipleVideoSupportFeatureFlag(state);
-    const sourceNameSignalingEnabled = getSourceNameSignalingFeatureFlag(state);
-    const _isVirtualScreenshareParticipant = multipleVideoSupportEnabled && isScreenShareParticipant(participant);
+    const _isVirtualScreenshareParticipant = isScreenShareParticipant(participant);
     const tracks = state['features/base/tracks'];
-
-    let _videoTrack;
-
-    if (_isVirtualScreenshareParticipant) {
-        _videoTrack = getVirtualScreenshareParticipantTrack(tracks, id);
-    } else {
-        _videoTrack = isLocal
-            ? getLocalVideoTrack(tracks) : getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.VIDEO, participantID);
-    }
+    const _videoTrack = getVideoTrackByParticipant(state, participant);
     const _audioTrack = isLocal
-        ? getLocalAudioTrack(tracks) : getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.AUDIO, participantID);
+        ? getLocalAudioTrack(tracks)
+        : getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.AUDIO, id);
     const _currentLayout = getCurrentLayout(state);
     let size: any = {};
     let _isMobilePortrait = false;
@@ -1312,10 +1283,8 @@ function _mapStateToProps(state: IState, ownProps: any): Object {
         _isVideoPlayable: id && isVideoPlayable(state, id),
         _isVirtualScreenshareParticipant,
         _localFlipX: Boolean(localFlipX),
-        _multipleVideoSupport: multipleVideoSupportEnabled,
         _participant: participant,
         _raisedHand: hasRaisedHand(participant),
-        _sourceNameSignalingEnabled: sourceNameSignalingEnabled,
         _stageFilmstripLayout: isStageFilmstripAvailable(state),
         _stageParticipantsVisible: _currentLayout === LAYOUTS.STAGE_FILMSTRIP_VIEW,
         _thumbnailType: tileType,

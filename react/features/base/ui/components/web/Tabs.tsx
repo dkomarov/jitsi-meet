@@ -1,11 +1,10 @@
-import { Theme } from '@mui/material';
 import React, { useCallback } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { isMobileBrowser } from '../../../environment/utils';
 import { withPixelLineHeight } from '../../../styles/functions.web';
 
-interface TabProps {
+interface ITabProps {
     accessibilityLabel: string;
     onChange: (id: string) => void;
     selected: string;
@@ -18,7 +17,7 @@ interface TabProps {
     }>;
 }
 
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(theme => {
     return {
         container: {
             display: 'flex'
@@ -83,7 +82,7 @@ const Tabs = ({
     onChange,
     selected,
     accessibilityLabel
-}: TabProps) => {
+}: ITabProps) => {
     const { classes, cx } = useStyles();
     const isMobile = isMobileBrowser();
 

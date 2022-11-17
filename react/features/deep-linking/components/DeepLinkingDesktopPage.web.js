@@ -8,8 +8,8 @@ import { createDeepLinkingPageEvent, sendAnalytics } from '../../analytics';
 import { isSupportedBrowser } from '../../base/environment';
 import { translate } from '../../base/i18n';
 import { connect } from '../../base/redux';
-import { Button } from '../../base/ui/components/web';
-import { BUTTON_TYPES } from '../../base/ui/constants';
+import Button from '../../base/ui/components/web/Button';
+import { BUTTON_TYPES } from '../../base/ui/constants.web';
 import {
     openDesktopApp,
     openWebApp

@@ -16,24 +16,24 @@ const DEFAULT_STATE = {
     sessionDatas: []
 };
 
-interface SessionData {
+interface ISessionData {
     error?: Error;
     id?: string;
-    initiator?: Object;
+    initiator?: { getId: Function; };
     liveStreamViewURL?: string;
     mode?: string;
     status?: string;
-    terminator?: Object;
+    terminator?: { getId: Function; };
     timestamp?: number;
 }
 
 export interface IRecordingState {
     disableHighlightMeetingMoment: boolean;
     pendingNotificationUids: {
-        [key: string]: number | undefined;
+        [key: string]: string | undefined;
     };
     selectedRecordingService: string;
-    sessionDatas: Array<SessionData>;
+    sessionDatas: Array<ISessionData>;
     streamKey?: string;
 }
 
@@ -107,7 +107,7 @@ ReducerRegistry.register<IRecordingState>(STORE_NAME,
  * @private
  * @returns {Array} The session datas with the updated session data added.
  */
-function _updateSessionDatas(sessionDatas: SessionData[], newSessionData: SessionData) {
+function _updateSessionDatas(sessionDatas: ISessionData[], newSessionData: ISessionData) {
     const hasExistingSessionData = sessionDatas.find(
         sessionData => sessionData.id === newSessionData.id);
     let newSessionDatas;

@@ -1,15 +1,12 @@
-/* eslint-disable lines-around-comment */
 import 'image-capture';
 import './createImageBitmap';
 import { IStore } from '../app/types';
-// @ts-ignore
 import { getLocalVideoTrack } from '../base/tracks/functions';
 import { getBaseUrl } from '../base/util/helpers';
 
 import {
     addFaceExpression,
     clearFaceExpressionBuffer,
-    faceLandmarkDetectionStopped,
     newFaceBox
 } from './actions';
 import {
@@ -25,7 +22,6 @@ import {
     sendFaceExpressionsWebhook
 } from './functions';
 import logger from './logger';
-declare const APP: any;
 
 /**
  * Class for face language detection.
@@ -98,6 +94,7 @@ class FaceLandmarksDetector {
 
         const baseUrl = `${getBaseUrl()}libs/`;
         let workerUrl = `${baseUrl}face-landmarks-worker.min.js`;
+
         // @ts-ignore
         const workerBlob = new Blob([ `importScripts("${workerUrl}");` ], { type: 'application/javascript' });
 
@@ -251,7 +248,6 @@ class FaceLandmarksDetector {
         this.detectionInterval = null;
         this.imageCapture = null;
         this.recognitionActive = false;
-        dispatch(faceLandmarkDetectionStopped(Date.now()));
         logger.log('Stop face detection');
     }
 

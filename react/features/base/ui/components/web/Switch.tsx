@@ -1,11 +1,12 @@
-import { Theme } from '@mui/material';
 import React, { useCallback } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { isMobileBrowser } from '../../../environment/utils';
-import { SwitchProps } from '../types';
+import { ISwitchProps } from '../types';
 
-interface Props extends SwitchProps {
+interface IProps extends ISwitchProps {
+
+    className?: string;
 
     /**
      * Id of the toggle.
@@ -13,7 +14,7 @@ interface Props extends SwitchProps {
     id?: string;
 }
 
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(theme => {
     return {
         container: {
             position: 'relative',
@@ -78,7 +79,7 @@ const useStyles = makeStyles()((theme: Theme) => {
     };
 });
 
-const Switch = ({ id, checked, disabled, onChange }: Props) => {
+const Switch = ({ className, id, checked, disabled, onChange }: IProps) => {
     const { classes: styles, cx } = useStyles();
     const isMobile = isMobileBrowser();
 
@@ -89,7 +90,7 @@ const Switch = ({ id, checked, disabled, onChange }: Props) => {
     return (
         <label
             className = { cx('toggle-container', styles.container, checked && styles.containerOn,
-                isMobile && 'is-mobile', disabled && 'disabled') }>
+                isMobile && 'is-mobile', disabled && 'disabled', className) }>
             <input
                 type = 'checkbox'
                 { ...(id ? { id } : {}) }

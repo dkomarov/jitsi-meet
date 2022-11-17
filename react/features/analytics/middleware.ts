@@ -1,5 +1,4 @@
-/* eslint-disable lines-around-comment */
-import { IState } from '../app/types';
+import { IReduxState } from '../app/types';
 import {
     CONFERENCE_JOINED,
     CONFERENCE_WILL_LEAVE,
@@ -28,7 +27,7 @@ import { createHandlers, initAnalytics, resetAnalytics, sendAnalytics } from './
  * @param {Object} state - The redux state.
  * @returns {Object} - The local tracks duration.
  */
-function calculateLocalTrackDuration(state: IState) {
+function calculateLocalTrackDuration(state: IReduxState) {
     const now = Date.now();
     const { localTracksDuration } = state['features/analytics'];
     const { conference } = state['features/base/conference'];
@@ -160,10 +159,9 @@ MiddlewareRegistry.register(store => next => action => {
         const state = getState();
         const { localTracksDuration } = state['features/analytics'];
 
-        if (localTracksDuration.conference.startedTime === -1 || action.mediaType === 'presenter') {
+        if (localTracksDuration.conference.startedTime === -1) {
             // We don't want to track the media duration if the conference is not joined yet because otherwise we won't
             // be able to compare them with the conference duration (from conference join to conference will leave).
-            // Also, do not track media duration for presenter tracks.
             break;
         }
         dispatch({

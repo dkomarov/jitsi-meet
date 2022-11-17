@@ -1,17 +1,10 @@
-/* eslint-disable import/order */
-import type { Dispatch } from 'redux';
-import { IState } from '../../../app/types';
-
-// @ts-ignore
-import { translate } from '../../../base/i18n';
-import { IconHideWhiteboard, IconShowWhiteboard } from '../../../base/icons/svg';
-
-// @ts-ignore
-import { connect } from '../../../base/redux';
-
+/* eslint-disable lines-around-comment */
+import { IReduxState, IStore } from '../../../app/types';
+import { translate } from '../../../base/i18n/functions';
+import { IconWhiteboard, IconWhiteboardHide } from '../../../base/icons/svg';
+import { connect } from '../../../base/redux/functions';
 // @ts-ignore
 import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
-
 // @ts-ignore
 import { setOverflowMenuVisible } from '../../../toolbox/actions.web';
 import { setWhiteboardOpen } from '../../actions';
@@ -28,7 +21,7 @@ type Props = AbstractButtonProps & {
     /**
      * The redux {@code dispatch} function.
      */
-    dispatch: Dispatch<any>;
+    dispatch: IStore['dispatch'];
 };
 
 /**
@@ -36,9 +29,9 @@ type Props = AbstractButtonProps & {
  */
 class WhiteboardButton extends AbstractButton<Props, any, any> {
     accessibilityLabel = 'toolbar.accessibilityLabel.whiteboard';
-    icon = IconShowWhiteboard;
+    icon = IconWhiteboard;
     label = 'toolbar.showWhiteboard';
-    toggledIcon = IconHideWhiteboard;
+    toggledIcon = IconWhiteboardHide;
     toggledLabel = 'toolbar.hideWhiteboard';
     toggledTooltip = 'toolbar.hideWhiteboard';
     tooltip = 'toolbar.showWhiteboard';
@@ -78,7 +71,7 @@ class WhiteboardButton extends AbstractButton<Props, any, any> {
  * @private
  * @returns {Props}
  */
-function _mapStateToProps(state: IState) {
+function _mapStateToProps(state: IReduxState) {
     return {
         _toggled: isWhiteboardVisible(state)
     };

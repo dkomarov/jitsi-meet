@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Dialog } from '../../base/dialog';
+import Dialog from '../../base/ui/components/web/Dialog';
 
 import VideoQualitySlider from './VideoQualitySlider.web';
 

@@ -5,13 +5,13 @@ import Bourne from '@hapi/bourne';
 import { jitsiLocalStorage } from '@jitsi/js-utils';
 import _ from 'lodash';
 
-import { IState } from '../../app/types';
+import { IReduxState } from '../../app/types';
 import { browser } from '../lib-jitsi-meet';
 import { parseURLParams } from '../util/parseURLParams';
 
 import { IConfig } from './configType';
 import CONFIG_WHITELIST from './configWhitelist';
-import { FEATURE_FLAGS, _CONFIG_STORE_PREFIX } from './constants';
+import { _CONFIG_STORE_PREFIX } from './constants';
 import INTERFACE_CONFIG_WHITELIST from './interfaceConfigWhitelist';
 import logger from './logger';
 
@@ -49,19 +49,8 @@ export function createFakeConfig(baseURL: string) {
  * @param {Object} state - The global state.
  * @returns {string}
  */
-export function getMeetingRegion(state: IState) {
+export function getMeetingRegion(state: IReduxState) {
     return state['features/base/config']?.deploymentInfo?.region || '';
-}
-
-/**
- * Selector for determining if receiving multiple stream support is enabled.
- *
- * @param {Object} state - The global state.
- * @returns {boolean}
- */
-export function getMultipleVideoSupportFeatureFlag(state: IState) {
-    return (getFeatureFlag(state, FEATURE_FLAGS.MULTIPLE_VIDEO_STREAMS_SUPPORT)
-        && getSourceNameSignalingFeatureFlag(state)) ?? true;
 }
 
 /**
@@ -70,19 +59,8 @@ export function getMultipleVideoSupportFeatureFlag(state: IState) {
  * @param {Object} state - The global state.
  * @returns {boolean}
  */
-export function getMultipleVideoSendingSupportFeatureFlag(state: IState) {
-    return navigator.product !== 'ReactNative'
-        && ((getMultipleVideoSupportFeatureFlag(state) ?? true) && isUnifiedPlanEnabled(state));
-}
-
-/**
- * Selector used to get the sourceNameSignaling feature flag.
- *
- * @param {Object} state - The global state.
- * @returns {boolean}
- */
-export function getSourceNameSignalingFeatureFlag(state: IState) {
-    return getFeatureFlag(state, FEATURE_FLAGS.SOURCE_NAME_SIGNALING) ?? true;
+export function getMultipleVideoSendingSupportFeatureFlag(state: IReduxState) {
+    return navigator.product !== 'ReactNative' && isUnifiedPlanEnabled(state);
 }
 
 /**
@@ -92,7 +70,7 @@ export function getSourceNameSignalingFeatureFlag(state: IState) {
  * @param {string} featureFlag - The name of the feature flag.
  * @returns {boolean}
  */
-export function getFeatureFlag(state: IState, featureFlag: string) {
+export function getFeatureFlag(state: IReduxState, featureFlag: string) {
     const featureFlags = state['features/base/config']?.flags || {};
 
     return featureFlags[featureFlag as keyof typeof featureFlags];
@@ -104,7 +82,7 @@ export function getFeatureFlag(state: IState, featureFlag: string) {
  * @param {Object} state - The global state.
  * @returns {boolean}
  */
-export function getDisableRemoveRaisedHandOnFocus(state: IState) {
+export function getDisableRemoveRaisedHandOnFocus(state: IReduxState) {
     return state['features/base/config']?.disableRemoveRaisedHandOnFocus || false;
 }
 
@@ -114,7 +92,7 @@ export function getDisableRemoveRaisedHandOnFocus(state: IState) {
  * @param {Object} state - The global state.
  * @returns {string}
  */
-export function getRecordingSharingUrl(state: IState) {
+export function getRecordingSharingUrl(state: IReduxState) {
     return state['features/base/config'].recordingSharingUrl;
 }
 
@@ -196,7 +174,7 @@ export function getWhitelistedJSON(configName: 'interfaceConfig' | 'config', con
  * @param {Object} state - The state of the app.
  * @returns {boolean}
  */
-export function isNameReadOnly(state: IState): boolean {
+export function isNameReadOnly(state: IReduxState): boolean {
     return Boolean(state['features/base/config'].disableProfile
         || state['features/base/config'].readOnlyName);
 }
@@ -207,7 +185,7 @@ export function isNameReadOnly(state: IState): boolean {
  * @param {Object} state - The state of the app.
  * @returns {boolean}
  */
-export function isDisplayNameVisible(state: IState): boolean {
+export function isDisplayNameVisible(state: IReduxState): boolean {
     return !state['features/base/config'].hideDisplayName;
 }
 
@@ -217,7 +195,7 @@ export function isDisplayNameVisible(state: IState): boolean {
  * @param {Object} state - The state of the app.
  * @returns {boolean}
  */
-export function isUnifiedPlanEnabled(state: IState): boolean {
+export function isUnifiedPlanEnabled(state: IReduxState): boolean {
     const { enableUnifiedOnChrome = true } = state['features/base/config'];
 
     return browser.supportsUnifiedPlan()
@@ -308,3 +286,23 @@ export function setConfigFromURLParams(
 }
 
 /* eslint-enable max-params */
+
+/**
+ * Returns the dial out url.
+ *
+ * @param {Object} state - The state of the app.
+ * @returns {string}
+ */
+export function getDialOutStatusUrl(state: IReduxState) {
+    return state['features/base/config'].guestDialOutStatusUrl;
+}
+
+/**
+ * Returns the dial out status url.
+ *
+ * @param {Object} state - The state of the app.
+ * @returns {string}
+ */
+export function getDialOutUrl(state: IReduxState) {
+    return state['features/base/config'].guestDialOutUrl;
+}

@@ -6,11 +6,8 @@ import clsx from 'clsx';
 import React from 'react';
 import { WithTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import type { Dispatch } from 'redux';
 
-import { IState } from '../../../app/types';
-// @ts-ignore
-import { getSourceNameSignalingFeatureFlag } from '../../../base/config';
+import { IReduxState, IStore } from '../../../app/types';
 import { translate } from '../../../base/i18n/functions';
 import { MEDIA_TYPE } from '../../../base/media/constants';
 import {
@@ -18,24 +15,20 @@ import {
     getParticipantById,
     isScreenShareParticipant
 } from '../../../base/participants/functions';
-// @ts-ignore
-import { Popover } from '../../../base/popover';
+import Popover from '../../../base/popover/components/Popover.web';
 import {
-    getSourceNameByParticipantId,
     getTrackByMediaTypeAndParticipant,
     getVirtualScreenshareParticipantTrack
-    // @ts-ignore
-} from '../../../base/tracks';
+} from '../../../base/tracks/functions';
 import {
-    isParticipantConnectionStatusInactive,
-    isParticipantConnectionStatusInterrupted,
     isTrackStreamingStatusInactive,
     isTrackStreamingStatusInterrupted
 } from '../../functions';
 import AbstractConnectionIndicator, {
     type Props as AbstractProps,
     type State as AbstractState,
-    INDICATOR_DISPLAY_THRESHOLD
+    INDICATOR_DISPLAY_THRESHOLD,
+    mapStateToProps as _abstractMapStateToProps
     // @ts-ignore
 } from '../AbstractConnectionIndicator';
 
@@ -92,25 +85,9 @@ type Props = AbstractProps & WithTranslation & {
     _connectionIndicatorInactiveDisabled: boolean;
 
     /**
-     * The current condition of the user's connection, matching one of the
-     * enumerated values in the library.
-     */
-    _connectionStatus: string;
-
-    /**
      * Whether the indicator popover is disabled.
      */
     _popoverDisabled: boolean;
-
-    /**
-     * The source name of the track.
-     */
-    _sourceName: string;
-
-    /**
-     * Whether source name signaling is enabled.
-     */
-    _sourceNameSignalingEnabled: boolean;
 
     /**
      * Whether or not the component should ignore setting a visibility class for
@@ -131,7 +108,7 @@ type Props = AbstractProps & WithTranslation & {
     /**
      * The Redux dispatch function.
      */
-    dispatch: Dispatch<any>;
+    dispatch: IStore['dispatch'];
 
     /**
      * Whether or not clicking the indicator should display a popover for more
@@ -151,13 +128,13 @@ type Props = AbstractProps & WithTranslation & {
     statsPopoverPosition: string;
 };
 
-type State = AbstractState & {
+interface IState extends AbstractState {
 
     /**
      * Whether popover is ivisible or not.
      */
     popoverVisible: boolean;
-};
+}
 
 const styles = (theme: Theme) => {
     return {
@@ -211,7 +188,7 @@ const styles = (theme: Theme) => {
  *
  * @augments {Component}
  */
-class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
+class ConnectionIndicator extends AbstractConnectionIndicator<Props, IState> {
     /**
      * Initializes a new {@code ConnectionIndicator} instance.
      *
@@ -256,7 +233,6 @@ class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
                     participantId = { participantId } /> }
                 disablePopover = { !enableStatsDisplay }
                 id = 'participant-connection-indicator'
-                noPaddingContent = { true }
                 onPopoverClose = { this._onHidePopover }
                 onPopoverOpen = { this._onShowPopover }
                 position = { statsPopoverPosition }
@@ -397,39 +373,31 @@ class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
  * @param {Props} ownProps - The own props of the component.
  * @returns {Props}
  */
-export function _mapStateToProps(state: IState, ownProps: Props) {
+export function _mapStateToProps(state: IReduxState, ownProps: Props) {
     const { participantId } = ownProps;
     const tracks = state['features/base/tracks'];
-    const sourceNameSignalingEnabled = getSourceNameSignalingFeatureFlag(state);
     const participant = participantId ? getParticipantById(state, participantId) : getLocalParticipant(state);
+    let _videoTrack = getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.VIDEO, participantId);
 
-    let firstVideoTrack;
-
-    if (sourceNameSignalingEnabled && isScreenShareParticipant(participant)) {
-        firstVideoTrack = getVirtualScreenshareParticipantTrack(tracks, participantId);
-    } else {
-        firstVideoTrack = getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.VIDEO, participantId);
+    if (isScreenShareParticipant(participant)) {
+        _videoTrack = getVirtualScreenshareParticipantTrack(tracks, participantId);
     }
 
-    const _isConnectionStatusInactive = sourceNameSignalingEnabled
-        ? isTrackStreamingStatusInactive(firstVideoTrack)
-        : isParticipantConnectionStatusInactive(participant);
-
-    const _isConnectionStatusInterrupted = sourceNameSignalingEnabled
-        ? isTrackStreamingStatusInterrupted(firstVideoTrack)
-        : isParticipantConnectionStatusInterrupted(participant);
+    const _isConnectionStatusInactive = isTrackStreamingStatusInactive(_videoTrack);
+    const _isConnectionStatusInterrupted = isTrackStreamingStatusInterrupted(_videoTrack);
 
     return {
+        ..._abstractMapStateToProps(state),
         _connectionIndicatorInactiveDisabled:
-        Boolean(state['features/base/config'].connectionIndicators?.inactiveDisabled),
+            Boolean(state['features/base/config'].connectionIndicators?.inactiveDisabled),
+        _isVirtualScreenshareParticipant: isScreenShareParticipant(participant),
         _popoverDisabled: state['features/base/config'].connectionIndicators?.disableDetails,
-        _videoTrack: firstVideoTrack,
         _isConnectionStatusInactive,
         _isConnectionStatusInterrupted,
-        _sourceName: getSourceNameByParticipantId(state, participantId),
-        _sourceNameSignalingEnabled: sourceNameSignalingEnabled
+        _videoTrack
     };
 }
+
 export default translate(connect(_mapStateToProps)(
     // @ts-ignore
     withStyles(styles)(ConnectionIndicator)));

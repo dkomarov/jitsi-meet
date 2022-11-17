@@ -1,16 +1,14 @@
 import BaseTheme from '../../base/ui/components/BaseTheme.native';
 
-const SECONDARY_COLOR = BaseTheme.palette.border04;
-
-const preJoinText = {
-    ...BaseTheme.typography.heading5,
-    color: BaseTheme.palette.text01,
-    textAlign: 'center'
-};
 
 export default {
-    prejoinButton: {
-        marginTop: BaseTheme.spacing[3]
+    joinButton: {
+        marginVertical: BaseTheme.spacing[3]
+    },
+
+    joinLowBandwidthLabel: {
+        color: BaseTheme.palette.text01,
+        textAlign: 'center'
     },
 
     buttonStylesBorderless: {
@@ -21,7 +19,7 @@ export default {
         style: {
             flexDirection: 'row',
             justifyContent: 'center',
-            marginHorizontal: BaseTheme.spacing[3],
+            margin: BaseTheme.spacing[3],
             height: 24,
             width: 24
         },
@@ -38,47 +36,54 @@ export default {
     },
 
     largeVideoContainer: {
-        minHeight: '50%'
+        height: '60%'
     },
 
     largeVideoContainerWide: {
         height: '100%',
         marginRight: 'auto',
         position: 'absolute',
-        width: '50%'
+        width: '60%'
     },
 
     contentContainer: {
         alignSelf: 'center',
+        backgroundColor: BaseTheme.palette.uiBackground,
+        bottom: 0,
         display: 'flex',
+        height: 284,
         justifyContent: 'center',
-        minHeight: '50%',
-        paddingHorizontal: BaseTheme.spacing[3],
-        width: 400
+        position: 'absolute',
+        width: 390,
+        zIndex: 1
     },
 
     contentContainerWide: {
-        alignItems: 'center',
+        alignSelf: 'center',
         height: '100%',
         justifyContent: 'center',
-        left: '50%',
-        paddingHorizontal: BaseTheme.spacing[3],
+        left: '60%',
+        padding: BaseTheme.spacing[3],
         position: 'absolute',
-        width: '50%'
+        width: '40%'
     },
 
     toolboxContainer: {
         alignSelf: 'center',
+        backgroundColor: BaseTheme.palette.ui01,
+        borderRadius: BaseTheme.shape.borderRadius,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: BaseTheme.spacing[3]
+        height: 60,
+        justifyContent: 'space-between',
+        marginVertical: BaseTheme.spacing[3],
+        paddingHorizontal: BaseTheme.spacing[2],
+        width: 148
     },
 
     toolboxContainerWide: {
         flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: BaseTheme.spacing[3]
+        justifyContent: 'center'
     },
 
     formWrapper: {
@@ -87,22 +92,26 @@ export default {
         marginHorizontal: BaseTheme.spacing[3]
     },
 
-    field: {
-        backgroundColor: BaseTheme.palette.field02,
-        borderColor: SECONDARY_COLOR,
-        borderRadius: BaseTheme.shape.borderRadius,
-        borderWidth: 2,
-        color: BaseTheme.palette.text06,
-        height: BaseTheme.spacing[7],
-        marginTop: BaseTheme.spacing[3],
+    customInput: {
         textAlign: 'center'
     },
 
-    preJoinTitle: {
-        ...preJoinText
+    preJoinRoomName: {
+        ...BaseTheme.typography.heading5,
+        color: BaseTheme.palette.text01,
+        textAlign: 'center'
     },
 
-    preJoinRoomName: {
-        ...preJoinText
+    displayRoomNameBackdrop: {
+        alignSelf: 'center',
+        backgroundColor: BaseTheme.palette.uiBackground,
+        borderRadius: BaseTheme.shape.borderRadius,
+        marginTop: BaseTheme.spacing[3],
+        opacity: 0.7,
+        paddingHorizontal: BaseTheme.spacing[3],
+        paddingVertical: BaseTheme.spacing[1],
+        position: 'absolute',
+        width: 243,
+        zIndex: 1
     }
 };

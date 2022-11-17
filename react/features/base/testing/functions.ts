@@ -1,20 +1,17 @@
-import { IState, IStore } from '../../app/types';
-import { getMultipleVideoSupportFeatureFlag } from '../config/functions.any';
+import { IReduxState, IStore } from '../../app/types';
 import { MEDIA_TYPE, VIDEO_TYPE } from '../media/constants';
 import { getParticipantById, isScreenShareParticipant } from '../participants/functions';
-// eslint-disable-next-line lines-around-comment
-// @ts-ignore
-import { getTrackByMediaTypeAndParticipant, getVirtualScreenshareParticipantTrack } from '../tracks';
+import { getTrackByMediaTypeAndParticipant, getVideoTrackByParticipant } from '../tracks/functions';
 
 /**
  * Indicates whether the test mode is enabled. When it's enabled
  * {@link TestHint} and other components from the testing package will be
  * rendered in various places across the app to help with automatic testing.
  *
- * @param {IState} state - The redux store state.
+ * @param {IReduxState} state - The redux store state.
  * @returns {boolean}
  */
-export function isTestModeEnabled(state: IState): boolean {
+export function isTestModeEnabled(state: IReduxState): boolean {
     const testingConfig = state['features/base/config'].testing;
 
     return Boolean(testingConfig?.testMode);
@@ -31,7 +28,7 @@ export function getRemoteVideoType({ getState }: IStore, id: string) {
     const state = getState();
     const participant = getParticipantById(state, id);
 
-    if (getMultipleVideoSupportFeatureFlag(state) && isScreenShareParticipant(participant)) {
+    if (isScreenShareParticipant(participant)) {
         return VIDEO_TYPE.DESKTOP;
     }
 
@@ -46,20 +43,13 @@ export function getRemoteVideoType({ getState }: IStore, id: string) {
  */
 export function isLargeVideoReceived({ getState }: IStore): boolean {
     const state = getState();
-    const largeVideoParticipantId = state['features/large-video'].participantId;
+    const largeVideoParticipantId = state['features/large-video'].participantId ?? '';
     const largeVideoParticipant = getParticipantById(state, largeVideoParticipantId ?? '');
-    const tracks = state['features/base/tracks'];
-    let videoTrack;
-
-    if (getMultipleVideoSupportFeatureFlag(state) && isScreenShareParticipant(largeVideoParticipant)) {
-        videoTrack = getVirtualScreenshareParticipantTrack(tracks, largeVideoParticipantId);
-    } else {
-        videoTrack = getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.VIDEO, largeVideoParticipantId);
-    }
-
+    const videoTrack = getVideoTrackByParticipant(state, largeVideoParticipant);
     const lastMediaEvent = state['features/large-video']?.lastMediaEvent;
 
-    return videoTrack && !videoTrack.muted && (lastMediaEvent === 'playing' || lastMediaEvent === 'canplaythrough');
+    return Boolean(videoTrack && !videoTrack.muted
+        && (lastMediaEvent === 'playing' || lastMediaEvent === 'canplaythrough'));
 }
 
 /**
@@ -71,16 +61,10 @@ export function isLargeVideoReceived({ getState }: IStore): boolean {
  */
 export function isRemoteVideoReceived({ getState }: IStore, id: string): boolean {
     const state = getState();
-    const tracks = state['features/base/tracks'];
     const participant = getParticipantById(state, id);
-    let videoTrack;
-
-    if (getMultipleVideoSupportFeatureFlag(state) && isScreenShareParticipant(participant)) {
-        videoTrack = getVirtualScreenshareParticipantTrack(tracks, id);
-    } else {
-        videoTrack = getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.VIDEO, id);
-    }
+    const videoTrack = getVideoTrackByParticipant(state, participant);
     const lastMediaEvent = videoTrack?.lastMediaEvent;
 
-    return videoTrack && !videoTrack.muted && (lastMediaEvent === 'playing' || lastMediaEvent === 'canplaythrough');
+    return Boolean(videoTrack && !videoTrack.muted
+        && (lastMediaEvent === 'playing' || lastMediaEvent === 'canplaythrough'));
 }

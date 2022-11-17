@@ -1,16 +1,14 @@
 export enum FakeParticipant {
-    Jigasi = 'Jigasi',
     LocalScreenShare = 'LocalScreenShare',
     RemoteScreenShare = 'RemoteScreenShare',
     SharedVideo = 'SharedVideo',
     Whiteboard = 'Whiteboard'
 }
 
-export interface Participant {
+export interface IParticipant {
     avatarURL?: string;
     botType?: string;
     conference?: Object;
-    connectionStatus?: string;
     displayName?: string;
     dominantSpeaker?: boolean;
     e2eeEnabled?: boolean;
@@ -22,6 +20,7 @@ export interface Participant {
     };
     getId?: Function;
     id: string;
+    isJigasi?: boolean;
     isReplaced?: boolean;
     isReplacing?: number;
     jwtId?: string;
@@ -39,7 +38,7 @@ export interface Participant {
     supportsRemoteControl?: boolean;
 }
 
-export interface LocalParticipant extends Participant {
+export interface ILocalParticipant extends IParticipant {
     audioOutputDeviceId?: string;
     cameraDeviceId?: string;
     jwtId?: string;
@@ -51,5 +50,9 @@ export interface LocalParticipant extends Participant {
 }
 
 export interface IJitsiParticipant {
+    getDisplayName: () => string;
     getId: () => string;
+    getJid: () => string;
+    getRole: () => string;
+    isHidden: () => boolean;
 }

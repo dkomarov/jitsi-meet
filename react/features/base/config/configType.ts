@@ -39,11 +39,13 @@ type ButtonsWithNotifyClick = 'camera' |
     'desktop' |
     'download' |
     'embedmeeting' |
+    'end-meeting' |
     'etherpad' |
     'feedback' |
     'filmstrip' |
     'fullscreen' |
     'hangup' |
+    'hangup-menu' |
     'help' |
     'invite' |
     'livestreaming' |
@@ -304,14 +306,13 @@ export interface IConfig {
     };
     firefox_fake_device?: string;
     flags?: {
-        sendMultipleVideoStreams?: boolean;
-        sourceNameSignaling?: boolean;
     };
     focusUserJid?: string;
     gatherStats?: boolean;
     giphy?: {
         displayMode?: 'all' | 'tile' | 'chat';
         enabled?: boolean;
+        rating?: 'g' | 'pg' | 'pg-13' | 'r';
         sdkKey?: string;
         tileTime?: number;
     };
@@ -343,6 +344,7 @@ export interface IConfig {
     iAmRecorder?: boolean;
     iAmSipGateway?: boolean;
     inviteAppName?: string | null;
+    jaasActuatorUrl?: string;
     jaasFeedbackMetadataURL?: string;
     jaasTokenUrl?: string;
     lastNLimits?: {
@@ -392,6 +394,7 @@ export interface IConfig {
         hideMuteAllButton?: boolean;
     };
     pcStatsInterval?: number;
+    peopleSearchUrl?: string;
     preferH264?: boolean;
     preferredTranscribeLanguage?: string;
     prejoinConfig?: {
@@ -428,6 +431,12 @@ export interface IConfig {
         mode?: 'always' | 'recording';
     };
     serviceUrl?: string;
+    sipInviteUrl?: string;
+    speakerStats?: {
+        disableSearch?: boolean;
+        disabled?: boolean;
+        order?: Array<'role' | 'name' | 'hasLeft'>;
+    };
     speakerStatsOrder?: Array<'role' | 'name' | 'hasLeft'>;
     startAudioMuted?: number;
     startAudioOnly?: boolean;
@@ -443,7 +452,6 @@ export interface IConfig {
         callStatsThreshold?: number;
         capScreenshareBitrate?: number;
         disableE2EE?: boolean;
-        enableThumbnailReordering?: boolean;
         mobileXmppWsThreshold?: number;
         noAutoPlayVideo?: boolean;
         p2pTestMode?: boolean;
@@ -453,6 +461,7 @@ export interface IConfig {
     tileView?: {
         numberOfVisibleTiles?: number;
     };
+    tokenAuthUrl?: string;
     toolbarButtons?: Array<ToolbarButtons>;
     toolbarConfig?: {
         alwaysVisible?: boolean;
@@ -487,8 +496,8 @@ export interface IConfig {
         minHeightForQualityLvl?: {
             [key: number]: string;
         };
+        persist?: boolean;
         preferredCodec?: string;
-        resizeDesktopForPresenter?: boolean;
     };
     webhookProxyUrl?: string;
     webrtcIceTcpDisable?: boolean;

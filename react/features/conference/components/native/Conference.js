@@ -2,7 +2,7 @@
 
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { BackHandler, NativeModules, SafeAreaView, StatusBar, View } from 'react-native';
+import { BackHandler, NativeModules, SafeAreaView, View } from 'react-native';
 import { withSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { appNavigate } from '../../../app/actions';
@@ -14,7 +14,7 @@ import { ASPECT_RATIO_NARROW } from '../../../base/responsive-ui/constants';
 import { TestConnectionInfo } from '../../../base/testing';
 import { ConferenceNotification, isCalendarEnabled } from '../../../calendar-sync';
 import { DisplayNameLabel } from '../../../display-name';
-import { BrandingImageBackground } from '../../../dynamic-branding';
+import { BrandingImageBackground } from '../../../dynamic-branding/components/native';
 import {
     FILMSTRIP_SIZE,
     Filmstrip,
@@ -268,8 +268,7 @@ class Conference extends AbstractConference<Props, State> {
      */
     render() {
         const {
-            _brandingStyles,
-            _fullscreenEnabled
+            _brandingStyles
         } = this.props;
 
         return (
@@ -279,10 +278,6 @@ class Conference extends AbstractConference<Props, State> {
                     _brandingStyles
                 ] }>
                 <BrandingImageBackground />
-                <StatusBar
-                    barStyle = 'light-content'
-                    hidden = { _fullscreenEnabled }
-                    translucent = { _fullscreenEnabled } />
                 { this._renderContent() }
             </Container>
         );

@@ -4,7 +4,6 @@ import React, { PureComponent } from 'react';
 import { Image, View } from 'react-native';
 import type { Dispatch } from 'redux';
 
-import { getMultipleVideoSupportFeatureFlag, getSourceNameSignalingFeatureFlag } from '../../../base/config';
 import { JitsiTrackEvents } from '../../../base/lib-jitsi-meet';
 import { MEDIA_TYPE, VIDEO_TYPE } from '../../../base/media';
 import {
@@ -26,7 +25,7 @@ import {
     getVideoTrackByParticipant,
     trackStreamingStatusChanged
 } from '../../../base/tracks';
-import { ConnectionIndicator } from '../../../connection-indicator';
+import ConnectionIndicator from '../../../connection-indicator/components/native/ConnectionIndicator';
 import { DisplayNameLabel } from '../../../display-name';
 import { getGifDisplayMode, getGifForParticipant } from '../../../gifs/functions';
 import {
@@ -112,11 +111,6 @@ type Props = {
     _renderModeratorIndicator: boolean,
 
     /**
-     * Whether source name signaling is enabled.
-     */
-    _sourceNameSignalingEnabled: boolean,
-
-    /**
      * The video track that will be displayed in the thumbnail.
      */
     _videoTrack: ?Object,
@@ -197,6 +191,8 @@ class Thumbnail extends PureComponent<Props> {
             dispatch(showSharedVideoMenu(_participantId));
         }
 
+        // TODO: add support for getting info about the virtual screen shares.
+
         if (!_fakeParticipant) {
             dispatch(showContextMenuDetails(_participantId, _local));
         }
@@ -266,9 +262,9 @@ class Thumbnail extends PureComponent<Props> {
         // Listen to track streaming status changed event to keep it updated.
         // TODO: after converting this component to a react function component,
         // use a custom hook to update local track streaming status.
-        const { _videoTrack, dispatch, _sourceNameSignalingEnabled } = this.props;
+        const { _videoTrack, dispatch } = this.props;
 
-        if (_sourceNameSignalingEnabled && _videoTrack && !_videoTrack.local) {
+        if (_videoTrack && !_videoTrack.local) {
             _videoTrack.jitsiTrack.on(JitsiTrackEvents.TRACK_STREAMING_STATUS_CHANGED,
                 this.handleTrackStreamingStatusChanged);
             dispatch(trackStreamingStatusChanged(_videoTrack.jitsiTrack,
@@ -286,10 +282,9 @@ class Thumbnail extends PureComponent<Props> {
     componentDidUpdate(prevProps: Props) {
         // TODO: after converting this component to a react function component,
         // use a custom hook to update local track streaming status.
-        const { _videoTrack, dispatch, _sourceNameSignalingEnabled } = this.props;
+        const { _videoTrack, dispatch } = this.props;
 
-        if (_sourceNameSignalingEnabled
-            && prevProps._videoTrack?.jitsiTrack?.getSourceName() !== _videoTrack?.jitsiTrack?.getSourceName()) {
+        if (prevProps._videoTrack?.jitsiTrack?.getSourceName() !== _videoTrack?.jitsiTrack?.getSourceName()) {
             if (prevProps._videoTrack && !prevProps._videoTrack.local) {
                 prevProps._videoTrack.jitsiTrack.off(JitsiTrackEvents.TRACK_STREAMING_STATUS_CHANGED,
                     this.handleTrackStreamingStatusChanged);
@@ -314,9 +309,9 @@ class Thumbnail extends PureComponent<Props> {
     componentWillUnmount() {
         // TODO: after converting this component to a react function component,
         // use a custom hook to update local track streaming status.
-        const { _videoTrack, dispatch, _sourceNameSignalingEnabled } = this.props;
+        const { _videoTrack, dispatch } = this.props;
 
-        if (_sourceNameSignalingEnabled && _videoTrack && !_videoTrack.local) {
+        if (_videoTrack && !_videoTrack.local) {
             _videoTrack.jitsiTrack.off(JitsiTrackEvents.TRACK_STREAMING_STATUS_CHANGED,
                 this.handleTrackStreamingStatusChanged);
             dispatch(trackStreamingStatusChanged(_videoTrack.jitsiTrack,
@@ -409,7 +404,6 @@ function _mapStateToProps(state, ownProps) {
     const id = participant?.id;
     const audioTrack = getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.AUDIO, id);
     const videoTrack = getVideoTrackByParticipant(state, participant);
-    const isMultiStreamSupportEnabled = getMultipleVideoSupportFeatureFlag(state);
     const isScreenShare = videoTrack?.videoType === VIDEO_TYPE.DESKTOP;
     const participantCount = getParticipantCount(state);
     const renderDominantSpeakerIndicator = participant && participant.dominantSpeaker && participantCount > 2;
@@ -424,7 +418,7 @@ function _mapStateToProps(state, ownProps) {
         _fakeParticipant: participant?.fakeParticipant,
         _gifSrc: mode === 'chat' ? null : gifSrc,
         _isScreenShare: isScreenShare,
-        _isVirtualScreenshare: isMultiStreamSupportEnabled && isScreenShareParticipant(participant),
+        _isVirtualScreenshare: isScreenShareParticipant(participant),
         _local: participant?.local,
         _localVideoOwner: Boolean(ownerId === localParticipantId),
         _participantId: id,
@@ -432,7 +426,6 @@ function _mapStateToProps(state, ownProps) {
         _raisedHand: hasRaisedHand(participant),
         _renderDominantSpeakerIndicator: renderDominantSpeakerIndicator,
         _renderModeratorIndicator: renderModeratorIndicator,
-        _sourceNameSignalingEnabled: getSourceNameSignalingFeatureFlag(state),
         _videoTrack: videoTrack
     };
 }

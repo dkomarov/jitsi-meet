@@ -1,5 +1,5 @@
 import JitsiMeetJS from '../lib-jitsi-meet';
-import Platform from '../react/Platform.web';
+import Platform from '../react/Platform';
 
 import { isMobileBrowser } from './utils';
 
@@ -24,8 +24,6 @@ const browserNameToCheck = {
     opera: browser.isOpera.bind(browser),
     safari: browser.isSafari.bind(browser)
 };
-
-declare let interfaceConfig: any;
 
 /**
  * Returns whether or not jitsi is optimized and targeted for the  provided

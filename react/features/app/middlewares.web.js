@@ -1,9 +1,8 @@
-// @flow
-
 import '../authentication/middleware';
 import '../base/i18n/middleware';
 import '../base/devices/middleware';
 import '../base/media/middleware';
+import '../base/redux/middleware';
 import '../dynamic-branding/middleware';
 import '../e2ee/middleware';
 import '../external-api/middleware';
@@ -19,7 +18,7 @@ import '../screen-share/middleware';
 import '../shared-video/middleware';
 import '../settings/middleware';
 import '../talk-while-muted/middleware';
-import '../virtual-background/middleware';
+import '../toolbox/middleware';
 import '../face-landmarks/middleware';
 import '../gifs/middleware';
 import '../whiteboard/middleware';

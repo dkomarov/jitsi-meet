@@ -1,4 +1,3 @@
-/* eslint-disable lines-around-comment */
 import i18next from 'i18next';
 import { v4 as uuidV4 } from 'uuid';
 import fixWebmDuration from 'webm-duration-fix';
@@ -8,10 +7,11 @@ import { getRoomName } from '../../../base/conference/functions';
 import { MEDIA_TYPE } from '../../../base/media/constants';
 import { getLocalTrack, getTrackState } from '../../../base/tracks/functions';
 import { inIframe } from '../../../base/util/iframeUtils';
+// eslint-disable-next-line lines-around-comment
 // @ts-ignore
 import { stopLocalVideoRecording } from '../../actions.any';
 
-interface SelfRecording {
+interface ISelfRecording {
     on: boolean;
     withVideo: boolean;
 }
@@ -29,7 +29,7 @@ interface ILocalRecordingManager {
     recordingData: Blob[];
     roomName: string;
     saveRecording: (recordingData: Blob[], filename: string) => void;
-    selfRecording: SelfRecording;
+    selfRecording: ISelfRecording;
     startLocalRecording: (store: IStore, onlySelf: boolean) => void;
     stopLocalRecording: () => void;
     stream: MediaStream | undefined;
@@ -219,10 +219,22 @@ const LocalRecordingManager: ILocalRecordingManager = {
                     permittedOrigins: [ '*' ]
                 });
             }
+            const localAudioTrack = getLocalTrack(tracks, MEDIA_TYPE.AUDIO)?.jitsiTrack?.track;
+
+            // Starting chrome 107, the recorder does not record any data if the audio stream has no tracks
+            // To fix this we create a track for the local user(muted track)
+            if (!localAudioTrack) {
+                APP.conference.muteAudio(false);
+                setTimeout(() => APP.conference.muteAudio(true), 100);
+                await new Promise(resolve => {
+                    setTimeout(resolve, 100);
+                });
+            }
 
             const currentTitle = document.title;
 
             document.title = i18next.t('localRecording.selectTabTitle');
+
             // @ts-ignore
             gdmStream = await navigator.mediaDevices.getDisplayMedia({
                 // @ts-ignore
@@ -243,9 +255,10 @@ const LocalRecordingManager: ILocalRecordingManager = {
             }
 
             this.initializeAudioMixer();
-            this.mixAudioStream(gdmStream);
 
-            tracks.forEach((track: any) => {
+            const allTracks = getTrackState(getState());
+
+            allTracks.forEach((track: any) => {
                 if (track.mediaType === MEDIA_TYPE.AUDIO) {
                     const audioTrack = track?.jitsiTrack?.track;
 

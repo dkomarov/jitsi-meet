@@ -1,23 +1,25 @@
 /* eslint-disable lines-around-comment */
+
 import React from 'react';
 
-import { IconEventNote, IconRestore, IconSettings } from '../base/icons/svg';
-// @ts-ignore
+import { IconCalendar, IconGear, IconRestore } from '../base/icons/svg';
 import BaseTheme from '../base/ui/components/BaseTheme';
 
 // @ts-ignore
 import TabIcon from './components/TabIcon';
 
-export const INACTIVE_TAB_COLOR = BaseTheme.palette.tab01Disabled;
+// @ts-ignore
+export const ACTIVE_TAB_COLOR = BaseTheme.palette.icon01;
+export const INACTIVE_TAB_COLOR = BaseTheme.palette.icon03;
 
 export const tabBarOptions = {
-    tabBarActiveTintColor: BaseTheme.palette.icon01,
+    tabBarActiveTintColor: ACTIVE_TAB_COLOR,
     tabBarInactiveTintColor: INACTIVE_TAB_COLOR,
     tabBarLabelStyle: {
         fontSize: 12
     },
-    tabBarStyle: {
-        backgroundColor: BaseTheme.palette.screen01Header
+    tabBarStyle: { // @ts-ignore
+        backgroundColor: BaseTheme.palette.screen02Header
     }
 };
 
@@ -33,7 +35,7 @@ export const calendarListTabBarOptions = {
     tabBarIcon: ({ focused }: { focused: boolean; }) => (
         <TabIcon
             focused = { focused }
-            src = { IconEventNote } />
+            src = { IconCalendar } />
     )
 };
 
@@ -41,6 +43,6 @@ export const settingsTabBarOptions = {
     tabBarIcon: ({ focused }: { focused: boolean; }) => (
         <TabIcon
             focused = { focused }
-            src = { IconSettings } />
+            src = { IconGear } />
     )
 };

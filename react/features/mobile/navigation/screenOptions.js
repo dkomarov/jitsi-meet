@@ -51,7 +51,7 @@ export const welcomeScreenOptions = {
     gestureEnabled: false,
     headerShown: true,
     headerStyle: {
-        backgroundColor: BaseTheme.palette.screen01Header
+        backgroundColor: BaseTheme.palette.screen02Header
     },
     headerTitleStyle: {
         color: BaseTheme.palette.text01
@@ -199,7 +199,9 @@ export const preJoinScreenOptions = {
     headerStyle: {
         backgroundColor: BaseTheme.palette.screen02Header
     },
-    headerTitle: ''
+    headerTitleStyle: {
+        color: BaseTheme.palette.text01
+    }
 };
 
 /**

@@ -5,7 +5,7 @@ import { Text, TouchableHighlight, View } from 'react-native';
 
 import { ColorSchemeRegistry } from '../../../base/color-scheme';
 import { translate } from '../../../base/i18n';
-import { Icon, IconCancelSelection } from '../../../base/icons';
+import { Icon, IconCloseCircle } from '../../../base/icons';
 import { connect } from '../../../base/redux';
 import { type StyleType } from '../../../base/styles';
 import {
@@ -15,6 +15,7 @@ import { setLobbyChatActiveState, setPrivateMessageRecipient } from '../../actio
 import AbstractMessageRecipient, {
     type Props as AbstractProps
 } from '../AbstractMessageRecipient';
+
 
 type Props = AbstractProps & {
 
@@ -113,7 +114,7 @@ class MessageRecipient extends AbstractMessageRecipient<Props> {
                     <TouchableHighlight
                         onPress = { this._onResetLobbyMessageRecipient }>
                         <Icon
-                            src = { IconCancelSelection }
+                            src = { IconCloseCircle }
                             style = { _styles.messageRecipientCancelIcon } />
                     </TouchableHighlight>
                 </View>
@@ -132,9 +133,10 @@ class MessageRecipient extends AbstractMessageRecipient<Props> {
                     }) }
                 </Text>
                 <TouchableHighlight
-                    onPress = { this._onResetPrivateMessageRecipient }>
+                    onPress = { this._onResetPrivateMessageRecipient }
+                    underlayColor = { 'transparent' }>
                     <Icon
-                        src = { IconCancelSelection }
+                        src = { IconCloseCircle }
                         style = { _styles.messageRecipientCancelIcon } />
                 </TouchableHighlight>
             </View>

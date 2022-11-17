@@ -1,11 +1,10 @@
-import { Theme } from '@mui/material';
 import React, { ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import ContextMenuItem, { Props as ItemProps } from './ContextMenuItem';
+import ContextMenuItem, { IProps as ItemProps } from './ContextMenuItem';
 
 
-type Props = {
+interface IProps {
 
     /**
      * List of actions in this group.
@@ -16,9 +15,9 @@ type Props = {
      * The children of the component.
      */
     children?: ReactNode;
-};
+}
 
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(theme => {
     return {
         contextMenuItemGroup: {
             '&:not(:empty)': {
@@ -43,7 +42,7 @@ const useStyles = makeStyles()((theme: Theme) => {
 const ContextMenuItemGroup = ({
     actions,
     children
-}: Props) => {
+}: IProps) => {
     const { classes: styles } = useStyles();
 
     return (

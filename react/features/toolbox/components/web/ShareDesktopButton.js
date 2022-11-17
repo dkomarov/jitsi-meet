@@ -1,11 +1,11 @@
 // @flow
 
 import { translate } from '../../../base/i18n';
-import { IconShareDesktop } from '../../../base/icons';
+import { IconScreenshare, IconStopScreenshare } from '../../../base/icons';
 import JitsiMeetJS from '../../../base/lib-jitsi-meet/_';
 import { connect } from '../../../base/redux';
 import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
-import { isScreenVideoShared } from '../../../screen-share';
+import { isScreenVideoShared } from '../../../screen-share/functions';
 import { isDesktopShareButtonDisabled } from '../../functions';
 
 type Props = AbstractButtonProps & {
@@ -32,7 +32,8 @@ type Props = AbstractButtonProps & {
 class ShareDesktopButton extends AbstractButton<Props, *> {
     accessibilityLabel = 'toolbar.accessibilityLabel.shareYourScreen';
     label = 'toolbar.startScreenSharing';
-    icon = IconShareDesktop;
+    icon = IconScreenshare;
+    toggledIcon = IconStopScreenshare;
     toggledLabel = 'toolbar.stopScreenSharing';
     tooltip = 'toolbar.accessibilityLabel.shareYourScreen';
 

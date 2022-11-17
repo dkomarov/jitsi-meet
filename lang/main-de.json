@@ -104,6 +104,7 @@
         },
         "noMessagesMessage": "Es gibt noch keine Nachricht in dieser Konferenz. Starten Sie hier eine Unterhaltung!",
         "privateNotice": "Private Nachricht an {{recipient}}",
+        "sendButton": "Senden",
         "smileysPanel": "Emoji-Auswahl",
         "tabs": {
             "chat": "Chatten",
@@ -270,6 +271,7 @@
         "gracefulShutdown": "Der Dienst steht momentan wegen Wartungsarbeiten nicht zur Verfügung. Bitte versuchen Sie es später noch einmal.",
         "grantModeratorDialog": "Möchten Sie wirklich Moderationsrechte an diese Person vergeben?",
         "grantModeratorTitle": "Moderationsrechte vergeben",
+        "hide": "Ausblenden",
         "hideShareAudioHelper": "Diese Meldung nicht mehr anzeigen",
         "incorrectPassword": "Name oder Passwort ungültig",
         "incorrectRoomLockPassword": "Falsches Passwort",
@@ -387,6 +389,7 @@
         "shareYourScreenDisabled": "Bildschirmfreigabe deaktiviert.",
         "sharedVideoDialogError": "Fehler: Ungültige URL",
         "sharedVideoLinkPlaceholder": "YouTube-URL oder direkte Video-URL",
+        "show": "Anzeigen",
         "start": "Starte ",
         "startLiveStreaming": "Livestream starten",
         "startRecording": "Aufnahme starten",
@@ -435,7 +438,7 @@
         "search": "GIPHY durchsuchen"
     },
     "helpView": {
-        "header": "Hilfecenter"
+        "title": "Hilfecenter"
     },
     "incomingCall": {
         "answer": "Antworten",
@@ -553,6 +556,7 @@
         "signedInAs": "Sie sind derzeit angemeldet als:",
         "start": "Einen Livestream starten",
         "streamIdHelp": "Was ist das?",
+        "title": "Livestream",
         "unavailableTitle": "Livestreaming nicht verfügbar",
         "youtubeTerms": "YouTube-Nutzungsbedingungen"
     },
@@ -595,6 +599,7 @@
         "passwordJoinButton": "Beitreten",
         "reject": "Ablehnen",
         "rejectAll": "Alle ablehnen",
+        "title": "Lobby",
         "toggleLabel": "Lobby aktivieren"
     },
     "localRecording": {
@@ -621,6 +626,7 @@
         "no": "Nein",
         "participant": "Person",
         "participantStats": "Personenstatistik",
+        "selectTabTitle": "🎥 Bitte dieses Tab zur Aufzeichnung auswählen",
         "sessionToken": "Sitzungs-Token",
         "start": "Aufnahme starten",
         "stop": "Aufnahme stoppen",
@@ -737,13 +743,13 @@
             "videoModeration": "Kamera einschalten"
         },
         "close": "Schließen",
-        "header": "Anwesende",
         "headings": {
             "lobby": "Lobby ({{count}})",
             "participantsList": "Anwesende ({{count}})",
             "waitingLobby": "In der Lobby ({{count}})"
         },
-        "search": "Suche Anwesende"
+        "search": "Suche Anwesende",
+        "title": "Anwesende"
     },
     "passwordDigitsOnly": "Bis zu {{number}} Ziffern",
     "passwordSetRemotely": "von einer anderen Person gesetzt",
@@ -853,7 +859,7 @@
         "ringing": "Es klingelt …"
     },
     "privacyView": {
-        "header": "Datenschutz"
+        "title": "Datenschutz"
     },
     "profile": {
         "avatar": "Benutzerbild",
@@ -925,6 +931,7 @@
         "signIn": "Anmelden",
         "signOut": "Abmelden",
         "surfaceError": "Bitte das aktuelle Tab auswählen.",
+        "title": "Aufnahme",
         "unavailable": "Oh! Der {{serviceName}} ist aktuell nicht verfügbar. Wir arbeiten an der Behebung des Problems. Bitte versuchen Sie es später noch einmal.",
         "unavailableTitle": "Aufnahme nicht verfügbar",
         "uploadToCloud": "In die Cloud hochladen"
@@ -936,8 +943,8 @@
     "security": {
         "about": "Sie können Ihre Konferenz mit einem Passwort sichern. Teilnehmer müssen dieses eingeben, bevor sie an der Sitzung teilnehmen dürfen.",
         "aboutReadOnly": "Mit Moderationsrechten kann die Konferenz mit einem Passwort gesichert werden. Personen müssen dieses eingeben, bevor sie an der Sitzung teilnehmen dürfen.",
-        "header": "Sicherheitsoptionen",
-        "insecureRoomNameWarning": "Der Raumname ist unsicher. Unerwünschte Teilnehmer könnten Ihrer Konferenz beitreten"
+        "insecureRoomNameWarning": "Der Raumname ist unsicher. Unerwünschte Teilnehmer könnten Ihrer Konferenz beitreten",
+        "title": "Sicherheitsoptionen"
     },
     "settings": {
         "buttonLabel": "Einstellungen",
@@ -1042,7 +1049,7 @@
         "title": "Die Konferenz wurde unterbrochen, weil der Standby-Modus aktiviert wurde."
     },
     "termsView": {
-        "header": "Nutzungsbedingungen"
+        "title": "Nutzungsbedingungen"
     },
     "toggleTopPanelLabel": "Obere Leiste ein-/ausschalten",
     "toolbar": {
@@ -1115,7 +1122,8 @@
             "toggleFilmstrip": "Miniaturansichten ein-/ausschalten",
             "undock": "In eigenem Fenster anzeigen",
             "videoblur": "Unscharfer Hintergrund ein-/ausschalten",
-            "videomute": "„Video stummschalten“ ein-/ausschalten"
+            "videomute": "„Video stummschalten“ ein-/ausschalten",
+            "whiteboard": "Whiteboard ein-/ausschalten"
         },
         "addPeople": "Personen zur Konferenz hinzufügen",
         "audioOnlyOff": "Modus „Nur Audio“ deaktivieren",
@@ -1146,6 +1154,7 @@
         "giphy": "GIPHY ein-/ausschalten",
         "hangup": "Konferenz verlassen",
         "help": "Hilfe",
+        "hideWhiteboard": "Whiteboard ausblenden",
         "invite": "Personen einladen",
         "joinBreakoutRoom": "In Breakout-Raum wechseln",
         "laugh": "Lachen",
@@ -1191,6 +1200,7 @@
         "shareaudio": "Audio teilen",
         "sharedvideo": "Video teilen",
         "shortcuts": "Tastenkürzel anzeigen",
+        "showWhiteboard": "Whiteboard anzeigen",
         "silence": "Stille",
         "speakerStats": "Sprechstatistik",
         "startScreenSharing": "Bildschirmfreigabe starten",
@@ -1215,6 +1225,8 @@
         "labelToolTip": "Das Meeting wird transkribiert",
         "off": "Transkribieren gestoppt",
         "pending": "Transkribieren des Meetings wird vorbereitet…",
+        "sourceLanguageDesc": "Aktuell ist die Sprache der Konferenz auf <b>{{sourceLanguage}}</b> eingestellt. <br/> Sie könne dies hier ",
+        "sourceLanguageHere": "ändern",
         "start": "Anzeige der Untertitel starten",
         "stop": "Anzeige der Untertitel stoppen",
         "subtitles": "Untertitel",

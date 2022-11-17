@@ -52,7 +52,7 @@ interface Props extends WithTranslation {
     /**
      * The channelLastN value configured for the conference.
      */
-    _channelLastN: Number;
+    _channelLastN: number;
 
     /**
      * Whether or not the conference is in peer to peer mode.
@@ -63,7 +63,7 @@ interface Props extends WithTranslation {
      * The currently configured maximum quality resolution to be sent and
      * received from the remote participants.
      */
-    _sendrecvVideoQuality: Number;
+    _sendrecvVideoQuality: number;
 
     /**
      * An object containing the CSS classes.
@@ -73,7 +73,7 @@ interface Props extends WithTranslation {
     /**
      * Invoked to request toggling of audio only mode.
      */
-    dispatch: Dispatch<any>;
+    dispatch: IStore['dispatch'];
 }
 
 /**
@@ -112,7 +112,7 @@ const styles = (theme: Theme) => {
  *
  * @augments Component
  */
-class VideoQualitySlider extends Component<Props> {
+class VideoQualitySlider extends Component<IProps> {
     _sliderOptions: Array<Object>;
 
     /**
@@ -121,7 +121,7 @@ class VideoQualitySlider extends Component<Props> {
      * @param {Object} props - The read-only React Component props with which
      * the new instance is to be initialized.
      */
-    constructor(props: Props) {
+    constructor(props: IProps) {
         super(props);
 
         // Bind event handlers so they are only bound once for every instance.
@@ -307,8 +307,10 @@ class VideoQualitySlider extends Component<Props> {
         const {
             // @ts-ignore
             audioOnly,
+
             // @ts-ignore
             onSelect,
+
             // @ts-ignore
             videoQuality,
         } =
@@ -360,7 +362,7 @@ class VideoQualitySlider extends Component<Props> {
  *
  * @param {Object} state - The Redux state.
  * @private
- * @returns {Props}
+ * @returns {IProps}
  */
 function _mapStateToProps(state: IState) {
     const { enabled: audioOnly } = state["features/base/audio-only"];

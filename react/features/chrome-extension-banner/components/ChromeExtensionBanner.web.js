@@ -8,12 +8,12 @@ import {
     sendAnalytics
 } from '../../analytics';
 import { getCurrentConference } from '../../base/conference/functions';
+import checkChromeExtensionsInstalled from '../../base/environment/checkChromeExtensionsInstalled';
 import {
-    checkChromeExtensionsInstalled,
     isMobileBrowser
 } from '../../base/environment/utils';
 import { translate } from '../../base/i18n';
-import { Icon, IconClose } from '../../base/icons';
+import { Icon, IconCloseLarge } from '../../base/icons';
 import { browser } from '../../base/lib-jitsi-meet';
 import { connect } from '../../base/redux';
 import { isVpaasMeeting } from '../../jaas/functions';
@@ -294,7 +294,7 @@ class ChromeExtensionBanner extends PureComponent<Props, State> {
                         <Icon
                             className = 'gray'
                             size = { 12 }
-                            src = { IconClose } />
+                            src = { IconCloseLarge } />
                     </div>
                 </div>
                 <div

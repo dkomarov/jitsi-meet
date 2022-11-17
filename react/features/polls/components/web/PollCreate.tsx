@@ -1,21 +1,20 @@
 /* eslint-disable lines-around-comment */
-import { Theme } from '@mui/material';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import Icon from '../../../base/icons/components/Icon';
-import { IconMenu } from '../../../base/icons/svg';
+import { IconBurger } from '../../../base/icons/svg';
 // @ts-ignore
 import { Tooltip } from '../../../base/tooltip';
 import Button from '../../../base/ui/components/web/Button';
-import { BUTTON_TYPES } from '../../../base/ui/constants';
+import { BUTTON_TYPES } from '../../../base/ui/constants.web';
 import { ANSWERS_LIMIT, CHAR_LIMIT } from '../../constants';
 // @ts-ignore
 import AbstractPollCreate from '../AbstractPollCreate';
 // @ts-ignore
 import type { AbstractProps } from '../AbstractPollCreate';
 
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(theme => {
     return {
         buttonMargin: {
             marginRight: theme.spacing(2)
@@ -231,7 +230,7 @@ const PollCreate = ({
                                 onMouseDown = { ev => onGrab(i, ev) }
                                 tabIndex = { -1 }
                                 type = 'button'>
-                                <Icon src = { IconMenu } />
+                                <Icon src = { IconBurger } />
                             </button>
                         </div>
 

@@ -8,17 +8,14 @@ import {
     Alert,
     NativeModules,
     Platform,
+    ScrollView,
     Text,
     View
 } from 'react-native';
-import {
-    Divider,
-    TextInput
-} from 'react-native-paper';
+import { Divider } from 'react-native-paper';
 
-// @ts-ignore
-import { getDefaultURL } from '../../../app/functions';
-import { IState } from '../../../app/types';
+import { getDefaultURL } from '../../../app/functions.native';
+import { IReduxState } from '../../../app/types';
 // @ts-ignore
 import { Avatar } from '../../../base/avatar';
 import { translate } from '../../../base/i18n/functions';
@@ -26,23 +23,21 @@ import { translate } from '../../../base/i18n/functions';
 import JitsiScreen from '../../../base/modal/components/JitsiScreen';
 import { getLocalParticipant } from '../../../base/participants/functions';
 import { connect } from '../../../base/redux/functions';
-// @ts-ignore
-import { updateSettings } from '../../../base/settings';
-import BaseThemeNative from '../../../base/ui/components/BaseTheme.native';
+import { updateSettings } from '../../../base/settings/actions';
+import Input from '../../../base/ui/components/native/Input';
 import Switch from '../../../base/ui/components/native/Switch';
 // @ts-ignore
 import { screen } from '../../../mobile/navigation/routes';
 // @ts-ignore
 import { AVATAR_SIZE } from '../../../welcome/components/styles';
-// @ts-ignore
-import { isServerURLChangeEnabled, normalizeUserInputURL } from '../../functions';
+import { isServerURLChangeEnabled, normalizeUserInputURL } from '../../functions.native';
 
 // @ts-ignore
 import FormRow from './FormRow';
 // @ts-ignore
 import FormSectionAccordion from './FormSectionAccordion';
 // @ts-ignore
-import styles, { PLACEHOLDER_COLOR, PLACEHOLDER_TEXT_COLOR } from './styles';
+import styles from './styles';
 
 /**
  * Application information module.
@@ -50,7 +45,7 @@ import styles, { PLACEHOLDER_COLOR, PLACEHOLDER_TEXT_COLOR } from './styles';
 const { AppInfo } = NativeModules;
 
 
-interface State {
+interface IState {
 
     /**
      * State variable for the disable call integration switch.
@@ -107,7 +102,7 @@ interface State {
  * The type of the React {@code Component} props of
  * {@link SettingsView}.
  */
-interface Props extends WithTranslation {
+interface IProps extends WithTranslation {
 
     /**
      * The ID of the local participant.
@@ -152,6 +147,11 @@ interface Props extends WithTranslation {
     _visible: boolean;
 
     /**
+     * Add bottom padding to the screen.
+     */
+    addBottomInset?: boolean;
+
+    /**
      * Redux store dispatch function.
      */
     dispatch: Function;
@@ -160,12 +160,17 @@ interface Props extends WithTranslation {
      * Default prop for navigating between screen components(React Navigation).
      */
     navigation: Object;
+
+    /**
+     * Bounce when scrolling.
+     */
+    scrollBounces?: boolean;
 }
 
 /**
  * The native container rendering the app settings page.
  */
-class SettingsView extends Component<Props, State> {
+class SettingsView extends Component<IProps, IState> {
     _urlField: Object;
 
     /**
@@ -174,7 +179,7 @@ class SettingsView extends Component<Props, State> {
      *
      * @inheritdoc
      */
-    constructor(props: Props) {
+    constructor(props: IProps) {
         super(props);
 
         const {
@@ -195,9 +200,9 @@ class SettingsView extends Component<Props, State> {
             disableCrashReporting,
             disableP2P,
             disableSelfView,
-            displayName,
-            email,
-            serverURL,
+            displayName: displayName || '',
+            email: email || '',
+            serverURL: serverURL || '',
             startCarMode,
             startWithAudioMuted,
             startWithVideoMuted
@@ -229,7 +234,7 @@ class SettingsView extends Component<Props, State> {
      * @inheritdoc
      * @returns {void}
      */
-    componentDidUpdate(prevProps: Props) {
+    componentDidUpdate(prevProps: IProps) {
         const { _settings } = this.props;
 
         if (!_.isEqual(prevProps._settings, _settings)) {
@@ -259,171 +264,155 @@ class SettingsView extends Component<Props, State> {
             startWithVideoMuted
         } = this.state;
 
-        const { t } = this.props;
-
-        const textInputTheme = {
-            colors: {
-                background: BaseThemeNative.palette.ui01,
-                placeholder: BaseThemeNative.palette.text01,
-                primary: PLACEHOLDER_COLOR,
-                underlineColor: 'transparent',
-                text: BaseThemeNative.palette.text01
-            }
-        };
+        const {
+            addBottomInset = false,
+            scrollBounces = false,
+            t
+        } = this.props;
 
         return (
             <JitsiScreen
-                safeAreaInsets = { [ 'bottom', 'left', 'right' ] }
-                scrollEnabled = { true }
+                disableForcedKeyboardDismiss = { true }
+                safeAreaInsets = { [ addBottomInset && 'bottom', 'left', 'right' ].filter(Boolean) }
                 style = { styles.settingsViewContainer }>
-                <View style = { styles.avatarContainer }>
-                    <Avatar
-                        participantId = { this.props._localParticipantId }
-                        size = { AVATAR_SIZE } />
-                </View>
-                <FormSectionAccordion
-                    label = 'settingsView.profileSection'>
-                    <TextInput
-                        autoCorrect = { false }
-                        label = { t('settingsView.displayName') }
-                        mode = 'outlined'
-                        onChangeText = { this._onChangeDisplayName }
-                        placeholder = { t('settingsView.displayNamePlaceholderText') }
-                        placeholderTextColor = { PLACEHOLDER_TEXT_COLOR }
-                        spellCheck = { false }
-                        style = { styles.textInputContainer }
-                        textContentType = { 'name' } // iOS only
-                        theme = { textInputTheme }
-                        value = { displayName } />
-                    <Divider style = { styles.fieldSeparator } />
-                    <TextInput
-                        autoCapitalize = 'none'
-                        autoCorrect = { false }
-                        keyboardType = { 'email-address' }
-                        label = { t('settingsView.email') }
-                        mode = 'outlined'
-                        onChangeText = { this._onChangeEmail }
-                        placeholder = 'email@example.com'
-                        placeholderTextColor = { PLACEHOLDER_TEXT_COLOR }
-                        spellCheck = { false }
-                        style = { styles.textInputContainer }
-                        textContentType = { 'emailAddress' } // iOS only
-                        theme = { textInputTheme }
-                        value = { email } />
-                </FormSectionAccordion>
-                <FormSectionAccordion
-                    label = 'settingsView.conferenceSection'>
-                    <TextInput
-                        autoCapitalize = 'none'
-                        autoCorrect = { false }
-                        editable = { this.props._serverURLChangeEnabled }
-                        keyboardType = { 'url' }
-                        label = { t('settingsView.serverURL') }
-                        mode = 'outlined'
-                        onBlur = { this._onBlurServerURL }
-                        onChangeText = { this._onChangeServerURL }
-                        placeholder = { this.props._serverURL }
-                        placeholderTextColor = { PLACEHOLDER_TEXT_COLOR }
-                        spellCheck = { false }
-                        style = { styles.textInputContainer }
-                        textContentType = { 'URL' } // iOS only
-                        theme = { textInputTheme }
-                        value = { serverURL } />
-                    <Divider style = { styles.fieldSeparator } />
-                    <FormRow label = 'settingsView.startCarModeInLowBandwidthMode'>
-                        <Switch
-                            checked = { startCarMode }
+                <ScrollView bounces = { scrollBounces }>
+                    <View style = { styles.avatarContainer }>
+                        <Avatar
+                            participantId = { this.props._localParticipantId }
+                            size = { AVATAR_SIZE } />
+                    </View>
+                    <FormSectionAccordion
+                        label = 'settingsView.profileSection'>
+                        <Input
                             // @ts-ignore
-                            onChange = { this._onStartCarmodeInLowBandwidthMode } />
-                    </FormRow>
-                    <Divider style = { styles.fieldSeparator } />
-                    <FormRow
-                        label = 'settingsView.startWithAudioMuted'>
-                        <Switch
-                            checked = { startWithAudioMuted }
+                            customStyles = {{ container: styles.customContainer }}
+                            label = { t('settingsView.displayName') }
+                            onChange = { this._onChangeDisplayName }
+                            placeholder = { t('settingsView.displayNamePlaceholderText') }
+                            textContentType = { 'name' } // iOS only
+                            value = { displayName } />
+                        <Divider style = { styles.fieldSeparator } />
+                        <Input
                             // @ts-ignore
-                            onChange = { this._onStartAudioMutedChange } />
-                    </FormRow>
-                    <Divider style = { styles.fieldSeparator } />
-                    <FormRow label = 'settingsView.startWithVideoMuted'>
-                        <Switch
-                            checked = { startWithVideoMuted }
+                            autoCapitalize = 'none'
+                            customStyles = {{ container: styles.customContainer }}
+                            keyboardType = { 'email-address' }
+                            label = { t('settingsView.email') }
+                            onChange = { this._onChangeEmail }
+                            placeholder = { t('settingsView.emailPlaceholderText') }
+                            textContentType = { 'emailAddress' } // iOS only
+                            value = { email } />
+                    </FormSectionAccordion>
+                    <FormSectionAccordion
+                        label = 'settingsView.conferenceSection'>
+                        <Input
                             // @ts-ignore
-                            onChange = { this._onStartVideoMutedChange } />
-                    </FormRow>
-                    <Divider style = { styles.fieldSeparator } />
-                    <FormRow label = 'videothumbnail.hideSelfView'>
-                        <Switch
-                            checked = { disableSelfView }
-                            // @ts-ignore
-                            onChange = { this._onDisableSelfView } />
-                    </FormRow>
-                </FormSectionAccordion>
-                <FormSectionAccordion
-                    label = 'settingsView.links'>
-                    <Link
-                        style = { styles.sectionLink }
-                        // @ts-ignore
-                        to = {{ screen: screen.settings.links.help }}>
-                        { t('settingsView.help') }
-                    </Link>
-                    <Divider style = { styles.fieldSeparator } />
-                    <Link
-                        style = { styles.sectionLink }
-                        // @ts-ignore
-                        to = {{ screen: screen.settings.links.terms }}>
-                        { t('settingsView.terms') }
-                    </Link>
-                    <Divider style = { styles.fieldSeparator } />
-                    <Link
-                        style = { styles.sectionLink }
-                        // @ts-ignore
-                        to = {{ screen: screen.settings.links.privacy }}>
-                        { t('settingsView.privacy') }
-                    </Link>
-                </FormSectionAccordion>
-                <FormSectionAccordion
-                    label = 'settingsView.buildInfoSection'>
-                    <FormRow
-                        label = 'settingsView.version'>
-                        <Text style = { styles.text }>
-                            {`${AppInfo.version} build ${AppInfo.buildNumber}`}
-                        </Text>
-                    </FormRow>
-                </FormSectionAccordion>
-                <FormSectionAccordion
-                    label = 'settingsView.advanced'>
-                    { Platform.OS === 'android' && (
-                        <>
-                            <FormRow
-                                label = 'settingsView.disableCallIntegration'>
-                                <Switch
-                                    checked = { disableCallIntegration }
-                                    // @ts-ignore
-                                    onChange = { this._onDisableCallIntegration } />
-                            </FormRow>
-                            <Divider style = { styles.fieldSeparator } />
-                        </>
-                    )}
-                    <FormRow
-                        label = 'settingsView.disableP2P'>
-                        <Switch
-                            checked = { disableP2P }
-                            // @ts-ignore
-                            onChange = { this._onDisableP2P } />
-                    </FormRow>
-                    <Divider style = { styles.fieldSeparator } />
-                    {AppInfo.GOOGLE_SERVICES_ENABLED && (
-                        <FormRow
-                            fieldSeparator = { true }
-                            label = 'settingsView.disableCrashReporting'>
+                            autoCapitalize = 'none'
+                            customStyles = {{ container: styles.customContainer }}
+                            editable = { this.props._serverURLChangeEnabled }
+                            keyboardType = { 'url' }
+                            label = { t('settingsView.serverURL') }
+                            onBlur = { this._onBlurServerURL }
+                            onChange = { this._onChangeServerURL }
+                            placeholder = { this.props._serverURL }
+                            textContentType = { 'URL' } // iOS only
+                            value = { serverURL } />
+                        <Divider style = { styles.fieldSeparator } />
+                        <FormRow label = 'settingsView.startCarModeInLowBandwidthMode'>
                             <Switch
-                                checked = { disableCrashReporting }
+                                checked = { startCarMode }
                                 // @ts-ignore
-                                onChange = { this._onDisableCrashReporting } />
+                                onChange = { this._onStartCarmodeInLowBandwidthMode } />
                         </FormRow>
-                    )}
-                </FormSectionAccordion>
+                        <Divider style = { styles.fieldSeparator } />
+                        <FormRow
+                            label = 'settingsView.startWithAudioMuted'>
+                            <Switch
+                                checked = { startWithAudioMuted }
+                                // @ts-ignore
+                                onChange = { this._onStartAudioMutedChange } />
+                        </FormRow>
+                        <Divider style = { styles.fieldSeparator } />
+                        <FormRow label = 'settingsView.startWithVideoMuted'>
+                            <Switch
+                                checked = { startWithVideoMuted }
+                                // @ts-ignore
+                                onChange = { this._onStartVideoMutedChange } />
+                        </FormRow>
+                        <Divider style = { styles.fieldSeparator } />
+                        <FormRow label = 'videothumbnail.hideSelfView'>
+                            <Switch
+                                checked = { disableSelfView }
+                                // @ts-ignore
+                                onChange = { this._onDisableSelfView } />
+                        </FormRow>
+                    </FormSectionAccordion>
+                    <FormSectionAccordion
+                        label = 'settingsView.links'>
+                        <Link
+                            style = { styles.sectionLink }
+                            // @ts-ignore
+                            to = {{ screen: screen.settings.links.help }}>
+                            { t('settingsView.help') }
+                        </Link>
+                        <Divider style = { styles.fieldSeparator } />
+                        <Link
+                            style = { styles.sectionLink }
+                            // @ts-ignore
+                            to = {{ screen: screen.settings.links.terms }}>
+                            { t('settingsView.terms') }
+                        </Link>
+                        <Divider style = { styles.fieldSeparator } />
+                        <Link
+                            style = { styles.sectionLink }
+                            // @ts-ignore
+                            to = {{ screen: screen.settings.links.privacy }}>
+                            { t('settingsView.privacy') }
+                        </Link>
+                    </FormSectionAccordion>
+                    <FormSectionAccordion
+                        label = 'settingsView.buildInfoSection'>
+                        <FormRow
+                            label = 'settingsView.version'>
+                            <Text style = { styles.text }>
+                                {`${AppInfo.version} build ${AppInfo.buildNumber}`}
+                            </Text>
+                        </FormRow>
+                    </FormSectionAccordion>
+                    <FormSectionAccordion
+                        label = 'settingsView.advanced'>
+                        { Platform.OS === 'android' && (
+                            <>
+                                <FormRow
+                                    label = 'settingsView.disableCallIntegration'>
+                                    <Switch
+                                        checked = { disableCallIntegration }
+                                        // @ts-ignore
+                                        onChange = { this._onDisableCallIntegration } />
+                                </FormRow>
+                                <Divider style = { styles.fieldSeparator } />
+                            </>
+                        )}
+                        <FormRow
+                            label = 'settingsView.disableP2P'>
+                            <Switch
+                                checked = { disableP2P }
+                                // @ts-ignore
+                                onChange = { this._onDisableP2P } />
+                        </FormRow>
+                        <Divider style = { styles.fieldSeparator } />
+                        {AppInfo.GOOGLE_SERVICES_ENABLED && (
+                            <FormRow
+                                fieldSeparator = { true }
+                                label = 'settingsView.disableCrashReporting'>
+                                <Switch
+                                    checked = { disableCrashReporting }
+                                    // @ts-ignore
+                                    onChange = { this._onDisableCrashReporting } />
+                            </FormRow>
+                        )}
+                    </FormSectionAccordion>
+                </ScrollView>
             </JitsiScreen>
         );
     }
@@ -737,9 +726,9 @@ class SettingsView extends Component<Props, State> {
  * Maps part of the Redux state to the props of this component.
  *
  * @param {Object} state - The Redux state.
- * @returns {Props}
+ * @returns {IProps}
  */
-function _mapStateToProps(state: IState) {
+function _mapStateToProps(state: IReduxState) {
     const localParticipant = getLocalParticipant(state);
 
     return {

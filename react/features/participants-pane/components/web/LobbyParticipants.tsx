@@ -1,5 +1,4 @@
 /* eslint-disable lines-around-comment */
-import { Theme } from '@mui/material';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 // @ts-ignore
 import { Avatar } from '../../../base/avatar';
 import Icon from '../../../base/icons/components/Icon';
-import { IconCheck, IconClose } from '../../../base/icons/svg';
+import { IconCheck, IconCloseLarge } from '../../../base/icons/svg';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
 // @ts-ignore
 import { admitMultiple } from '../../../lobby/actions.web';
@@ -16,15 +15,13 @@ import { admitMultiple } from '../../../lobby/actions.web';
 import { getKnockingParticipants, getLobbyEnabled } from '../../../lobby/functions';
 // @ts-ignore
 import { Drawer, JitsiPortal } from '../../../toolbox/components/web';
-// @ts-ignore
-import { showOverflowDrawer } from '../../../toolbox/functions';
-// @ts-ignore
+import { showOverflowDrawer } from '../../../toolbox/functions.web';
 import { useLobbyActions, useParticipantDrawer } from '../../hooks';
 
 // @ts-ignore
 import LobbyParticipantItems from './LobbyParticipantItems';
 
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(theme => {
     return {
         drawerActions: {
             listStyleType: 'none',
@@ -134,7 +131,7 @@ export default function LobbyParticipants() {
                             <Icon
                                 className = { classes.icon }
                                 size = { 20 }
-                                src = { IconClose } />
+                                src = { IconCloseLarge } />
                             <span>{ t('lobby.reject')}</span>
                         </li>
                     </ul>

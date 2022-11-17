@@ -1,4 +1,3 @@
-import { Theme } from '@mui/material';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -8,10 +7,11 @@ import Icon from '../../../icons/components/Icon';
 interface IProps {
     accessibilityLabel: string;
     icon: Function;
+    id?: string;
     onClick: () => void;
 }
 
-const useStyles = makeStyles()((theme: Theme) => {
+const useStyles = makeStyles()(theme => {
     return {
         button: {
             padding: '2px',
@@ -40,7 +40,7 @@ const useStyles = makeStyles()((theme: Theme) => {
     };
 });
 
-const ClickableIcon = ({ accessibilityLabel, icon, onClick }: IProps) => {
+const ClickableIcon = ({ accessibilityLabel, icon, id, onClick }: IProps) => {
     const { classes: styles, cx } = useStyles();
     const isMobile = isMobileBrowser();
 
@@ -48,6 +48,7 @@ const ClickableIcon = ({ accessibilityLabel, icon, onClick }: IProps) => {
         <button
             aria-label = { accessibilityLabel }
             className = { cx(styles.button, isMobile && 'is-mobile') }
+            id = { id }
             onClick = { onClick }>
             <Icon
                 size = { 24 }

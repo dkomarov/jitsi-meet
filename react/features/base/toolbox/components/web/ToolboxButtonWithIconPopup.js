@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { Icon } from '../../../icons';
-import { Popover } from '../../../popover';
+import Popover from '../../../popover/components/Popover.web';
 
 type Props = {
 
@@ -129,7 +129,7 @@ export default function ToolboxButtonWithIconPopup(props: Props) {
                         { ...iconProps }
                         ariaHasPopup = { ariaHasPopup }
                         ariaLabel = { ariaLabel }
-                        size = { 9 }
+                        size = { 16 }
                         src = { icon } />
                 </Popover>
             </div>
