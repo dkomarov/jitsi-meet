@@ -8,7 +8,7 @@ import type { Dispatch } from "redux";
 
 import { createToolbarEvent } from "../../analytics/AnalyticsEvents";
 import { sendAnalytics } from "../../analytics/functions";
-import { IState } from "../../app/types";
+import { IReduxState, IStore } from "../../app/types"; // IState
 // @ts-ignore
 import { setAudioOnly } from "../../base/audio-only";
 import { translate } from "../../base/i18n/functions";
@@ -73,7 +73,7 @@ interface Props extends WithTranslation {
     /**
      * Invoked to request toggling of audio only mode.
      */
-    dispatch: IStore['dispatch'];
+    dispatch: IStore["dispatch"];
 }
 
 /**
@@ -112,7 +112,7 @@ const styles = (theme: Theme) => {
  *
  * @augments Component
  */
-class VideoQualitySlider extends Component<IProps> {
+class VideoQualitySlider extends Component<Props> {
     _sliderOptions: Array<Object>;
 
     /**
@@ -121,7 +121,7 @@ class VideoQualitySlider extends Component<IProps> {
      * @param {Object} props - The read-only React Component props with which
      * the new instance is to be initialized.
      */
-    constructor(props: IProps) {
+    constructor(props: Props) {
         super(props);
 
         // Bind event handlers so they are only bound once for every instance.
