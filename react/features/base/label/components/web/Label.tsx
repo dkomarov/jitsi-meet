@@ -1,12 +1,11 @@
-import React from 'react';
-import { makeStyles } from 'tss-react/mui';
+import React from "react";
+import { makeStyles } from "tss-react/mui";
 
-import Icon from '../../../icons/components/Icon';
-import { withPixelLineHeight } from '../../../styles/functions.web';
-import { COLORS } from '../../constants';
+import Icon from "../../../icons/components/Icon";
+import { withPixelLineHeight } from "../../../styles/functions.web";
+import { COLORS } from "../../constants";
 
 interface IProps {
-
     /**
      * Own CSS class name.
      */
@@ -41,10 +40,9 @@ interface IProps {
      * String or component that will be rendered as the label itself.
      */
     text?: string;
-
 }
 
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()((theme) => {
     return {
         label: {
             ...withPixelLineHeight(theme.typography.labelRegular),
@@ -52,11 +50,11 @@ const useStyles = makeStyles()(theme => {
             background: theme.palette.ui04,
             borderRadius: Number(theme.shape.borderRadius) / 2,
             color: theme.palette.text01,
-            display: 'flex',
-            margin: '0 0 4px 4px',
-            padding: '6px',
+            display: "flex",
+            margin: "0 0 4px 4px",
+            padding: "6px",
             height: 28,
-            boxSizing: 'border-box'
+            boxSizing: "border-box",
         },
         withIcon: {
             marginLeft: 8,
@@ -68,9 +66,9 @@ const useStyles = makeStyles()(theme => {
             background: theme.palette.ui09,
             color: theme.palette.text04,
 
-            '& svg': {
-                fill: theme.palette.icon04
-            }
+            "& svg": {
+                fill: theme.palette.icon04,
+            },
         },
         [COLORS.green]: {
             background: theme.palette.success02,
@@ -88,64 +86,67 @@ const Label = ({
     iconColor,
     id,
     onClick,
-    text
+    text,
 }: IProps) => {
     const { classes, cx } = useStyles();
 
     return (
         <div
-            className = { cx(classes.label, onClick && classes.clickable,
-                color && classes[color], className
-            ) }
-            id = { id }
-            onClick = { onClick }>
-            {icon && <Icon
-                color = { iconColor }
-                size = '16'
-                src = { icon } />}
-            {text && <span className = { icon && classes.withIcon }>{text}</span>}
+            className={cx(
+                classes.label,
+                onClick && classes.clickable,
+                color && classes[color],
+                className
+            )}
+            id={id}
+            onClick={onClick}
+        >
+            {icon && <Icon color={iconColor} size="16" src={icon} />}
+            {text && <span className={icon && classes.withIcon}>{text}</span>}
         </div>
     );
 };
 
-/**
- * React Component for showing short text in a circle.
- *
- * @augments Component
- */
-class Label extends AbstractLabel<Props, any> {
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     */
-    render() {
-        const {
-            classes,
-            className,
-            color,
-            icon,
-            iconColor,
-            id,
-            onClick,
-            text,
-        } = this.props;
-        const labelClassName = clsx(
-            classes.label,
-            onClick && classes.clickable,
-            color && classes[color],
-            className
-        );
+export default Label;
 
-        return (
-            <div className={labelClassName} id={id} onClick={onClick}>
-                {icon && <Icon color={iconColor} size="16" src={icon} />}
-                {text && (
-                    <span className={icon && classes.withIcon}>{text}</span>
-                )}
-            </div>
-        );
-    }
-}
+// /**
+//  * React Component for showing short text in a circle.
+//  *
+//  * @augments Component
+//  */
+// class Label extends AbstractLabel<Props, any> {
+//     /**
+//      * Implements React's {@link Component#render()}.
+//      *
+//      * @inheritdoc
+//      */
+//     render() {
+//         const {
+//             classes,
+//             className,
+//             color,
+//             icon,
+//             iconColor,
+//             id,
+//             onClick,
+//             text,
+//         } = this.props;
+//         const labelClassName = clsx(
+//             classes.label,
+//             onClick && classes.clickable,
+//             color && classes[color],
+//             className
+//         );
 
-export default withStyles(styles)(Label);
+//         return (
+//             <div className={labelClassName} id={id} onClick={onClick}>
+//                 {icon && <Icon color={iconColor} size="16" src={icon} />}
+//                 {text && (
+//                     <span className={icon && classes.withIcon}>{text}</span>
+//                 )}
+//             </div>
+//         );
+//     }
+// }
+
+// export default withStyles(styles)(Label);
