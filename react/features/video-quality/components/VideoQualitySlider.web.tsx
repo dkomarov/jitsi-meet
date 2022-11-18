@@ -364,7 +364,7 @@ class VideoQualitySlider extends Component<Props> {
  * @private
  * @returns {IProps}
  */
-function _mapStateToProps(state: IState) {
+function _mapStateToProps(state: IReduxState) {
     const { enabled: audioOnly } = state["features/base/audio-only"];
     const { p2p } = state["features/base/conference"];
     const { preferredVideoQuality } = state["features/video-quality"];
