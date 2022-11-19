@@ -1,4 +1,55 @@
-<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1.5C9.51472 1.5 7.5 3.51472 7.5 6V12C7.5 14.4853 9.51472 16.5 12 16.5C14.4853 16.5 16.5 14.4853 16.5 12V6C16.5 3.51472 14.4853 1.5 12 1.5ZM15 12V6C15 4.34315 13.6569 3 12 3C10.3431 3 9 4.34315 9 6V12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12Z" />
-    <path d="M11.25 19.463C7.46001 19.0867 4.5 15.889 4.5 12V10.5C4.5 10.0858 4.83579 9.75 5.25 9.75C5.66421 9.75 6 10.0858 6 10.5V12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12V10.5C18 10.0858 18.3358 9.75 18.75 9.75C19.1642 9.75 19.5 10.0858 19.5 10.5V12C19.5 15.889 16.54 19.0867 12.75 19.463V21.75C12.75 22.1642 12.4142 22.5 12 22.5C11.5858 22.5 11.25 22.1642 11.25 21.75V19.463Z" />
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg5755"
+   sodipodi:docname="mic.svg"
+   inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs5759" />
+  <sodipodi:namedview
+     id="namedview5757"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="20.166667"
+     inkscape:cx="11.975207"
+     inkscape:cy="12.347107"
+     inkscape:window-width="1280"
+     inkscape:window-height="706"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg5755" />
+  <path
+     fill-rule="evenodd"
+     clip-rule="evenodd"
+     d="m 11.92562,0.2107438 c -2.2305903,0 -4.0388431,1.7245242 -4.0388431,3.85183 v 5.135773 c 0,2.1273232 1.8082528,3.8518302 4.0388431,3.8518302 2.230608,0 4.038843,-1.724507 4.038843,-3.8518302 v -5.135773 c 0,-2.1273058 -1.808235,-3.85183 -4.038843,-3.85183 z m 2.692562,8.987603 v -5.135773 c 0,-1.418201 -1.20546,-2.5678867 -2.692562,-2.5678867 -1.487102,0 -2.6925621,1.1496857 -2.6925621,2.5678867 v 5.135773 c 0,1.4182442 1.2054601,2.5678872 2.6925621,2.5678872 1.487102,0 2.692562,-1.149643 2.692562,-2.5678872 z"
+     id="path5751"
+     style="stroke-width:0.876495" />
+  <path
+     d="M 11.252479,15.586393 C 7.850885,15.264295 5.1942149,12.527184 5.1942149,9.1983468 v -1.283943 c 0,-0.3545396 0.3013785,-0.6419717 0.6731405,-0.6419717 0.371762,0 0.6731405,0.2874321 0.6731405,0.6419717 v 1.283943 c 0,2.8364022 2.4110008,5.1357742 5.3851241,5.1357742 2.974114,0 5.385124,-2.299372 5.385124,-5.1357742 v -1.283943 c 0,-0.3545396 0.301387,-0.6419717 0.67314,-0.6419717 0.371753,0 0.673141,0.2874321 0.673141,0.6419717 v 1.283943 c 0,3.3288372 -2.656661,6.0659482 -6.058265,6.3880462 v 1.957586 c 0,0.354539 -0.301387,0.641972 -0.67314,0.641972 -0.371753,0 -0.673141,-0.287433 -0.673141,-0.641972 z"
+     id="path5753"
+     style="stroke-width:0.876495" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.66667px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+     x="3.9759076"
+     y="23.844992"
+     id="text479"><tspan
+       sodipodi:role="line"
+       x="3.9759076"
+       y="23.844992"
+       id="tspan481"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.66667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">MIC</tspan></text>
 </svg>

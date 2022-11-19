@@ -1,3 +1,51 @@
-<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM22.5 12C22.5 17.799 17.799 22.5 12 22.5C6.20101 22.5 1.5 17.799 1.5 12C1.5 6.20101 6.20101 1.5 12 1.5C17.799 1.5 22.5 6.20101 22.5 12ZM12 15.5C13.933 15.5 15.5 13.933 15.5 12C15.5 10.067 13.933 8.5 12 8.5C10.067 8.5 8.5 10.067 8.5 12C8.5 13.933 10.067 15.5 12 15.5Z" />
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg809"
+   sodipodi:docname="record.svg"
+   inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs813" />
+  <sodipodi:namedview
+     id="namedview811"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="20.166667"
+     inkscape:cx="11.975207"
+     inkscape:cy="12.396694"
+     inkscape:window-width="1280"
+     inkscape:window-height="706"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg809" />
+  <path
+     fill-rule="evenodd"
+     clip-rule="evenodd"
+     d="m 20.00118,9.0000004 c 0,4.1138016 -3.515615,7.4486416 -7.85242,7.4486416 -4.3367693,0 -7.85242,-3.33484 -7.85242,-7.4486416 0,-4.1137696 3.5156507,-7.4486426 7.85242,-7.4486426 4.336805,0 7.85242,3.334873 7.85242,7.4486426 z m 1.308737,0 c 0,4.7994076 -4.101581,8.6900816 -9.161157,8.6900816 -5.0595671,0 -9.1611567,-3.890674 -9.1611567,-8.6900816 0,-4.7994006 4.1015896,-8.69008304 9.1611567,-8.69008304 5.059576,0 9.161157,3.89068244 9.161157,8.69008304 z M 12.14876,11.896694 c 1.686525,0 3.053719,-1.296892 3.053719,-2.8966936 0,-1.5998032 -1.367194,-2.8966946 -3.053719,-2.8966946 -1.686525,0 -3.0537187,1.2968914 -3.0537187,2.8966946 0,1.5998016 1.3671937,2.8966936 3.0537187,2.8966936 z"
+     id="path807"
+     style="stroke-width:0.849763" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.66667px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+     x="4.6205359"
+     y="23.894579"
+     id="text479"><tspan
+       sodipodi:role="line"
+       x="4.6205359"
+       y="23.894579"
+       id="tspan481"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.66667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">REC</tspan></text>
 </svg>

@@ -1,4 +1,55 @@
-<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8.46967 5.46967C8.76256 5.17678 9.23744 5.17678 9.53033 5.46967L12 7.93934L14.4697 5.46967C14.7626 5.17678 15.2374 5.17678 15.5303 5.46967C15.8232 5.76256 15.8232 6.23744 15.5303 6.53033L13.0607 9L15.5303 11.4697C15.8232 11.7626 15.8232 12.2374 15.5303 12.5303C15.2374 12.8232 14.7626 12.8232 14.4697 12.5303L12 10.0607L9.53033 12.5303C9.23744 12.8232 8.76256 12.8232 8.46967 12.5303C8.17678 12.2374 8.17678 11.7626 8.46967 11.4697L10.9393 9L8.46967 6.53033C8.17678 6.23744 8.17678 5.76256 8.46967 5.46967Z" />
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M21 15.75H16.1541L18.6854 21.4454C18.8536 21.8239 18.6831 22.2671 18.3046 22.4354C17.9261 22.6036 17.4829 22.4331 17.3146 22.0546L14.5126 15.75H9.4874L6.68536 22.0546C6.51713 22.4331 6.07391 22.6036 5.6954 22.4354C5.31688 22.2671 5.14641 21.8239 5.31464 21.4454L7.84593 15.75H3C2.17157 15.75 1.5 15.0784 1.5 14.25V3.75C1.5 2.92157 2.17157 2.25 3 2.25H21C21.8284 2.25 22.5 2.92157 22.5 3.75V14.25C22.5 15.0784 21.8284 15.75 21 15.75ZM3 3.75H21V14.25H15.0163C15.0052 14.2498 14.994 14.2497 14.9828 14.25H9.01716C9.00598 14.2497 8.99481 14.2498 8.98367 14.25H3V3.75Z" />
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg11407"
+   sodipodi:docname="whiteboard-hide.svg"
+   inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs11411" />
+  <sodipodi:namedview
+     id="namedview11409"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="20.166667"
+     inkscape:cx="11.975207"
+     inkscape:cy="4.3140496"
+     inkscape:window-width="1280"
+     inkscape:window-height="706"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg11407" />
+  <path
+     d="m 8.7355651,3.1403381 c 0.2790582,-0.27496 0.7315117,-0.27496 1.0105698,0 L 12.099173,5.4588208 14.45224,3.1403381 c 0.279068,-0.27496 0.731445,-0.27496 1.010513,0 0.279068,0.2749599 0.279068,0.7207689 0,0.9957289 l -2.352972,2.3184827 2.352972,2.3185109 c 0.279068,0.274969 0.279068,0.720703 0,0.995673 -0.279068,0.2749694 -0.731445,0.2749694 -1.010513,0 L 12.099173,7.4503162 9.7461349,9.7687336 c -0.2790581,0.2749694 -0.7315116,0.2749694 -1.0105698,0 -0.2790581,-0.27497 -0.2790581,-0.720704 0,-0.995673 L 11.088565,6.4545497 8.7355651,4.136067 c -0.2790581,-0.27496 -0.2790581,-0.720769 0,-0.9957289 z"
+     id="path11403"
+     style="stroke-width:0.945753" />
+  <path
+     fill-rule="evenodd"
+     clip-rule="evenodd"
+     d="m 20.674144,12.791331 h -4.61705 l 2.411758,5.346741 c 0.160257,0.355329 -0.0022,0.771398 -0.362817,0.929395 -0.360625,0.157903 -0.782894,-0.0022 -0.943246,-0.357488 L 14.493114,12.791331 H 9.7052323 L 7.0355201,18.709979 C 6.8752348,19.065308 6.4529461,19.22537 6.0923114,19.067467 5.7316672,18.90947 5.5692478,18.493401 5.729533,18.138072 L 8.1412816,12.791331 H 3.524203 c -0.7893069,0 -1.4291617,-0.630486 -1.4291617,-1.408173 V 1.5259422 c 0,-0.7777155 0.6398548,-1.4081736 1.4291617,-1.4081736 h 17.149941 c 0.789278,0 1.429161,0.6304581 1.429161,1.4081736 v 9.8572158 c 0,0.777687 -0.639883,1.408173 -1.429161,1.408173 z M 3.524203,1.5259422 h 17.149941 v 9.8572158 h -5.701117 c -0.01058,-1.88e-4 -0.02125,-2.82e-4 -0.03192,0 H 9.2571996 c -0.010652,-2.82e-4 -0.021294,-1.88e-4 -0.031908,0 H 3.524203 Z"
+     id="path11405"
+     style="stroke-width:0.945753" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.66667px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+     x="2.8849988"
+     y="24.043339"
+     id="text479"><tspan
+       sodipodi:role="line"
+       x="2.8849988"
+       y="24.043339"
+       id="tspan481"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.66667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">HIDE</tspan></text>
 </svg>
