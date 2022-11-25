@@ -45,7 +45,7 @@ export const commonStyles = (theme: Theme) => {
             fontSize: 14,
             fontWeight: 400,
             height: 40,
-            lineHeight: '24px',
+            lineHeight: '36px', // 24
             padding: '8px 16px',
             boxSizing: 'border-box' as const,
             '& > div': {
@@ -85,7 +85,7 @@ export const commonStyles = (theme: Theme) => {
 
             '& i': {
                 display: 'inline',
-                fontSize: 24
+                fontSize: 36 // 24
             },
 
             '@media (hover: hover) and (pointer: fine)': {
@@ -95,19 +95,21 @@ export const commonStyles = (theme: Theme) => {
             },
 
             '& img': {
-                maxWidth: 24,
-                maxHeight: 24
+                maxWidth: 36, // 24,
+                maxHeight: 36 // 24
             },
 
             '& svg': {
                 fill: theme.palette.text01,
-                height: 20,
-                width: 20
+                height: 36, // 20,
+                width: 36 // 20
             }
         },
 
         '.participant-avatar': {
-            margin: `${theme.spacing(2)} ${theme.spacing(3)} ${theme.spacing(2)} 0`
+            margin: `${theme.spacing(2)} ${theme.spacing(3)} ${theme.spacing(
+                2
+            )} 0`
         },
 
         '.prejoin-dialog': {
@@ -265,7 +267,8 @@ export const commonStyles = (theme: Theme) => {
             padding: 6,
             textAlign: 'center' as const,
             pointerEvents: 'all' as const,
-            boxShadow: '0px 2px 8px 4px rgba(0, 0, 0, 0.25), 0px 0px 0px 1px rgba(0, 0, 0, 0.15)',
+            boxShadow:
+                '0px 2px 8px 4px rgba(0, 0, 0, 0.25), 0px 0px 0px 1px rgba(0, 0, 0, 0.15)',
 
             '& > div': {
                 marginLeft: 8,
