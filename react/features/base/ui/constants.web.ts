@@ -223,7 +223,7 @@ export const commonStyles = (theme: Theme) => {
             display: 'flex',
             borderRadius: 3,
             flexDirection: 'column' as const,
-            fontSize: 24,
+            fontSize: 36, // 24,
             height: 48,
             justifyContent: 'center',
             width: 48,
