@@ -10,15 +10,14 @@ import AbstractToolboxItem from './AbstractToolboxItem';
 import type { Props as AbstractToolboxItemProps } from './AbstractToolboxItem';
 
 type Props = AbstractToolboxItemProps & {
-
     /**
      * Whether or not the item is displayed in a context menu.
      */
     contextMenu?: boolean,
 
     /**
-    * On key down handler.
-    */
+     * On key down handler.
+     */
     onKeyDown: Function
 };
 
@@ -91,31 +90,30 @@ export default class ToolboxItem extends AbstractToolboxItem<Props> {
         const useTooltip = this.tooltip && this.tooltip.length > 0;
 
         if (contextMenu) {
-            return (<ContextMenuItem
-                accessibilityLabel = { this.accessibilityLabel }
-                disabled = { disabled }
-                icon = { icon }
-                onClick = { onClick }
-                onKeyDown = { onKeyDown }
-                onKeyPress = { this._onKeyPress }
-                text = { this.label } />);
+            return (
+                <ContextMenuItem
+                    accessibilityLabel={this.accessibilityLabel}
+                    disabled={disabled}
+                    icon={icon}
+                    onClick={onClick}
+                    onKeyDown={onKeyDown}
+                    onKeyPress={this._onKeyPress}
+                    text={this.label}
+                />
+            );
         }
         let children = (
             <Fragment>
-                { this._renderIcon() }
-                { showLabel && <span>
-                    { this.label }
-                </span> }
-                { elementAfter }
+                {this._renderIcon()}
+                {showLabel && <span>{this.label}</span>}
+                {elementAfter}
             </Fragment>
         );
 
         if (useTooltip) {
             children = (
-                <Tooltip
-                    content = { this.tooltip }
-                    position = { tooltipPosition }>
-                    { children }
+                <Tooltip content={this.tooltip} position={tooltipPosition}>
+                    {children}
                 </Tooltip>
             );
         }
@@ -131,12 +129,18 @@ export default class ToolboxItem extends AbstractToolboxItem<Props> {
      */
     _renderIcon() {
         const { customClass, disabled, icon, showLabel, toggled } = this.props;
-        const iconComponent = (<Icon
-            size = { showLabel ? undefined : 24 }
-            src = { icon } />);
+        const iconComponent = (
+            <Icon
+                size={showLabel ? undefined : 36} // 24
+                src={icon}
+            />
+        );
         const elementType = showLabel ? 'span' : 'div';
-        const className = `${showLabel ? 'overflow-menu-item-icon' : 'toolbox-icon'} ${
-            toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''} ${customClass ?? ''}`;
+        const className = `${
+            showLabel ? 'overflow-menu-item-icon' : 'toolbox-icon'
+        } ${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''} ${
+            customClass ?? ''
+        }`;
 
         return React.createElement(elementType, { className }, iconComponent);
     }
