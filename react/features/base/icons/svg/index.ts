@@ -22,7 +22,6 @@ export { default as IconConnectionInactive } from './ninja.svg';
 export { default as IconCopy } from './copy.svg';
 export { default as IconCrown } from './host.svg';
 export { default as IconDeviceHeadphone } from './headset.svg';
-export { default as IconDock } from './dock.svg';
 export { default as IconDotsHorizontal } from './horizontal-points.svg'; // './dots-horizontal.svg';
 export { default as IconDownload } from './download.svg';
 export { default as IconE2EE } from './e2ee.svg';
