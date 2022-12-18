@@ -18,9 +18,8 @@ import { isParticipantAudioMuted } from '../../../base/tracks/functions';
 import ContextMenu from '../../../base/ui/components/web/ContextMenu';
 import ContextMenuItemGroup from '../../../base/ui/components/web/ContextMenuItemGroup';
 import { getBreakoutRooms, getCurrentRoomId, isInBreakoutRoom } from '../../../breakout-rooms/functions';
-// @ts-ignore
+import { displayVerification } from '../../../e2ee/functions';
 import { setVolume } from '../../../filmstrip/actions.web';
-// @ts-ignore
 import { isStageFilmstripAvailable } from '../../../filmstrip/functions.web';
 import { isForceMuted } from '../../../participants-pane/functions';
 // @ts-ignore
@@ -31,6 +30,7 @@ import { showOverflowDrawer } from '../../../toolbox/functions.web';
 import { REMOTE_CONTROL_MENU_STATES } from './RemoteControlButton';
 // @ts-ignore
 import SendToRoomButton from './SendToRoomButton';
+import VerifyParticipantButton from './VerifyParticipantButton';
 
 import {
     AskToUnmuteButton,
@@ -152,6 +152,7 @@ const ParticipantContextMenu = ({
     const isBreakoutRoom = useSelector(isInBreakoutRoom);
     const isModerationSupported = useSelector((state: IReduxState) => isAvModerationSupported()(state));
     const stageFilmstrip = useSelector(isStageFilmstripAvailable);
+    const shouldDisplayVerification = useSelector((state: IReduxState) => displayVerification(state, participant?.id));
 
     const _currentRoomId = useSelector(getCurrentRoomId);
     const _rooms: Array<{ id: string; }> = Object.values(useSelector(getBreakoutRooms));
@@ -225,6 +226,15 @@ const ParticipantContextMenu = ({
                     participantID = { _getCurrentParticipantId() } />
             );
         }
+
+        if (shouldDisplayVerification) {
+            buttons2.push(
+                <VerifyParticipantButton
+                    key = 'verify'
+                    participantID = { _getCurrentParticipantId() } />
+            );
+        }
+
     }
 
     if (stageFilmstrip) {

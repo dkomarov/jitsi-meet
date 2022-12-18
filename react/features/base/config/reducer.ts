@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import { CONFERENCE_INFO } from '../../conference/components/constants';
+import Platform from '../react/Platform';
 import ReducerRegistry from '../redux/ReducerRegistry';
 import { equals } from '../redux/functions';
 
@@ -47,14 +48,18 @@ const INITIAL_RN_STATE: IConfig = {
     // fastest to merely disable them.
     disableAudioLevels: true,
 
+    // FIXME: Mobile codecs should probably be configurable separately, rather
+    // than requiring this override here...
+
     p2p: {
+        // Temporarily disable P2P on Android while we sort out some (codec?) issues.
+        ...(Platform.OS === 'android' ? { enabled: false } : {}), // eslint-disable-line no-extra-parens
+        disabledCodec: 'vp9',
         preferredCodec: 'h264'
     },
 
     videoQuality: {
-        // FIXME: Mobile codecs should probably be configurable separately, rather
-        // than requiring this override here...
-        enforcePreferredCodec: true,
+        disabledCodec: 'vp9',
         preferredCodec: 'vp8'
     }
 };
@@ -74,6 +79,7 @@ export interface IConfigState extends IConfig {
     analysis?: {
         obfuscateRoomName?: boolean;
     };
+    disableRemoteControl?: boolean;
     error?: Error;
 }
 
@@ -332,6 +338,13 @@ function _translateLegacyConfig(oldValue: IConfig) {
                     = (newValue.conferenceInfo.autoHide ?? []).filter(c => !CONFERENCE_HEADER_MAPPING[key].includes(c));
             }
         });
+    }
+
+    newValue.welcomePage = oldValue.welcomePage || {};
+    if (oldValue.hasOwnProperty('enableWelcomePage')
+        && !newValue.welcomePage.hasOwnProperty('disabled')
+    ) {
+        newValue.welcomePage.disabled = !oldValue.enableWelcomePage;
     }
 
     newValue.prejoinConfig = oldValue.prejoinConfig || {};

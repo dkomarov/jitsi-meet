@@ -147,6 +147,7 @@
         "bridgeCount": "Server count: ",
         "codecs": "Codecs (A/V): ",
         "connectedTo": "Connected to:",
+        "e2eeVerified": "E2EE verified:",
         "framerate": "Frame rate:",
         "less": "Show less",
         "localaddress": "Local address:",
@@ -408,6 +409,10 @@
         "user": "User",
         "userIdentifier": "User identifier",
         "userPassword": "User password",
+        "verifyParticipantConfirm": "They match",
+        "verifyParticipantDismiss": "They do not match",
+        "verifyParticipantQuestion": "EXPERIMENTAL: Ask participant {{participantName}} if they see the same content, in the same order.",
+        "verifyParticipantTitle": "User verification",
         "videoLink": "Video link",
         "viewUpgradeOptions": "View upgrade options",
         "viewUpgradeOptionsContent": "To get unlimited access to premium features like recording, transcriptions, RTMP Streaming & more, you'll need to upgrade your plan.",
@@ -436,9 +441,6 @@
     "giphy": {
         "noResults": "No results found :(",
         "search": "Search GIPHY"
-    },
-    "helpView": {
-        "title": "Help center"
     },
     "incomingCall": {
         "answer": "Answer",
@@ -511,7 +513,7 @@
         "mute": "Mute or unmute your microphone",
         "pushToTalk": "Push to talk",
         "raiseHand": "Raise or lower your hand",
-        "showSpeakerStats": "Show speaker stats",
+        "showSpeakerStats": "Show participants stats",
         "toggleChat": "Open or close the chat",
         "toggleFilmstrip": "Show or hide video thumbnails",
         "toggleParticipantsPane": "Show or hide the participants pane",
@@ -563,7 +565,6 @@
     "lobby": {
         "admit": "Admit",
         "admitAll": "Admit all",
-        "allow": "Allow",
         "backToKnockModeButton": "Ask to join",
         "chat": "Chat",
         "dialogTitle": "Lobby mode",
@@ -649,6 +650,8 @@
         "connectedOneMember": "{{name}} joined the meeting",
         "connectedThreePlusMembers": "{{name}} and many others joined the meeting",
         "connectedTwoMembers": "{{first}} and {{second}} joined the meeting",
+        "dataChannelClosed": "Video quality impaired",
+        "dataChannelClosedDescription": "The bridge channel has been disconnected and thus video quality is limited to its lowest setting.",
         "disconnected": "disconnected",
         "displayNotifications": "Display notifications for",
         "focus": "Conference focus",
@@ -858,9 +861,6 @@
         "rejected": "Rejected",
         "ringing": "Ringing..."
     },
-    "privacyView": {
-        "title": "Privacy"
-    },
     "profile": {
         "avatar": "avatar",
         "setDisplayNameLabel": "Set your display name",
@@ -1036,7 +1036,7 @@
         "sad": "Sad",
         "search": "Search",
         "seconds": "{{count}}s",
-        "speakerStats": "Speaker Stats",
+        "speakerStats": "Participants Stats",
         "speakerTime": "Speaker Time",
         "surprised": "Surprised"
     },
@@ -1068,7 +1068,6 @@
             "chat": "Open / Close chat",
             "clap": "Clap",
             "collapse": "Collapse",
-            "dock": "Dock in main window",
             "document": "Toggle shared document",
             "download": "Download our apps",
             "embedMeeting": "Embed meeting",
@@ -1117,12 +1116,11 @@
             "shortcuts": "Toggle shortcuts",
             "show": "Show on stage",
             "silence": "Silence",
-            "speakerStats": "Toggle speaker statistics",
+            "speakerStats": "Toggle participants statistics",
             "surprised": "Surprised",
             "tileView": "Toggle tile view",
             "toggleCamera": "Toggle camera",
             "toggleFilmstrip": "Toggle filmstrip",
-            "undock": "Undock into separate window",
             "videoblur": "Toggle video blur",
             "videomute": "Start / Stop camera",
             "whiteboard": "Show / Hide whiteboard"
@@ -1141,7 +1139,6 @@
         "closeReactionsMenu": "Close reactions menu",
         "disableNoiseSuppression": "Disable noise suppression",
         "disableReactionSounds": "You can disable reaction sounds for this meeting",
-        "dock": "Dock in main window",
         "documentClose": "Close shared document",
         "documentOpen": "Open shared document",
         "download": "Download our apps",
@@ -1204,7 +1201,7 @@
         "shortcuts": "View shortcuts",
         "showWhiteboard": "Show whiteboard",
         "silence": "Silence",
-        "speakerStats": "Speaker stats",
+        "speakerStats": "Participants stats",
         "startScreenSharing": "Start screen sharing",
         "startSubtitles": "Subtitles • {{language}}",
         "stopAudioSharing": "Stop audio sharing",
@@ -1215,7 +1212,6 @@
         "talkWhileMutedPopup": "Trying to speak? You are muted.",
         "tileViewToggle": "Toggle tile view",
         "toggleCamera": "Toggle camera",
-        "undock": "Undock into separate window",
         "videoSettings": "Video settings",
         "videomute": "Start / Stop camera"
     },
@@ -1294,6 +1290,7 @@
         "show": "Show on stage",
         "showSelfView": "Show self view",
         "unpinFromStage": "Unpin",
+        "verify": "Verify participant",
         "videoMuted": "Camera disabled",
         "videomute": "Participant has stopped the camera"
     },

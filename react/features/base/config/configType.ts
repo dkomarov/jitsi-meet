@@ -2,7 +2,6 @@ type ToolbarButtons = 'camera' |
     'chat' |
     'closedcaptions' |
     'desktop' |
-    'dock-iframe' |
     'download' |
     'embedmeeting' |
     'etherpad' |
@@ -29,7 +28,6 @@ type ToolbarButtons = 'camera' |
     'stats' |
     'tileview' |
     'toggle-camera' |
-    'undock-iframe' |
     'videoquality' |
     '__end';
 
@@ -129,6 +127,7 @@ export interface IConfig {
         preventExecution: boolean;
     }>;
     callDisplayName?: string;
+    callFlowsEnabled?: boolean;
     callStatsConfigParams?: {
         additionalIDs?: {
             customerID?: string;
@@ -316,6 +315,7 @@ export interface IConfig {
         sdkKey?: string;
         tileTime?: number;
     };
+    googleApiApplicationClientID?: string;
     gravatar?: {
         baseUrl?: string;
         disabled?: boolean;
@@ -340,10 +340,13 @@ export interface IConfig {
         domain: string;
         focus?: string;
         muc: string;
+        visitorFocus: string;
     };
     iAmRecorder?: boolean;
     iAmSipGateway?: boolean;
     inviteAppName?: string | null;
+    inviteServiceCallFlowsUrl?: string;
+    inviteServiceUrl?: string;
     jaasActuatorUrl?: string;
     jaasFeedbackMetadataURL?: string;
     jaasTokenUrl?: string;
@@ -366,6 +369,7 @@ export interface IConfig {
     localSubject?: string;
     locationURL?: URL;
     maxFullResolutionParticipants?: number;
+    microsoftApiApplicationClientID?: string;
     moderatedRoomServiceUrl?: string;
     mouseMoveCallbackInterval?: number;
     noticeMessage?: string;
@@ -504,6 +508,10 @@ export interface IConfig {
     webrtcIceUdpDisable?: boolean;
     websocket?: string;
     websocketKeepAliveUrl?: string;
+    welcomePage?: {
+        customUrl?: string;
+        disabled?: boolean;
+    };
     whiteboard?: {
         collabServerBaseUrl?: string;
         enabled?: boolean;

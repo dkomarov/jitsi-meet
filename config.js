@@ -580,9 +580,19 @@ var config = {
     // Require users to always specify a display name.
     // requireDisplayName: true,
 
+    // DEPRECATED! Use 'welcomePage.disabled' instead.
     // Whether to use a welcome page or not. In case it's false a random room
     // will be joined when no room is specified.
-    enableWelcomePage: true,
+    // enableWelcomePage: true,
+
+    // Configs for welcome page.
+    // welcomePage: {
+    //     // Whether to disable welcome page. In case it's disabled a random room
+    //     // will be joined when no room is specified.
+    //     disabled: false,
+    //     // If set,landing page will redirect to this URL.
+    //     customUrl: ''
+    // },
 
     // Disable app shortcuts that are registered upon joining a conference
     // disableShortcuts: false,
@@ -701,7 +711,6 @@ var config = {
     //    'chat',
     //    'closedcaptions',
     //    'desktop',
-    //    'dock-iframe',
     //    'download',
     //    'embedmeeting',
     //    'etherpad',
@@ -729,7 +738,6 @@ var config = {
     //    'stats',
     //    'tileview',
     //    'toggle-camera',
-    //    'undock-iframe',
     //    'videoquality',
     //    'whiteboard',
     // ],
