@@ -15,7 +15,11 @@ import {
 import { getLocalParticipant } from '../participants/functions';
 import { toState } from '../redux/functions';
 import { getJitsiMeetGlobalNS } from '../util/helpers';
-import { getBackendSafePath, safeDecodeURIComponent } from '../util/uri';
+import {
+    appendURLParam,
+    getBackendSafePath,
+    safeDecodeURIComponent
+} from '../util/uri';
 
 import { setObfuscatedRoom } from './actions';
 import {
@@ -253,7 +257,7 @@ export function getConferenceOptions(stateful: IStateful) {
 }
 
 /**
- * Returns an object aggregating the conference options.
+ * Override the global config (that is, window.config) with XMPP configuration required to join as a visitor.
  *
  * @param {IStateful} stateful - The redux store state.
  * @param {Array<string>} params - The received parameters.
@@ -274,10 +278,17 @@ export function generateVisitorConfig(stateful: IStateful, params: Array<string>
 
     config.hosts.domain = `${vnode}.meet.jitsi`;
     config.hosts.muc = config.hosts.muc.replace(oldDomain, config.hosts.domain);
-    config.hosts.visitorFocus = focusJid;
+    config.focusUserJid = focusJid;
 
-    config.bosh += `?vnode=${vnode}`;
-    config.websocket += `?vnode=${vnode}`;
+    // This flag disables sending the initial conference request
+    config.disableFocus = true;
+
+    if (config.bosh) {
+        config.bosh = appendURLParam(config.bosh, 'vnode', vnode);
+    }
+    if (config.websocket) {
+        config.websocket = appendURLParam(config.websocket, 'vnode', vnode);
+    }
 }
 
 /**

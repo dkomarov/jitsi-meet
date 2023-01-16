@@ -79,11 +79,6 @@ var config = {
         // This is useful when the client runs on a host with limited resources.
         // noAutoPlayVideo: false,
 
-        // Whether to use fake constraints (height: 99999, width: 99999) when calling getDisplayMedia on
-        // Chromium based browsers. This is intended as a workaround for
-        // https://bugs.chromium.org/p/chromium/issues/detail?id=1056311
-        // setScreenSharingResolutionConstraints: true,
-
         // Enable callstats only for a percentage of users.
         // This takes a value between 0 and 100 which determines the probability for
         // the callstats to be enabled.
@@ -262,17 +257,6 @@ var config = {
     // applied locally. FIXME: having these 2 options is confusing.
     // startWithVideoMuted: false,
 
-    // If set to true, prefer to use the H.264 video codec (if supported).
-    // Note that it's not recommended to do this because simulcast is not
-    // supported when  using H.264. For 1-to-1 calls this setting is enabled by
-    // default and can be toggled in the p2p section.
-    // This option has been deprecated, use preferredCodec under videoQuality section instead.
-    // preferH264: true,
-
-    // If set to true, disable H.264 video codec by stripping it out of the
-    // SDP.
-    // disableH264: false,
-
     // Desktop sharing
 
     // Optional desktop sharing frame rate options. Default value: min:5, max:5.
@@ -433,12 +417,6 @@ var config = {
     //     70: 5,
     //     90: 2,
     // },
-
-    // Provides a way to translate the legacy bridge signaling messages, 'LastNChangedEvent',
-    // 'SelectedEndpointsChangedEvent' and 'ReceiverVideoConstraint' into the new 'ReceiverVideoConstraints' message
-    // that invokes the new bandwidth allocation algorithm in the bridge which is described here
-    // - https://github.com/jitsi/jitsi-videobridge/blob/master/doc/allocation.md.
-    // useNewBandwidthAllocationStrategy: false,
 
     // Specify the settings for video quality optimizations on the client.
     // videoQuality: {
@@ -923,17 +901,9 @@ var config = {
         // If not set, the effective value is 'all'.
         // iceTransportPolicy: 'all',
 
-        // If set to true, it will prefer to use H.264 for P2P calls (if H.264
-        // is supported). This setting is deprecated, use preferredCodec instead.
-        // preferH264: true,
-
         // Provides a way to set the video codec preference on the p2p connection. Acceptable
         // codec values are 'VP8', 'VP9' and 'H264'.
         // preferredCodec: 'H264',
-
-        // If set to true, disable H.264 video codec by stripping it out of the
-        // SDP. This setting is deprecated, use disabledCodec instead.
-        // disableH264: false,
 
         // Provides a way to prevent a video codec from being negotiated on the p2p connection.
         // disabledCodec: '',
@@ -1091,9 +1061,63 @@ var config = {
     // use only.
     // _desktopSharingSourceDevice: 'sample-id-or-label',
 
+    // DEPRECATED! Use deeplinking.disabled instead.
     // If true, any checks to handoff to another application will be prevented
     // and instead the app will continue to display in the current browser.
     // disableDeepLinking: false,
+
+    // The deeplinking config.
+    // For information about the properties of
+    // deeplinking.[ios/android].dynamicLink check:
+    // https://firebase.google.com/docs/dynamic-links/create-manually
+    // deeplinking: {
+    //
+    //     // The desktop deeplinking config.
+    //     desktop: {
+    //         appName: 'Jitsi Meet'
+    //     },
+    //     // If true, any checks to handoff to another application will be prevented
+    //     // and instead the app will continue to display in the current browser.
+    //     disabled: false,
+
+    //     // whether to hide the logo on the deep linking pages.
+    //     hideLogo: false,
+
+    //     // The ios deeplinking config.
+    //     ios: {
+    //         appName: 'Jitsi Meet',
+    //         // Specify mobile app scheme for opening the app from the mobile browser.
+    //         appScheme: 'org.jitsi.meet',
+    //         // Custom URL for downloading ios mobile app.
+    //         downloadLink: 'https://itunes.apple.com/us/app/jitsi-meet/id1165103905',
+    //         dynamicLink: {
+    //             apn: 'org.jitsi.meet',
+    //             appCode: 'w2atb',
+    //             customDomain: undefined,
+    //             ibi: 'com.atlassian.JitsiMeet.ios',
+    //             isi: '1165103905'
+    //         }
+    //     },
+
+    //     // The android deeplinking config.
+    //     android: {
+    //         appName: 'Jitsi Meet',
+    //         // Specify mobile app scheme for opening the app from the mobile browser.
+    //         appScheme: 'org.jitsi.meet',
+    //         // Custom URL for downloading android mobile app.
+    //         downloadLink: 'https://play.google.com/store/apps/details?id=org.jitsi.meet',
+    //         // Android app package name.
+    //         appPackage: 'org.jitsi.meet',
+    //         fDroidUrl: 'https://f-droid.org/en/packages/org.jitsi.meet/',
+    //         dynamicLink: {
+    //             apn: 'org.jitsi.meet',
+    //             appCode: 'w2atb',
+    //             customDomain: undefined,
+    //             ibi: 'com.atlassian.JitsiMeet.ios',
+    //             isi: '1165103905'
+    //         }
+    //     }
+    // },
 
     // A property to disable the right click context menu for localVideo
     // the menu has option to flip the locally seen video for local presentations

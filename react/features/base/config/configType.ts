@@ -88,6 +88,35 @@ export type Sounds = 'ASKED_TO_UNMUTE_SOUND' |
     'RECORDING_ON_SOUND' |
     'TALK_WHILE_MUTED_SOUND';
 
+
+export interface IMobileDynamicLink {
+    apn: string;
+    appCode: string;
+    customDomain?: string;
+    ibi: string;
+    isi: string;
+}
+
+export interface IDeeplinkingPlatformConfig {
+    appName: string;
+}
+
+export interface IDeeplinkingMobileConfig extends IDeeplinkingPlatformConfig {
+    appPackage?: string;
+    appScheme: string;
+    downloadLink: string;
+    dynamicLink?: IMobileDynamicLink;
+    fDroidUrl?: string;
+}
+
+export interface IDeeplinkingConfig {
+    android?: IDeeplinkingMobileConfig;
+    desktop?: IDeeplinkingPlatformConfig;
+    disabled: boolean;
+    hideLogo: boolean;
+    ios?: IDeeplinkingMobileConfig;
+}
+
 export interface IConfig {
     _desktopSharingSourceDevice?: string;
     analytics?: {
@@ -159,6 +188,7 @@ export interface IConfig {
         alwaysVisible?: Array<string>;
         autoHide?: Array<string>;
     };
+    conferenceRequestUrl?: string;
     connectionIndicators?: {
         autoHide?: boolean;
         autoHideTimeout?: number;
@@ -176,6 +206,7 @@ export interface IConfig {
         };
     };
     corsAvatarURLs?: Array<string>;
+    deeplinking?: IDeeplinkingConfig;
     defaultLanguage?: string;
     defaultLocalDisplayName?: string;
     defaultLogoUrl?: string;
@@ -202,7 +233,7 @@ export interface IConfig {
     disableChatSmileys?: boolean;
     disableDeepLinking?: boolean;
     disableFilmstripAutohiding?: boolean;
-    disableH264?: boolean;
+    disableFocus?: boolean;
     disableIncomingMessageSound?: boolean;
     disableInitialGUM?: boolean;
     disableInviteFunctions?: boolean;
@@ -383,12 +414,10 @@ export interface IConfig {
     opusMaxAverageBitrate?: number;
     p2p?: {
         backToP2PDelay?: number;
-        disableH264?: boolean;
         disabledCodec?: string;
         enableUnifiedOnChrome?: boolean;
         enabled?: boolean;
         iceTransportPolicy?: string;
-        preferH264?: boolean;
         preferredCodec?: string;
         stunServers?: Array<{ urls: string; }>;
     };
@@ -399,7 +428,6 @@ export interface IConfig {
     };
     pcStatsInterval?: number;
     peopleSearchUrl?: string;
-    preferH264?: boolean;
     preferredTranscribeLanguage?: string;
     prejoinConfig?: {
         enabled?: boolean;
@@ -454,12 +482,10 @@ export interface IConfig {
     subject?: string;
     testing?: {
         callStatsThreshold?: number;
-        capScreenshareBitrate?: number;
         disableE2EE?: boolean;
         mobileXmppWsThreshold?: number;
         noAutoPlayVideo?: boolean;
         p2pTestMode?: boolean;
-        setScreenSharingResolutionConstraints?: boolean;
         testMode?: boolean;
     };
     tileView?: {
@@ -485,7 +511,6 @@ export interface IConfig {
         useAppLanguage?: boolean;
     };
     useHostPageLocalStorage?: boolean;
-    useNewBandwidthAllocationStrategy?: boolean;
     useTurnUdp?: boolean;
     videoQuality?: {
         disabledCodec?: string;

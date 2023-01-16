@@ -2,16 +2,14 @@ import { IReduxState, IStore } from '../../app/types';
 // eslint-disable-next-line lines-around-comment
 // @ts-ignore
 import { setPictureInPictureEnabled } from '../../mobile/picture-in-picture/functions';
-import { setAudioOnly } from '../audio-only/actions';
+import { showNotification } from '../../notifications/actions';
+import { NOTIFICATION_TIMEOUT_TYPE } from '../../notifications/constants';
 import JitsiMeetJS from '../lib-jitsi-meet';
 import {
     setScreenshareMuted,
     setVideoMuted
 } from '../media/actions';
-import {
-    MEDIA_TYPE,
-    VIDEO_MUTISM_AUTHORITY
-} from '../media/constants';
+import { VIDEO_MUTISM_AUTHORITY } from '../media/constants';
 
 import { addLocalTrack, replaceLocalTrack } from './actions.any';
 import { getLocalDesktopTrack, getTrackState, isLocalVideoTrackDesktop } from './functions.native';
@@ -40,7 +38,7 @@ export function toggleScreensharing(enabled: boolean, _ignore1?: boolean, _ignor
             }
         } else {
             dispatch(setScreenshareMuted(true));
-            dispatch(setVideoMuted(false, MEDIA_TYPE.VIDEO, VIDEO_MUTISM_AUTHORITY.SCREEN_SHARE));
+            dispatch(setVideoMuted(false, VIDEO_MUTISM_AUTHORITY.SCREEN_SHARE));
             setPictureInPictureEnabled(true);
         }
     };
@@ -73,12 +71,16 @@ async function _startScreenSharing(dispatch: Function, state: IReduxState) {
             dispatch(addLocalTrack(track));
         }
 
-        dispatch(setVideoMuted(true, MEDIA_TYPE.VIDEO, VIDEO_MUTISM_AUTHORITY.SCREEN_SHARE));
+        dispatch(setVideoMuted(true, VIDEO_MUTISM_AUTHORITY.SCREEN_SHARE));
 
         const { enabled: audioOnly } = state['features/base/audio-only'];
 
         if (audioOnly) {
-            dispatch(setAudioOnly(false));
+            dispatch(showNotification({
+                titleKey: 'notify.screenSharingAudioOnlyTitle',
+                descriptionKey: 'notify.screenSharingAudioOnlyDescription',
+                maxLines: 3
+            }, NOTIFICATION_TIMEOUT_TYPE.LONG));
         }
     } catch (error: any) {
         console.log('ERROR creating ScreeSharing stream ', error);
