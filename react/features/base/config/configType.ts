@@ -336,12 +336,14 @@ export interface IConfig {
     };
     firefox_fake_device?: string;
     flags?: {
+        ssrcRewritingEnabled: boolean;
     };
     focusUserJid?: string;
     gatherStats?: boolean;
     giphy?: {
         displayMode?: 'all' | 'tile' | 'chat';
         enabled?: boolean;
+        proxyUrl?: string;
         rating?: 'g' | 'pg' | 'pg-13' | 'r';
         sdkKey?: string;
         tileTime?: number;

@@ -388,10 +388,10 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
 
         this._frame = document.createElement('iframe');
         this._frame.allow = 'camera; microphone; display-capture; autoplay; clipboard-write';
-        this._frame.src = this._url;
         this._frame.name = frameName;
         this._frame.id = frameName;
         this._setSize(height, width);
+        this._frame.sandbox = 'allow-scripts allow-same-origin allow-popups allow-forms';
         this._frame.setAttribute('allowFullScreen', 'true');
         this._frame.style.border = 0;
 
@@ -402,6 +402,8 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
         }
 
         this._frame = this._parentNode.appendChild(this._frame);
+
+        this._frame.src = this._url;
     }
 
     /**

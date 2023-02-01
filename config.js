@@ -1515,6 +1515,8 @@ var config = {
     //     tileTime: 5000,
     //     // Limit results by rating: g, pg, pg-13, r. Default value: g.
     //     rating: 'pg',
+    //     // The proxy server url for giphy requests in the web app.
+    //     proxyUrl: 'https://giphy-proxy.example.com',
     // },
 
     // Logging
@@ -1543,6 +1545,12 @@ var config = {
     //     collabServerBaseUrl: 'https://excalidraw-backend.example.com',
     // },
 };
+
+// Temporary backwards compatibility with old mobile clients.
+config.flags = config.flags || {};
+config.flags.sourceNameSignaling = true;
+config.flags.sendMultipleVideoStreams = true;
+config.flags.receiveMultipleVideoStreams = true;
 
 // Set the default values for JaaS customers
 if (enableJaaS) {

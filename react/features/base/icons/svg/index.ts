@@ -88,7 +88,6 @@ export { default as IconSubtitles } from './subtitles.svg';
 export { default as IconTileView } from './tiles-many.svg'; // './tile-view.svg';
 export { default as IconTrash } from './trash.svg';
 export { default as IconUserDeleted } from './user-deleted.svg';
-export { default as IconUserGroups } from './user-groups.svg';
 export { default as IconUsers } from './users.svg';
 export { default as IconVideo } from './camera-empty.svg'; // './video.svg';
 export { default as IconVideoOff } from './camera-empty-disabled.svg'; //'./video-off.svg';

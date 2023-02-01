@@ -10,6 +10,7 @@ import { IInputProps } from '../types';
 
 interface IProps extends IInputProps {
     accessibilityLabel?: string;
+    autoComplete?: string;
     autoFocus?: boolean;
     bottomLabel?: string;
     className?: string;
@@ -21,6 +22,7 @@ interface IProps extends IInputProps {
     name?: string;
     onKeyPress?: (e: React.KeyboardEvent) => void;
     readOnly?: boolean;
+    required?: boolean;
     textarea?: boolean;
     type?: 'text' | 'email' | 'number' | 'password';
 }
@@ -130,6 +132,7 @@ const useStyles = makeStyles()(theme => {
 
 const Input = React.forwardRef<any, IProps>(({
     accessibilityLabel,
+    autoComplete,
     autoFocus,
     bottomLabel,
     className,
@@ -148,6 +151,7 @@ const Input = React.forwardRef<any, IProps>(({
     onKeyPress,
     placeholder,
     readOnly = false,
+    required,
     textarea = false,
     type = 'text',
     value
@@ -173,11 +177,13 @@ const Input = React.forwardRef<any, IProps>(({
                 {textarea ? (
                     <TextareaAutosize
                         aria-label = { accessibilityLabel }
+                        autoComplete = { autoComplete }
                         autoFocus = { autoFocus }
                         className = { cx(styles.input, isMobile && 'is-mobile',
                             error && 'error', clearable && styles.clearableInput, icon && 'icon-input') }
                         disabled = { disabled }
                         { ...(id ? { id } : {}) }
+                        maxLength = { maxLength }
                         maxRows = { maxRows }
                         minRows = { minRows }
                         name = { name }
@@ -186,10 +192,12 @@ const Input = React.forwardRef<any, IProps>(({
                         placeholder = { placeholder }
                         readOnly = { readOnly }
                         ref = { ref }
+                        required = { required }
                         value = { value } />
                 ) : (
                     <input
                         aria-label = { accessibilityLabel }
+                        autoComplete = { autoComplete }
                         autoFocus = { autoFocus }
                         className = { cx(styles.input, isMobile && 'is-mobile',
                             error && 'error', clearable && styles.clearableInput, icon && 'icon-input') }
@@ -202,6 +210,7 @@ const Input = React.forwardRef<any, IProps>(({
                         placeholder = { placeholder }
                         readOnly = { readOnly }
                         ref = { ref }
+                        required = { required }
                         type = { type }
                         value = { value } />
                 )}
