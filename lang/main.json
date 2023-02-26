@@ -184,13 +184,21 @@
     "deepLinking": {
         "appNotInstalled": "You need the {{app}} mobile app to join this meeting on your phone.",
         "description": "Nothing happened? We tried launching your meeting in the {{app}} desktop app. Try again or launch it in the {{app}} web app.",
+        "descriptionNew": "Nothing happened? We tried launching your meeting in the {{app}} desktop app. <br /><br /> You can try again or launch it on web.",
         "descriptionWithoutWeb": "Nothing happened? We tried launching your meeting in the {{app}} desktop app.",
         "downloadApp": "Download the app",
+        "downloadMobileApp": "Download from App Store",
         "ifDoNotHaveApp": "If you don't have the app yet:",
         "ifHaveApp": "If you already have the app:",
         "joinInApp": "Join this meeting using the app",
+        "joinInAppNew": "Join in app",
+        "joinInBrowser": "Join in browser",
+        "launchMeetingLabel": "How do you want to join this meeting?",
         "launchWebButton": "Launch in web",
+        "noMobileApp": "You don’t have the app?",
+        "termsAndConditions": "By continuing you agree to our <a href='{{termsAndConditionsLink}}' rel='noopener noreferrer' target='_blank'>terms & conditions.</a>",
         "title": "Launching your meeting in {{app}}...",
+        "titleNew": "Launching your meeting ...",
         "tryAgainButton": "Try again in desktop",
         "unsupportedBrowser": "It looks like you're using a browser we don't support."
     },
@@ -203,6 +211,12 @@
         "microphonePermission": "Error obtaining microphone permission"
     },
     "deviceSelection": {
+        "hid": {
+            "callControl": "Call control",
+            "connectedDevices": "Connected devices:",
+            "deleteDevice": "Delete device",
+            "pairDevice": "Pair device"
+        },
         "noPermission": "Permission not granted",
         "previewUnavailable": "Preview unavailable",
         "selectADevice": "Select a device",
@@ -751,6 +765,7 @@
         "headings": {
             "lobby": "Lobby ({{count}})",
             "participantsList": "Meeting participants ({{count}})",
+            "visitors": "Visitors ({{count}})",
             "waitingLobby": "Waiting in lobby ({{count}})"
         },
         "search": "Search participants",
@@ -1284,6 +1299,7 @@
         "grantModerator": "Grant Moderator Rights",
         "hideSelfView": "Hide self view",
         "kick": "Kick out",
+        "mirrorVideo": "Mirror my video",
         "moderator": "Moderator",
         "mute": "Participant is muted",
         "muted": "Muted",
@@ -1321,6 +1337,7 @@
         "webAssemblyWarning": "WebAssembly not supported",
         "webAssemblyWarningDescription": "WebAssembly disabled or not supported by this browser"
     },
+    "visitorsLabel": "Number of visitors: {{count}}",
     "volumeSlider": "Volume slider",
     "welcomepage": {
         "accessibilityLabel": {

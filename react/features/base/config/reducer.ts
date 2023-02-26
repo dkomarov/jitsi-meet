@@ -57,10 +57,8 @@ const INITIAL_RN_STATE: IConfig = {
     // than requiring this override here...
 
     p2p: {
-        // Temporarily disable P2P on mobile while we sort out some (codec?) issues.
-        enabled: false,
         disabledCodec: 'vp9',
-        preferredCodec: 'h264'
+        preferredCodec: 'vp8'
     },
 
     videoQuality: {
@@ -532,6 +530,30 @@ function _translateLegacyConfig(oldValue: IConfig) {
         newValue.speakerStats = {
             ...newValue.speakerStats,
             order: oldValue.speakerStatsOrder
+        };
+    }
+
+    if (oldValue.autoKnockLobby !== undefined
+        && newValue.lobby?.autoKnock === undefined) {
+        newValue.lobby = {
+            ...newValue.lobby || {},
+            autoKnock: oldValue.autoKnockLobby
+        };
+    }
+
+    if (oldValue.enableLobbyChat !== undefined
+        && newValue.lobby?.enableChat === undefined) {
+        newValue.lobby = {
+            ...newValue.lobby || {},
+            enableChat: oldValue.enableLobbyChat
+        };
+    }
+
+    if (oldValue.hideLobbyButton !== undefined
+        && newValue.securityUi?.hideLobbyButton === undefined) {
+        newValue.securityUi = {
+            ...newValue.securityUi || {},
+            hideLobbyButton: oldValue.hideLobbyButton
         };
     }
 

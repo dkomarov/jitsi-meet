@@ -389,7 +389,7 @@ PODS:
   - react-native-video/Video (6.0.0-alpha.1):
     - PromisesSwift
     - React-Core
-  - react-native-webrtc (106.0.5):
+  - react-native-webrtc (106.0.6):
     - JitsiWebRTC (~> 106.0.0)
     - React-Core
   - react-native-webview (11.15.1):
@@ -469,7 +469,7 @@ PODS:
     - React-Core
   - RNDeviceInfo (8.4.8):
     - React-Core
-  - RNGestureHandler (2.8.0):
+  - RNGestureHandler (2.9.0):
     - React-Core
   - RNGoogleSignin (7.0.4):
     - GoogleSignIn (~> 6.0.0)
@@ -754,7 +754,7 @@ SPEC CHECKSUMS:
   react-native-slider: 6e9b86e76cce4b9e35b3403193a6432ed07e0c81
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-video: bb6f12a7198db53b261fefb5d609dc77417acc8b
-  react-native-webrtc: ef315d8adb68e78298b22100377d12ef168efdb5
+  react-native-webrtc: 22ac6c64a1e38552bb173dde81ffea6979a58ef3
   react-native-webview: ea4899a1056c782afa96dd082179a66cbebf5504
   React-perflogger: 0458a87ea9a7342079e7a31b0d32b3734fb8415f
   React-RCTActionSheet: 22538001ea2926dea001111dd2846c13a0730bc9
@@ -773,7 +773,7 @@ SPEC CHECKSUMS:
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNDefaultPreference: 08bdb06cfa9188d5da97d4642dac745218d7fb31
   RNDeviceInfo: 0400a6d0c94186d1120c3cbd97b23abc022187a9
-  RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
+  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNGoogleSignin: c4381751eefd73c552b923ba347a9bfc6f18771c
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNSound: 27e8268bdb0a1f191f219a33267f7e0445e8d62f

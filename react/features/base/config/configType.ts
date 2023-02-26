@@ -206,6 +206,8 @@ export interface IConfig {
         };
     };
     corsAvatarURLs?: Array<string>;
+    customParticipantMenuButtons?: Array<{ icon: string; id: string; text: string; }>;
+    customToolbarButtons?: Array<{ icon: string; id: string; text: string; }>;
     deeplinking?: IDeeplinkingConfig;
     defaultLanguage?: string;
     defaultLocalDisplayName?: string;
@@ -386,6 +388,11 @@ export interface IConfig {
     lastNLimits?: {
         [key: number]: number;
     };
+    legalUrls?: {
+        helpCentre: string;
+        privacy: string;
+        terms: string;
+    };
     liveStreaming?: {
         dataPrivacyLink?: string;
         enabled?: boolean;
@@ -394,6 +401,10 @@ export interface IConfig {
         validatorRegExpString?: string;
     };
     liveStreamingEnabled?: boolean;
+    lobby?: {
+        autoKnock?: boolean;
+        enableChat?: boolean;
+    };
     localRecording?: {
         disable?: boolean;
         disableSelfRecording?: boolean;
@@ -463,6 +474,10 @@ export interface IConfig {
     screenshotCapture?: {
         enabled?: boolean;
         mode?: 'always' | 'recording';
+    };
+    securityUi?: {
+        disableLobbyPassword?: boolean;
+        hideLobbyButton?: boolean;
     };
     serviceUrl?: string;
     sipInviteUrl?: string;
