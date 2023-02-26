@@ -4,11 +4,14 @@ import { withStyles } from '@mui/styles';
 import React, { Component } from 'react';
 
 import { IReduxState } from '../../../app/types';
-import { IconBell, IconCalendar, IconGear, IconModerator, IconUser, IconVolumeUp } from '../../../base/icons/svg';
+import { getAvailableDevices } from '../../../base/devices/actions';
+// @ts-ignore
+import { DialogWithTabs } from '../../../base/dialog';
+import { hideDialog } from '../../../base/dialog/actions';
 import { connect } from '../../../base/redux/functions';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
-import DialogWithTabs, { IDialogTab } from '../../../base/ui/components/web/DialogWithTabs';
-import { isCalendarEnabled } from '../../../calendar-sync/functions.web';
+// @ts-ignore
+import { isCalendarEnabled } from '../../../calendar-sync';
 import {
     DeviceSelection,
     getDeviceSelectionDialogProps,
@@ -46,7 +49,11 @@ interface IProps {
     /**
      * Information about the tabs to be rendered.
      */
-    _tabs: IDialogTab[];
+    _tabs: Array<{
+        name: string;
+        onMount: () => void;
+        submit: () => void;
+    }>;
 
     /**
      * An object containing the CSS classes.
@@ -132,9 +139,7 @@ const styles = (theme: Theme) => {
 
             '& .profile-edit': {
                 display: 'flex',
-                width: '100%',
-                padding: '0 2px',
-                boxSizing: 'border-box'
+                width: '100%'
             },
 
             '& .profile-edit-field': {
@@ -215,6 +220,18 @@ const styles = (theme: Theme) => {
  * @augments Component
  */
 class SettingsDialog extends Component<IProps> {
+    /**
+     * Initializes a new {@code ConnectedSettingsDialog} instance.
+     *
+     * @param {IProps} props - The React {@code Component} props to initialize
+     * the new {@code ConnectedSettingsDialog} instance with.
+     */
+    constructor(props: IProps) {
+        super(props);
+
+        // Bind event handlers so they are only bound once for every instance.
+        this._closeDialog = this._closeDialog.bind(this);
+    }
 
     /**
      * Implements React's {@link Component#render()}.
@@ -224,22 +241,45 @@ class SettingsDialog extends Component<IProps> {
      */
     render() {
         const { _tabs, defaultTab, dispatch } = this.props;
-        const correctDefaultTab = _tabs.find(tab => tab.name === defaultTab)?.name;
+        const onSubmit = this._closeDialog;
+        const defaultTabIdx
+            = _tabs.findIndex(({ name }) => name === defaultTab);
         const tabs = _tabs.map(tab => {
             return {
                 ...tab,
+                onMount: tab.onMount
+
+                    // @ts-ignore
+                    ? (...args: any) => dispatch(tab.onMount(...args))
+                    : undefined,
                 submit: (...args: any) => tab.submit
+
+                    // @ts-ignore
                     && dispatch(tab.submit(...args))
             };
         });
 
         return (
             <DialogWithTabs
-                className = 'settings-dialog'
-                defaultTab = { correctDefaultTab }
+                closeDialog = { this._closeDialog }
+                cssClassName = 'settings-dialog'
+                defaultTab = {
+                    defaultTabIdx === -1 ? undefined : defaultTabIdx
+                }
+                onSubmit = { onSubmit }
                 tabs = { tabs }
                 titleKey = 'settings.title' />
         );
+    }
+
+    /**
+     * Callback invoked to close the dialog without saving changes.
+     *
+     * @private
+     * @returns {void}
+     */
+    _closeDialog() {
+        this.props.dispatch(hideDialog());
     }
 }
 
@@ -269,13 +309,14 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
     const showCalendarSettings
         = configuredTabs.includes('calendar') && isCalendarEnabled(state);
     const showSoundsSettings = configuredTabs.includes('sounds');
-    const tabs: IDialogTab[] = [];
+    const tabs = [];
 
     if (showDeviceSettings) {
         tabs.push({
             name: SETTINGS_TABS.DEVICES,
             component: DeviceSelection,
-            labelKey: 'settings.devices',
+            label: 'settings.devices',
+            onMount: getAvailableDevices,
             props: getDeviceSelectionDialogProps(state, isDisplayedOnWelcomePage),
             propsUpdateFunction: (tabState: any, newProps: any) => {
                 // Ensure the device selection tab gets updated when new devices
@@ -291,9 +332,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
                     selectedVideoInputId: tabState.selectedVideoInputId
                 };
             },
-            className: `settings-pane ${classes.settingsDialog} devices-pane`,
-            submit: (newState: any) => submitDeviceSelectionTab(newState, isDisplayedOnWelcomePage),
-            icon: IconVolumeUp
+            styles: `settings-pane ${classes.settingsDialog} devices-pane`,
+            submit: (newState: any) => submitDeviceSelectionTab(newState, isDisplayedOnWelcomePage)
         });
     }
 
@@ -301,11 +341,10 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         tabs.push({
             name: SETTINGS_TABS.PROFILE,
             component: ProfileTab,
-            labelKey: 'profile.title',
+            label: 'profile.title',
             props: getProfileTabProps(state),
-            className: `settings-pane ${classes.settingsDialog} profile-pane`,
-            submit: submitProfileTab,
-            icon: IconUser
+            styles: `settings-pane ${classes.settingsDialog} profile-pane`,
+            submit: submitProfileTab
         });
     }
 
@@ -313,7 +352,7 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         tabs.push({
             name: SETTINGS_TABS.MODERATOR,
             component: ModeratorTab,
-            labelKey: 'settings.moderator',
+            label: 'settings.moderator',
             props: moderatorTabProps,
             propsUpdateFunction: (tabState: any, newProps: any) => {
                 // Updates tab props, keeping users selection
@@ -326,9 +365,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
                     startReactionsMuted: tabState?.startReactionsMuted
                 };
             },
-            className: `settings-pane ${classes.settingsDialog} moderator-pane`,
-            submit: submitModeratorTab,
-            icon: IconModerator
+            styles: `settings-pane ${classes.settingsDialog} moderator-pane`,
+            submit: submitModeratorTab
         });
     }
 
@@ -336,9 +374,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         tabs.push({
             name: SETTINGS_TABS.CALENDAR,
             component: CalendarTab,
-            labelKey: 'settings.calendar.title',
-            className: `settings-pane ${classes.settingsDialog} calendar-pane`,
-            icon: IconCalendar
+            label: 'settings.calendar.title',
+            styles: `settings-pane ${classes.settingsDialog} calendar-pane`
         });
     }
 
@@ -346,21 +383,18 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         tabs.push({
             name: SETTINGS_TABS.SOUNDS,
             component: SoundsTab,
-            labelKey: 'settings.sounds',
+            label: 'settings.sounds',
             props: getSoundsTabProps(state),
-            className: `settings-pane ${classes.settingsDialog} profile-pane`,
-            submit: submitSoundsTab,
-            icon: IconBell
+            styles: `settings-pane ${classes.settingsDialog} profile-pane`,
+            submit: submitSoundsTab
         });
     }
 
     if (showMoreTab) {
         tabs.push({
             name: SETTINGS_TABS.MORE,
-
-            // @ts-ignore
             component: MoreTab,
-            labelKey: 'settings.more',
+            label: 'settings.more',
             props: moreTabProps,
             propsUpdateFunction: (tabState: any, newProps: any) => {
                 // Updates tab props, keeping users selection
@@ -375,9 +409,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
                     maxStageParticipants: tabState?.maxStageParticipants
                 };
             },
-            className: `settings-pane ${classes.settingsDialog} more-pane`,
-            submit: submitMoreTab,
-            icon: IconGear
+            styles: `settings-pane ${classes.settingsDialog} more-pane`,
+            submit: submitMoreTab
         });
     }
 

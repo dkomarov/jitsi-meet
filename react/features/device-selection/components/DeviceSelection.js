@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-import { getAvailableDevices } from '../../base/devices/actions.web';
 import AbstractDialogTab, {
     type Props as AbstractDialogTabProps
 } from '../../base/dialog/components/web/AbstractDialogTab';
@@ -87,6 +86,12 @@ export type Props = {
      * (In the case of iOS Safari).
      */
     hideVideoInputPreview: boolean,
+
+    /**
+     * An optional callback to invoke after the component has completed its
+     * mount logic.
+     */
+    mountCallback?: Function,
 
     /**
      * The id of the audio input device to preview.
@@ -177,7 +182,7 @@ class DeviceSelection extends AbstractDialogTab<Props, State> {
             this._createVideoInputTrack(this.props.selectedVideoInputId)
         ])
         .catch(err => logger.warn('Failed to initialize preview tracks', err))
-            .then(() => getAvailableDevices());
+        .then(() => this.props.mountCallback && this.props.mountCallback());
     }
 
     /**

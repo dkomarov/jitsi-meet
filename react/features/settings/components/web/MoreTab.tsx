@@ -104,7 +104,7 @@ export type Props = AbstractDialogTabProps & WithTranslation & {
  *
  * @augments Component
  */
-class MoreTab extends AbstractDialogTab<Props, any> {
+class MoreTab extends AbstractDialogTab<Props, {}> {
     /**
      * Initializes a new {@code MoreTab} instance.
      *
