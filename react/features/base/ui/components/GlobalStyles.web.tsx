@@ -2,7 +2,7 @@ import React from 'react';
 import { GlobalStyles as MUIGlobalStyles } from 'tss-react';
 import { useStyles } from 'tss-react/mui';
 
-import { commonStyles } from '../constants';
+import { commonStyles, getGlobalStyles } from '../constants';
 
 /**
  * A component generating all the global styles.
@@ -14,7 +14,8 @@ function GlobalStyles() {
 
     return (<MUIGlobalStyles
         styles = {{
-            ...commonStyles(theme)
+            ...commonStyles(theme),
+            ...getGlobalStyles(theme)
         }} />);
 }
 
