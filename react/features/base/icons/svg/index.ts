@@ -47,7 +47,6 @@ export { default as IconHelp } from './help.svg';
 export { default as IconHighlight } from './highlight.svg';
 export { default as IconImage } from './virtual-background.svg'; // './image.svg';
 export { default as IconInfoCircle } from './info-circle.svg';
-export { default as IconBurger } from './burger.svg';
 export { default as IconMessage } from './chat.svg'; // './message.svg';
 export { default as IconMeter } from './meter.svg';
 export { default as IconMic } from './microphone-empty.svg'; //'./mic.svg';
