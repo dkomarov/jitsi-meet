@@ -23,6 +23,7 @@
     "@atlaskit/modal-dialog": "11.2.4",
     "@atlaskit/multi-select": "15.0.5",
     "@atlaskit/spinner": "15.0.6",
+    "@atlaskit/tabs": "12.1.2",
     "@atlaskit/theme": "11.0.2",
     "@atlaskit/tooltip": "17.1.2",
     "@emotion/react": "11.10.0",
