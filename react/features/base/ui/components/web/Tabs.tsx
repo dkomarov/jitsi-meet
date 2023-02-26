@@ -6,7 +6,6 @@ import { withPixelLineHeight } from '../../../styles/functions.web';
 
 interface ITabProps {
     accessibilityLabel: string;
-    className?: string;
     onChange: (id: string) => void;
     selected: string;
     tabs: Array<{
@@ -79,11 +78,10 @@ const useStyles = makeStyles()(theme => {
 
 
 const Tabs = ({
-    accessibilityLabel,
-    className,
+    tabs,
     onChange,
     selected,
-    tabs
+    accessibilityLabel
 }: ITabProps) => {
     const { classes, cx } = useStyles();
     const isMobile = isMobileBrowser();
@@ -95,7 +93,7 @@ const Tabs = ({
     return (
         <div
             aria-label = { accessibilityLabel }
-            className = { cx(classes.container, className) }
+            className = { classes.container }
             role = 'tablist'>
             {tabs.map(tab => (
                 <button

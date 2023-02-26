@@ -1,3 +1,4 @@
+import Tabs from '@atlaskit/tabs';
 import React, { PureComponent } from 'react';
 import { WithTranslation } from 'react-i18next';
 
@@ -6,7 +7,6 @@ import { hideDialog } from '../../base/dialog/actions';
 import { translate } from '../../base/i18n/functions';
 import { connect } from '../../base/redux/functions';
 import Dialog from '../../base/ui/components/web/Dialog';
-import Tabs from '../../base/ui/components/web/Tabs';
 // eslint-disable-next-line lines-around-comment
 // @ts-ignore
 import { obtainDesktopSources } from '../functions';
@@ -85,7 +85,7 @@ interface IState {
     /**
      * The desktop source type currently being displayed.
      */
-    selectedTab: string;
+    selectedTab: number;
 
     /**
      * An object containing all the DesktopCapturerSources.
@@ -133,7 +133,7 @@ class DesktopPicker extends PureComponent<IProps, IState> {
     state: IState = {
         screenShareAudio: false,
         selectedSource: {},
-        selectedTab: DEFAULT_TAB_TYPE,
+        selectedTab: 0,
         sources: {},
         types: []
     };
@@ -191,8 +191,6 @@ class DesktopPicker extends PureComponent<IProps, IState> {
      * @inheritdoc
      */
     render() {
-        const { selectedTab, selectedSource, sources } = this.state;
-
         return (
             <Dialog
                 ok = {{
@@ -204,14 +202,6 @@ class DesktopPicker extends PureComponent<IProps, IState> {
                 size = 'large'
                 titleKey = 'dialog.shareYourScreen'>
                 { this._renderTabs() }
-                <DesktopPickerPane
-                    key = { selectedTab }
-                    onClick = { this._onPreviewClick }
-                    onDoubleClick = { this._onSubmit }
-                    onShareAudioChecked = { this._onShareAudioChecked }
-                    selectedSourceId = { selectedSource.id }
-                    sources = { sources[selectedTab as keyof typeof sources] }
-                    type = { selectedTab } />
             </Dialog>
         );
     }
@@ -306,20 +296,23 @@ class DesktopPicker extends PureComponent<IProps, IState> {
      * Stores the selected tab and updates the selected source via
      * {@code _getSelectedSource}.
      *
-     * @param {string} id - The id of the newly selected tab.
+     * @param {Object} _tab - The configuration passed into atlaskit tabs to
+     * describe how to display the selected tab.
+     * @param {number} tabIndex - The index of the tab within the array of
+     * displayed tabs.
      * @returns {void}
      */
-    _onTabSelected(id: string) {
-        const { sources } = this.state;
+    _onTabSelected(_tab: Object, tabIndex: number) {
+        const { types, sources } = this.state;
 
-        this._selectedTabType = id;
+        this._selectedTabType = types[tabIndex];
 
         // When we change tabs also reset the screenShareAudio state so we don't
         // use the option from one tab when sharing from another.
         this.setState({
             screenShareAudio: false,
             selectedSource: this._getSelectedSource(sources),
-            selectedTab: id
+            selectedTab: tabIndex
         });
     }
 
@@ -341,23 +334,27 @@ class DesktopPicker extends PureComponent<IProps, IState> {
      * @returns {ReactElement}
      */
     _renderTabs() {
-        const { types } = this.state;
+        const { selectedSource, sources, types } = this.state;
         const { t } = this.props;
         const tabs
             = types.map(
                 type => {
                     return {
-                        accessibilityLabel: t(TAB_LABELS[type as keyof typeof TAB_LABELS]),
-                        id: type,
+                        content: <DesktopPickerPane
+                            key = { type }
+                            onClick = { this._onPreviewClick }
+                            onDoubleClick = { this._onSubmit }
+                            onShareAudioChecked = { this._onShareAudioChecked }
+                            selectedSourceId = { selectedSource.id }
+                            sources = { sources[type as keyof typeof sources] }
+                            type = { type } />,
                         label: t(TAB_LABELS[type as keyof typeof TAB_LABELS])
                     };
                 });
 
         return (
             <Tabs
-                accessibilityLabel = ''
-                className = 'desktop-picker-tabs-container'
-                onChange = { this._onTabSelected }
+                onSelect = { this._onTabSelected }
                 selected = { this.state.selectedTab }
                 tabs = { tabs } />);
     }
