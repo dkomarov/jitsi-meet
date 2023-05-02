@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
 
-// @ts-ignore
-import { Avatar } from '../../../base/avatar';
+import Avatar from '../../../base/avatar/components/Avatar';
 import Icon from '../../../base/icons/components/Icon';
 import { IconCheck, IconCloseLarge } from '../../../base/icons/svg';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
@@ -15,7 +14,6 @@ import JitsiPortal from '../../../toolbox/components/web/JitsiPortal';
 import { showOverflowDrawer } from '../../../toolbox/functions.web';
 import { useLobbyActions, useParticipantDrawer } from '../../hooks';
 
-// @ts-ignore
 import LobbyParticipantItems from './LobbyParticipantItems';
 
 const useStyles = makeStyles()(theme => {
@@ -50,8 +48,7 @@ const useStyles = makeStyles()(theme => {
             justifyContent: 'space-between'
         },
         heading: {
-            // @ts-ignore
-            ...withPixelLineHeight(theme.typography.heading7),
+            ...withPixelLineHeight(theme.typography.bodyShortBold),
             color: theme.palette.text02
         },
         link: {

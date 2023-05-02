@@ -1,4 +1,5 @@
 import { IReduxState } from '../../app/types';
+import JitsiMeetJS from '../../base/lib-jitsi-meet';
 
 import { IConfig, IDeeplinkingConfig, IDeeplinkingMobileConfig, IDeeplinkingPlatformConfig } from './configType';
 import { TOOLBAR_BUTTONS } from './constants';
@@ -45,6 +46,16 @@ export function getToolbarButtons(state: IReduxState): Array<string> {
 }
 
 /**
+ * Returns the configuration value of web-hid feature.
+ *
+ * @param {Object} state - The state of the app.
+ * @returns {boolean} True if web-hid feature should be enabled, otherwise false.
+ */
+export function getWebHIDFeatureConfig(state: IReduxState): boolean {
+    return state['features/base/config'].enableWebHIDFeature || false;
+}
+
+/**
  * Checks if the specified button is enabled.
  *
  * @param {string} buttonName - The name of the button.
@@ -65,8 +76,7 @@ export function isToolbarButtonEnabled(buttonName: string, state: IReduxState | 
  * @returns {boolean}
  */
 export function areAudioLevelsEnabled(state: IReduxState): boolean {
-    // Default to false for React Native as audio levels are of no interest to the mobile app.
-    return navigator.product !== 'ReactNative' && !state['features/base/config'].disableAudioLevels;
+    return !state['features/base/config'].disableAudioLevels && JitsiMeetJS.isCollectingLocalStats();
 }
 
 /**

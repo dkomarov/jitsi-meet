@@ -1,14 +1,14 @@
 // @flow
 
 import React from 'react';
+import { connect } from 'react-redux';
 
-import { translate } from '../../base/i18n';
-import { Label } from '../../base/label';
-import { connect } from '../../base/redux';
-import { type StyleType, combineStyles } from '../../base/styles';
+import { translate } from '../../base/i18n/functions';
+import Label from '../../base/label/components/native/Label';
+import { StyleType, combineStyles } from '../../base/styles/functions.native';
 
 import AbstractVideoQualityLabel, {
-    type Props as AbstractProps,
+    IProps as AbstractProps,
     _abstractMapStateToProps
 } from './AbstractVideoQualityLabel';
 import styles from './styles';

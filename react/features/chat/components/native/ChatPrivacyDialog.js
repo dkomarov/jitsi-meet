@@ -1,8 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import { ConfirmDialog } from '../../../base/dialog';
-import { translate } from '../../../base/i18n';
-import { connect } from '../../../base/redux';
+import ConfirmDialog from '../../../base/dialog/components/native/ConfirmDialog';
+import { translate } from '../../../base/i18n/functions';
 import { AbstractChatPrivacyDialog, _mapDispatchToProps, _mapStateToProps } from '../AbstractChatPrivacyDialog';
 
 /**

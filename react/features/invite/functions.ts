@@ -26,8 +26,8 @@ import {
     UPGRADE_OPTIONS_TEXT
 } from './constants';
 import logger from './logger';
+import { IInvitee } from './types';
 
-declare let $: any;
 
 export const sharingFeatures = {
     email: 'email',
@@ -49,11 +49,16 @@ export function checkDialNumber(
 ): Promise<{ allow?: boolean; country?: string; phone?: string; }> {
     const fullUrl = `${dialOutAuthUrl}?phone=${dialNumber}`;
 
-    return new Promise((resolve, reject) => {
-        $.getJSON(fullUrl)
-            .then(resolve)
-            .catch(reject);
-    });
+    return new Promise((resolve, reject) =>
+        fetch(fullUrl)
+            .then(res => {
+                if (res.ok) {
+                    resolve(res.json());
+                } else {
+                    reject(new Error('Request not successful!'));
+                }
+            })
+            .catch(reject));
 }
 
 /**
@@ -379,7 +384,7 @@ export function getInviteText({
  * @returns {Object} An object with keys as user types and values as the number
  * of invites for that type.
  */
-export function getInviteTypeCounts(inviteItems: Array<{ type: string; }> = []) {
+export function getInviteTypeCounts(inviteItems: IInvitee[] = []) {
     const inviteTypeCounts: any = {};
 
     inviteItems.forEach(({ type }) => {

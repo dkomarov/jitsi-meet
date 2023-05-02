@@ -1,5 +1,5 @@
-import React from "react";
-import { makeStyles } from "tss-react/mui";
+import React, { useCallback } from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import Icon from "../../../icons/components/Icon";
 import { withPixelLineHeight } from "../../../styles/functions.web";
@@ -90,19 +90,32 @@ const Label = ({
 }: IProps) => {
     const { classes, cx } = useStyles();
 
+    const onKeyPress = useCallback(event => {
+        if (!onClick) {
+            return;
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onClick();
+        }
+    }, [ onClick ]);
+
     return (
         <div
-            className={cx(
-                classes.label,
-                onClick && classes.clickable,
-                color && classes[color],
-                className
-            )}
-            id={id}
-            onClick={onClick}
-        >
-            {icon && <Icon color={iconColor} size="16" src={icon} />}
-            {text && <span className={icon && classes.withIcon}>{text}</span>}
+            className = { cx(classes.label, onClick && classes.clickable,
+                color && classes[color], className
+            ) }
+            id = { id }
+            onClick = { onClick }
+            onKeyPress = { onKeyPress }
+            role = { onClick ? 'button' : undefined }
+            tabIndex = { onClick ? 0 : undefined }>
+            {icon && <Icon
+                color = { iconColor }
+                size = '16'
+                src = { icon } />}
+            {text && <span className = { icon && classes.withIcon }>{text}</span>}
         </div>
     );
 };

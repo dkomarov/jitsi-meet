@@ -3,14 +3,15 @@ import {
     Text,
     View
 } from 'react-native';
+import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 
 import { getSecurityUiConfig } from '../../../../base/config/functions.any';
-import { MEETING_PASSWORD_ENABLED, getFeatureFlag } from '../../../../base/flags';
-import { translate } from '../../../../base/i18n';
+import { MEETING_PASSWORD_ENABLED } from '../../../../base/flags/constants';
+import { getFeatureFlag } from '../../../../base/flags/functions';
+import { translate } from '../../../../base/i18n/functions';
 import JitsiScreen from '../../../../base/modal/components/JitsiScreen';
-import { isLocalParticipantModerator } from '../../../../base/participants';
-import { connect } from '../../../../base/redux';
+import { isLocalParticipantModerator } from '../../../../base/participants/functions';
 import Button from '../../../../base/ui/components/native/Button';
 import Input from '../../../../base/ui/components/native/Input';
 import Switch from '../../../../base/ui/components/native/Switch';
@@ -18,11 +19,11 @@ import { BUTTON_TYPES } from '../../../../base/ui/constants.native';
 import { copyText } from '../../../../base/util/copyText.native';
 import { isInBreakoutRoom } from '../../../../breakout-rooms/functions';
 import { toggleLobbyMode } from '../../../../lobby/actions.any';
-import { LOCKED_LOCALLY, LOCKED_REMOTELY } from '../../../../room-lock';
 import {
     endRoomLockRequest,
     unlockRoom
 } from '../../../../room-lock/actions';
+import { LOCKED_LOCALLY, LOCKED_REMOTELY } from '../../../../room-lock/constants';
 
 import styles from './styles';
 

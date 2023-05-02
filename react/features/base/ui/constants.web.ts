@@ -111,11 +111,10 @@ export const commonStyles = (theme: Theme) => {
                 2
             )} 0`
         },
-
         '.prejoin-dialog': {
-            background: '#1C2025',
+            backgroundColor: theme.palette.uiBackground,
             boxShadow: '0px 2px 20px rgba(0, 0, 0, 0.5)',
-            borderRadius: '5px',
+            borderRadius: theme.shape.borderRadius,
             color: '#fff',
             height: '400px',
             width: '375px',
@@ -167,15 +166,10 @@ export const commonStyles = (theme: Theme) => {
             },
 
             '.prejoin-dialog-icon': {
-                cursor: 'pointer',
-
-                '& > svg': {
-                    fill: '#A4B8D1'
-                }
+                cursor: 'pointer'
             },
 
             '.prejoin-dialog-btn': {
-                width: '309px',
                 marginBottom: '8px'
             },
 
@@ -184,7 +178,7 @@ export const commonStyles = (theme: Theme) => {
             },
 
             '.prejoin-dialog-delimiter': {
-                background: '#5f6266',
+                background: theme.palette.ui03,
                 border: '0',
                 height: '1px',
                 margin: '0',
@@ -193,7 +187,7 @@ export const commonStyles = (theme: Theme) => {
             },
 
             '.prejoin-dialog-delimiter-container': {
-                margin: `${theme.spacing(3)} 0 ${theme.spacing(4)} 0`,
+                margin: `${theme.spacing(4)} 0`,
                 position: 'relative' as const
             },
 
@@ -205,8 +199,8 @@ export const commonStyles = (theme: Theme) => {
             },
 
             '.prejoin-dialog-delimiter-txt': {
-                background: '#1C2025',
-                color: '#5f6266',
+                background: theme.palette.uiBackground,
+                color: theme.palette.text01,
                 fontSize: '11px',
                 textTransform: 'uppercase' as const,
                 padding: `0 ${theme.spacing(2)}`

@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Platform, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { IconSearch } from '../../../base/icons';
+import { IconSearch } from '../../../base/icons/svg';
 import JitsiScreen from '../../../base/modal/components/JitsiScreen';
-import { LoadingIndicator } from '../../../base/react';
+import LoadingIndicator from '../../../base/react/components/native/LoadingIndicator';
 import Button from '../../../base/ui/components/native/Button';
 import Input from '../../../base/ui/components/native/Input';
 import { BUTTON_TYPES } from '../../../base/ui/constants.native';

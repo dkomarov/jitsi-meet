@@ -12,7 +12,7 @@ import {
     constructOptions
 } from './react/features/base/connection/actions.web';
 import { openDialog } from './react/features/base/dialog/actions';
-import { setJWT } from './react/features/base/jwt';
+import { setJWT } from './react/features/base/jwt/actions';
 import {
     JitsiConnectionErrors,
     JitsiConnectionEvents
@@ -167,7 +167,7 @@ export function openConnection({ id, password, retry, roomName }) {
         password = passwordOverride; // eslint-disable-line no-param-reassign
     }
 
-    return connect(id, password, roomName).catch(err => {
+    return connect(id, password).catch(err => {
         if (retry) {
             const { jwt } = APP.store.getState()['features/base/jwt'];
 

@@ -1,5 +1,3 @@
-/* eslint-disable lines-around-comment  */
-
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { WithTranslation } from 'react-i18next';
@@ -10,36 +8,30 @@ import {
     Platform,
     ScrollView,
     Text,
-    View
+    View,
+    ViewStyle
 } from 'react-native';
 import { Divider } from 'react-native-paper';
-
+import { connect } from 'react-redux';
 
 import { getDefaultURL } from '../../../app/functions.native';
 import { IReduxState } from '../../../app/types';
-// @ts-ignore
-import { Avatar } from '../../../base/avatar';
+import Avatar from '../../../base/avatar/components/Avatar';
 import { getLegalUrls } from '../../../base/config/functions.native';
 import { translate } from '../../../base/i18n/functions';
-// @ts-ignore
 import JitsiScreen from '../../../base/modal/components/JitsiScreen';
 import { getLocalParticipant } from '../../../base/participants/functions';
-import { connect } from '../../../base/redux/functions';
 import { updateSettings } from '../../../base/settings/actions';
 import Button from '../../../base/ui/components/native/Button';
 import Input from '../../../base/ui/components/native/Input';
 import Switch from '../../../base/ui/components/native/Switch';
-// @ts-ignore
 import { BUTTON_TYPES } from '../../../base/ui/constants.any';
-// @ts-ignore
 import { AVATAR_SIZE } from '../../../welcome/components/styles';
 import { isServerURLChangeEnabled, normalizeUserInputURL } from '../../functions.native';
 
 // @ts-ignore
 import FormRow from './FormRow';
-// @ts-ignore
 import FormSection from './FormSection';
-// @ts-ignore
 import styles from './styles';
 
 /**
@@ -52,52 +44,52 @@ interface IState {
     /**
      * State variable for the disable call integration switch.
      */
-    disableCallIntegration: boolean;
+    disableCallIntegration?: boolean;
 
     /**
      * State variable for the disable crash reporting switch.
      */
-    disableCrashReporting: boolean;
+    disableCrashReporting?: boolean;
 
     /**
      * State variable for the disable p2p switch.
      */
-    disableP2P: boolean;
+    disableP2P?: boolean;
 
     /**
      * Whether the self view is disabled or not.
      */
-    disableSelfView: boolean;
+    disableSelfView?: boolean;
 
     /**
      * State variable for the display name field.
      */
-    displayName: string;
+    displayName?: string;
 
     /**
      * State variable for the email field.
      */
-    email: string;
+    email?: string;
 
     /**
      * State variable for the server URL field.
      */
-    serverURL: string;
+    serverURL?: string;
 
     /**
      * State variable for start car mode.
      */
-    startCarMode: boolean;
+    startCarMode?: boolean;
 
     /**
      * State variable for the start with audio muted switch.
      */
-    startWithAudioMuted: boolean;
+    startWithAudioMuted?: boolean;
 
     /**
      * State variable for the start with video muted switch.
      */
-    startWithVideoMuted: boolean;
+    startWithVideoMuted?: boolean;
 }
 
 /**
@@ -118,7 +110,7 @@ interface IProps extends WithTranslation {
     /**
      * The ID of the local participant.
      */
-    _localParticipantId: string;
+    _localParticipantId?: string;
 
     /**
      * The default URL for when there is no custom URL set in the settings.
@@ -138,16 +130,16 @@ interface IProps extends WithTranslation {
      * The current settings object.
      */
     _settings: {
-        disableCallIntegration: boolean;
-        disableCrashReporting: boolean;
-        disableP2P: boolean;
-        disableSelfView: boolean;
-        displayName: string;
-        email: string;
-        serverURL: string;
-        startCarMode: boolean;
-        startWithAudioMuted: boolean;
-        startWithVideoMuted: boolean;
+        disableCallIntegration?: boolean;
+        disableCrashReporting?: boolean;
+        disableP2P?: boolean;
+        disableSelfView?: boolean;
+        displayName?: string;
+        email?: string;
+        serverURL?: string;
+        startCarMode?: boolean;
+        startWithAudioMuted?: boolean;
+        startWithVideoMuted?: boolean;
     };
 
     /**
@@ -155,7 +147,7 @@ interface IProps extends WithTranslation {
      *
      * @protected
      */
-    _visible: boolean;
+    _visible?: boolean;
 
     /**
      * Add bottom padding to the screen.
@@ -170,7 +162,7 @@ interface IProps extends WithTranslation {
     /**
      * Default prop for navigating between screen components(React Navigation).
      */
-    navigation: Object;
+    navigation?: Object;
 
     /**
      * Bounce when scrolling.
@@ -287,29 +279,28 @@ class SettingsView extends Component<IProps, IState> {
         return (
             <JitsiScreen
                 disableForcedKeyboardDismiss = { true }
+
+                // @ts-ignore
                 safeAreaInsets = { [ addBottomInset && 'bottom', 'left', 'right' ].filter(Boolean) }
                 style = { styles.settingsViewContainer }>
                 <ScrollView bounces = { scrollBounces }>
-                    <View style = { styles.avatarContainer }>
+                    <View style = { styles.avatarContainer as ViewStyle }>
                         <Avatar
                             participantId = { this.props._localParticipantId }
                             size = { AVATAR_SIZE } />
                     </View>
-                    {/* @ts-ignore */}
                     <FormSection
                         label = 'settingsView.profileSection'>
                         <Input
-                            // @ts-ignore
                             customStyles = {{ container: styles.customContainer }}
                             label = { t('settingsView.displayName') }
                             onChange = { this._onChangeDisplayName }
                             placeholder = { t('settingsView.displayNamePlaceholderText') }
                             textContentType = { 'name' } // iOS only
-                            value = { displayName } />
+                            value = { displayName ?? '' } />
                         {/* @ts-ignore */}
                         <Divider style = { styles.fieldSeparator } />
                         <Input
-                            // @ts-ignore
                             autoCapitalize = 'none'
                             customStyles = {{ container: styles.customContainer }}
                             keyboardType = { 'email-address' }
@@ -317,13 +308,11 @@ class SettingsView extends Component<IProps, IState> {
                             onChange = { this._onChangeEmail }
                             placeholder = { t('settingsView.emailPlaceholderText') }
                             textContentType = { 'emailAddress' } // iOS only
-                            value = { email } />
+                            value = { email ?? '' } />
                     </FormSection>
-                    {/* @ts-ignore */}
                     <FormSection
                         label = 'settingsView.conferenceSection'>
                         <Input
-                            // @ts-ignore
                             autoCapitalize = 'none'
                             customStyles = {{ container: styles.customContainer }}
                             editable = { this.props._serverURLChangeEnabled }
@@ -333,13 +322,12 @@ class SettingsView extends Component<IProps, IState> {
                             onChange = { this._onChangeServerURL }
                             placeholder = { this.props._serverURL }
                             textContentType = { 'URL' } // iOS only
-                            value = { serverURL } />
+                            value = { serverURL ?? '' } />
                         {/* @ts-ignore */}
                         <Divider style = { styles.fieldSeparator } />
                         <FormRow label = 'settingsView.startCarModeInLowBandwidthMode'>
                             <Switch
-                                checked = { startCarMode }
-                                // @ts-ignore
+                                checked = { Boolean(startCarMode) }
                                 onChange = { this._onStartCarmodeInLowBandwidthMode } />
                         </FormRow>
                         {/* @ts-ignore */}
@@ -347,34 +335,31 @@ class SettingsView extends Component<IProps, IState> {
                         <FormRow
                             label = 'settingsView.startWithAudioMuted'>
                             <Switch
-                                checked = { startWithAudioMuted }
-                                // @ts-ignore
+                                checked = { Boolean(startWithAudioMuted) }
                                 onChange = { this._onStartAudioMutedChange } />
                         </FormRow>
                         {/* @ts-ignore */}
                         <Divider style = { styles.fieldSeparator } />
                         <FormRow label = 'settingsView.startWithVideoMuted'>
                             <Switch
-                                checked = { startWithVideoMuted }
-                                // @ts-ignore
+                                checked = { Boolean(startWithVideoMuted) }
                                 onChange = { this._onStartVideoMutedChange } />
                         </FormRow>
                         {/* @ts-ignore */}
                         <Divider style = { styles.fieldSeparator } />
                         <FormRow label = 'videothumbnail.hideSelfView'>
                             <Switch
-                                checked = { disableSelfView }
-                                // @ts-ignore
+                                checked = { Boolean(disableSelfView) }
                                 onChange = { this._onDisableSelfView } />
                         </FormRow>
                     </FormSection>
-                    {/* @ts-ignore */}
                     <FormSection
                         label = 'settingsView.links'>
                         <Button
                             accessibilityLabel = 'settingsView.help'
                             labelKey = 'settingsView.help'
                             onClick = { this._onShowHelpPressed }
+                            style = { styles.linksButton }
                             type = { BUTTON_TYPES.TERTIARY } />
                         {/* @ts-ignore */}
                         <Divider style = { styles.fieldSeparator } />
@@ -382,6 +367,7 @@ class SettingsView extends Component<IProps, IState> {
                             accessibilityLabel = 'settingsView.terms'
                             labelKey = 'settingsView.terms'
                             onClick = { this._onShowTermsPressed }
+                            style = { styles.linksButton }
                             type = { BUTTON_TYPES.TERTIARY } />
                         {/* @ts-ignore */}
                         <Divider style = { styles.fieldSeparator } />
@@ -389,12 +375,11 @@ class SettingsView extends Component<IProps, IState> {
                             accessibilityLabel = 'settingsView.privacy'
                             labelKey = 'settingsView.privacy'
                             onClick = { this._onShowPrivacyPressed }
+                            style = { styles.linksButton }
                             type = { BUTTON_TYPES.TERTIARY } />
                     </FormSection>
-                    {/* @ts-ignore */}
                     <FormSection
                         label = 'settingsView.buildInfoSection'>
-                        {/* @ts-ignore */}
                         <FormRow
                             label = 'settingsView.version'>
                             <Text style = { styles.text }>
@@ -402,7 +387,6 @@ class SettingsView extends Component<IProps, IState> {
                             </Text>
                         </FormRow>
                     </FormSection>
-                    {/* @ts-ignore */}
                     <FormSection
                         label = 'settingsView.advanced'>
                         { Platform.OS === 'android' && (
@@ -410,8 +394,7 @@ class SettingsView extends Component<IProps, IState> {
                                 <FormRow
                                     label = 'settingsView.disableCallIntegration'>
                                     <Switch
-                                        checked = { disableCallIntegration }
-                                        // @ts-ignore
+                                        checked = { Boolean(disableCallIntegration) }
                                         onChange = { this._onDisableCallIntegration } />
                                 </FormRow>
                                 {/* @ts-ignore */}
@@ -421,8 +404,7 @@ class SettingsView extends Component<IProps, IState> {
                         <FormRow
                             label = 'settingsView.disableP2P'>
                             <Switch
-                                checked = { disableP2P }
-                                // @ts-ignore
+                                checked = { Boolean(disableP2P) }
                                 onChange = { this._onDisableP2P } />
                         </FormRow>
                         {/* @ts-ignore */}
@@ -432,8 +414,7 @@ class SettingsView extends Component<IProps, IState> {
                                 fieldSeparator = { true }
                                 label = 'settingsView.disableCrashReporting'>
                                 <Switch
-                                    checked = { disableCrashReporting }
-                                    // @ts-ignore
+                                    checked = { Boolean(disableCrashReporting) }
                                     onChange = { this._onDisableCrashReporting } />
                             </FormRow>
                         )}
@@ -513,7 +494,7 @@ class SettingsView extends Component<IProps, IState> {
      * @private
      * @returns {void}
      */
-    _onDisableCallIntegration(disableCallIntegration: boolean) {
+    _onDisableCallIntegration(disableCallIntegration?: boolean) {
         this.setState({
             disableCallIntegration
         });
@@ -531,7 +512,7 @@ class SettingsView extends Component<IProps, IState> {
      * @private
      * @returns {void}
      */
-    _onDisableP2P(disableP2P: boolean) {
+    _onDisableP2P(disableP2P?: boolean) {
         this.setState({
             disableP2P
         });
@@ -548,7 +529,7 @@ class SettingsView extends Component<IProps, IState> {
      * @private
      * @returns {void}
      */
-    _onDisableSelfView(disableSelfView: boolean) {
+    _onDisableSelfView(disableSelfView?: boolean) {
         this.setState({
             disableSelfView
         });
@@ -565,7 +546,7 @@ class SettingsView extends Component<IProps, IState> {
      * @private
      * @returns {void}
      */
-    _onStartCarmodeInLowBandwidthMode(startCarMode: boolean) {
+    _onStartCarmodeInLowBandwidthMode(startCarMode?: boolean) {
         this.setState({
             startCarMode
         });
@@ -583,11 +564,11 @@ class SettingsView extends Component<IProps, IState> {
      * @private
      * @returns {void}
      */
-    _onDisableCrashReporting(disableCrashReporting: boolean) {
+    _onDisableCrashReporting(disableCrashReporting?: boolean) {
         if (disableCrashReporting) {
             this._showCrashReportingDisableAlert();
         } else {
-            this._disableCrashReporting(disableCrashReporting);
+            this._disableCrashReporting(Boolean(disableCrashReporting));
         }
     }
 
@@ -609,7 +590,7 @@ class SettingsView extends Component<IProps, IState> {
      * @protected
      * @returns {void}
      */
-    _onStartAudioMutedChange(startWithAudioMuted: boolean) {
+    _onStartAudioMutedChange(startWithAudioMuted?: boolean) {
         this.setState({
             startWithAudioMuted
         });
@@ -627,7 +608,7 @@ class SettingsView extends Component<IProps, IState> {
      * @protected
      * @returns {void}
      */
-    _onStartVideoMutedChange(startWithVideoMuted: boolean) {
+    _onStartVideoMutedChange(startWithVideoMuted?: boolean) {
         this.setState({
             startWithVideoMuted
         });
@@ -649,7 +630,7 @@ class SettingsView extends Component<IProps, IState> {
     _processServerURL(hideOnSuccess: boolean) {
         // @ts-ignore
         const { serverURL } = this.props._settings;
-        const normalizedURL = normalizeUserInputURL(serverURL);
+        const normalizedURL = normalizeUserInputURL(serverURL ?? '');
 
         if (normalizedURL === null) {
             this._showURLAlert();
