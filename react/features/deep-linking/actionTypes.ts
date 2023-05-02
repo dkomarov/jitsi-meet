@@ -1,3 +1,5 @@
+/* @flow */
+
 /**
  * The type of the action which signals to open the conference in the desktop
  * app.

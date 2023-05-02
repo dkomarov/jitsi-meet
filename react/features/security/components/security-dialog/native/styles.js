@@ -17,7 +17,7 @@ export default {
     },
 
     lobbyModeContainer: {
-        borderBottomColor: BaseTheme.palette.ui07,
+        borderBottomColor: BaseTheme.palette.border01,
         borderBottomWidth: 1,
         marginTop: BaseTheme.spacing[4]
     },

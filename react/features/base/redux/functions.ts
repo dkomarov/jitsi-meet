@@ -1,6 +1,7 @@
 import _ from 'lodash';
+import { connect as reduxConnect } from 'react-redux';
 
-import { IReduxState, IStore } from '../../app/types';
+import { IReduxState } from '../../app/types';
 import { IStateful } from '../app/types';
 
 /**
@@ -24,6 +25,19 @@ export function assign<T extends Object>(target: T, source: Partial<T>): T {
     }
 
     return t;
+}
+
+/**
+ * Wrapper function for the react-redux connect function to avoid having to
+ * declare function types for flow, but still let flow warn for other errors.
+ *
+ * @param {any} mapStateToProps - Redux mapStateToProps function.
+ * @param {Function?} mapDispatchToProps - Redux mapDispatchToProps function.
+ * @returns {Connector}
+ */
+export function connect(
+        mapStateToProps?: any, mapDispatchToProps?: Function | Object) {
+    return reduxConnect(mapStateToProps, mapDispatchToProps);
 }
 
 /**
@@ -58,6 +72,8 @@ export function equals(a: any, b: any) {
 export function set<T extends Object>(state: T, property: keyof T, value: any): T {
     return _set(state, property, value, /* copyOnWrite */ true);
 }
+
+/* eslint-disable max-params */
 
 /**
  * Sets a specific property of a specific state to a specific value. Prevents
@@ -111,16 +127,6 @@ function _set<T extends Object>(
 /* eslint-enable max-params */
 
 /**
- * Whether or not the entity is of type IStore.
- *
- * @param {IStateful} stateful - The entity to check.
- * @returns {boolean}
- */
-function isStore(stateful: IStateful): stateful is IStore {
-    return 'getState' in stateful && typeof stateful.getState === 'function';
-}
-
-/**
  * Returns redux state from the specified {@code stateful} which is presumed to
  * be related to the redux state (e.g. The redux store, the redux
  * {@code getState} function).
@@ -136,10 +142,14 @@ export function toState(stateful: IStateful): IReduxState {
             return stateful();
         }
 
-        if (isStore(stateful)) {
-            return stateful.getState();
+        // @ts-ignore
+        const { getState } = stateful;
+
+        if (typeof getState === 'function') {
+            return getState();
         }
     }
 
+    // @ts-ignore
     return stateful;
 }

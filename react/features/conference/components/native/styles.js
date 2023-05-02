@@ -1,4 +1,4 @@
-import { fixAndroidViewClipping } from '../../../base/styles/functions.native';
+import { fixAndroidViewClipping } from '../../../base/styles';
 import BaseTheme from '../../../base/ui/components/BaseTheme.native';
 
 export const INSECURE_ROOM_NAME_LABEL_COLOR = BaseTheme.palette.actionDanger;
@@ -14,20 +14,6 @@ const titleBarSafeView = {
     position: 'absolute',
     right: 0,
     top: 0
-};
-
-const alwaysOnTitleBar = {
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, .5)',
-    borderRadius: BaseTheme.shape.borderRadius,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: BaseTheme.spacing[3],
-    paddingRight: BaseTheme.spacing[0],
-    '&:not(:empty)': {
-        padding: BaseTheme.spacing[1]
-    }
 };
 
 /**
@@ -123,13 +109,19 @@ export default {
     },
 
     alwaysOnTitleBar: {
-        ...alwaysOnTitleBar,
-        marginRight: BaseTheme.spacing[2]
-    },
+        paddingRight: 0,
+        borderRadius: 6,
+        backgroundColor: 'rgba(0, 0, 0, .5)',
+        marginLeft: BaseTheme.spacing[2],
+        flexDirection: 'row',
+        alignSelf: 'flex-start',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: BaseTheme.spacing[2],
 
-    alwaysOnTitleBarWide: {
-        ...alwaysOnTitleBar,
-        marginRight: BaseTheme.spacing[12]
+        '&:not(:empty)': {
+            padding: 4
+        }
     },
 
     expandedLabelWrapper: {
@@ -139,7 +131,6 @@ export default {
     roomTimer: {
         ...BaseTheme.typography.bodyShortBold,
         color: BaseTheme.palette.text01,
-        lineHeight: 14,
         textAlign: 'center'
     },
 
@@ -202,8 +193,8 @@ export default {
         backgroundColor: BaseTheme.palette.warning02,
         borderRadius: BaseTheme.shape.borderRadius,
         flexDirection: 'row',
-        marginBottom: BaseTheme.spacing[0],
-        marginLeft: BaseTheme.spacing[0]
+        marginLeft: BaseTheme.spacing[0],
+        marginBottom: BaseTheme.spacing[0]
     },
 
     raisedHandsCountLabelText: {

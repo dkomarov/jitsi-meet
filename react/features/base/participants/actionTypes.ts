@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * Create an action for when dominant speaker changes.
  *

@@ -1,4 +1,4 @@
-import './middleware.any';
+import './middleware.any.js';
 
 import { IStore } from '../../app/types';
 import { showNotification } from '../../notifications/actions';

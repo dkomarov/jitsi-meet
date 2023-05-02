@@ -1,6 +1,7 @@
 /* eslint-disable lines-around-comment */
 import { IStore } from '../app/types';
-import { addPeopleFeatureControl } from '../base/participants/functions';
+import { ADD_PEOPLE_ENABLED } from '../base/flags/constants';
+import { getFeatureFlag } from '../base/flags/functions';
 // @ts-ignore
 import { navigate } from '../mobile/navigation/components/conference/ConferenceNavigationContainerRef';
 // @ts-ignore
@@ -8,6 +9,7 @@ import { screen } from '../mobile/navigation/routes';
 import { beginShareRoom } from '../share-room/actions';
 /* eslint-enable lines-around-comment */
 
+import { isAddPeopleEnabled, isDialOutEnabled } from './functions';
 
 export * from './actions.any';
 
@@ -20,8 +22,10 @@ export * from './actions.any';
 export function doInvitePeople() {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const state = getState();
+        const addPeopleEnabled = getFeatureFlag(state, ADD_PEOPLE_ENABLED, true)
+            && (isAddPeopleEnabled(state) || isDialOutEnabled(state));
 
-        if (addPeopleFeatureControl(state)) {
+        if (addPeopleEnabled) {
             return navigate(screen.conference.invite);
         }
 

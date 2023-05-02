@@ -28,7 +28,7 @@ export function assignIfDefined(target: Object, source: Object) {
  *
  * @returns {{promise, resolve, reject}}
  */
-export function createDeferred() {
+export function createDeferred(): Object {
     const deferred: any = {};
 
     deferred.promise = new Promise((resolve, reject) => {

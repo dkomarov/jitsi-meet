@@ -30,7 +30,7 @@ const VisitorsCountLabel = () => {
     const visitorsCount = useSelector((state: IReduxState) =>
         state['features/visitors'].count || 0);
 
-    return !visitorsMode && visitorsCount > 0 && (
+    return visitorsMode && (
         <Label
             icon = { IconUsers }
             iconColor = { BaseTheme.palette.uiBackground }

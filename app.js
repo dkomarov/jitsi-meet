@@ -18,6 +18,7 @@ import './react/features/base/jitsi-local-storage/setup';
 import conference from './conference';
 import API from './modules/API';
 import UI from './modules/UI/UI';
+import keyboardshortcut from './modules/keyboardshortcut/keyboardshortcut';
 import translation from './modules/translation/translation';
 
 // Initialize Olm as early as possible.
@@ -37,6 +38,7 @@ window.APP = {
         'index.loaded': window.indexLoadedTime
     },
 
+    keyboardshortcut,
     translation,
     UI
 };

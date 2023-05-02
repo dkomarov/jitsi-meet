@@ -41,7 +41,6 @@ const DEFAULT_STATE = {
 
 export interface IJitsiConference {
     addCommandListener: Function;
-    addLobbyMessageListener: Function;
     addTrack: Function;
     authenticateAndUpgradeRole: Function;
     avModerationApprove: Function;
@@ -49,27 +48,19 @@ export interface IJitsiConference {
     createVideoSIPGWSession: Function;
     dial: Function;
     disableAVModeration: Function;
-    disableLobby: Function;
     enableAVModeration: Function;
-    enableLobby: Function;
     end: Function;
     getBreakoutRooms: Function;
     getLocalParticipantProperty: Function;
     getLocalTracks: Function;
     getMeetingUniqueId: Function;
-    getMetadataHandler: Function;
-    getName: Function;
     getParticipantById: Function;
-    getParticipantCount: Function;
     getParticipants: Function;
-    getRole: Function;
     getSpeakerStats: () => ISpeakerStats;
-    getSsrcByTrack: Function;
     grantOwner: Function;
     isAVModerationSupported: Function;
     isCallstatsEnabled: Function;
     isE2EEEnabled: Function;
-    isE2EESupported: Function;
     isEndConferenceSupported: Function;
     isLobbySupported: Function;
     isSIPCallingSupported: Function;
@@ -78,11 +69,7 @@ export interface IJitsiConference {
     join: Function;
     joinLobby: Function;
     kickParticipant: Function;
-    leave: Function;
-    lobbyApproveAccess: Function;
-    lobbyDenyAccess: Function;
     lock: Function;
-    markParticipantVerified: Function;
     muteParticipant: Function;
     myLobbyUserId: Function;
     myUserId: Function;
@@ -92,7 +79,6 @@ export interface IJitsiConference {
     removeTrack: Function;
     replaceTrack: Function;
     room: IJitsiConferenceRoom;
-    sendApplicationLog: Function;
     sendCommand: Function;
     sendCommandOnce: Function;
     sendEndpointMessage: Function;
@@ -100,36 +86,29 @@ export interface IJitsiConference {
     sendFeedback: Function;
     sendLobbyMessage: Function;
     sendMessage: Function;
-    sendPrivateTextMessage: Function;
-    sendTextMessage: Function;
-    sendTones: Function;
     sessionId: string;
-    setAssumedBandwidthBps: (value: number) => void;
     setDesktopSharingFrameRate: Function;
     setDisplayName: Function;
     setLocalParticipantProperty: Function;
-    setMediaEncryptionKey: Function;
     setReceiverConstraints: Function;
     setSenderVideoConstraint: Function;
-    setStartMutedPolicy: Function;
     setSubject: Function;
-    startRecording: Function;
     startVerification: Function;
-    stopRecording: Function;
-    toggleE2EE: Function;
 }
 
 export interface IConferenceState {
     authEnabled?: boolean;
     authLogin?: string;
-    authRequired?: IJitsiConference;
+    authRequired?: {
+        join: Function;
+    };
     conference?: IJitsiConference;
     conferenceTimestamp?: number;
     e2eeSupported?: boolean;
     error?: Error;
     followMeEnabled?: boolean;
-    joining?: IJitsiConference;
-    leaving?: IJitsiConference;
+    joining?: Object;
+    leaving?: Object;
     localSubject?: string;
     locked?: string;
     membersOnly?: IJitsiConference;
@@ -137,7 +116,7 @@ export interface IConferenceState {
     obfuscatedRoomSource?: string;
     p2p?: Object;
     password?: string;
-    passwordRequired?: IJitsiConference;
+    passwordRequired?: Object;
     pendingSubjectChange?: string;
     room?: string;
     startAudioMutedPolicy?: boolean;
@@ -369,7 +348,7 @@ function _conferenceJoined(state: IConferenceState, { conference }: { conference
  * reduction of the specified action.
  */
 function _conferenceLeftOrWillLeave(state: IConferenceState, { conference, type }:
-    { conference: IJitsiConference; type: string; }) {
+    { conference: Object; type: string; }) {
     const nextState = { ...state };
 
     // The redux action CONFERENCE_LEFT is the last time that we should be
@@ -423,7 +402,7 @@ function _conferenceLeftOrWillLeave(state: IConferenceState, { conference, type 
  * @returns {Object} The new state of the feature base/conference after the
  * reduction of the specified action.
  */
-function _conferenceWillJoin(state: IConferenceState, { conference }: { conference: IJitsiConference; }) {
+function _conferenceWillJoin(state: IConferenceState, { conference }: { conference: Object; }) {
     return assign(state, {
         error: undefined,
         joining: conference

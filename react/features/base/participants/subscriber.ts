@@ -10,11 +10,7 @@ import { VIDEO_TYPE } from '../media/constants';
 import StateListenerRegistry from '../redux/StateListenerRegistry';
 
 import { createVirtualScreenshareParticipant, participantLeft } from './actions';
-import {
-    getParticipantById,
-    getRemoteScreensharesBasedOnPresence,
-    getVirtualScreenshareParticipantOwnerId
-} from './functions';
+import { getRemoteScreensharesBasedOnPresence } from './functions';
 import { FakeParticipant } from './types';
 
 StateListenerRegistry.register(
@@ -80,7 +76,7 @@ function _updateScreenshareParticipants(store: IStore): void {
 
             if (track.local) {
                 newLocalSceenshareSourceName = sourceName;
-            } else if (getParticipantById(state, getVirtualScreenshareParticipantOwnerId(sourceName))) {
+            } else {
                 acc.push(sourceName);
             }
         }

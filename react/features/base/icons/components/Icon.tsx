@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react';
 
-import { Container } from '../../react/components/index';
-import { StyleType, styleTypeToObject } from '../../styles/functions';
+// @ts-ignore
+import { Container } from '../../react/base';
+import { styleTypeToObject } from '../../styles/functions';
 
-import { IIconProps } from './types';
-
-interface IProps extends IIconProps {
+interface IProps {
 
     /**
      * The id of the element this button icon controls.
@@ -63,6 +62,11 @@ interface IProps extends IIconProps {
     id?: string;
 
     /**
+     * Function to invoke on click.
+     */
+    onClick?: Function;
+
+    /**
      * Keydown handler.
      */
     onKeyDown?: Function;
@@ -90,17 +94,12 @@ interface IProps extends IIconProps {
     /**
      * Style object to be applied.
      */
-    style?: StyleType | StyleType[];
+    style?: Object;
 
     /**
      * TabIndex  for the Icon.
      */
     tabIndex?: number;
-
-    /**
-     * Test id for the icon.
-     */
-    testId?: string;
 }
 
 export const DEFAULT_COLOR = navigator.product === 'ReactNative' ? 'white' : undefined;
@@ -133,7 +132,6 @@ export default function Icon(props: IProps) {
         role,
         onKeyPress,
         onKeyDown,
-        testId,
         ...rest
     }: IProps = props;
 
@@ -141,6 +139,8 @@ export default function Icon(props: IProps) {
         color: styleColor,
         fontSize: styleSize,
         ...restStyle
+
+        // @ts-ignore
     } = styleTypeToObject(style ?? {});
     const calculatedColor = color ?? styleColor ?? DEFAULT_COLOR;
     const calculatedSize = size ?? styleSize ?? DEFAULT_SIZE;
@@ -167,7 +167,6 @@ export default function Icon(props: IProps) {
             aria-label = { ariaLabel }
             aria-pressed = { ariaPressed }
             className = { `${jitsiIconClassName} ${className || ''}` }
-            data-testid = { testId }
             id = { containerId }
             onClick = { onClick }
             onKeyDown = { onKeyDown }

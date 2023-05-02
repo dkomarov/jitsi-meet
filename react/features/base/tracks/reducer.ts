@@ -11,6 +11,7 @@ import {
     TRACK_OWNER_CHANGED,
     TRACK_REMOVED,
     TRACK_UPDATED,
+    TRACK_UPDATE_LAST_VIDEO_MEDIA_EVENT,
     TRACK_WILL_CREATE
 } from './actionTypes';
 import { ITrack } from './types';
@@ -72,7 +73,20 @@ function track(state: ITrack, action: any) {
         }
         break;
     }
+    case TRACK_UPDATE_LAST_VIDEO_MEDIA_EVENT: {
+        const t = action.track;
 
+        if (state.jitsiTrack === t) {
+            if (state.lastMediaEvent !== action.name) {
+
+                return {
+                    ...state,
+                    lastMediaEvent: action.name
+                };
+            }
+        }
+        break;
+    }
     case TRACK_NO_DATA_FROM_SOURCE: {
         const t = action.track;
 
@@ -103,6 +117,7 @@ ReducerRegistry.register<ITracksState>('features/base/tracks', (state = [], acti
     case PARTICIPANT_ID_CHANGED:
     case TRACK_NO_DATA_FROM_SOURCE:
     case TRACK_OWNER_CHANGED:
+    case TRACK_UPDATE_LAST_VIDEO_MEDIA_EVENT:
     case TRACK_UPDATED:
         return state.map((t: ITrack) => track(t, action));
     case TRACK_ADDED: {

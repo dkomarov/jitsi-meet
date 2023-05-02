@@ -1,8 +1,7 @@
 // @flow
 
-import { connect } from 'react-redux';
-
-import { translate } from '../../../../base/i18n/functions';
+import { translate } from '../../../../base/i18n';
+import { connect } from '../../../../base/redux';
 import { navigate } from '../../../../mobile/navigation/components/conference/ConferenceNavigationContainerRef';
 import { screen } from '../../../../mobile/navigation/routes';
 import AbstractSecurityDialogButton, {

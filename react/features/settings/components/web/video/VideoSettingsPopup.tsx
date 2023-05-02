@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import { connect } from 'react-redux';
-import { makeStyles } from 'tss-react/mui';
 
 import { IReduxState } from '../../../../app/types';
 import {
@@ -15,20 +14,15 @@ import { getCurrentCameraDeviceId } from '../../../../base/settings/functions.we
 import { toggleVideoSettings } from '../../../actions';
 import { getVideoSettingsVisibility } from '../../../functions.web';
 
-import VideoSettingsContent from './VideoSettingsContent';
+import VideoSettingsContent, { type IProps as VideoSettingsProps } from './VideoSettingsContent';
 
 
-interface IProps {
+interface IProps extends VideoSettingsProps {
 
     /**
     * Component children (the Video button).
     */
     children: ReactNode;
-
-    /**
-     * The deviceId of the camera device currently being used.
-     */
-    currentCameraDeviceId: string;
 
     /**
     * Flag controlling the visibility of the popup.
@@ -44,26 +38,7 @@ interface IProps {
      * The popup placement enum value.
      */
     popupPlacement: string;
-
-    /**
-     * Callback invoked to change current camera.
-     */
-    setVideoInputDevice: Function;
-
-    /**
-     * All the camera device ids currently connected.
-     */
-    videoDeviceIds: string[];
 }
-
-const useStyles = makeStyles()(() => {
-    return {
-        container: {
-            background: 'none',
-            display: 'inline-block'
-        }
-    };
-});
 
 /**
  * Popup with a preview of all the video devices.
@@ -79,18 +54,14 @@ function VideoSettingsPopup({
     setVideoInputDevice,
     videoDeviceIds
 }: IProps) {
-    const { classes, cx } = useStyles();
-
     return (
-        <div className = { cx('video-preview', classes.container) }>
+        <div className = 'video-preview'>
             <Popover
-                allowClick = { true }
                 content = { <VideoSettingsContent
                     currentCameraDeviceId = { currentCameraDeviceId }
                     setVideoInputDevice = { setVideoInputDevice }
                     toggleVideoSettings = { onClose }
                     videoDeviceIds = { videoDeviceIds } /> }
-                headingId = 'video-settings-button'
                 onPopoverClose = { onClose }
                 position = { popupPlacement }
                 trigger = 'click'

@@ -10,6 +10,12 @@ declare global {
         API: any;
         conference: any;
         debugLogs: any;
+        keyboardshortcut: {
+            registerShortcut: Function;
+            unregisterShortcut: Function;
+            openDialog: Function;
+            enable: Function;
+        }
     };
     const interfaceConfig: any;
 
@@ -19,21 +25,9 @@ declare global {
         interfaceConfig?: any;
         JitsiMeetJS?: any;
         JitsiMeetElectron?: any;
-        // selenium tests handler
-        _sharedVideoPlayer: any;
-    }
-
-    interface Document {
-        mozCancelFullScreen?: Function;
-        webkitExitFullscreen?: Function;
     }
 
     const config: IConfig;
 
     const JitsiMeetJS: any;
-
-    interface HTMLMediaElement {
-        setSinkId: (id: string) => Promise<undefined>;
-        stop: () => void;
-    }
 }

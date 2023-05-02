@@ -141,11 +141,11 @@ function on_message(event)
         local from = event.stanza.attr.from;
         local occupant = room:get_occupant_by_real_jid(from);
         if not occupant then
-            module:log('warn', 'No occupant %s found for %s', from, room.jid);
+            log('warn', 'No occupant %s found for %s', from, room.jid);
             return false;
         end
         if occupant.role ~= 'moderator' then
-            module:log('warn', 'Occupant %s is not moderator and not allowed this operation for %s', from, room.jid);
+            log('warn', 'Occupant %s is not moderator and not allowed this operation for %s', from, room.jid);
             return false;
         end
 

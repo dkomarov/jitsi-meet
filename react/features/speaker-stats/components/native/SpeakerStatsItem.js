@@ -3,8 +3,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import Avatar from '../../../base/avatar/components/Avatar';
-import StatelessAvatar from '../../../base/avatar/components/native/StatelessAvatar';
+import { Avatar, StatelessAvatar } from '../../../base/avatar';
 import { getInitials } from '../../../base/avatar/functions';
 import BaseTheme from '../../../base/ui/components/BaseTheme.native';
 

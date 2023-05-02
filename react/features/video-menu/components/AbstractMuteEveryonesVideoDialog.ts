@@ -1,3 +1,5 @@
+import { WithTranslation } from 'react-i18next';
+
 import { IReduxState } from '../../app/types';
 import { requestDisableVideoModeration, requestEnableVideoModeration } from '../../av-moderation/actions';
 import { isEnabledFromState, isSupported } from '../../av-moderation/functions';
@@ -6,25 +8,25 @@ import { getLocalParticipant, getParticipantDisplayName } from '../../base/parti
 import { muteAllParticipants } from '../actions';
 
 import AbstractMuteRemoteParticipantsVideoDialog, {
-    type IProps as AbstractProps
+    type Props as AbstractProps
 } from './AbstractMuteRemoteParticipantsVideoDialog';
 
 /**
  * The type of the React {@code Component} props of
  * {@link AbstractMuteEveryonesVideoDialog}.
  */
-export interface IProps extends AbstractProps {
-    content?: string;
+export type Props = AbstractProps & WithTranslation & {
+    content: string;
     exclude: Array<string>;
-    isModerationSupported?: boolean;
-    isVideoModerationEnabled?: boolean;
+    isModerationSupported: boolean;
+    isVideoModerationEnabled: boolean;
     showAdvancedModerationToggle: boolean;
     title: string;
-}
+};
 
 interface IState {
     content: string;
-    moderationEnabled?: boolean;
+    moderationEnabled: boolean;
 }
 
 /**
@@ -34,7 +36,7 @@ interface IState {
  *
  * @augments AbstractMuteRemoteParticipantsVideoDialog
  */
-export default class AbstractMuteEveryonesVideoDialog<P extends IProps>
+export default class AbstractMuteEveryonesVideoDialog<P extends Props>
     extends AbstractMuteRemoteParticipantsVideoDialog<P, IState> {
     static defaultProps = {
         exclude: [],
@@ -105,9 +107,9 @@ export default class AbstractMuteEveryonesVideoDialog<P extends IProps>
  *
  * @param {IReduxState} state - The redux state.
  * @param {Object} ownProps - The properties explicitly passed to the component.
- * @returns {IProps}
+ * @returns {Props}
  */
-export function abstractMapStateToProps(state: IReduxState, ownProps: IProps) {
+export function abstractMapStateToProps(state: IReduxState, ownProps: Props) {
     const { exclude = [], t } = ownProps;
     const isVideoModerationEnabled = isEnabledFromState(MEDIA_TYPE.VIDEO, state);
 

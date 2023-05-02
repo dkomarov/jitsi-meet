@@ -4,7 +4,6 @@ import {
 } from '../config/functions.any';
 import { JitsiTrackErrors, browser } from '../lib-jitsi-meet';
 import { MEDIA_TYPE, MediaType, VIDEO_TYPE } from '../media/constants';
-import { IMediaState } from '../media/reducer';
 import {
     getVirtualScreenshareParticipantOwnerId,
     isScreenShareParticipant
@@ -30,8 +29,7 @@ export const getTrackState = (state: IReduxState) => state['features/base/tracks
  * @param {IReduxState} state - Global state.
  * @returns {boolean} - Is the media type muted for the participant.
  */
-export function isParticipantMediaMuted(participant: IParticipant | undefined,
-        mediaType: MediaType, state: IReduxState) {
+export function isParticipantMediaMuted(participant: IParticipant, mediaType: MediaType, state: IReduxState) {
     if (!participant) {
         return false;
     }
@@ -65,7 +63,7 @@ export function isParticipantAudioMuted(participant: IParticipant, state: IRedux
  * @param {IReduxState} state - Global state.
  * @returns {boolean} - Is video muted for the participant.
  */
-export function isParticipantVideoMuted(participant: IParticipant | undefined, state: IReduxState) {
+export function isParticipantVideoMuted(participant: IParticipant, state: IReduxState) {
     return isParticipantMediaMuted(participant, MEDIA_TYPE.VIDEO, state);
 }
 
@@ -360,7 +358,7 @@ export function isUserInteractionRequiredForUnmute(state: IReduxState) {
  * @param {Object} state - The redux state.
  * @returns {Promise}
  */
-export function setTrackMuted(track: any, muted: boolean, state: IReduxState | IMediaState) {
+export function setTrackMuted(track: any, muted: boolean, state: IReduxState) {
     muted = Boolean(muted); // eslint-disable-line no-param-reassign
 
     // Ignore the check for desktop track muted operation. When the screenshare is terminated by clicking on the

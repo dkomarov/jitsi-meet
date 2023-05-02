@@ -2,14 +2,12 @@
 
 import { Immersive } from 'react-native-immersive';
 
-import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../../base/app/actionTypes';
-import { getCurrentConference } from '../../base/conference/functions';
+import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../../base/app';
+import { getCurrentConference } from '../../base/conference';
 import { isAnyDialogOpen } from '../../base/dialog/functions';
-import { FULLSCREEN_ENABLED } from '../../base/flags/constants';
-import { getFeatureFlag } from '../../base/flags/functions';
-import Platform from '../../base/react/Platform.native';
-import MiddlewareRegistry from '../../base/redux/MiddlewareRegistry';
-import StateListenerRegistry from '../../base/redux/StateListenerRegistry';
+import { FULLSCREEN_ENABLED, getFeatureFlag } from '../../base/flags';
+import { Platform } from '../../base/react';
+import { MiddlewareRegistry, StateListenerRegistry } from '../../base/redux';
 
 import { _SET_IMMERSIVE_LISTENER } from './actionTypes';
 import { _setImmersiveListener as _setImmersiveListenerA } from './actions';

@@ -41,7 +41,6 @@ const Switch = ({
 }: IProps) => (
     <NativeSwitch
         disabled = { disabled }
-        ios_backgroundColor = { DISABLED_TRACK_COLOR }
         onValueChange = { onChange }
         style = { style }
         thumbColor = { thumbColor }

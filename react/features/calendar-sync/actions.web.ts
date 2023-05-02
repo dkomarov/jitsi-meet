@@ -4,7 +4,9 @@ import { generateRoomWithoutSeparator } from '@jitsi/js-utils/random';
 import { createCalendarConnectedEvent } from '../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../analytics/functions';
 import { IStore } from '../app/types';
-import { loadGoogleAPI } from '../google-api/actions';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import { loadGoogleAPI } from '../google-api';
 
 import {
     CLEAR_CALENDAR_INTEGRATION,
@@ -283,7 +285,6 @@ export function updateProfile(calendarType: string) {
             return Promise.reject('No integration found');
         }
 
-        // @ts-ignore
         return dispatch(integration.getCurrentEmail())
             .then((email: string) => {
                 dispatch(setCalendarProfileEmail(email));

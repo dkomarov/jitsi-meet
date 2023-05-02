@@ -21,6 +21,8 @@ import {
     isMuteAllVisible
 } from '../../functions';
 import { AddBreakoutRoomButton } from '../breakout-rooms/components/web/AddBreakoutRoomButton';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
 import { RoomList } from '../breakout-rooms/components/web/RoomList';
 
 import { FooterContextMenu } from './FooterContextMenu';
@@ -31,11 +33,15 @@ import MeetingParticipants from './MeetingParticipants';
 const useStyles = makeStyles()(theme => {
     return {
         container: {
-            boxSizing: 'border-box',
+            boxSizing: 'border-box' as const,
             flex: 1,
-            overflowY: 'auto',
-            position: 'relative',
+            overflowY: 'auto' as const,
+            position: 'relative' as const,
             padding: `0 ${participantsPaneTheme.panePadding}px`,
+
+            [`& > * + *:not(.${participantsPaneTheme.ignoredChildClassName})`]: {
+                marginTop: theme.spacing(3)
+            },
 
             '&::-webkit-scrollbar': {
                 display: 'none'
@@ -51,10 +57,10 @@ const useStyles = makeStyles()(theme => {
 
         header: {
             alignItems: 'center',
-            boxSizing: 'border-box',
+            boxSizing: 'border-box' as const,
             display: 'flex',
-            height: '60px',
-            padding: `0 ${participantsPaneTheme.panePadding}px`,
+            height: `${participantsPaneTheme.headerSize}px`,
+            padding: '0 20px',
             justifyContent: 'flex-end'
         },
 
@@ -81,7 +87,7 @@ const useStyles = makeStyles()(theme => {
         },
 
         footerMoreContainer: {
-            position: 'relative'
+            position: 'relative' as const
         }
     };
 });

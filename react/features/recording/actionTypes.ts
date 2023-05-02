@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * The type of Redux action which clears all the data of every sessions.
  *

@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { translate } from '../../base/i18n/functions';
 import Icon from '../../base/icons/components/Icon';
 import { IconPlus } from '../../base/icons/svg';
-import { withPixelLineHeight } from '../../base/styles/functions.web';
 import { type Image, VIRTUAL_BACKGROUND_TYPE } from '../constants';
 import { resizeImage } from '../functions';
 import logger from '../logger';
@@ -41,25 +40,24 @@ interface IProps extends WithTranslation {
 
 const useStyles = makeStyles()(theme => {
     return {
-        label: {
-            ...withPixelLineHeight(theme.typography.bodyShortBold),
-            color: theme.palette.link01,
-            marginBottom: theme.spacing(3),
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center'
-        },
-
         addBackground: {
-            marginRight: theme.spacing(3),
-
+            marginRight: theme.spacing(2),
             '& svg': {
-                fill: `${theme.palette.link01} !important`
+                fill: '#669aec !important'
             }
         },
-
-        input: {
+        button: {
             display: 'none'
+        },
+        label: {
+            fontSize: '14px',
+            fontWeight: 600,
+            lineHeight: '20px',
+            marginTop: theme.spacing(3),
+            marginBottom: theme.spacing(2),
+            color: '#669aec',
+            display: 'inline-flex',
+            cursor: 'pointer'
         }
     };
 });
@@ -129,14 +127,14 @@ function UploadImageButton({
                 tabIndex = { 0 } >
                 <Icon
                     className = { classes.addBackground }
-                    size = { 24 }
+                    size = { 20 }
                     src = { IconPlus } />
                 {t('virtualBackground.addBackground')}
             </label>}
 
             <input
                 accept = 'image/*'
-                className = { classes.input }
+                className = { classes.button }
                 id = 'file-upload'
                 onChange = { uploadImage }
                 ref = { uploadImageButton }

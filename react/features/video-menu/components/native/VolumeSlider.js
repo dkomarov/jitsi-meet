@@ -5,10 +5,9 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { View } from 'react-native';
 import { withTheme } from 'react-native-paper';
-import { connect } from 'react-redux';
 
-import Icon from '../../../base/icons/components/Icon';
-import { IconVolumeUp } from '../../../base/icons/svg';
+import { Icon, IconVolumeUp } from '../../../base/icons';
+import { connect } from '../../../base/redux';
 import { setVolume } from '../../../participants-pane/actions.native';
 import { VOLUME_SLIDER_SCALE } from '../../constants';
 
@@ -105,13 +104,13 @@ class VolumeSlider extends PureComponent<Props, State> {
                     size = { 24 }
                     src = { IconVolumeUp } />
                 <Slider
-                    maximumTrackTintColor = { palette.ui10 }
+                    maximumTrackTintColor = { palette.field02 }
                     maximumValue = { VOLUME_SLIDER_SCALE }
                     minimumTrackTintColor = { palette.action01 }
                     minimumValue = { 0 }
                     onValueChange = { onVolumeChange }
                     style = { styles.sliderContainer }
-                    thumbTintColor = { palette.ui10 }
+                    thumbTintColor = { palette.field02 }
                     value = { volumeLevel } />
             </View>
 

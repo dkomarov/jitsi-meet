@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * Resets the state of calendar integration so stored events and selected
  * calendar type are cleared.

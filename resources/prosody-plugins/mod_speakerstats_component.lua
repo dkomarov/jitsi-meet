@@ -65,12 +65,12 @@ function on_message(event)
         local room = get_room_from_jid(room_jid_match_rewrite(roomAddress));
 
         if not room then
-            module:log("warn", "No room found %s", roomAddress);
+            log("warn", "No room found %s", roomAddress);
             return false;
         end
 
         if not room.speakerStats then
-            module:log("warn", "No speakerStats found for %s", roomAddress);
+            log("warn", "No speakerStats found for %s", roomAddress);
             return false;
         end
 
@@ -79,7 +79,7 @@ function on_message(event)
 
         local occupant = room:get_occupant_by_real_jid(from);
         if not occupant then
-            module:log("warn", "No occupant %s found for %s", from, roomAddress);
+            log("warn", "No occupant %s found for %s", from, roomAddress);
             return false;
         end
 
@@ -107,18 +107,18 @@ function on_message(event)
         local room = get_room_from_jid(room_jid_match_rewrite(roomAddress));
 
         if not room then
-            module:log("warn", "No room found %s", roomAddress);
+            log("warn", "No room found %s", roomAddress);
             return false;
         end
          if not room.speakerStats then
-            module:log("warn", "No speakerStats found for %s", roomAddress);
+            log("warn", "No speakerStats found for %s", roomAddress);
             return false;
         end
         local from = event.stanza.attr.from;
 
         local occupant = room:get_occupant_by_real_jid(from);
         if not occupant then
-            module:log("warn", "No occupant %s found for %s", from, roomAddress);
+            log("warn", "No occupant %s found for %s", from, roomAddress);
             return false;
         end
         local faceLandmarks = room.speakerStats[occupant.jid].faceLandmarks;
@@ -154,7 +154,7 @@ end
 -- saves start time if it is new dominat speaker
 -- or calculates and accumulates time of speaking
 function SpeakerStats:setDominantSpeaker(isNowDominantSpeaker, silence)
-    -- module:log("debug", "set isDominant %s for %s", tostring(isNowDominantSpeaker), self.nick);
+    -- log("debug", "set isDominant %s for %s", tostring(isNowDominantSpeaker), self.nick);
 
     local now = socket.gettime()*1000;
 

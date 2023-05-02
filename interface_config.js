@@ -70,8 +70,7 @@ var interfaceConfig = {
 
     ENABLE_DIAL_OUT: true,
 
-    // DEPRECATED. Animation no longer supported.
-    // ENABLE_FEEDBACK_ANIMATION: false,
+    ENABLE_FEEDBACK_ANIMATION: false, // Enables feedback star animation.
 
     FILM_STRIP_MAX_HEIGHT: 120,
 

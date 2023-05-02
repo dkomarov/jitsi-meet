@@ -1,24 +1,31 @@
-import React, { useCallback, useContext, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Animated, Text, TextStyle, View, ViewStyle } from 'react-native';
+/* eslint-disable lines-around-comment */
 
-import Icon from '../../../base/icons/components/Icon';
+import React from 'react';
+import { WithTranslation } from 'react-i18next';
+import { Animated, Text, View } from 'react-native';
+
+import { translate } from '../../../base/i18n/functions';
 import {
+    Icon,
     IconCloseLarge,
     IconInfoCircle,
     IconUsers,
     IconWarning
-} from '../../../base/icons/svg';
+    // @ts-ignore
+} from '../../../base/icons';
 import { colors } from '../../../base/ui/Tokens';
 import BaseTheme from '../../../base/ui/components/BaseTheme.native';
 import Button from '../../../base/ui/components/native/Button';
 import IconButton from '../../../base/ui/components/native/IconButton';
 import { BUTTON_MODES, BUTTON_TYPES } from '../../../base/ui/constants.native';
 import { replaceNonUnicodeEmojis } from '../../../chat/functions';
-import { NOTIFICATION_ICON, NOTIFICATION_TYPE } from '../../constants';
-import { INotificationProps } from '../../types';
-import { NotificationsTransitionContext } from '../NotificationsTransition';
+import { NOTIFICATION_ICON } from '../../constants';
+import AbstractNotification, {
+    type Props as AbstractNotificationProps
+    // @ts-ignore
+} from '../AbstractNotification';
 
+// @ts-ignore
 import styles from './styles';
 
 
@@ -36,59 +43,64 @@ const ICON_COLOR = {
 };
 
 
-export interface IProps extends INotificationProps {
+export type Props = AbstractNotificationProps & WithTranslation & {
     _participants: ArrayLike<any>;
-    onDismissed: Function;
-}
+};
 
-const Notification = ({
-    appearance = NOTIFICATION_TYPE.NORMAL,
-    customActionHandler,
-    customActionNameKey,
-    customActionType,
-    description,
-    descriptionArguments,
-    descriptionKey,
-    icon,
-    onDismissed,
-    title,
-    titleArguments,
-    titleKey,
-    uid
-}: IProps) => {
-    const { t } = useTranslation();
-    const notificationOpacityAnimation = useRef(new Animated.Value(0)).current;
-    const { unmounting } = useContext(NotificationsTransitionContext);
 
-    useEffect(() => {
+/**
+ * Implements a React {@link Component} to display a notification.
+ *
+ * @augments Component
+ */
+class Notification extends AbstractNotification<Props> {
+
+    /**
+     * Initializes a new {@code Notification} instance.
+     *
+     * @inheritdoc
+     */
+    constructor(props: Props) {
+        super(props);
+
+        // @ts-ignore
+        this.state = {
+            notificationContainerAnimation: new Animated.Value(0)
+        };
+    }
+
+    /**
+     * Implements React's {@link Component#componentDidMount()}.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
         Animated.timing(
-            notificationOpacityAnimation,
+            // @ts-ignore
+            this.state.notificationContainerAnimation,
             {
                 toValue: 1,
-                duration: 200,
+                duration: 500,
                 useNativeDriver: true
             })
             .start();
-    }, []);
+    }
 
-    useEffect(() => {
-        if (unmounting.get(uid ?? '')) {
-            Animated.timing(
-                notificationOpacityAnimation,
-                {
-                    toValue: 0,
-                    duration: 200,
-                    useNativeDriver: true
-                })
-                .start();
-        }
-    }, [ unmounting ]);
+    /**
+     * Creates action button configurations for the notification based on
+     * notification appearance.
+     *
+     * @private
+     * @returns {Object[]}
+     */
+    _mapAppearanceToButtons() {
+        const {
+            customActionHandler,
+            customActionNameKey,
+            customActionType
+            // @ts-ignore
+        } = this.props;
 
-    const onDismiss = useCallback(() => {
-        onDismissed(uid);
-    }, [ onDismissed, uid ]);
-
-    const mapAppearanceToButtons = () => {
         if (customActionNameKey?.length && customActionHandler?.length && customActionType?.length) {
             return customActionNameKey?.map((customAction: string, index: number) => (
                 <Button
@@ -99,20 +111,29 @@ const Notification = ({
                     // eslint-disable-next-line react/jsx-no-bind
                     onClick = { () => {
                         if (customActionHandler[index]()) {
-                            onDismiss();
+                            this._onDismissed();
                         }
                     } }
                     style = { styles.btn }
-
-                    // @ts-ignore
                     type = { customActionType[index] } />
             ));
         }
 
         return [];
-    };
+    }
 
-    const getIcon = () => {
+    /**
+     * Returns the Icon type component to be used, based on icon or appearance.
+     *
+     * @returns {ReactElement}
+     */
+    _getIcon() {
+        const {
+            appearance,
+            icon
+            // @ts-ignore
+        } = this.props;
+
         let src;
 
         switch (icon || appearance) {
@@ -131,36 +152,103 @@ const Notification = ({
         }
 
         return src;
-    };
+    }
 
-    const _getDescription = () => {
-        const descriptionArray = [];
+    /**
+     * Creates an icon component depending on the configured notification
+     * appearance.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _mapAppearanceToIcon() {
+        // @ts-ignore
+        const { appearance } = this.props;
+        // @ts-ignore
+        const color = ICON_COLOR[appearance];
 
-        descriptionKey
-            && descriptionArray.push(t(descriptionKey, descriptionArguments));
+        return (
+            <View style = { styles.iconContainer }>
+                <Icon
+                    color = { color }
+                    size = { 24 }
+                    src = { this._getIcon() } />
+            </View>
+        );
+    }
 
-        description && descriptionArray.push(description);
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        // @ts-ignore
+        const { icon } = this.props;
+        const contentColumnStyles = icon === NOTIFICATION_ICON.PARTICIPANTS
+            ? styles.contentColumn : styles.interactiveContentColumn;
+        const description = this._getDescription();
 
-        return descriptionArray;
-    };
+        const notificationStyles = description?.length
+            ? styles.notificationWithDescription
+            : styles.notification;
 
-    // eslint-disable-next-line react/no-multi-comp
-    const _renderContent = () => {
+        return (
+            <Animated.View
+                pointerEvents = 'box-none'
+                style = { [
+                    notificationStyles,
+                    {
+                        // @ts-ignore
+                        opacity: this.state.notificationContainerAnimation
+                    }
+                ] }>
+                <View style = { contentColumnStyles }>
+                    { this._mapAppearanceToIcon() }
+                    <View
+                        pointerEvents = 'box-none'
+                        style = { styles.contentContainer }>
+                        { this._renderContent() }
+                    </View>
+                    <View style = { styles.btnContainer }>
+                        { this._mapAppearanceToButtons() }
+                    </View>
+                </View>
+                <IconButton
+                    color = { BaseTheme.palette.icon04 }
+                    onPress = { this._onDismissed }
+                    src = { IconCloseLarge }
+                    type = { BUTTON_TYPES.TERTIARY } />
+            </Animated.View>
+        );
+    }
+
+    /**
+     * Renders the notification's content. If the title or title key is present
+     * it will be just the title. Otherwise it will fallback to description.
+     *
+     * @returns {Array<ReactElement>}
+     * @private
+     */
+    _renderContent() {
+        // @ts-ignore
+        const { t, title, titleArguments, titleKey } = this.props;
         const titleText = title || (titleKey && t(titleKey, titleArguments));
-        const descriptionArray = _getDescription();
+        const description = this._getDescription();
 
-        if (descriptionArray?.length) {
+        if (description?.length) {
             return (
                 <>
-                    <Text style = { styles.contentTextTitle as TextStyle }>
-                        {titleText}
+                    <Text style = { styles.contentTextTitle }>
+                        { titleText }
                     </Text>
                     {
-                        descriptionArray.map((line, index) => (
+                        description.map((line, index) => (
                             <Text
                                 key = { index }
                                 style = { styles.contentText }>
-                                {replaceNonUnicodeEmojis(line)}
+                                { replaceNonUnicodeEmojis(line) }
                             </Text>
                         ))
                     }
@@ -169,50 +257,17 @@ const Notification = ({
         }
 
         return (
-            <Text style = { styles.contentTextTitle as TextStyle }>
-                {titleText}
+            <Text style = { styles.contentTextTitle }>
+                { titleText }
             </Text>
         );
-    };
+    }
 
-    return (
-        <Animated.View
-            pointerEvents = 'box-none'
-            style = { [
-                _getDescription()?.length
-                    ? styles.notificationWithDescription
-                    : styles.notification,
-                {
-                    opacity: notificationOpacityAnimation
-                }
-            ] as ViewStyle[] }>
-            <View
-                style = { (icon === NOTIFICATION_ICON.PARTICIPANTS
-                    ? styles.contentColumn
-                    : styles.interactiveContentColumn) as ViewStyle }>
-                <View style = { styles.iconContainer as ViewStyle }>
-                    <Icon
-                        color = { ICON_COLOR[appearance as keyof typeof ICON_COLOR] }
-                        size = { 24 }
-                        src = { getIcon() } />
-                </View>
-                <View
-                    pointerEvents = 'box-none'
-                    style = { styles.contentContainer }>
-                    {_renderContent()}
-                </View>
-                <View style = { styles.btnContainer as ViewStyle }>
-                    {mapAppearanceToButtons()}
-                </View>
-            </View>
-            <IconButton
-                color = { BaseTheme.palette.icon04 }
-                onPress = { onDismiss }
-                src = { IconCloseLarge }
-                type = { BUTTON_TYPES.TERTIARY } />
-        </Animated.View>
-    );
+    _getDescription: () => Array<string>;
 
-};
+    _onDismissed: () => void;
+}
 
-export default Notification;
+
+// @ts-ignore
+export default translate(Notification);

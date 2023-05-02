@@ -1,3 +1,5 @@
+import { WithTranslation } from 'react-i18next';
+
 import { IReduxState } from '../../app/types';
 import { requestDisableAudioModeration, requestEnableAudioModeration } from '../../av-moderation/actions';
 import { isEnabledFromState, isSupported } from '../../av-moderation/functions';
@@ -6,24 +8,24 @@ import { getLocalParticipant, getParticipantDisplayName } from '../../base/parti
 import { muteAllParticipants } from '../actions';
 
 import AbstractMuteRemoteParticipantDialog, {
-    type IProps as AbstractProps
+    type Props as AbstractProps
 } from './AbstractMuteRemoteParticipantDialog';
 
 /**
  * The type of the React {@code Component} props of
  * {@link AbstractMuteEveryoneDialog}.
  */
-export interface IProps extends AbstractProps {
-    content?: string;
+export type Props = AbstractProps & WithTranslation & {
+    content: string;
     exclude: Array<string>;
-    isAudioModerationEnabled?: boolean;
-    isModerationSupported?: boolean;
+    isAudioModerationEnabled: boolean;
+    isModerationSupported: boolean;
     showAdvancedModerationToggle: boolean;
     title: string;
-}
+};
 
 interface IState {
-    audioModerationEnabled?: boolean;
+    audioModerationEnabled: boolean;
     content: string;
 }
 
@@ -34,7 +36,7 @@ interface IState {
  *
  * @augments AbstractMuteRemoteParticipantDialog
  */
-export default class AbstractMuteEveryoneDialog<P extends IProps> extends
+export default class AbstractMuteEveryoneDialog<P extends Props> extends
     AbstractMuteRemoteParticipantDialog<P, IState> {
     static defaultProps = {
         exclude: [],
@@ -105,9 +107,9 @@ export default class AbstractMuteEveryoneDialog<P extends IProps> extends
  *
  * @param {IReduxState} state - The redux state.
  * @param {Object} ownProps - The properties explicitly passed to the component.
- * @returns {IProps}
+ * @returns {Props}
  */
-export function abstractMapStateToProps(state: IReduxState, ownProps: IProps) {
+export function abstractMapStateToProps(state: IReduxState, ownProps: Props) {
     const { exclude = [], t } = ownProps;
 
     const whom = exclude

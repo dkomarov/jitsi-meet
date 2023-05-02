@@ -26,7 +26,7 @@ export const styles = (theme: Theme) => {
             transition: 'opacity .3s',
             zIndex: 1,
 
-            '&:hover, &:focus-within': {
+            '&:hover': {
                 backgroundColor: theme.palette.ui02
             }
         },
@@ -70,7 +70,7 @@ export const styles = (theme: Theme) => {
             right: 0,
             bottom: 0,
 
-            '&:hover, &:focus-within': {
+            '&:hover': {
                 '& .resizable-filmstrip': {
                     backgroundColor: BACKGROUND_COLOR
                 },
@@ -106,7 +106,7 @@ export const styles = (theme: Theme) => {
         filmstripBackground: {
             backgroundColor: theme.palette.uiBackground,
 
-            '&:hover, &:focus-within': {
+            '&:hover': {
                 backgroundColor: theme.palette.uiBackground
             }
         },

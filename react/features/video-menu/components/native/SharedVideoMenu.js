@@ -3,17 +3,16 @@
 import React, { PureComponent } from 'react';
 import { Text, View } from 'react-native';
 import { Divider } from 'react-native-paper';
-import { connect } from 'react-redux';
 
-import Avatar from '../../../base/avatar/components/Avatar';
-import { hideSheet } from '../../../base/dialog/actions';
-import BottomSheet from '../../../base/dialog/components/native/BottomSheet';
+import { Avatar } from '../../../base/avatar';
+import { BottomSheet, hideSheet } from '../../../base/dialog';
 import { bottomSheetStyles } from '../../../base/dialog/components/native/styles';
 import {
     getParticipantById,
     getParticipantDisplayName
-} from '../../../base/participants/functions';
-import SharedVideoButton from '../../../shared-video/components/native/SharedVideoButton';
+} from '../../../base/participants';
+import { connect } from '../../../base/redux';
+import { SharedVideoButton } from '../../../shared-video/components';
 
 import styles from './styles';
 

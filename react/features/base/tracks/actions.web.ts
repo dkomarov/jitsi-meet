@@ -1,3 +1,4 @@
+/* eslint-disable lines-around-comment */
 // @ts-expect-error
 import { AUDIO_ONLY_SCREEN_SHARE_NO_TRACK } from '../../../../modules/UI/UIErrors';
 import { IReduxState, IStore } from '../../app/types';
@@ -8,15 +9,15 @@ import { NOTIFICATION_TIMEOUT_TYPE } from '../../notifications/constants';
 import { stopReceiver } from '../../remote-control/actions';
 import { setScreenAudioShareState, setScreenshareAudioTrack } from '../../screen-share/actions';
 import { isAudioOnlySharing, isScreenVideoShared } from '../../screen-share/functions';
-import { toggleScreenshotCaptureSummary } from '../../screenshot-capture/actions';
-import { isScreenshotCaptureEnabled } from '../../screenshot-capture/functions';
-// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import { isScreenshotCaptureEnabled, toggleScreenshotCaptureSummary } from '../../screenshot-capture';
 // @ts-ignore
 import { AudioMixerEffect } from '../../stream-effects/audio-mixer/AudioMixerEffect';
 import { getCurrentConference } from '../conference/functions';
 import { JitsiTrackErrors, JitsiTrackEvents } from '../lib-jitsi-meet';
 import { setScreenshareMuted } from '../media/actions';
 import { MEDIA_TYPE, VIDEO_TYPE } from '../media/constants';
+/* eslint-enable lines-around-comment */
 
 import {
     addLocalTrack,
@@ -119,7 +120,7 @@ async function _maybeApplyAudioMixerEffect(desktopAudioTrack: any, state: IRedux
     } else {
         // If no local stream is present ( i.e. no input audio devices) we use the screen share audio
         // stream as we would use a regular stream.
-        await conference?.replaceTrack(null, desktopAudioTrack);
+        await conference.replaceTrack(null, desktopAudioTrack);
     }
 }
 
@@ -249,7 +250,7 @@ async function _toggleScreenSharing(
             if (localAudio) {
                 localAudio.setEffect(undefined);
             } else {
-                await conference?.replaceTrack(desktopAudioTrack, null);
+                await conference.replaceTrack(desktopAudioTrack, null);
             }
             desktopAudioTrack.dispose();
             dispatch(setScreenshareAudioTrack(null));

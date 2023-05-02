@@ -17,9 +17,9 @@ import {
     createDeviceChangedEvent,
     createScreenSharingEvent,
     createStartSilentEvent,
-    createTrackMutedEvent
-} from './react/features/analytics/AnalyticsEvents';
-import { sendAnalytics } from './react/features/analytics/functions';
+    createTrackMutedEvent,
+    sendAnalytics
+} from './react/features/analytics';
 import {
     maybeRedirectToWelcomePage,
     redirectToStaticPage,
@@ -28,8 +28,13 @@ import {
 import { showModeratedNotification } from './react/features/av-moderation/actions';
 import { shouldShowModeratedNotification } from './react/features/av-moderation/functions';
 import {
+    AVATAR_URL_COMMAND,
+    CONFERENCE_LEAVE_REASONS,
+    EMAIL_COMMAND,
     _conferenceWillJoin,
     authStatusChanged,
+    commonUserJoinedHandling,
+    commonUserLeftHandling,
     conferenceFailed,
     conferenceJoinInProgress,
     conferenceJoined,
@@ -42,26 +47,15 @@ import {
     dataChannelClosed,
     dataChannelOpened,
     e2eRttChanged,
+    generateVisitorConfig,
+    getConferenceOptions,
     kickedOut,
     lockStateChanged,
     nonParticipantMessageReceived,
     onStartMutedPolicyChanged,
-    p2pStatusChanged
-} from './react/features/base/conference/actions';
-import {
-    AVATAR_URL_COMMAND,
-    CONFERENCE_LEAVE_REASONS,
-    EMAIL_COMMAND
-} from './react/features/base/conference/constants';
-import {
-    commonUserJoinedHandling,
-    commonUserLeftHandling,
-    getConferenceOptions,
-    getVisitorOptions,
-    restoreConferenceOptions,
+    p2pStatusChanged,
     sendLocalParticipant
-} from './react/features/base/conference/functions';
-import { overwriteConfig } from './react/features/base/config/actions';
+} from './react/features/base/conference';
 import { getReplaceParticipant } from './react/features/base/config/functions';
 import {
     checkAndNotifyForNewDevice,
@@ -87,21 +81,22 @@ import {
 } from './react/features/base/lib-jitsi-meet';
 import { isFatalJitsiConnectionError } from './react/features/base/lib-jitsi-meet/functions';
 import {
+    MEDIA_TYPE,
+    getStartWithAudioMuted,
+    getStartWithVideoMuted,
+    isVideoMutedByUser,
     setAudioAvailable,
     setAudioMuted,
     setAudioUnmutePermissions,
     setVideoAvailable,
     setVideoMuted,
     setVideoUnmutePermissions
-} from './react/features/base/media/actions';
-import { MEDIA_TYPE } from './react/features/base/media/constants';
-import {
-    getStartWithAudioMuted,
-    getStartWithVideoMuted,
-    isVideoMutedByUser
-} from './react/features/base/media/functions';
+} from './react/features/base/media';
 import {
     dominantSpeakerChanged,
+    getLocalParticipant,
+    getNormalizedDisplayName,
+    getVirtualScreenshareParticipantByOwnerId,
     localParticipantAudioLevelChanged,
     localParticipantRoleChanged,
     participantKicked,
@@ -112,58 +107,53 @@ import {
     participantUpdated,
     screenshareParticipantDisplayNameChanged,
     updateRemoteParticipantFeatures
-} from './react/features/base/participants/actions';
-import {
-    getLocalParticipant,
-    getNormalizedDisplayName,
-    getVirtualScreenshareParticipantByOwnerId
-} from './react/features/base/participants/functions';
-import { updateSettings } from './react/features/base/settings/actions';
+} from './react/features/base/participants';
+import { updateSettings } from './react/features/base/settings';
 import {
     addLocalTrack,
-    destroyLocalTracks,
-    replaceLocalTrack,
-    toggleScreensharing as toggleScreensharingA,
-    trackAdded,
-    trackRemoved
-} from './react/features/base/tracks/actions';
-import {
     createLocalTracksF,
+    destroyLocalTracks,
     getLocalJitsiAudioTrack,
     getLocalJitsiVideoTrack,
     getLocalTracks,
     getLocalVideoTrack,
     isLocalTrackMuted,
-    isUserInteractionRequiredForUnmute
-} from './react/features/base/tracks/functions';
+    isUserInteractionRequiredForUnmute,
+    replaceLocalTrack,
+    toggleScreensharing as toggleScreensharingA,
+    trackAdded,
+    trackRemoved
+} from './react/features/base/tracks';
 import { downloadJSON } from './react/features/base/util/downloadJSON';
-import { showDesktopPicker } from './react/features/desktop-picker/actions';
-import { appendSuffix } from './react/features/display-name/functions';
-import { maybeOpenFeedbackDialog, submitFeedback } from './react/features/feedback/actions';
-import { initKeyboardShortcuts } from './react/features/keyboard-shortcuts/actions';
+import { showDesktopPicker } from './react/features/desktop-picker';
+import { appendSuffix } from './react/features/display-name';
+import {
+    maybeOpenFeedbackDialog,
+    submitFeedback
+} from './react/features/feedback';
 import { maybeSetLobbyChatMessageListener } from './react/features/lobby/actions.any';
 import { setNoiseSuppressionEnabled } from './react/features/noise-suppression/actions';
-import { hideNotification, showNotification, showWarningNotification } from './react/features/notifications/actions';
 import {
     DATA_CHANNEL_CLOSED_NOTIFICATION_ID,
-    NOTIFICATION_TIMEOUT_TYPE
-} from './react/features/notifications/constants';
-import { isModerationNotificationDisplayed } from './react/features/notifications/functions';
+    NOTIFICATION_TIMEOUT_TYPE,
+    hideNotification,
+    isModerationNotificationDisplayed,
+    showNotification,
+    showWarningNotification
+} from './react/features/notifications';
 import { mediaPermissionPromptVisibilityChanged } from './react/features/overlay/actions';
-import { suspendDetected } from './react/features/power-monitor/actions';
+import { suspendDetected } from './react/features/power-monitor';
 import { initPrejoin, makePrecallTest, setJoiningInProgress } from './react/features/prejoin/actions';
 import { isPrejoinPageVisible } from './react/features/prejoin/functions';
-import { disableReceiver, stopReceiver } from './react/features/remote-control/actions';
-import { setScreenAudioShareState } from './react/features/screen-share/actions.web';
-import { isScreenAudioShared } from './react/features/screen-share/functions';
-import { toggleScreenshotCaptureSummary } from './react/features/screenshot-capture/actions';
+import { disableReceiver, stopReceiver } from './react/features/remote-control';
+import { isScreenAudioShared, setScreenAudioShareState } from './react/features/screen-share/';
+import { toggleScreenshotCaptureSummary } from './react/features/screenshot-capture';
 import { AudioMixerEffect } from './react/features/stream-effects/audio-mixer/AudioMixerEffect';
 import { createRnnoiseProcessor } from './react/features/stream-effects/rnnoise';
-import { endpointMessageReceived } from './react/features/subtitles/actions.any';
+import { endpointMessageReceived } from './react/features/subtitles';
 import { handleToggleVideoMuted } from './react/features/toolbox/actions.any';
 import { muteLocal } from './react/features/video-menu/actions.any';
 import { setIAmVisitor } from './react/features/visitors/actions';
-import { iAmVisitor } from './react/features/visitors/functions';
 import UIEvents from './service/UI/UIEvents';
 
 const logger = Logger.getLogger(__filename);
@@ -351,30 +341,23 @@ class ConferenceConnector {
         }
 
         case JitsiConferenceErrors.REDIRECTED: {
-            const newConfig = getVisitorOptions(APP.store.getState(), params);
+            generateVisitorConfig(APP.store.getState(), params);
 
-            if (!newConfig) {
-                logger.warn('Not redirected missing params');
-                break;
-            }
+            APP.store.dispatch(setIAmVisitor(true));
 
-            const [ vnode ] = params;
+            connection.disconnect().then(() => {
+                connect(this._conference.roomName).then(con => {
+                    const localTracks = getLocalTracks(APP.store.getState()['features/base/tracks']);
 
-            APP.store.dispatch(overwriteConfig(newConfig))
-                .then(this._conference.leaveRoom())
-                .then(APP.store.dispatch(setIAmVisitor(Boolean(vnode))))
+                    const jitsiTracks = localTracks.map(t => t.jitsiTrack);
 
-                // we do not clear local tracks on error, so we need to manually clear them
-                .then(APP.store.dispatch(destroyLocalTracks()))
-                .then(() => {
-                    // Reset VideoLayout. It's destroyed in features/video-layout/middleware.web.js so re-initialize it.
-                    VideoLayout.initLargeVideo();
-                    VideoLayout.resizeVideoArea();
+                    // visitors connect muted
+                    jitsiTracks.forEach(t => t.mute());
 
-                    connect(this._conference.roomName).then(con => {
-                        this._conference.startConference(con, []);
-                    });
+                    // TODO disable option to unmute audio or video
+                    this._conference.startConference(con, jitsiTracks);
                 });
+            });
 
             break;
         }
@@ -409,28 +392,10 @@ class ConferenceConnector {
             room.leave(CONFERENCE_LEAVE_REASONS.UNRECOVERABLE_ERROR).then(() => connection.disconnect());
             break;
 
-        case JitsiConferenceErrors.CONFERENCE_MAX_USERS: {
+        case JitsiConferenceErrors.CONFERENCE_MAX_USERS:
             APP.UI.notifyMaxUsersLimitReached();
-
-            // in case of max users(it can be from a visitor node), let's restore
-            // oldConfig if any as we will be back to the main prosody
-            const newConfig = restoreConferenceOptions(APP.store.getState());
-
-            if (newConfig) {
-                APP.store.dispatch(overwriteConfig(newConfig))
-                    .then(this._conference.leaveRoom())
-                    .then(() => {
-                        _connectionPromise = connect(this._conference.roomName);
-
-                        return _connectionPromise;
-                    })
-                    .then(con => {
-                        APP.connection = connection = con;
-                    });
-            }
-
             break;
-        }
+
         case JitsiConferenceErrors.INCOMPATIBLE_SERVER_VERSIONS:
             APP.store.dispatch(reloadWithStoredParams());
             break;
@@ -806,14 +771,13 @@ export default {
      * @returns {Promise}
      */
     async init({ roomName }) {
-        const state = APP.store.getState();
         const initialOptions = {
             startAudioOnly: config.startAudioOnly,
             startScreenSharing: config.startScreenSharing,
-            startWithAudioMuted: getStartWithAudioMuted(state)
-                || isUserInteractionRequiredForUnmute(state),
-            startWithVideoMuted: getStartWithVideoMuted(state)
-                || isUserInteractionRequiredForUnmute(state)
+            startWithAudioMuted: getStartWithAudioMuted(APP.store.getState())
+                || isUserInteractionRequiredForUnmute(APP.store.getState()),
+            startWithVideoMuted: getStartWithVideoMuted(APP.store.getState())
+                || isUserInteractionRequiredForUnmute(APP.store.getState())
         };
 
         this.roomName = roomName;
@@ -843,7 +807,7 @@ export default {
             return tracks;
         };
 
-        if (isPrejoinPageVisible(state)) {
+        if (isPrejoinPageVisible(APP.store.getState())) {
             _connectionPromise = connect(roomName).then(c => {
                 // we want to initialize it early, in case of errors to be able
                 // to gather logs
@@ -866,7 +830,7 @@ export default {
             // they may remain as empty strings.
             this._initDeviceList(true);
 
-            if (isPrejoinPageVisible(state)) {
+            if (isPrejoinPageVisible(APP.store.getState())) {
                 return APP.store.dispatch(initPrejoin(tracks, errors));
             }
 
@@ -876,7 +840,7 @@ export default {
 
             let localTracks = handleStartAudioMuted(initialOptions, tracks);
 
-            // In case where gUM is slow and resolves after the startAudio/VideoMuted coming from jicofo, we can be
+            // in case where gum is slow and resolves after the startAudio/VideoMuted coming from jicofo, we can be
             // join unmuted even though jicofo had instruct us to mute, so let's respect that before passing the tracks
             if (!browser.isWebKitBased()) {
                 if (room?.isStartAudioMuted()) {
@@ -886,11 +850,6 @@ export default {
 
             if (room?.isStartVideoMuted()) {
                 localTracks = localTracks.filter(track => track.getType() !== MEDIA_TYPE.VIDEO);
-            }
-
-            // Do not add the tracks if the user has joined the call as a visitor.
-            if (iAmVisitor(state)) {
-                return Promise.resolve();
             }
 
             return this._setLocalAudioVideoStreams(localTracks);
@@ -1078,17 +1037,10 @@ export default {
             return;
         }
 
-        const state = APP.store.getState();
-
         if (!mute
-                && isUserInteractionRequiredForUnmute(state)) {
+                && isUserInteractionRequiredForUnmute(APP.store.getState())) {
             logger.error('Unmuting video requires user interaction');
 
-            return;
-        }
-
-        // check for A/V Moderation when trying to unmute and return early
-        if (!mute && shouldShowModeratedNotification(MEDIA_TYPE.VIDEO, state)) {
             return;
         }
 
@@ -1105,7 +1057,7 @@ export default {
             return;
         }
 
-        const localVideo = getLocalJitsiVideoTrack(state);
+        const localVideo = getLocalJitsiVideoTrack(APP.store.getState());
 
         if (!localVideo && !mute && !this.isCreatingLocalTrack) {
             const maybeShowErrorDialog = error => {
@@ -1496,7 +1448,7 @@ export default {
 
                 logger.debug(`useVideoStream: Replacing ${oldTrack} with ${newTrack}`);
 
-                if (oldTrack === newTrack || (!oldTrack && !newTrack)) {
+                if (oldTrack === newTrack) {
                     resolve();
                     onFinish();
 
@@ -2309,7 +2261,10 @@ export default {
 
         APP.UI.initConference();
 
-        dispatch(initKeyboardShortcuts());
+        if (!config.disableShortcuts) {
+            APP.keyboardshortcut.init();
+        }
+
         dispatch(conferenceJoined(room));
 
         const jwt = APP.store.getState()['features/base/jwt'];

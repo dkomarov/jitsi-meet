@@ -1,3 +1,4 @@
+/* eslint-disable lines-around-comment */
 import { Theme } from '@mui/material';
 import React from 'react';
 import { WithTranslation } from 'react-i18next';
@@ -5,6 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { translate } from '../../../../base/i18n/functions';
 import { withPixelLineHeight } from '../../../../base/styles/functions.web';
+// @ts-ignore
 import { _formatConferenceIDPin } from '../../../_utils';
 
 
@@ -13,12 +15,12 @@ interface IProps extends WithTranslation {
     /**
      * The conference id.
      */
-    conferenceID?: string | number;
+     conferenceID?: string | number;
 
     /**
      * The conference name.
      */
-    conferenceName: string;
+     conferenceName: string;
 }
 
 const useStyles = makeStyles()((theme: Theme) => {
@@ -31,11 +33,7 @@ const useStyles = makeStyles()((theme: Theme) => {
             textAlign: 'center',
             display: 'flex',
             flexDirection: 'column',
-            borderRadius: 6,
-
-            '& *': {
-                userSelect: 'text'
-            }
+            borderRadius: 6
         },
         confNameLabel: {
             ...withPixelLineHeight(theme.typography.heading6),

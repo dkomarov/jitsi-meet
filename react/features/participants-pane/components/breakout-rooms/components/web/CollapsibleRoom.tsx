@@ -1,15 +1,14 @@
-import React, { useCallback, useState } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
 
 import { IReduxState } from '../../../../../app/types';
+import ListItem from '../../../../../base/components/participants-pane-list/ListItem';
 import Icon from '../../../../../base/icons/components/Icon';
 import { IconArrowDown, IconArrowUp } from '../../../../../base/icons/svg';
 import { isLocalParticipantModerator } from '../../../../../base/participants/functions';
 import { withPixelLineHeight } from '../../../../../base/styles/functions.web';
-import ListItem from '../../../../../base/ui/components/web/ListItem';
-import { IRoom } from '../../../../../breakout-rooms/types';
 import { showOverflowDrawer } from '../../../../../toolbox/functions.web';
 import { ACTION_TRIGGER } from '../../../../constants';
 import { participantMatchesSearch } from '../../../../functions';
@@ -26,7 +25,7 @@ interface IProps {
     /**
      * React children.
      */
-    children: React.ReactNode;
+    children: ReactElement;
 
     /**
      * Is this item highlighted/raised.
@@ -48,8 +47,6 @@ interface IProps {
      */
     participantContextEntity?: {
         jid: string;
-        participantName: string;
-        room: IRoom;
     };
 
     /**
@@ -91,8 +88,9 @@ const useStyles = makeStyles()(theme => {
         roomName: {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            ...withPixelLineHeight(theme.typography.bodyLongBold)
+            whiteSpace: 'nowrap', // @ts-ignore
+            ...withPixelLineHeight(theme.typography.labelButton),
+            padding: '12px 0'
         },
 
         arrowContainer: {

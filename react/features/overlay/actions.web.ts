@@ -27,6 +27,6 @@ export function mediaPermissionPromptVisibilityChanged(isVisible: boolean, brows
  *
  * @returns {Function}
  */
-export function openPageReloadDialog(): any {
+export function openPageReloadDialog() {
     // Dummy
 }

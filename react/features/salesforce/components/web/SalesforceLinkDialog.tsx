@@ -1,3 +1,4 @@
+import Spinner from '@atlaskit/spinner';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
@@ -9,7 +10,6 @@ import { IconSearch } from '../../../base/icons/svg';
 import { getFieldValue } from '../../../base/react/functions';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
 import Dialog from '../../../base/ui/components/web/Dialog';
-import Spinner from '../../../base/ui/components/web/Spinner';
 import { NOTES_MAX_LENGTH } from '../../constants';
 import { useSalesforceLinkDialog } from '../../useSalesforceLinkDialog';
 
@@ -116,7 +116,9 @@ const useStyles = makeStyles()(theme => {
             border: '1px solid',
             borderColor: theme.palette.ui05,
             backgroundColor: theme.palette.field01,
-            color: theme.palette.text01,
+
+            // @ts-ignore
+            color: theme.palette.field02,
             borderRadius: theme.shape.borderRadius,
             padding: '10px 16px'
         }
@@ -163,7 +165,11 @@ function SalesforceLinkDialog() {
 
     const renderSpinner = () => (
         <div className = { classes.spinner }>
-            <Spinner />
+            <Spinner
+
+                // @ts-ignore
+                isCompleting = { false }
+                size = 'medium' />
         </div>
     );
 
@@ -176,7 +182,9 @@ function SalesforceLinkDialog() {
     const renderSelection = () => (
         <div>
             <div className = { classes.recordInfo }>
+                {/* @ts-ignore */}
                 <RecordItem { ...selectedRecord } />
+                {/* @ts-ignore */}
                 {selectedRecordOwner && <RecordItem { ...selectedRecordOwner } />}
                 {hasDetailsErrors && renderDetailsErrors()}
             </div>

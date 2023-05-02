@@ -2,15 +2,16 @@
 import React from 'react';
 import { Image, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { connect } from 'react-redux';
 
 import { translate } from '../../../../base/i18n/functions';
 // @ts-ignore
-import LoadingIndicator from '../../../../base/react/components/native/LoadingIndicator';
+import { LoadingIndicator } from '../../../../base/react';
+import { connect } from '../../../../base/redux/functions';
 import Button from '../../../../base/ui/components/native/Button';
 import Switch from '../../../../base/ui/components/native/Switch';
 import { BUTTON_TYPES } from '../../../../base/ui/constants.native';
 import { RECORDING_TYPES } from '../../../constants';
+// @ts-ignore
 import { getRecordingDurationEstimation } from '../../../functions';
 import AbstractStartRecordingDialogContent, {
     IProps,
@@ -183,6 +184,7 @@ class StartRecordingDialogContent extends AbstractStartRecordingDialogContent<IP
     _renderSpinner() {
         return (
             <LoadingIndicator
+                isCompleting = { false }
                 size = 'small' />
         );
     }

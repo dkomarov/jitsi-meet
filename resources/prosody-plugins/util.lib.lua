@@ -372,17 +372,10 @@ function presence_check_status(muc_x, status)
     return false;
 end
 
--- Retrieves the focus from the room and cache it in the room object
--- @param room The room name for which to find the occupant
-local function get_focus_occupant(room)
-    return room:get_occupant_by_nick(room.jid..'/focus');
-end
-
 return {
     extract_subdomain = extract_subdomain;
     is_feature_allowed = is_feature_allowed;
     is_healthcheck_room = is_healthcheck_room;
-    get_focus_occupant = get_focus_occupant;
     get_room_from_jid = get_room_from_jid;
     get_room_by_name_and_subdomain = get_room_by_name_and_subdomain;
     async_handler_wrapper = async_handler_wrapper;

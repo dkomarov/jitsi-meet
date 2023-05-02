@@ -16,6 +16,8 @@ import { getLocalDesktopTrack, getTrackState, isLocalVideoTrackDesktop } from '.
 
 export * from './actions.any';
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /**
  * Signals that the local participant is ending screensharing or beginning the screensharing flow.
  *
@@ -41,6 +43,8 @@ export function toggleScreensharing(enabled: boolean, _ignore1?: boolean, _ignor
         }
     };
 }
+
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Creates desktop track and replaces the local one.

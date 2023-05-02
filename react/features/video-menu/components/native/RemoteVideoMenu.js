@@ -1,20 +1,18 @@
 import React, { PureComponent } from 'react';
 import { Text, View } from 'react-native';
 import { Divider } from 'react-native-paper';
-import { connect } from 'react-redux';
 
-import Avatar from '../../../base/avatar/components/Avatar';
-import { hideSheet } from '../../../base/dialog/actions';
-import BottomSheet from '../../../base/dialog/components/native/BottomSheet';
+import { Avatar } from '../../../base/avatar';
+import { BottomSheet, hideSheet } from '../../../base/dialog';
 import { bottomSheetStyles } from '../../../base/dialog/components/native/styles';
-import { KICK_OUT_ENABLED } from '../../../base/flags/constants';
-import { getFeatureFlag } from '../../../base/flags/functions';
-import { translate } from '../../../base/i18n/functions';
+import { KICK_OUT_ENABLED, getFeatureFlag } from '../../../base/flags';
+import { translate } from '../../../base/i18n';
 import {
     getParticipantById,
     getParticipantDisplayName,
     isLocalParticipantModerator
-} from '../../../base/participants/functions';
+} from '../../../base/participants';
+import { connect } from '../../../base/redux';
 import { getBreakoutRooms, getCurrentRoomId } from '../../../breakout-rooms/functions';
 import PrivateMessageButton from '../../../chat/components/native/PrivateMessageButton';
 import ConnectionStatusButton from '../native/ConnectionStatusButton';
@@ -226,13 +224,12 @@ function _mapStateToProps(state, ownProps) {
     const _currentRoomId = getCurrentRoomId(state);
     const shouldDisableKick = disableKick || !kickOutEnabled;
     const moderator = isLocalParticipantModerator(state);
-    const _iAmVisitor = state['features/visitors'].iAmVisitor;
 
     return {
         _currentRoomId,
         _disableKick: Boolean(shouldDisableKick),
         _disableRemoteMute: Boolean(disableRemoteMute),
-        _disablePrivateChat: Boolean(disablePrivateChat) || _iAmVisitor,
+        _disablePrivateChat: Boolean(disablePrivateChat),
         _isParticipantAvailable: Boolean(isParticipantAvailable),
         _moderator: moderator,
         _participantDisplayName: getParticipantDisplayName(state, participantId),

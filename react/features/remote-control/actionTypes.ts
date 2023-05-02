@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * The type of (redux) action which signals that the controller is capturing mouse and keyboard events.
  *

@@ -11,7 +11,6 @@ const button = {
 
 const buttonLabel = {
     ...BaseTheme.typography.bodyShortBold,
-    lineHeight: 14,
     textTransform: 'capitalize'
 };
 
@@ -35,7 +34,7 @@ export default {
 
     buttonDisabled: {
         ...button,
-        backgroundColor: BaseTheme.palette.ui08
+        backgroundColor: BaseTheme.palette.actionDisabled
     },
 
     buttonLabelPrimary: {
@@ -66,7 +65,7 @@ export default {
     buttonLabelTertiary: {
         ...buttonLabel,
         color: BaseTheme.palette.text01,
-        marginHorizontal: BaseTheme.spacing[2],
+        margin: BaseTheme.spacing[3],
         textAlign: 'center'
     },
 

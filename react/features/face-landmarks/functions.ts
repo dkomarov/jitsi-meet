@@ -54,10 +54,9 @@ export function sendFaceBoxToParticipants(
  * @param  {FaceLandmarks} faceLandmarks - Face landmarks to be sent.
  * @returns {void}
  */
-export function sendFaceExpressionToServer(conference: IJitsiConference | undefined,
-        faceLandmarks: FaceLandmarks): void {
+export function sendFaceExpressionToServer(conference: IJitsiConference, faceLandmarks: FaceLandmarks): void {
     try {
-        conference?.sendFaceLandmarks(faceLandmarks);
+        conference.sendFaceLandmarks(faceLandmarks);
     } catch (err) {
         logger.warn('Could not send the face landmarks to prosody', err);
     }

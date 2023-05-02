@@ -5,17 +5,18 @@ const UI = {};
 
 import Logger from '@jitsi/logger';
 import EventEmitter from 'events';
+import $ from 'jquery';
 
 import { isMobileBrowser } from '../../react/features/base/environment/utils';
-import { setColorAlpha } from '../../react/features/base/util/helpers';
-import { setDocumentUrl } from '../../react/features/etherpad/actions';
-import { setFilmstripVisible } from '../../react/features/filmstrip/actions.any';
+import { setColorAlpha } from '../../react/features/base/util';
+import { setDocumentUrl } from '../../react/features/etherpad';
+import { setFilmstripVisible } from '../../react/features/filmstrip';
 import {
+    NOTIFICATION_TIMEOUT_TYPE,
+    joinLeaveNotificationsDisabled,
     setNotificationsEnabled,
     showNotification
-} from '../../react/features/notifications/actions';
-import { NOTIFICATION_TIMEOUT_TYPE } from '../../react/features/notifications/constants';
-import { joinLeaveNotificationsDisabled } from '../../react/features/notifications/functions';
+} from '../../react/features/notifications';
 import {
     dockToolbox,
     setToolboxEnabled,
@@ -105,16 +106,16 @@ UI.start = function() {
     VideoLayout.resizeVideoArea();
 
     if (isMobileBrowser()) {
-        document.body.classList.add('mobile-browser');
+        $('body').addClass('mobile-browser');
     } else {
-        document.body.classList.add('desktop-browser');
+        $('body').addClass('desktop-browser');
     }
 
     if (config.backgroundAlpha !== undefined) {
-        const backgroundColor = getComputedStyle(document.body).getPropertyValue('background-color');
+        const backgroundColor = $('body').css('background-color');
         const alphaColor = setColorAlpha(backgroundColor, config.backgroundAlpha);
 
-        document.body.style.backgroundColor = alphaColor;
+        $('body').css('background-color', alphaColor);
     }
 
     if (config.iAmRecorder) {
@@ -134,33 +135,32 @@ UI.registerListeners
     = () => UIListeners.forEach((value, key) => UI.addListener(key, value));
 
 /**
- *
- */
-function onResize() {
-    VideoLayout.onResize();
-}
-
-/**
  * Setup some DOM event listeners.
  */
 UI.bindEvents = () => {
-    // Resize and reposition videos in full screen mode.
-    document.addEventListener('webkitfullscreenchange', onResize);
-    document.addEventListener('mozfullscreenchange', onResize);
-    document.addEventListener('fullscreenchange', onResize);
+    /**
+     *
+     */
+    function onResize() {
+        VideoLayout.onResize();
+    }
 
-    window.addEventListener('resize', onResize);
+    // Resize and reposition videos in full screen mode.
+    $(document).on(
+            'webkitfullscreenchange mozfullscreenchange fullscreenchange',
+            onResize);
+
+    $(window).resize(onResize);
 };
 
 /**
  * Unbind some DOM event listeners.
  */
 UI.unbindEvents = () => {
-    document.removeEventListener('webkitfullscreenchange', onResize);
-    document.removeEventListener('mozfullscreenchange', onResize);
-    document.removeEventListener('fullscreenchange', onResize);
+    $(document).off(
+            'webkitfullscreenchange mozfullscreenchange fullscreenchange');
 
-    window.removeEventListener('resize', onResize);
+    $(window).off('resize');
 };
 
 /**
@@ -291,6 +291,17 @@ UI.showToolbar = timeout => APP.store.dispatch(showToolbox(timeout));
 
 // Used by torture.
 UI.dockToolbar = dock => APP.store.dispatch(dockToolbox(dock));
+
+/**
+ * Updates the displayed avatar for participant.
+ *
+ * @param {string} id - User id whose avatar should be updated.
+ * @param {string} avatarURL - The URL to avatar image to display.
+ * @returns {void}
+ */
+UI.refreshAvatarDisplay = function(id) {
+    VideoLayout.changeUserAvatar(id);
+};
 
 /**
  * Notify user that connection failed.

@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * Action type to signal the arriving or updating of a knocking participant.
  */

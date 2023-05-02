@@ -8,11 +8,11 @@ import { addToOffset, setTimelinePanning } from '../../actions.any';
 import { SCROLL_RATE, TIMELINE_COLORS } from '../../constants';
 import { getFaceLandmarksEnd, getFaceLandmarksStart, getTimelineBoundaries } from '../../functions';
 
-interface IProps {
+type Props = {
     faceLandmarks?: FaceLandmarks[];
-}
+};
 
-const Timeline = ({ faceLandmarks }: IProps) => {
+const Timeline = ({ faceLandmarks }: Props) => {
     const startTimestamp = useSelector((state: IReduxState) => getConferenceTimestamp(state)) ?? 0;
     const { left, right } = useSelector((state: IReduxState) => getTimelineBoundaries(state));
     const { timelinePanning } = useSelector((state: IReduxState) => state['features/speaker-stats']);

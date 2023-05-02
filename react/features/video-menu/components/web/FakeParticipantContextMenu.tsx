@@ -2,8 +2,11 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
+// @ts-ignore
 import TogglePinToStageButton from '../../../../features/video-menu/components/web/TogglePinToStageButton';
-import Avatar from '../../../base/avatar/components/Avatar';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import { Avatar } from '../../../base/avatar';
 import { IconPlay } from '../../../base/icons/svg';
 import { isWhiteboardParticipant } from '../../../base/participants/functions';
 import { IParticipant } from '../../../base/participants/types';

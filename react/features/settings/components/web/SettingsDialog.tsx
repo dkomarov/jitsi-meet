@@ -1,55 +1,44 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { makeStyles } from 'tss-react/mui';
+/* eslint-disable lines-around-comment */
+import { Theme } from '@mui/material';
+import { withStyles } from '@mui/styles';
+import React, { Component } from 'react';
 
 import { IReduxState } from '../../../app/types';
+import { getAvailableDevices } from '../../../base/devices/actions';
+// @ts-ignore
+import { DialogWithTabs } from '../../../base/dialog';
+import { hideDialog } from '../../../base/dialog/actions';
+import { connect } from '../../../base/redux/functions';
+import { withPixelLineHeight } from '../../../base/styles/functions.web';
+// @ts-ignore
+import { isCalendarEnabled } from '../../../calendar-sync';
 import {
-    IconBell,
-    IconCalendar,
-    IconGear,
-    IconImage,
-    IconModerator,
-    IconShortcuts,
-    IconUser,
-    IconVideo,
-    IconVolumeUp
-} from '../../../base/icons/svg';
-import DialogWithTabs, { IDialogTab } from '../../../base/ui/components/web/DialogWithTabs';
-import { isCalendarEnabled } from '../../../calendar-sync/functions.web';
-import { submitAudioDeviceSelectionTab, submitVideoDeviceSelectionTab } from '../../../device-selection/actions.web';
-import AudioDevicesSelection from '../../../device-selection/components/AudioDevicesSelection';
-import VideoDeviceSelection from '../../../device-selection/components/VideoDeviceSelection';
-import {
-    getAudioDeviceSelectionDialogProps,
-    getVideoDeviceSelectionDialogProps
-} from '../../../device-selection/functions.web';
-import { checkBlurSupport } from '../../../virtual-background/functions';
+    DeviceSelection,
+    getDeviceSelectionDialogProps,
+    submitDeviceSelectionTab
+    // @ts-ignore
+} from '../../../device-selection';
 import {
     submitModeratorTab,
     submitMoreTab,
-    submitNotificationsTab,
     submitProfileTab,
-    submitShortcutsTab,
-    submitVirtualBackgroundTab
+    submitSoundsTab
 } from '../../actions';
 import { SETTINGS_TABS } from '../../constants';
 import {
     getModeratorTabProps,
     getMoreTabProps,
-    getNotificationsMap,
-    getNotificationsTabProps,
     getProfileTabProps,
-    getShortcutsTabProps,
-    getVirtualBackgroundTabProps
+    getSoundsTabProps
 } from '../../functions';
 
+// @ts-ignore
 import CalendarTab from './CalendarTab';
 import ModeratorTab from './ModeratorTab';
 import MoreTab from './MoreTab';
-import NotificationsTab from './NotificationsTab';
 import ProfileTab from './ProfileTab';
-import ShortcutsTab from './ShortcutsTab';
-import VirtualBackgroundTab from './VirtualBackgroundTab';
+import SoundsTab from './SoundsTab';
+/* eslint-enable lines-around-comment */
 
 /**
  * The type of the React {@code Component} props of
@@ -70,7 +59,6 @@ interface IProps {
      * An object containing the CSS classes.
      */
     classes: Object;
-    _tabs: IDialogTab<any>[];
 
     /**
      * Which settings tab should be initially displayed. If not defined then
@@ -90,11 +78,17 @@ interface IProps {
     isDisplayedOnWelcomePage: boolean;
 }
 
-const useStyles = makeStyles()(() => {
+/**
+ * Creates the styles for the component.
+ *
+ * @param {Object} theme - The current UI theme.
+ *
+ * @returns {Object}
+ */
+const styles = (theme: Theme) => {
     return {
         settingsDialog: {
             display: 'flex',
-
             width: '100%',
 
             '&.profile-pane': {
@@ -213,37 +207,12 @@ const useStyles = makeStyles()(() => {
                 '& .more-tab': {
                     flexDirection: 'column'
                 }
-
-            width: '100%'
-
+            }
         }
     };
-});
-
-const SettingsDialog = ({ _tabs, defaultTab, dispatch }: IProps) => {
-    const { classes } = useStyles();
-
-    const correctDefaultTab = _tabs.find(tab => tab.name === defaultTab)?.name;
-    const tabs = _tabs.map(tab => {
-        return {
-            ...tab,
-            className: `settings-pane ${classes.settingsDialog}`,
-            submit: (...args: any) => tab.submit
-                && dispatch(tab.submit(...args))
-        };
-    });
-
-    return (
-        <DialogWithTabs
-            className = 'settings-dialog'
-            defaultTab = { correctDefaultTab }
-            tabs = { tabs }
-            titleKey = 'settings.title' />
-    );
 };
 
 /**
-
  * A React {@code Component} for displaying a dialog to modify local settings
  * and conference-wide (moderator) settings. This version is connected to
  * redux to get the current settings.
@@ -315,7 +284,6 @@ class SettingsDialog extends Component<IProps> {
 }
 
 /**
-
  * Maps (parts of) the Redux state to the associated props for the
  * {@code ConnectedSettingsDialog} component.
  *
@@ -327,7 +295,7 @@ class SettingsDialog extends Component<IProps> {
  * }}
  */
 function _mapStateToProps(state: IReduxState, ownProps: any) {
-    const { isDisplayedOnWelcomePage } = ownProps;
+    const { classes, isDisplayedOnWelcomePage } = ownProps;
     const configuredTabs = interfaceConfig.SETTINGS_SECTIONS || [];
 
     // The settings sections to display.
@@ -341,7 +309,6 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
     const showCalendarSettings
         = configuredTabs.includes('calendar') && isCalendarEnabled(state);
     const showSoundsSettings = configuredTabs.includes('sounds');
-
     const tabs = [];
 
     if (showDeviceSettings) {
@@ -352,20 +319,6 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             onMount: getAvailableDevices,
             props: getDeviceSelectionDialogProps(state, isDisplayedOnWelcomePage),
             propsUpdateFunction: (tabState: any, newProps: any) => {
-
-    const enabledNotifications = getNotificationsMap(state);
-    const showNotificationsSettings = Object.keys(enabledNotifications).length > 0;
-    const virtualBackgroundSupported = checkBlurSupport();
-    const tabs: IDialogTab<any>[] = [];
-
-    if (showDeviceSettings) {
-        tabs.push({
-            name: SETTINGS_TABS.AUDIO,
-            component: AudioDevicesSelection,
-            labelKey: 'settings.audio',
-            props: getAudioDeviceSelectionDialogProps(state, isDisplayedOnWelcomePage),
-            propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getAudioDeviceSelectionDialogProps>) => {
-
                 // Ensure the device selection tab gets updated when new devices
                 // are found by taking the new props and only preserving the
                 // current user selected devices. If this were not done, the
@@ -374,83 +327,24 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
 
                 return {
                     ...newProps,
-                    noiseSuppressionEnabled: tabState.noiseSuppressionEnabled,
                     selectedAudioInputId: tabState.selectedAudioInputId,
-                    selectedAudioOutputId: tabState.selectedAudioOutputId
-                };
-            },
-            styles: `settings-pane ${classes.settingsDialog} devices-pane`,
-            submit: (newState: any) => submitAudioDeviceSelectionTab(newState, isDisplayedOnWelcomePage),
-            icon: IconVolumeUp
-        });
-        tabs.push({
-            name: SETTINGS_TABS.VIDEO,
-            component: VideoDeviceSelection,
-            labelKey: 'settings.video',
-            props: getVideoDeviceSelectionDialogProps(state, isDisplayedOnWelcomePage),
-            propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getVideoDeviceSelectionDialogProps>) => {
-                // Ensure the device selection tab gets updated when new devices
-                // are found by taking the new props and only preserving the
-                // current user selected devices. If this were not done, the
-                // tab would keep using a copy of the initial props it received,
-                // leaving the device list to become stale.
-
-                return {
-                    ...newProps,
-                    currentFramerate: tabState?.currentFramerate,
-                    localFlipX: tabState.localFlipX,
+                    selectedAudioOutputId: tabState.selectedAudioOutputId,
                     selectedVideoInputId: tabState.selectedVideoInputId
                 };
             },
-            submit: (newState: any) => submitVideoDeviceSelectionTab(newState, isDisplayedOnWelcomePage),
-            icon: IconVideo
+            styles: `settings-pane ${classes.settingsDialog} devices-pane`,
+            submit: (newState: any) => submitDeviceSelectionTab(newState, isDisplayedOnWelcomePage)
         });
     }
 
-    if (virtualBackgroundSupported) {
+    if (showProfileSettings) {
         tabs.push({
-            name: SETTINGS_TABS.VIRTUAL_BACKGROUND,
-            component: VirtualBackgroundTab,
-            labelKey: 'virtualBackground.title',
-            props: getVirtualBackgroundTabProps(state),
-            submit: (newState: any) => submitVirtualBackgroundTab(newState),
-            cancel: () => {
-                const { _virtualBackground } = getVirtualBackgroundTabProps(state);
-
-                return submitVirtualBackgroundTab({
-                    options: {
-                        backgroundType: _virtualBackground.backgroundType,
-                        enabled: _virtualBackground.backgroundEffectEnabled,
-                        url: _virtualBackground.virtualSource,
-                        selectedThumbnail: _virtualBackground.selectedThumbnail,
-                        blurValue: _virtualBackground.blurValue
-                    }
-                }, true);
-            },
-            icon: IconImage
-        });
-    }
-
-    if (showSoundsSettings || showNotificationsSettings) {
-        tabs.push({
-            name: SETTINGS_TABS.NOTIFICATIONS,
-            component: NotificationsTab,
-            labelKey: 'settings.notifications',
-            propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getNotificationsTabProps>) => {
-                return {
-                    ...newProps,
-                    enabledNotifications: tabState?.enabledNotifications || {},
-                    soundsIncomingMessage: tabState?.soundsIncomingMessage,
-                    soundsParticipantJoined: tabState?.soundsParticipantJoined,
-                    soundsParticipantKnocking: tabState?.soundsParticipantKnocking,
-                    soundsParticipantLeft: tabState?.soundsParticipantLeft,
-                    soundsReactions: tabState?.soundsReactions,
-                    soundsTalkWhileMuted: tabState?.soundsTalkWhileMuted
-                };
-            },
-            props: getNotificationsTabProps(state, showSoundsSettings),
-            submit: submitNotificationsTab,
-            icon: IconBell
+            name: SETTINGS_TABS.PROFILE,
+            component: ProfileTab,
+            label: 'profile.title',
+            props: getProfileTabProps(state),
+            styles: `settings-pane ${classes.settingsDialog} profile-pane`,
+            submit: submitProfileTab
         });
     }
 
@@ -460,7 +354,7 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             component: ModeratorTab,
             label: 'settings.moderator',
             props: moderatorTabProps,
-            propsUpdateFunction: (tabState: any, newProps: typeof moderatorTabProps) => {
+            propsUpdateFunction: (tabState: any, newProps: any) => {
                 // Updates tab props, keeping users selection
 
                 return {
@@ -471,19 +365,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
                     startReactionsMuted: tabState?.startReactionsMuted
                 };
             },
-            submit: submitModeratorTab,
-            icon: IconModerator
-        });
-    }
-
-    if (showProfileSettings) {
-        tabs.push({
-            name: SETTINGS_TABS.PROFILE,
-            component: ProfileTab,
-            labelKey: 'profile.title',
-            props: getProfileTabProps(state),
-            submit: submitProfileTab,
-            icon: IconUser
+            styles: `settings-pane ${classes.settingsDialog} moderator-pane`,
+            submit: submitModeratorTab
         });
     }
 
@@ -491,27 +374,21 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         tabs.push({
             name: SETTINGS_TABS.CALENDAR,
             component: CalendarTab,
-            labelKey: 'settings.calendar.title',
-            icon: IconCalendar
+            label: 'settings.calendar.title',
+            styles: `settings-pane ${classes.settingsDialog} calendar-pane`
         });
     }
 
-    tabs.push({
-        name: SETTINGS_TABS.SHORTCUTS,
-        component: ShortcutsTab,
-        labelKey: 'settings.shortcuts',
-        props: getShortcutsTabProps(state, isDisplayedOnWelcomePage),
-        propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getShortcutsTabProps>) => {
-            // Updates tab props, keeping users selection
-
-            return {
-                ...newProps,
-                keyboardShortcutsEnabled: tabState?.keyboardShortcutsEnabled
-            };
-        },
-        submit: submitShortcutsTab,
-        icon: IconShortcuts
-    });
+    if (showSoundsSettings) {
+        tabs.push({
+            name: SETTINGS_TABS.SOUNDS,
+            component: SoundsTab,
+            label: 'settings.sounds',
+            props: getSoundsTabProps(state),
+            styles: `settings-pane ${classes.settingsDialog} profile-pane`,
+            submit: submitSoundsTab
+        });
+    }
 
     if (showMoreTab) {
         tabs.push({
@@ -519,23 +396,25 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             component: MoreTab,
             label: 'settings.more',
             props: moreTabProps,
-            propsUpdateFunction: (tabState: any, newProps: typeof moreTabProps) => {
+            propsUpdateFunction: (tabState: any, newProps: any) => {
                 // Updates tab props, keeping users selection
 
                 return {
                     ...newProps,
+                    currentFramerate: tabState?.currentFramerate,
                     currentLanguage: tabState?.currentLanguage,
                     hideSelfView: tabState?.hideSelfView,
                     showPrejoinPage: tabState?.showPrejoinPage,
+                    enabledNotifications: tabState?.enabledNotifications || {},
                     maxStageParticipants: tabState?.maxStageParticipants
                 };
             },
-            submit: submitMoreTab,
-            icon: IconGear
+            styles: `settings-pane ${classes.settingsDialog} more-pane`,
+            submit: submitMoreTab
         });
     }
 
     return { _tabs: tabs };
 }
 
-export default connect(_mapStateToProps)(SettingsDialog);
+export default withStyles(styles)(connect(_mapStateToProps)(SettingsDialog));

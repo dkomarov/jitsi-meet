@@ -12,7 +12,7 @@ import { HangupContextMenuItem } from './HangupContextMenuItem';
 /**
  * The type of the React {@code Component} props of {@link LeaveConferenceButton}.
  */
-interface IProps {
+type Props = {
 
     /**
      * Key to use for toolbarButtonClicked event.
@@ -24,7 +24,7 @@ interface IProps {
      * whether to only notify or to also prevent button click routine.
      */
     notifyMode?: string;
-}
+};
 
 
 /**
@@ -33,7 +33,7 @@ interface IProps {
  * @param {Object} props - Component's props.
  * @returns {JSX.Element} - The leave conference button.
  */
-export const LeaveConferenceButton = (props: IProps) => {
+export const LeaveConferenceButton = (props: Props) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 

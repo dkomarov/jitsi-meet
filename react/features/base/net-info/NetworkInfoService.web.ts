@@ -35,7 +35,8 @@ export default class NetworkInfoService extends EventEmitter {
      * @returns {boolean}
      */
     static isSupported() {
-        return Boolean(window.addEventListener) && typeof navigator.onLine !== 'undefined';
+        // @ts-ignore
+        return window.addEventListener && typeof navigator.onLine !== 'undefined';
     }
 
     /**

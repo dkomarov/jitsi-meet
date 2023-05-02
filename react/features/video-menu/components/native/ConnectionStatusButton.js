@@ -1,9 +1,8 @@
-import { connect } from 'react-redux';
-
-import { openSheet } from '../../../base/dialog/actions';
-import { translate } from '../../../base/i18n/functions';
-import { IconInfoCircle } from '../../../base/icons/svg';
-import AbstractButton, { IProps as AbstractButtonProps } from '../../../base/toolbox/components/AbstractButton';
+import { openSheet } from '../../../base/dialog';
+import { translate } from '../../../base/i18n';
+import { IconInfoCircle } from '../../../base/icons';
+import { connect } from '../../../base/redux';
+import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
 
 import ConnectionStatusComponent from './ConnectionStatusComponent';
 

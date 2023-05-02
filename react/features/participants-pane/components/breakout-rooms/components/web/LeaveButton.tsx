@@ -8,11 +8,7 @@ import Button from '../../../../../base/ui/components/web/Button';
 import { BUTTON_TYPES } from '../../../../../base/ui/constants.web';
 import { moveToRoom } from '../../../../../breakout-rooms/actions';
 
-interface IProps {
-    className?: string;
-}
-
-export const LeaveButton = ({ className }: IProps) => {
+export const LeaveButton = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -24,7 +20,6 @@ export const LeaveButton = ({ className }: IProps) => {
     return (
         <Button
             accessibilityLabel = { t('breakoutRooms.actions.leaveBreakoutRoom') }
-            className = { className }
             fullWidth = { true }
             labelKey = { 'breakoutRooms.actions.leaveBreakoutRoom' }
             onClick = { onLeave }

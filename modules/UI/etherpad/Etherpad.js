@@ -2,8 +2,7 @@
 
 import $ from 'jquery';
 
-import { setDocumentEditingState } from '../../../react/features/etherpad/actions';
-import { getSharedDocumentUrl } from '../../../react/features/etherpad/functions';
+import { getSharedDocumentUrl, setDocumentEditingState } from '../../../react/features/etherpad';
 import { getToolboxHeight } from '../../../react/features/toolbox/functions.web';
 import Filmstrip from '../videolayout/Filmstrip';
 import LargeContainer from '../videolayout/LargeContainer';

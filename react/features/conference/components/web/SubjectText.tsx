@@ -5,7 +5,9 @@ import { makeStyles } from 'tss-react/mui';
 
 import { getConferenceName } from '../../../base/conference/functions';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
-import Tooltip from '../../../base/tooltip/components/Tooltip';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import { Tooltip } from '../../../base/tooltip';
 
 const useStyles = makeStyles()(theme => {
     return {
@@ -42,13 +44,13 @@ const SubjectText = () => {
     const { classes } = useStyles();
 
     return (
-        <Tooltip
-            content = { subject }
-            position = 'bottom'>
-            <div className = { classes.container }>
+        <div className = { classes.container }>
+            <Tooltip
+                content = { subject }
+                position = 'bottom'>
                 <div className = { clsx('subject-text--content', classes.content) }>{subject}</div>
-            </div>
-        </Tooltip>
+            </Tooltip>
+        </div>
     );
 };
 

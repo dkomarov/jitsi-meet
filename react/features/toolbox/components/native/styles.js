@@ -1,5 +1,4 @@
-import ColorSchemeRegistry from '../../../base/color-scheme/ColorSchemeRegistry';
-import { schemeColor } from '../../../base/color-scheme/functions';
+import { ColorSchemeRegistry, schemeColor } from '../../../base/color-scheme';
 import BaseTheme from '../../../base/ui/components/BaseTheme.native';
 
 const BUTTON_SIZE = 48;
@@ -67,7 +66,7 @@ const reactionMenu = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: BaseTheme.palette.ui01,
+    backgroundColor: BaseTheme.palette.bottomSheet,
     padding: BaseTheme.spacing[3]
 };
 
@@ -130,7 +129,7 @@ ColorSchemeRegistry.register('Toolbox', {
     },
 
     backgroundToggle: {
-        backgroundColor: BaseTheme.palette.ui04
+        backgroundColor: BaseTheme.palette.ui13
     },
 
     hangupMenuContainer: {
@@ -150,7 +149,7 @@ ColorSchemeRegistry.register('Toolbox', {
             ...toolbarButton,
             backgroundColor: schemeColor('hangup')
         },
-        underlayColor: BaseTheme.palette.ui04
+        underlayColor: BaseTheme.palette.underlay01
     },
 
     reactionDialog: {
@@ -178,7 +177,7 @@ ColorSchemeRegistry.register('Toolbox', {
     reactionButton: {
         gifButton,
         style: reactionButton,
-        underlayColor: BaseTheme.palette.ui04,
+        underlayColor: BaseTheme.palette.ui13,
         emoji: reactionEmoji
     },
 

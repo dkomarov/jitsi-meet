@@ -1,7 +1,5 @@
 import { IReduxState } from '../app/types';
 
-export * from './functions.any';
-
 /**
  * Returns the visibility state of the reactions menu.
  *

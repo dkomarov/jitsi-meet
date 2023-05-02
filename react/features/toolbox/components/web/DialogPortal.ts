@@ -3,9 +3,8 @@ import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 
 import { IReduxState } from '../../../app/types';
-import { ZINDEX_DIALOG_PORTAL } from '../../constants';
 
-interface IProps {
+type Props = {
 
     /**
      * The component(s) to be displayed within the drawer portal.
@@ -31,13 +30,7 @@ interface IProps {
      * Custom style to apply to the container div.
      */
     style?: any;
-
-    /**
-     * The selector for the element we consider the content container.
-     * This is used to determine the correct size of the portal content.
-     */
-    targetSelector?: string;
-}
+};
 
 /**
  * Component meant to render a drawer at the bottom of the screen,
@@ -45,7 +38,7 @@ interface IProps {
  *
  * @returns {ReactElement}
  */
-function DialogPortal({ children, className, style, getRef, setSize, targetSelector }: IProps) {
+function DialogPortal({ children, className, style, getRef, setSize }: Props) {
     const clientWidth = useSelector((state: IReduxState) => state['features/base/responsive-ui'].clientWidth);
     const [ portalTarget ] = useState(() => {
         const portalDiv = document.createElement('div');
@@ -72,7 +65,6 @@ function DialogPortal({ children, className, style, getRef, setSize, targetSelec
     useEffect(() => {
         if (portalTarget && getRef) {
             getRef(portalTarget);
-            portalTarget.style.zIndex = `${ZINDEX_DIALOG_PORTAL}`;
         }
     }, [ portalTarget ]);
 
@@ -93,15 +85,13 @@ function DialogPortal({ children, className, style, getRef, setSize, targetSelec
             }
         });
 
-        const target = targetSelector ? portalTarget.querySelector(targetSelector) : portalTarget;
-
         if (document.body) {
             document.body.appendChild(portalTarget);
-            observer.observe(target ?? portalTarget);
+            observer.observe(portalTarget);
         }
 
         return () => {
-            observer.unobserve(target ?? portalTarget);
+            observer.unobserve(portalTarget);
             if (document.body) {
                 document.body.removeChild(portalTarget);
             }

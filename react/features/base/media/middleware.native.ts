@@ -1,1 +1,1 @@
-import './middleware.any';
+import './middleware.any.js';

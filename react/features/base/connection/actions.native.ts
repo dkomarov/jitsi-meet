@@ -141,6 +141,8 @@ function _connectionWillConnect(connection: Object) {
     };
 }
 
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Closes connection.
  *

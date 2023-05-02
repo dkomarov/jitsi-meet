@@ -5,40 +5,33 @@ import { makeStyles } from 'tss-react/mui';
 
 import Icon from '../../base/icons/components/Icon';
 import { IconTrash } from '../../base/icons/svg';
-import { withPixelLineHeight } from '../../base/styles/functions.web';
 import Button from '../../base/ui/components/web/Button';
 import { BUTTON_TYPES } from '../../base/ui/constants.any';
 import { closeHidDevice, requestHidDevice } from '../../web-hid/actions';
 import { getDeviceInfo, shouldRequestHIDDevice } from '../../web-hid/functions';
 
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()(() => {
     return {
         callControlContainer: {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start'
+            marginTop: '8px',
+            marginBottom: '16px',
+            fontSize: '14px',
+            '> label': {
+                display: 'block',
+                marginBottom: '20px'
+            }
         },
-
-        label: {
-            ...withPixelLineHeight(theme.typography.bodyShortRegular),
-            color: theme.palette.text01,
-            marginBottom: theme.spacing(2)
-        },
-
         deviceRow: {
             display: 'flex',
             justifyContent: 'space-between'
         },
-
         deleteDevice: {
             cursor: 'pointer',
             textAlign: 'center'
         },
-
         headerConnectedDevice: {
             fontWeight: 600
         },
-
         hidContainer: {
             '> span': {
                 marginLeft: '16px'
@@ -73,7 +66,7 @@ function DeviceHidContainer() {
             className = { classes.callControlContainer }
             key = 'callControl'>
             <label
-                className = { classes.label }
+                className = 'device-selector-label'
                 htmlFor = 'callControl'>
                 {t('deviceSelection.hid.callControl')}
             </label>
@@ -84,6 +77,7 @@ function DeviceHidContainer() {
                     key = 'request-control-btn'
                     label = { t('deviceSelection.hid.pairDevice') }
                     onClick = { onRequestControl }
+                    size = 'small'
                     type = { BUTTON_TYPES.SECONDARY } />
             )}
             {!showRequestDeviceInfo && (

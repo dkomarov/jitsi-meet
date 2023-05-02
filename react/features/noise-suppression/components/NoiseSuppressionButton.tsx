@@ -1,30 +1,41 @@
-import { connect } from 'react-redux';
-
 import { IReduxState } from '../../app/types';
 import { translate } from '../../base/i18n/functions';
 import {
     IconNoiseSuppressionOff,
     IconNoiseSuppressionOn
 } from '../../base/icons/svg';
-import AbstractButton, { IProps as AbstractButtonProps } from '../../base/toolbox/components/AbstractButton';
+import { connect } from '../../base/redux/functions';
+import {
+    AbstractButton,
+    type AbstractButtonProps
+
+    // @ts-ignore
+} from '../../base/toolbox/components';
 import { setOverflowMenuVisible } from '../../toolbox/actions';
 import { toggleNoiseSuppression } from '../actions';
 import { isNoiseSuppressionEnabled } from '../functions';
 
-interface IProps extends AbstractButtonProps {
-    _isNoiseSuppressionEnabled?: boolean;
-}
+type Props = AbstractButtonProps & {
+
+    /**
+     * The redux {@code dispatch} function.
+     */
+    dispatch: Function;
+
+};
 
 /**
  * Component that renders a toolbar button for toggling noise suppression.
  */
-class NoiseSuppressionButton extends AbstractButton<IProps> {
+class NoiseSuppressionButton extends AbstractButton<Props, any, any> {
     accessibilityLabel = 'toolbar.accessibilityLabel.noiseSuppression';
     icon = IconNoiseSuppressionOn;
     label = 'toolbar.noiseSuppression';
     tooltip = 'toolbar.noiseSuppression';
     toggledIcon = IconNoiseSuppressionOff;
     toggledLabel = 'toolbar.disableNoiseSuppression';
+
+    private props: Props;
 
     /**
      * Handles clicking / pressing the button.
@@ -56,12 +67,13 @@ class NoiseSuppressionButton extends AbstractButton<IProps> {
  *
  * @param {Object} state - The Redux state.
  * @private
- * @returns {IProps}
+ * @returns {Props}
  */
-function _mapStateToProps(state: IReduxState) {
+function _mapStateToProps(state: IReduxState): Object {
     return {
         _isNoiseSuppressionEnabled: isNoiseSuppressionEnabled(state)
     };
 }
 
+// @ts-ignore
 export default translate(connect(_mapStateToProps)(NoiseSuppressionButton));

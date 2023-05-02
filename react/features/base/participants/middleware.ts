@@ -429,12 +429,11 @@ StateListenerRegistry.register(
                 'e2ee.enabled': (participant: IJitsiParticipant, value: string) =>
                     _e2eeUpdated(store, conference, participant.getId(), value),
                 'features_e2ee': (participant: IJitsiParticipant, value: boolean) =>
-                    getParticipantById(store.getState(), participant.getId())?.e2eeSupported !== value
-                        && store.dispatch(participantUpdated({
-                            conference,
-                            id: participant.getId(),
-                            e2eeSupported: value
-                        })),
+                    store.dispatch(participantUpdated({
+                        conference,
+                        id: participant.getId(),
+                        e2eeSupported: value
+                    })),
                 'features_jigasi': (participant: IJitsiParticipant, value: boolean) =>
                     store.dispatch(participantUpdated({
                         conference,
@@ -507,12 +506,7 @@ StateListenerRegistry.register(
 function _e2eeUpdated({ getState, dispatch }: IStore, conference: IJitsiConference,
         participantId: string, newValue: string | boolean) {
     const e2eeEnabled = newValue === 'true';
-    const state = getState();
-    const { e2ee = {} } = state['features/base/config'];
-
-    if (e2eeEnabled === getParticipantById(state, participantId)?.e2eeEnabled) {
-        return;
-    }
+    const { e2ee = {} } = getState()['features/base/config'];
 
     dispatch(participantUpdated({
         conference,
@@ -548,11 +542,11 @@ function _localParticipantJoined({ getState, dispatch }: IStore, next: Function,
 
     const settings = getState()['features/base/settings'];
 
+    // @ts-ignore
     dispatch(localParticipantJoined({
         avatarURL: settings.avatarURL,
         email: settings.email,
-        name: settings.displayName,
-        id: ''
+        name: settings.displayName
     }));
 
     return result;
@@ -647,6 +641,7 @@ function _participantJoinedOrUpdated(store: IStore, next: Function, action: any)
     // Send an external update of the local participant's raised hand state
     // if a new raised hand state is defined in the action.
     if (typeof raisedHandTimestamp !== 'undefined') {
+
         if (local) {
             const { conference } = getState()['features/base/conference'];
             const rHand = parseInt(raisedHandTimestamp, 10);
@@ -694,6 +689,14 @@ function _participantJoinedOrUpdated(store: IStore, next: Function, action: any)
                     dispatch(setLoadableAvatarUrl(participantId, urlData?.src ?? '', Boolean(urlData?.isUsingCORS)));
                 });
         }
+    }
+
+    // Notify external listeners of potential avatarURL changes.
+    if (typeof APP === 'object') {
+        const currentKnownId = local ? APP.conference.getMyUserId() : id;
+
+        // Force update of local video getting a new id.
+        APP.UI.refreshAvatarDisplay(currentKnownId);
     }
 
     return result;

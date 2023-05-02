@@ -429,12 +429,7 @@
         "startSilentTitle": "",
         "suboptimalExperienceDescription": "Valitettavasti {{appName}} ei taida toimia kovin hyvin täällä. Yritämme löytää parannuskeinoja, mutta sillä välin kannattaa käyttää jotain <a href='{{recommendedBrowserPageLink}}' target='_blank'>täysin tuettua selainta</a>.",
         "suboptimalExperienceTitle": "Selainvaroitus",
-        "unmute": "Poista mykistys"
-    },
-    "participantsPane": {
-        "actions": {
-            "muteEveryoneElse": "Mykistä kaikki muut"
-        }
+        "unmute": ""
     },
     "passwordDigitsOnly": "",
     "passwordSetRemotely": "",
@@ -568,13 +563,11 @@
             "moreActions": "Säädä Lisää toimintoja -valikkoa",
             "moreActionsMenu": "Lisää toimintoja -valikko",
             "mute": "Säädä äänen mykistystä",
-            "muteEveryoneElse": "Mykistä kaikki muut",
             "pip": "Säädä Kuva kuvassa (PiP) -tilaa",
             "profile": "Muokkaa profiilia",
             "raiseHand": "Säädä käden nostoa",
             "recording": "Säädä nauhoitusta",
             "remoteMute": "Mykistä osanottaja",
-            "selectBackground": "Valitse tausta",
             "shareRoom": "Kutsu joku",
             "shareYourScreen": "Säädä näytön jakoa",
             "sharedvideo": "Säädä videon jakoa",
@@ -664,37 +657,29 @@
         "pending": "{{displayName}} on kutsuttu"
     },
     "videoStatus": {
-        "adjustFor": "Muokkaa:",
         "audioOnly": "ÄÄNI",
         "audioOnlyExpanded": "Käytössäsi on Vain ääni -tila. Se säästää kaistanleveyttä, mutta et näe muiden videoita.",
-        "bestPerformance": "Paras suorituskyky",
-        "callQuality": "Videon laatu",
+        "callQuality": "",
         "hd": "HD",
         "highDefinition": "Teräväpiirto",
-        "highestQuality": "Korkein laatu",
         "labelTooiltipNoVideo": "Ei videota",
         "labelTooltipAudioOnly": "Vain ääni -tila käytössä",
         "ld": "LD",
         "lowDefinition": "Alhainen kuvanlaatu",
         "onlyAudioAvailable": "Vain ääni -tila on käytettävissä",
         "onlyAudioSupported": "Tässä selaimessa tuemme vain ääntä.",
-        "performanceSettings": "Suorituskykyasetukset",
         "sd": "SD",
         "standardDefinition": "Vakiopiirto"
     },
     "videothumbnail": {
         "domute": "Mykistä",
-        "domuteOthers": "Mykistä kaikki muut",
-        "domuteVideoOfOthers": "Estä muiden kamera",
         "flip": "Käännä",
         "kick": "Poista",
         "moderator": "Valvoja",
-        "mute": "Osallistuja on mykistetty",
+        "mute": "",
         "muted": "Mykistetty",
-        "pinToStage": "Kiinnitä ruutuun",
         "remoteControl": "Etäkäyttö",
-        "show": "Näytä ruudulla",
-        "unpinFromStage": "Irroita kiinnitys",
+        "show": "",
         "videomute": ""
     },
     "welcomepage": {

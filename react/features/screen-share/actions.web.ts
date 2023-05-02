@@ -58,7 +58,7 @@ export function startAudioScreenShareFlow() {
         const audioOnlySharing = isAudioOnlySharing(state);
 
         // If we're already in a normal screen sharing session, warn the user.
-        if (isScreenVideoShared(state)) {
+        if (isScreenVideoShared(state)) { // @ts-ignore
             dispatch(openDialog(ShareMediaWarningDialog, { _isAudioScreenShareWarning: true }));
 
             return;
@@ -76,6 +76,7 @@ export function startAudioScreenShareFlow() {
             return;
         }
 
+        // @ts-ignore
         dispatch(openDialog(ShareAudioDialog));
     };
 }
@@ -93,7 +94,7 @@ export function startScreenShareFlow(enabled: boolean) {
         const audioOnlySharing = isAudioOnlySharing(state);
 
         // If we're in an audio screen sharing session, warn the user.
-        if (audioOnlySharing) {
+        if (audioOnlySharing) { // @ts-ignore
             dispatch(openDialog(ShareMediaWarningDialog, { _isAudioScreenShareWarning: false }));
 
             return;

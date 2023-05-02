@@ -1,6 +1,6 @@
+/* eslint-disable lines-around-comment */
 import React, { useEffect } from 'react';
 import { WithTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 
 import { createInviteDialogEvent } from '../../../../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../../../../analytics/functions';
@@ -8,11 +8,13 @@ import { IReduxState } from '../../../../app/types';
 import { getInviteURL } from '../../../../base/connection/functions';
 import { translate } from '../../../../base/i18n/functions';
 import { JitsiRecordingConstants } from '../../../../base/lib-jitsi-meet';
+import { connect } from '../../../../base/redux/functions';
 import Dialog from '../../../../base/ui/components/web/Dialog';
 import { StatusCode } from '../../../../base/util/uri';
 import { isDynamicBrandingDataLoaded } from '../../../../dynamic-branding/functions.any';
 import { getActiveSession } from '../../../../recording/functions';
-import { updateDialInNumbers } from '../../../actions.web';
+// @ts-ignore
+import { updateDialInNumbers } from '../../../actions';
 import {
     _getDefaultPhoneNumber,
     getInviteText,
@@ -21,14 +23,19 @@ import {
     isDialOutEnabled,
     isSharingEnabled,
     sharingFeatures
+    // @ts-ignore
 } from '../../../functions';
 
 import CopyMeetingLinkSection from './CopyMeetingLinkSection';
 import DialInLimit from './DialInLimit';
+// @ts-ignore
 import DialInSection from './DialInSection';
 import InviteByEmailSection from './InviteByEmailSection';
+// @ts-ignore
 import InviteContactsSection from './InviteContactsSection';
+// @ts-ignore
 import LiveStreamSection from './LiveStreamSection';
+/* eslint-enable lines-around-comment */
 
 interface IProps extends WithTranslation {
 
@@ -61,7 +68,7 @@ interface IProps extends WithTranslation {
     /**
      * An alternate app name to be displayed in the email subject.
      */
-    _inviteAppName?: string | null;
+    _inviteAppName?: string;
 
     /**
      * Whether or not invite contacts should be visible.
@@ -81,12 +88,12 @@ interface IProps extends WithTranslation {
     /**
      * The current known URL for a live stream in progress.
      */
-    _liveStreamViewURL?: string;
+    _liveStreamViewURL: string;
 
     /**
      * The default phone number.
      */
-    _phoneNumber?: string | null;
+    _phoneNumber?: string;
 
     /**
      * Whether or not url sharing button should be visible.

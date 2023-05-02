@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
+import clsx from 'clsx';
+import React, { Component } from 'react';
 
 import Icon from '../../../../base/icons/components/Icon';
 import { IconCheck, IconExclamationSolid } from '../../../../base/icons/svg';
@@ -7,13 +7,12 @@ import { IconCheck, IconExclamationSolid } from '../../../../base/icons/svg';
 // @ts-ignore
 import JitsiMeetJS from '../../../../base/lib-jitsi-meet/_';
 import ContextMenuItem from '../../../../base/ui/components/web/ContextMenuItem';
-import { TEXT_OVERFLOW_TYPES } from '../../../../base/ui/constants.any';
 
 import Meter from './Meter';
 
 const JitsiTrackEvents = JitsiMeetJS.events.track;
 
-interface IProps {
+type Props = {
 
     /**
      * The text for this component.
@@ -67,69 +66,48 @@ interface IProps {
      * Click handler for component.
      */
     onClick: Function;
-}
+};
 
-const useStyles = makeStyles()(theme => {
-    return {
-        container: {
-            position: 'relative'
-        },
+type State = {
 
-        entryText: {
-            maxWidth: '238px',
+    /**
+     * The audio level.
+     */
+    level: number;
+};
 
-            '&.withMeter': {
-                maxWidth: '178px'
-            },
+/**
+ * React {@code Component} representing an entry for the microphone audio settings.
+ *
+ * @param {Props} props - The props of the component.
+ * @returns { ReactElement}
+ */
+export default class MicrophoneEntry extends Component<Props, State> {
+    /**
+     * Initializes a new {@code MicrophoneEntry} instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props: Props) {
+        super(props);
 
-            '&.left-margin': {
-                marginLeft: '36px'
-            }
-        },
-
-        icon: {
-            borderRadius: '50%',
-            display: 'inline-block',
-            width: '14px',
-            marginLeft: '6px',
-
-            '& svg': {
-                fill: theme.palette.iconError
-            }
-        },
-
-        meter: {
-            position: 'absolute',
-            right: '16px',
-            top: '14px'
-        }
-    };
-});
-
-const MicrophoneEntry = ({
-    deviceId,
-    children,
-    hasError,
-    index,
-    isSelected,
-    length,
-    jitsiTrack,
-    listHeaderId,
-    measureAudioLevels,
-    onClick: propsClick
-}: IProps) => {
-    const [ level, setLevel ] = useState(-1);
-    const activeTrackRef = useRef(jitsiTrack);
-    const { classes, cx } = useStyles();
+        this.state = {
+            level: -1
+        };
+        this._onClick = this._onClick.bind(this);
+        this._onKeyPress = this._onKeyPress.bind(this);
+        this._updateLevel = this._updateLevel.bind(this);
+    }
 
     /**
      * Click handler for the entry.
      *
      * @returns {void}
      */
-    const onClick = useCallback(() => {
-        propsClick(deviceId);
-    }, [ propsClick, deviceId ]);
+    _onClick() {
+        this.props.onClick(this.props.deviceId);
+    }
 
     /**
      * Key pressed handler for the entry.
@@ -139,12 +117,12 @@ const MicrophoneEntry = ({
      *
      * @returns {void}
      */
-    const onKeyPress = useCallback((e: React.KeyboardEvent) => {
+    _onKeyPress(e: React.KeyboardEvent) {
         if (e.key === ' ') {
             e.preventDefault();
-            propsClick(deviceId);
+            this.props.onClick(this.props.deviceId);
         }
-    }, [ propsClick, deviceId ]);
+    }
 
     /**
      * Updates the level of the meter.
@@ -152,82 +130,121 @@ const MicrophoneEntry = ({
      * @param {number} num - The audio level provided by the jitsiTrack.
      * @returns {void}
      */
-    const updateLevel = useCallback((num: number) => {
-        setLevel(Math.floor(num / 0.125));
-    }, []);
+    _updateLevel(num: number) {
+        this.setState({
+            level: Math.floor(num / 0.125)
+        });
+    }
 
     /**
      * Subscribes to audio level changes coming from the jitsiTrack.
      *
      * @returns {void}
      */
-    const startListening = () => {
+    _startListening() {
+        const { jitsiTrack, measureAudioLevels } = this.props;
+
         jitsiTrack && measureAudioLevels && jitsiTrack.on(
             JitsiTrackEvents.TRACK_AUDIO_LEVEL_CHANGED,
-            updateLevel);
-    };
+            this._updateLevel);
+    }
 
     /**
      * Unsubscribes from changes coming from the jitsiTrack.
      *
-     * @param {Object} track - The jitsiTrack to unsubscribe from.
+     * @param {Object} jitsiTrack - The jitsiTrack to unsubscribe from.
      * @returns {void}
      */
-    const stopListening = (track?: any) => {
-        track?.off(JitsiTrackEvents.TRACK_AUDIO_LEVEL_CHANGED, updateLevel);
-        setLevel(-1);
-    };
+    _stopListening(jitsiTrack?: any) {
+        jitsiTrack?.off(JitsiTrackEvents.TRACK_AUDIO_LEVEL_CHANGED, this._updateLevel);
+        this.setState({
+            level: -1
+        });
+    }
 
-    useEffect(() => {
-        startListening();
+    /**
+     * Implements React's {@link Component#componentDidUpdate}.
+     *
+     * @inheritdoc
+     */
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.jitsiTrack !== this.props.jitsiTrack) {
+            this._stopListening(prevProps.jitsiTrack);
+            this._startListening();
+        }
+    }
 
-        return () => {
-            stopListening(jitsiTrack);
-        };
-    }, []);
+    /**
+     * Implements React's {@link Component#componentDidMount}.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        this._startListening();
+    }
 
-    useEffect(() => {
-        stopListening(activeTrackRef.current);
-        startListening();
-        activeTrackRef.current = jitsiTrack;
-    }, [ jitsiTrack ]);
+    /**
+     * Implements React's {@link Component#componentWillUnmount}.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        this._stopListening(this.props.jitsiTrack);
+    }
 
-    const deviceTextId = `choose_microphone${deviceId}`;
+    /**
+     * Implements React's {@link Component#render}.
+     *
+     * @inheritdoc
+     */
+    render() {
+        const {
+            deviceId,
+            children,
+            hasError,
+            index,
+            isSelected,
+            length,
+            jitsiTrack,
+            listHeaderId,
+            measureAudioLevels
+        } = this.props;
 
-    const labelledby = `${listHeaderId} ${deviceTextId} `;
+        const deviceTextId = `choose_microphone${deviceId}`;
 
-    return (
-        <li
-            aria-checked = { isSelected }
-            aria-labelledby = { labelledby }
-            aria-posinset = { index }
-            aria-setsize = { length }
-            className = { classes.container }
-            onClick = { onClick }
-            onKeyPress = { onKeyPress }
-            role = 'radio'
-            tabIndex = { 0 }>
-            <ContextMenuItem
-                accessibilityLabel = ''
-                icon = { isSelected ? IconCheck : undefined }
-                overflowType = { TEXT_OVERFLOW_TYPES.SCROLL_ON_HOVER }
-                selected = { isSelected }
-                text = { children }
-                textClassName = { cx(classes.entryText,
-                    measureAudioLevels && 'withMeter',
-                    !isSelected && 'left-margin') }>
-                {hasError && <Icon
-                    className = { classes.icon }
-                    size = { 16 }
-                    src = { IconExclamationSolid } />}
-            </ContextMenuItem>
-            {Boolean(jitsiTrack) && measureAudioLevels && <Meter
-                className = { classes.meter }
-                isDisabled = { hasError }
-                level = { level } />
-            }
-        </li>
-    );
-};
+        const labelledby = `${listHeaderId} ${deviceTextId} `;
 
-export default MicrophoneEntry;
+        const className = `audio-preview-microphone ${measureAudioLevels
+            ? 'audio-preview-microphone--withmeter' : 'audio-preview-microphone--nometer'}`;
+
+        return (
+            <li
+                aria-checked = { isSelected }
+                aria-labelledby = { labelledby }
+                aria-posinset = { index }
+                aria-setsize = { length }
+                className = { className }
+                onClick = { this._onClick }
+                onKeyPress = { this._onKeyPress }
+                role = 'radio'
+                tabIndex = { 0 }>
+                <ContextMenuItem
+                    accessibilityLabel = ''
+                    icon = { isSelected ? IconCheck : undefined }
+                    selected = { isSelected }
+                    text = { children }
+                    textClassName = { clsx('audio-preview-entry-text', !isSelected && 'left-margin') }>
+                    {hasError && <Icon
+                        className = 'audio-preview-icon audio-preview-icon--exclamation'
+                        size = { 16 }
+                        src = { IconExclamationSolid } />}
+                </ContextMenuItem>
+                { Boolean(jitsiTrack) && measureAudioLevels && <Meter
+                    className = 'audio-preview-meter-mic'
+                    isDisabled = { hasError }
+                    level = { this.state.level } />
+                }
+            </li>
+        );
+    }
+}

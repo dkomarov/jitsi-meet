@@ -1,38 +1,20 @@
-import { IStore } from '../app/types';
-import { SET_CONFIG } from '../base/config/actionTypes';
 import MiddlewareRegistry from '../base/redux/MiddlewareRegistry';
-import { CAPTURE_EVENTS } from '../remote-control/actionTypes';
 
-import { disableKeyboardShortcuts, enableKeyboardShortcuts } from './actions';
+import { OPEN_KEYBOARD_SHORTCUTS_DIALOG } from './actionTypes';
 
-MiddlewareRegistry.register((store: IStore) => (next: Function) => (action: any) => {
-    const { dispatch } = store;
-
+/**
+ * Implements the middleware of the feature keyboard-shortcuts.
+ *
+ * @param {Store} store - The redux store.
+ * @returns {Function}
+ */
+MiddlewareRegistry.register(_store => next => action => {
     switch (action.type) {
-    case CAPTURE_EVENTS:
-        if (action.isCapturingEvents) {
-            dispatch(disableKeyboardShortcuts());
-        } else {
-            dispatch(enableKeyboardShortcuts());
+    case OPEN_KEYBOARD_SHORTCUTS_DIALOG:
+        if (typeof APP === 'object') {
+            APP.keyboardshortcut.openDialog();
         }
-
-        return next(action);
-    case SET_CONFIG: {
-        const result = next(action);
-
-        const state = store.getState();
-        const { disableShortcuts } = state['features/base/config'];
-
-        if (disableShortcuts !== undefined) {
-            if (disableShortcuts) {
-                dispatch(disableKeyboardShortcuts());
-            } else {
-                dispatch(enableKeyboardShortcuts());
-            }
-        }
-
-        return result;
-    }
+        break;
     }
 
     return next(action);

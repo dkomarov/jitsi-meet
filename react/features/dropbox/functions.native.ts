@@ -28,11 +28,9 @@ export async function _authorizeDropbox(_appKey?: any, _redirectURI?: any): Prom
 /**
  * Gets a new access token based on the refresh token.
  *
- * @param {string} _appKey - The dropbox appKey.
- * @param {string} _rToken - The refresh token.
  * @returns {Promise}
  */
-export function getNewAccessToken(_appKey: string, _rToken: string) {
+export function getNewAccessToken() {
     return _authorizeDropbox();
 }
 

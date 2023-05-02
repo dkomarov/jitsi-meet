@@ -83,7 +83,7 @@ interface IProps {
     /**
      * Target elements against which positioning calculations are made.
      */
-    offsetTarget?: HTMLElement | null;
+    offsetTarget?: HTMLElement;
 
     /**
      * Callback for click on an item in the menu.
@@ -132,7 +132,7 @@ const useStyles = makeStyles()(theme => {
             boxShadow: '0px 1px 2px rgba(41, 41, 41, 0.25)',
             color: theme.palette.text01,
             ...withPixelLineHeight(theme.typography.bodyShortRegular),
-            marginTop: '48px',
+            marginTop: `${(participantsPaneTheme.panePadding * 2) + theme.typography.bodyShortRegular.fontSize}px`,
             position: 'absolute',
             right: `${participantsPaneTheme.panePadding}px`,
             top: 0,
@@ -197,7 +197,8 @@ const ContextMenu = ({
             const { current: container } = containerRef;
 
             // make sure the max height is not set
-            container.style.maxHeight = 'none';
+            // @ts-ignore
+            container.style.maxHeight = null;
             const { offsetTop, offsetParent: { offsetHeight, scrollTop } } = offsetTarget;
             let outerHeight = getComputedOuterHeight(container);
             let height = Math.min(MAX_HEIGHT, outerHeight);
@@ -250,7 +251,8 @@ const ContextMenu = ({
         : <div
             { ...aria }
             aria-label = { accessibilityLabel }
-            className = { cx(styles.contextMenu,
+            className = { cx(participantsPaneTheme.ignoredChildClassName,
+                styles.contextMenu,
                 isHidden && styles.contextMenuHidden,
                 className
             ) }
@@ -260,7 +262,7 @@ const ContextMenu = ({
             onMouseEnter = { onMouseEnter }
             onMouseLeave = { onMouseLeave }
             ref = { containerRef }
-            role = { role }
+            role = { role ?? 'menu' }
             tabIndex = { tabIndex }>
             {children}
         </div>;

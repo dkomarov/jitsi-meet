@@ -1,7 +1,7 @@
 import { IStore } from '../app/types';
 import { toggleDialog } from '../base/dialog/actions';
 
-import LanguageSelectorDialog from './components/web/LanguageSelectorDialog';
+import LanguageSelectorDialogWeb from './components/LanguageSelectorDialog.web';
 
 export * from './actions.any';
 
@@ -14,6 +14,6 @@ export * from './actions.any';
  */
 export function toggleLanguageSelectorDialog() {
     return function(dispatch: IStore['dispatch']) {
-        dispatch(toggleDialog(LanguageSelectorDialog));
+        dispatch(toggleDialog(LanguageSelectorDialogWeb));
     };
 }

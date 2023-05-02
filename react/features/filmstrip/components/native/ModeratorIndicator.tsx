@@ -1,9 +1,11 @@
+/* eslint-disable lines-around-comment */
+
 import React from 'react';
 
-import { IconModerator } from '../../../base/icons/svg';
-// eslint-disable-next-line lines-around-comment
 // @ts-ignore
-import BaseIndicator from '../../../base/react/components/native/BaseIndicator';
+import { IconModerator } from '../../../base/icons';
+// @ts-ignore
+import { BaseIndicator } from '../../../base/react';
 
 /**
  * Thumbnail badge showing that the participant is a conference moderator.

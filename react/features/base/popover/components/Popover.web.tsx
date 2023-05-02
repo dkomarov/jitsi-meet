@@ -1,22 +1,17 @@
 import React, { Component, ReactNode } from 'react';
-import ReactFocusLock from 'react-focus-lock';
-import { connect } from 'react-redux';
 
 import { IReduxState } from '../../../app/types';
 import DialogPortal from '../../../toolbox/components/web/DialogPortal';
 import Drawer from '../../../toolbox/components/web/Drawer';
 import JitsiPortal from '../../../toolbox/components/web/JitsiPortal';
+import { isMobileBrowser } from '../../environment/utils';
+import { connect } from '../../redux/functions';
 import { getContextMenuStyle } from '../functions.web';
 
 /**
  * The type of the React {@code Component} props of {@link Popover}.
  */
 interface IProps {
-
-    /**
-     * Whether the child element can be clicked on.
-     */
-    allowClick?: boolean;
 
     /**
      * A child React Element to use as the trigger for showing the dialog.
@@ -38,18 +33,6 @@ interface IProps {
      * Whether displaying of the popover should be prevented.
      */
     disablePopover?: boolean;
-
-    /**
-     * The id of the dom element acting as the Popover label (matches aria-labelledby).
-     */
-    headingId?: string;
-
-    /**
-     * String acting as the Popover label (matches aria-label).
-     *
-     * If headingId is set, this will not be used.
-     */
-    headingLabel?: string;
 
     /**
      * An id attribute to apply to the root of the {@code Popover}
@@ -190,8 +173,8 @@ class Popover extends Component<IProps, IState> {
      * @param {MouseEvent} e - The click event.
      * @returns {void}
      */
-    _onOutsideClick(e: React.MouseEvent) {
-        if (!this._containerRef?.current?.contains(e.target as Node) && this.props.visible) {
+    _onOutsideClick(e: React.MouseEvent) { // @ts-ignore
+        if (!this._containerRef?.current?.contains(e.target) && this.props.visible) {
             this._onHideDialog();
         }
     }
@@ -203,16 +186,7 @@ class Popover extends Component<IProps, IState> {
      * @returns {ReactElement}
      */
     render() {
-        const { children,
-            className,
-            content,
-            headingId,
-            headingLabel,
-            id,
-            overflowDrawer,
-            visible,
-            trigger
-        } = this.props;
+        const { children, className, content, id, overflowDrawer, visible, trigger } = this.props;
 
         if (overflowDrawer) {
             return (
@@ -223,7 +197,6 @@ class Popover extends Component<IProps, IState> {
                     { children }
                     <JitsiPortal>
                         <Drawer
-                            headingId = { headingId }
                             isOpen = { visible }
                             onClose = { this._onHideDialog }>
                             { content }
@@ -241,26 +214,15 @@ class Popover extends Component<IProps, IState> {
                 onKeyPress = { this._onKeyPress }
                 { ...(trigger === 'hover' ? {
                     onMouseEnter: this._onShowDialog,
-                    onMouseLeave: this._onHideDialog,
-                    tabIndex: 0
+                    onMouseLeave: this._onHideDialog
                 } : {}) }
                 ref = { this._containerRef }>
                 { visible && (
                     <DialogPortal
                         getRef = { this._setContextMenuRef }
                         setSize = { this._setContextMenuStyle }
-                        style = { this.state.contextMenuStyle }
-                        targetSelector = '.popover-content'>
-                        <ReactFocusLock
-                            lockProps = {{
-                                role: 'dialog',
-                                'aria-modal': true,
-                                'aria-labelledby': headingId,
-                                'aria-label': !headingId && headingLabel ? headingLabel : undefined
-                            }}
-                            returnFocus = { true }>
-                            {this._renderContent()}
-                        </ReactFocusLock>
+                        style = { this.state.contextMenuStyle }>
+                        {this._renderContent()}
                     </DialogPortal>
                 )}
                 { children }
@@ -303,8 +265,8 @@ class Popover extends Component<IProps, IState> {
         if (this.props.visible
             && !this.props.overflowDrawer
             && this._contextMenuRef
-            && this._contextMenuRef.contains
-            && !this._contextMenuRef.contains(event.target as Node)) {
+            && this._contextMenuRef.contains // @ts-ignore
+            && !this._contextMenuRef.contains(event.target)) {
             this._onHideDialog();
         }
     }
@@ -350,11 +312,9 @@ class Popover extends Component<IProps, IState> {
      * @returns {void}
      */
     _onClick(event: React.MouseEvent) {
-        const { allowClick, trigger, visible } = this.props;
+        const { trigger, visible } = this.props;
 
-        if (!allowClick) {
-            event.stopPropagation();
-        }
+        event.stopPropagation();
         if (trigger === 'click') {
             if (visible) {
                 this._onHideDialog();
@@ -424,15 +384,20 @@ class Popover extends Component<IProps, IState> {
      * @returns {ReactElement}
      */
     _renderContent() {
-        const { content, position, trigger } = this.props;
+        const { content } = this.props;
 
         return (
             <div
-                className = { `popover ${trigger}` }
+                className = 'popover'
                 onKeyDown = { this._onEscKey }>
-                <div className = { `popover-content ${position.split('-')[0]}` }>
-                    { content }
-                </div>
+                { content }
+                {!isMobileBrowser() && (
+                    <>
+                        <div className = 'popover-mousemove-padding-top' />
+                        <div className = 'popover-mousemove-padding-right' />
+                        <div className = 'popover-mousemove-padding-left' />
+                        <div className = 'popover-mousemove-padding-bottom' />
+                    </>)}
             </div>
         );
     }

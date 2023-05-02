@@ -1,4 +1,5 @@
-import { AudioElement } from '../media/components/AbstractAudio';
+// @ts-ignore
+import type { AudioElement } from '../media';
 import ReducerRegistry from '../redux/ReducerRegistry';
 import { assign } from '../redux/functions';
 
@@ -24,9 +25,7 @@ export type Sound = {
     /**
      * This field is container for all optional parameters related to the sound.
      */
-    options?: {
-        loop: boolean;
-    };
+    options?: Object;
 
     /**
      * This field describes the source of the audio resource to be played. It

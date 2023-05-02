@@ -112,26 +112,15 @@ export interface IDeeplinkingMobileConfig extends IDeeplinkingPlatformConfig {
 export interface IDeeplinkingConfig {
     android?: IDeeplinkingMobileConfig;
     desktop?: IDeeplinkingPlatformConfig;
-    disabled?: boolean;
-    hideLogo?: boolean;
+    disabled: boolean;
+    hideLogo: boolean;
     ios?: IDeeplinkingMobileConfig;
-}
-
-export interface INoiseSuppressionConfig {
-    krisp?: {
-        debugLogs?: boolean;
-        enabled?: boolean;
-        logProcessStats?: boolean;
-    };
 }
 
 export interface IConfig {
     _desktopSharingSourceDevice?: string;
-    _immediateReloadThreshold?: string;
-    _screenshotHistoryRegionUrl?: number;
     analytics?: {
         amplitudeAPPKey?: string;
-        blackListedEvents?: string[];
         disabled?: boolean;
         googleAnalyticsTrackingId?: string;
         matomoEndpoint?: string;
@@ -143,7 +132,6 @@ export interface IConfig {
         rtcstatsSendSdp?: boolean;
         rtcstatsUseLegacy?: boolean;
         scriptURLs?: Array<string>;
-        whiteListedEvents?: string[];
     };
     apiLogLevels?: Array<'warn' | 'log' | 'error' | 'info' | 'debug'>;
     appId?: string;
@@ -226,9 +214,6 @@ export interface IConfig {
     defaultLogoUrl?: string;
     defaultRemoteDisplayName?: string;
     deploymentInfo?: {
-        envType?: string;
-        environment?: string;
-        product?: string;
         region?: string;
         shard?: string;
         userRegion?: string;
@@ -243,8 +228,6 @@ export interface IConfig {
     };
     dialInConfCodeUrl?: string;
     dialInNumbersUrl?: string;
-    dialOutAuthUrl?: string;
-    dialOutRegionUrl?: string;
     disable1On1Mode?: boolean | null;
     disableAddingBackgroundImages?: boolean;
     disableAudioLevels?: boolean;
@@ -253,7 +236,6 @@ export interface IConfig {
     disableDeepLinking?: boolean;
     disableFilmstripAutohiding?: boolean;
     disableFocus?: boolean;
-    disableIframeAPI?: boolean;
     disableIncomingMessageSound?: boolean;
     disableInitialGUM?: boolean;
     disableInviteFunctions?: boolean;
@@ -324,6 +306,7 @@ export interface IConfig {
     enableForcedReload?: boolean;
     enableIceRestart?: boolean;
     enableInsecureRoomNameWarning?: boolean;
+    enableLayerSuspension?: boolean;
     enableLipSync?: boolean;
     enableLobbyChat?: boolean;
     enableNoAudioDetection?: boolean;
@@ -332,7 +315,7 @@ export interface IConfig {
     enableRemb?: boolean;
     enableSaveLogs?: boolean;
     enableTcc?: boolean;
-    enableWebHIDFeature?: boolean;
+    enableUnifiedOnChrome?: boolean;
     enableWelcomePage?: boolean;
     etherpad_base?: string;
     faceLandmarks?: {
@@ -402,6 +385,9 @@ export interface IConfig {
     jaasActuatorUrl?: string;
     jaasFeedbackMetadataURL?: string;
     jaasTokenUrl?: string;
+    lastNLimits?: {
+        [key: number]: number;
+    };
     legalUrls?: {
         helpCentre: string;
         privacy: string;
@@ -430,7 +416,6 @@ export interface IConfig {
     microsoftApiApplicationClientID?: string;
     moderatedRoomServiceUrl?: string;
     mouseMoveCallbackInterval?: number;
-    noiseSuppression?: INoiseSuppressionConfig;
     noticeMessage?: string;
     notificationTimeouts?: {
         long?: number;
@@ -443,6 +428,7 @@ export interface IConfig {
     p2p?: {
         backToP2PDelay?: number;
         disabledCodec?: string;
+        enableUnifiedOnChrome?: boolean;
         enabled?: boolean;
         iceTransportPolicy?: string;
         preferredCodec?: string;
@@ -454,7 +440,6 @@ export interface IConfig {
         hideMuteAllButton?: boolean;
     };
     pcStatsInterval?: number;
-    peopleSearchQueryTypes?: string[];
     peopleSearchUrl?: string;
     preferredTranscribeLanguage?: string;
     prejoinConfig?: {

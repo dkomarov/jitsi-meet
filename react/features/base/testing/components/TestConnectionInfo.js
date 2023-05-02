@@ -1,11 +1,13 @@
+// @flow
+
 import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
 
 import statsEmitter from '../../../connection-indicator/statsEmitter';
-import { getLocalParticipant } from '../../participants/functions';
+import { getLocalParticipant } from '../../participants';
+import { connect } from '../../redux';
 import { isTestModeEnabled } from '../functions';
 
-import TestHint from './TestHint';
+import { TestHint } from './index';
 
 /**
  * Defines the TestConnectionInfo's properties.

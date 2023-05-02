@@ -105,11 +105,3 @@ export interface ISwitchProps {
      */
     onChange: (on?: boolean) => void;
 }
-
-export type MultiSelectItem = {
-    content: string;
-    description?: string;
-    elemBefore?: Element;
-    isDisabled?: boolean;
-    value: string;
-};

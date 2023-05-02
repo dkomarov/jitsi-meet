@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { WithTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 import { FixedSizeGrid, FixedSizeList } from 'react-window';
 
 import { ACTION_SHORTCUT_TRIGGERED, createShortcutEvent, createToolbarEvent } from '../../../analytics/AnalyticsEvents';
@@ -14,8 +13,9 @@ import { isMobileBrowser } from '../../../base/environment/utils';
 import { translate } from '../../../base/i18n/functions';
 import Icon from '../../../base/icons/components/Icon';
 import { IconArrowDown, IconArrowUp } from '../../../base/icons/svg';
+import { IParticipant } from '../../../base/participants/types';
+import { connect } from '../../../base/redux/functions';
 import { getHideSelfView } from '../../../base/settings/functions.any';
-import { registerShortcut, unregisterShortcut } from '../../../keyboard-shortcuts/actions';
 import { showToolbox } from '../../../toolbox/actions.web';
 import { isButtonEnabled, isToolboxVisible } from '../../../toolbox/functions.web';
 import { LAYOUTS } from '../../../video-layout/constants';
@@ -44,6 +44,7 @@ import {
     shouldRemoteVideosBeVisible
 } from '../../functions';
 
+// @ts-ignore
 import AudioTracksContainer from './AudioTracksContainer';
 import Thumbnail from './Thumbnail';
 import ThumbnailWrapper from './ThumbnailWrapper';
@@ -67,7 +68,7 @@ interface IProps extends WithTranslation {
     /**
      * The current layout of the filmstrip.
      */
-    _currentLayout?: string;
+    _currentLayout: string;
 
     /**
      * Whether or not to hide the self view.
@@ -112,7 +113,7 @@ interface IProps extends WithTranslation {
     /**
      * The local screen share participant. This prop is behind the sourceNameSignaling feature flag.
      */
-    _localScreenShareId: string | undefined;
+    _localScreenShare: IParticipant;
 
     /**
      * Whether or not the filmstrip videos should currently be displayed.
@@ -132,7 +133,7 @@ interface IProps extends WithTranslation {
     /**
      * The participants in the call.
      */
-    _remoteParticipants: Array<string>;
+    _remoteParticipants: Array<Object>;
 
     /**
      * The length of the remote participants array.
@@ -167,7 +168,7 @@ interface IProps extends WithTranslation {
     /**
      * The height of the top panel (user resized).
      */
-    _topPanelHeight?: number | null;
+    _topPanelHeight?: number;
 
     /**
      * The max height of the top panel.
@@ -182,7 +183,7 @@ interface IProps extends WithTranslation {
     /**
      * The width of the vertical filmstrip (user resized).
      */
-    _verticalFilmstripWidth?: number | null;
+    _verticalFilmstripWidth?: number;
 
     /**
      * Whether or not the vertical filmstrip should have a background color.
@@ -296,12 +297,12 @@ class Filmstrip extends PureComponent <IProps, IState> {
      * @inheritdoc
      */
     componentDidMount() {
-        this.props.dispatch(registerShortcut({
-            character: 'F',
-            helpDescription: 'keyboardShortcuts.toggleFilmstrip',
-            handler: this._onShortcutToggleFilmstrip
-        }));
-
+        APP.keyboardshortcut.registerShortcut(
+            'F',
+            'filmstripPopover',
+            this._onShortcutToggleFilmstrip,
+            'keyboardShortcuts.toggleFilmstrip'
+        );
         document.addEventListener('mouseup', this._onDragMouseUp);
 
         // @ts-ignore
@@ -314,8 +315,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
      * @inheritdoc
      */
     componentWillUnmount() {
-        this.props.dispatch(unregisterShortcut('F'));
-
+        APP.keyboardshortcut.unregisterShortcut('F');
         document.removeEventListener('mouseup', this._onDragMouseUp);
 
         // @ts-ignore
@@ -333,7 +333,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
         const {
             _currentLayout,
             _disableSelfView,
-            _localScreenShareId,
+            _localScreenShare,
             _mainFilmstripVisible,
             _resizableFilmstrip,
             _topPanelFilmstrip,
@@ -343,8 +343,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
             _verticalViewGrid,
             _verticalViewMaxWidth,
             classes,
-            filmstripType,
-            t
+            filmstripType
         } = this.props;
         const { isMouseDown } = this.state;
         const tileViewActive = _currentLayout === LAYOUTS.TILE_VIEW;
@@ -408,7 +407,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
                         }
                     </div>
                 )}
-                {_localScreenShareId && !_disableSelfView && !_verticalViewGrid && (
+                {_localScreenShare && !_disableSelfView && !_verticalViewGrid && (
                     <div
                         className = 'filmstrip__videos'
                         id = 'filmstripLocalScreenShare'>
@@ -416,7 +415,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
                             {
                                 !tileViewActive && filmstripType === FILMSTRIP_TYPE.MAIN && <Thumbnail
                                     key = 'localScreenShare'
-                                    participantID = { _localScreenShareId } />
+                                    participantID = { _localScreenShare.id } />
                             }
                         </div>
                     </div>
@@ -435,12 +434,6 @@ class Filmstrip extends PureComponent <IProps, IState> {
                     _verticalViewGrid && 'no-vertical-padding',
                     _verticalViewBackground && classes.filmstripBackground) }
                 style = { filmstripStyle }>
-                <span
-                    aria-level = { 1 }
-                    className = 'sr-only'
-                    role = 'heading'>
-                    { t('filmstrip.accessibilityLabel.heading') }
-                </span>
                 { toolbar }
                 {_resizableFilmstrip
                     ? <div
@@ -598,7 +591,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
      * @param {Object} data - An object with the indexes identifying the ThumbnailWrapper instance.
      * @returns {string} - The key.
      */
-    _gridItemKey({ columnIndex, rowIndex }: { columnIndex: number; rowIndex: number; }): string {
+    _gridItemKey({ columnIndex, rowIndex }: { columnIndex: number; rowIndex: number; }) {
         const {
             _disableSelfView,
             _columns,
@@ -700,6 +693,8 @@ class Filmstrip extends PureComponent <IProps, IState> {
                     initialScrollLeft = { 0 }
                     initialScrollTop = { 0 }
                     itemData = {{ filmstripType }}
+
+                    // @ts-ignore
                     itemKey = { this._gridItemKey }
                     onItemsRendered = { this._onGridItemsRendered }
                     overscanRowCount = { 1 }
@@ -874,7 +869,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
  * @private
  * @returns {IProps}
  */
-function _mapStateToProps(state: IReduxState, ownProps: any) {
+function _mapStateToProps(state: IReduxState, ownProps: Partial<IProps>) {
     const { _hasScroll = false, filmstripType, _topPanelFilmstrip, _remoteParticipants } = ownProps;
     const toolbarButtons = getToolbarButtons(state);
     const { iAmRecorder } = state['features/base/config'];
@@ -917,11 +912,11 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         _isFilmstripButtonEnabled: isButtonEnabled('filmstrip', state),
         _isToolboxVisible: isToolboxVisible(state),
         _isVerticalFilmstrip,
-        _localScreenShareId: localScreenShare?.id,
+        _localScreenShare: localScreenShare,
         _mainFilmstripVisible: visible,
         _maxFilmstripWidth: clientWidth - MIN_STAGE_VIEW_WIDTH,
         _maxTopPanelHeight: clientHeight - MIN_STAGE_VIEW_HEIGHT,
-        _remoteParticipantsLength: _remoteParticipants?.length ?? 0,
+        _remoteParticipantsLength: _remoteParticipants?.length,
         _topPanelHeight: topPanelHeight.current,
         _topPanelMaxHeight: topPanelHeight.current || TOP_FILMSTRIP_HEIGHT,
         _topPanelVisible,

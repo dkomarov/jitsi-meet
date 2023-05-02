@@ -3,7 +3,7 @@
 import React, { PureComponent } from 'react';
 import { Text } from 'react-native';
 
-import { translate } from '../../../base/i18n/functions';
+import { translate } from '../../../base/i18n';
 import { createLocalizedTime } from '../timeFunctions';
 
 /**

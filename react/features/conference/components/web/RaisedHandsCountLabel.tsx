@@ -6,7 +6,9 @@ import { makeStyles } from 'tss-react/mui';
 import { IReduxState } from '../../../app/types';
 import { IconRaiseHand } from '../../../base/icons/svg';
 import Label from '../../../base/label/components/web/Label';
-import Tooltip from '../../../base/tooltip/components/Tooltip';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import { Tooltip } from '../../../base/tooltip';
 import { open as openParticipantsPane } from '../../../participants-pane/actions.web';
 
 const useStyles = makeStyles()(theme => {
@@ -28,7 +30,7 @@ const RaisedHandsCountLabel = () => {
         dispatch(openParticipantsPane());
     }, []);
 
-    return raisedHandsCount > 0 ? (<Tooltip
+    return raisedHandsCount > 0 && (<Tooltip
         content = { t('raisedHandsLabel') }
         position = { 'bottom' }>
         <Label
@@ -38,7 +40,7 @@ const RaisedHandsCountLabel = () => {
             id = 'raisedHandsCountLabel'
             onClick = { onClick }
             text = { `${raisedHandsCount}` } />
-    </Tooltip>) : null;
+    </Tooltip>);
 };
 
 export default RaisedHandsCountLabel;

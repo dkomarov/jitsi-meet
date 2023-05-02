@@ -1,5 +1,6 @@
 import { IStateful } from '../base/app/types';
 import { toState } from '../base/redux/functions';
+import { areThereNotifications } from '../notifications/functions';
 
 
 /**
@@ -13,5 +14,5 @@ export function shouldDisplayNotifications(stateful: IStateful) {
     const state = toState(stateful);
     const { calleeInfoVisible } = state['features/invite'];
 
-    return !calleeInfoVisible;
+    return areThereNotifications(state) && !calleeInfoVisible;
 }

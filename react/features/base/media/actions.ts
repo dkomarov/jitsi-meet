@@ -157,7 +157,7 @@ export function setVideoAvailable(available: boolean) {
  * @returns {Function}
  */
 export function setVideoMuted(
-        muted: boolean | number,
+        muted: boolean,
         authority: number = VIDEO_MUTISM_AUTHORITY.USER,
         ensureTrack = false) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {

@@ -184,7 +184,6 @@ interface IDimensions {
 }
 
 interface IFilmstripDimensions {
-    columns?: number;
     filmstripHeight?: number;
     filmstripWidth?: number;
     gridDimensions?: {

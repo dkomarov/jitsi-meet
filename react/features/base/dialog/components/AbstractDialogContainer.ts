@@ -11,12 +11,12 @@ interface IProps {
     /**
      * The component to render.
      */
-    _component?: ComponentType<any>;
+    _component: ComponentType;
 
     /**
      * The props to pass to the component that will be rendered.
      */
-    _componentProps?: Object;
+    _componentProps: Object;
 
     /**
      * Array of reactions to be displayed.

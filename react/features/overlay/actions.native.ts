@@ -1,5 +1,7 @@
-import { openDialog } from '../base/dialog/actions';
-import PageReloadDialog from '../base/dialog/components/native/PageReloadDialog';
+/* eslint-disable max-len */
+
+// @ts-ignore
+import { PageReloadDialog, openDialog } from '../base/dialog';
 
 
 /**

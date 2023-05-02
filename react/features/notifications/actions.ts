@@ -116,18 +116,12 @@ export function showNotification(props: INotificationProps = {}, type?: string) 
         const { disabledNotifications = [], notifications, notificationTimeouts } = getState()['features/base/config'];
         const enabledFlag = getFeatureFlag(getState(), NOTIFICATIONS_ENABLED, true);
 
-        const { descriptionKey, titleKey } = props;
-
         const shouldDisplay = enabledFlag
-            && !(disabledNotifications.includes(descriptionKey ?? '')
-                || disabledNotifications.includes(titleKey ?? ''))
+            && !(disabledNotifications.includes(props.descriptionKey ?? '')
+                || disabledNotifications.includes(props.titleKey ?? ''))
             && (!notifications
-                || notifications.includes(descriptionKey ?? '')
-                || notifications.includes(titleKey ?? ''));
-
-        if (typeof APP !== 'undefined') {
-            APP.API.notifyNotificationTriggered(titleKey, descriptionKey);
-        }
+                || notifications.includes(props.descriptionKey ?? '')
+                || notifications.includes(props.titleKey ?? ''));
 
         if (shouldDisplay) {
             return dispatch({

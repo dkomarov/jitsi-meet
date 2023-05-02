@@ -2,24 +2,22 @@
 
 import React, { PureComponent } from 'react';
 import { Divider } from 'react-native-paper';
-import { connect } from 'react-redux';
 
-import { hideSheet } from '../../../base/dialog/actions';
-import BottomSheet from '../../../base/dialog/components/native/BottomSheet';
+import { BottomSheet, hideSheet } from '../../../base/dialog';
 import { bottomSheetStyles } from '../../../base/dialog/components/native/styles';
+import { connect } from '../../../base/redux';
 import SettingsButton from '../../../base/settings/components/native/SettingsButton';
-import SharedDocumentButton from '../../../etherpad/components/SharedDocumentButton.native';
-import ReactionMenu from '../../../reactions/components/native/ReactionMenu';
+import { SharedDocumentButton } from '../../../etherpad';
+import { ReactionMenu } from '../../../reactions/components';
 import { isReactionsEnabled } from '../../../reactions/functions.any';
-import LiveStreamButton from '../../../recording/components/LiveStream/native/LiveStreamButton';
-import RecordButton from '../../../recording/components/Recording/native/RecordButton';
+import { LiveStreamButton, RecordButton } from '../../../recording';
 import SecurityDialogButton
     from '../../../security/components/security-dialog/native/SecurityDialogButton';
-import SharedVideoButton from '../../../shared-video/components/native/SharedVideoButton';
+import { SharedVideoButton } from '../../../shared-video/components';
 import SpeakerStatsButton from '../../../speaker-stats/components/native/SpeakerStatsButton';
 import { isSpeakerStatsDisabled } from '../../../speaker-stats/functions';
-import ClosedCaptionButton from '../../../subtitles/components/native/ClosedCaptionButton';
-import TileViewButton from '../../../video-layout/components/TileViewButton';
+import { ClosedCaptionButton } from '../../../subtitles';
+import { TileViewButton } from '../../../video-layout';
 import styles from '../../../video-menu/components/native/styles';
 import { getMovableButtons } from '../../functions.native';
 

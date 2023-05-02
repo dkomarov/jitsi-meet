@@ -6,11 +6,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { browser } from '../../../react/features/base/lib-jitsi-meet';
-import { FILMSTRIP_BREAKPOINT } from '../../../react/features/filmstrip/constants';
+import { isTestModeEnabled } from '../../../react/features/base/testing';
+import { FILMSTRIP_BREAKPOINT } from '../../../react/features/filmstrip';
+import { LargeVideoBackground, ORIENTATION, updateLastLargeVideoMediaEvent } from '../../../react/features/large-video';
 import { setLargeVideoDimensions } from '../../../react/features/large-video/actions.any';
-import { LargeVideoBackground, ORIENTATION } from '../../../react/features/large-video/components/LargeVideoBackground';
-import { LAYOUTS } from '../../../react/features/video-layout/constants';
-import { getCurrentLayout } from '../../../react/features/video-layout/functions.any';
+import { LAYOUTS, getCurrentLayout } from '../../../react/features/video-layout';
 /* eslint-enable no-unused-vars */
 import UIUtil from '../util/UIUtil';
 
@@ -20,8 +20,16 @@ import LargeContainer from './LargeContainer';
 // FIXME should be 'video'
 export const VIDEO_CONTAINER_TYPE = 'camera';
 
-// Corresponds to animation duration from the animatedFadeIn and animatedFadeOut CSS classes.
 const FADE_DURATION_MS = 300;
+
+/**
+ * List of container events that we are going to process, will be added as listener to the
+ * container for every event in the list. The latest event will be stored in redux.
+ */
+const containerEvents = [
+    'abort', 'canplay', 'canplaythrough', 'emptied', 'ended', 'error', 'loadeddata', 'loadedmetadata', 'loadstart',
+    'pause', 'play', 'playing', 'ratechange', 'stalled', 'suspend', 'waiting'
+];
 
 /**
  * Returns an array of the video dimensions, so that it keeps it's aspect
@@ -177,8 +185,8 @@ export class VideoContainer extends LargeContainer {
     /**
      *
      */
-    get video() {
-        return document.getElementById('largeVideo');
+    get $video() {
+        return $('#largeVideo');
     }
 
     /**
@@ -225,20 +233,26 @@ export class VideoContainer extends LargeContainer {
          * @type {boolean}
          */
         this.avatarDisplayed = false;
-        this.avatar = document.getElementById('dominantSpeaker');
+        this.$avatar = $('#dominantSpeaker');
 
         /**
-         * The HTMLElements of the remote connection message.
-         * @type {HTMLElement}
+         * A jQuery selector of the remote connection message.
+         * @type {jQuery|HTMLElement}
          */
-        this.remoteConnectionMessage = document.getElementById('remoteConnectionMessage');
-        this.remotePresenceMessage = document.getElementById('remotePresenceMessage');
+        this.$remoteConnectionMessage = $('#remoteConnectionMessage');
+
+        this.$remotePresenceMessage = $('#remotePresenceMessage');
 
         this.$wrapper = $('#largeVideoWrapper');
 
-        this.wrapperParent = document.getElementById('largeVideoElementsContainer');
-        this.avatarHeight = document.getElementById('dominantSpeakerAvatarContainer').getBoundingClientRect().height;
-        this.video.onplaying = function(event) {
+        /**
+         * FIXME: currently using parent() because I can't come up with name
+         * for id. We'll need to probably refactor the HTML related to the large
+         * video anyway.
+         */
+        this.$wrapperParent = this.$wrapper.parent();
+        this.avatarHeight = $('#dominantSpeakerAvatarContainer').height();
+        this.$video[0].onplaying = function(event) {
             if (typeof resizeContainer === 'function') {
                 resizeContainer(event);
             }
@@ -251,7 +265,15 @@ export class VideoContainer extends LargeContainer {
          */
         this._resizeListeners = new Set();
 
-        this.video.onresize = this._onResize.bind(this);
+        this.$video[0].onresize = this._onResize.bind(this);
+
+        if (isTestModeEnabled(APP.store.getState())) {
+            const cb = name => APP.store.dispatch(updateLastLargeVideoMediaEvent(name));
+
+            containerEvents.forEach(event => {
+                this.$video[0].addEventListener(event, cb.bind(this, event));
+            });
+        }
     }
 
     /**
@@ -279,7 +301,7 @@ export class VideoContainer extends LargeContainer {
      * @returns {{width, height}}
      */
     getStreamSize() {
-        const video = this.video;
+        const video = this.$video[0];
 
 
         return {
@@ -354,8 +376,8 @@ export class VideoContainer extends LargeContainer {
      * @returns {void}
      */
     positionRemoteStatusMessages() {
-        this._positionParticipantStatus(this.remoteConnectionMessage);
-        this._positionParticipantStatus(this.remotePresenceMessage);
+        this._positionParticipantStatus(this.$remoteConnectionMessage);
+        this._positionParticipantStatus(this.$remotePresenceMessage);
     }
 
     /**
@@ -365,16 +387,18 @@ export class VideoContainer extends LargeContainer {
      * @private
      * @returns {void}
      */
-    _positionParticipantStatus(element) {
+    _positionParticipantStatus($element) {
         if (this.avatarDisplayed) {
-            const avatarImage = document.getElementById('dominantSpeakerAvatarContainer').getBoundingClientRect();
+            const $avatarImage = $('#dominantSpeakerAvatarContainer');
 
-            element.style.top = avatarImage.top + avatarImage.height + 10;
+            $element.css(
+                'top',
+                $avatarImage.offset().top + $avatarImage.height() + 10);
         } else {
-            const height = element.getBoundingClientRect().height;
-            const parentHeight = element.parentElement.getBoundingClientRect().height;
+            const height = $element.height();
+            const parentHeight = $element.parent().height();
 
-            element.style.top = (parentHeight / 2) - (height / 2);
+            $element.css('top', (parentHeight / 2) - (height / 2));
         }
     }
 
@@ -384,7 +408,7 @@ export class VideoContainer extends LargeContainer {
     resize(containerWidth, containerHeight, animate = false) {
         // XXX Prevent TypeError: undefined is not an object when the Web
         // browser does not support WebRTC (yet).
-        if (!this.video) {
+        if (this.$video.length === 0) {
             return;
         }
         const state = APP.store.getState();
@@ -477,8 +501,8 @@ export class VideoContainer extends LargeContainer {
         }
 
         // detach old stream
-        if (this.stream && this.video) {
-            this.stream.detach(this.video);
+        if (this.stream && this.$video[0]) {
+            this.stream.detach(this.$video[0]);
         }
 
         this.stream = stream;
@@ -488,16 +512,18 @@ export class VideoContainer extends LargeContainer {
             return;
         }
 
-        if (this.video) {
-            stream.attach(this.video);
+        if (this.$video[0]) {
+            stream.attach(this.$video[0]);
 
             // Ensure large video gets play() called on it when a new stream is attached to it. This is necessary in the
             // case of Safari as autoplay doesn't kick-in automatically on Safari 15 and newer versions.
-            browser.isWebKitBased() && this.video.play();
+            browser.isWebKitBased() && this.$video[0].play();
 
             const flipX = stream.isLocal() && this.localFlipX && !this.isScreenSharing();
 
-            this.video.style.transform = flipX ? 'scaleX(-1)' : 'none';
+            this.$video.css({
+                transform: flipX ? 'scaleX(-1)' : 'none'
+            });
             this._updateBackground();
         }
     }
@@ -508,10 +534,12 @@ export class VideoContainer extends LargeContainer {
      */
     setLocalFlipX(val) {
         this.localFlipX = val;
-        if (!this.video || !this.stream || !this.stream.isLocal()) {
+        if (!this.$video || !this.stream || !this.stream.isLocal()) {
             return;
         }
-        this.video.style.transform = this.localFlipX ? 'scaleX(-1)' : 'none';
+        this.$video.css({
+            transform: this.localFlipX ? 'scaleX(-1)' : 'none'
+        });
 
         this._updateBackground();
     }
@@ -530,30 +558,37 @@ export class VideoContainer extends LargeContainer {
      * @param {boolean} show
      */
     showAvatar(show) {
-        this.avatar.style.visibility = show ? 'visible' : 'hidden';
+        this.$avatar.css('visibility', show ? 'visible' : 'hidden');
         this.avatarDisplayed = show;
 
         APP.API.notifyLargeVideoVisibilityChanged(show);
     }
 
     /**
-     * Show video container.
+     * We are doing fadeOut/fadeIn animations on parent div which wraps
+     * largeVideo, because when Temasys plugin is in use it replaces
+     * <video> elements with plugin <object> tag. In Safari jQuery is
+     * unable to store values on this plugin object which breaks all
+     * animation effects performed on it directly.
+     *
+     * TODO: refactor this since Temasys is no longer supported.
      */
     show() {
         return new Promise(resolve => {
-            this.wrapperParent.style.visibility = 'visible';
-            this.wrapperParent.classList.remove('animatedFadeOut');
-            this.wrapperParent.classList.add('animatedFadeIn');
-            setTimeout(() => {
-                this._isHidden = false;
-                this._updateBackground();
-                resolve();
-            }, FADE_DURATION_MS);
+            this.$wrapperParent.css('visibility', 'visible').fadeTo(
+                FADE_DURATION_MS,
+                1,
+                () => {
+                    this._isHidden = false;
+                    this._updateBackground();
+                    resolve();
+                }
+            );
         });
     }
 
     /**
-     * Hide video container.
+     *
      */
     hide() {
         // as the container is hidden/replaced by another container
@@ -561,14 +596,12 @@ export class VideoContainer extends LargeContainer {
         this.showAvatar(false);
 
         return new Promise(resolve => {
-            this.wrapperParent.classList.remove('animatedFadeIn');
-            this.wrapperParent.classList.add('animatedFadeOut');
-            setTimeout(() => {
-                this.wrapperParent.style.visibility = 'hidden';
+            this.$wrapperParent.fadeTo(FADE_DURATION_MS, 0, () => {
+                this.$wrapperParent.css('visibility', 'hidden');
                 this._isHidden = true;
                 this._updateBackground();
                 resolve();
-            }, FADE_DURATION_MS);
+            });
         });
     }
 
@@ -616,7 +649,7 @@ export class VideoContainer extends LargeContainer {
                     && this.localFlipX
                 }
                 orientationFit = { this._backgroundOrientation }
-                videoElement = { this.video }
+                videoElement = { this.$video && this.$video[0] }
                 videoTrack = { this.stream } />,
             document.getElementById('largeVideoBackgroundContainer')
         );

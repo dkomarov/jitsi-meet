@@ -1,11 +1,10 @@
 /* eslint-disable lines-around-comment */
 
-import { connect } from 'react-redux';
-
 import { IReduxState } from '../../../../app/types';
 import { translate } from '../../../../base/i18n/functions';
 import { IconGear } from '../../../../base/icons/svg';
-import AbstractButton, { IProps as AbstractButtonProps } from '../../../../base/toolbox/components/AbstractButton';
+// @ts-ignore
+import { AbstractButton, type AbstractButtonProps } from '../../../../base/toolbox/components';
 import { navigate }
 // @ts-ignore
     from '../../../../mobile/navigation/components/conference/ConferenceNavigationContainerRef';
@@ -13,11 +12,12 @@ import { navigate }
 import { screen } from '../../../../mobile/navigation/routes';
 import { SETTINGS_ENABLED } from '../../../flags/constants';
 import { getFeatureFlag } from '../../../flags/functions';
+import { connect } from '../../../redux/functions';
 
 /**
  * Implements an {@link AbstractButton} to open the carmode.
  */
-class SettingsButton extends AbstractButton<AbstractButtonProps> {
+class SettingsButton extends AbstractButton<AbstractButtonProps, any, any> {
     accessibilityLabel = 'toolbar.accessibilityLabel.Settings';
     icon = IconGear;
     label = 'settings.buttonLabel';
@@ -48,4 +48,5 @@ function _mapStateToProps(state: IReduxState) {
     };
 }
 
+// @ts-ignore
 export default translate(connect(_mapStateToProps)(SettingsButton));

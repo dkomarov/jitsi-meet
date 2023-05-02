@@ -42,11 +42,11 @@ export function parseURLParams(
         }
     }
 
-    paramParts.forEach((part: string) => {
+    paramParts.forEach(part => {
         const param = part.split('=');
         const key = param[0];
 
-        if (!key || key.split('.').some((k: string) => blacklist.includes(k))) {
+        if (!key || key.split('.').some(k => blacklist.includes(k))) {
             return;
         }
 

@@ -1,3 +1,4 @@
+/* eslint-disable lines-around-comment */
 import React, { ReactNode, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
@@ -5,8 +6,8 @@ import { makeStyles } from 'tss-react/mui';
 import { createToolbarEvent } from '../../../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../../../analytics/functions';
 import Popover from '../../../base/popover/components/Popover.web';
-import ReactionEmoji from '../../../reactions/components/web/ReactionEmoji';
-import ReactionsMenu from '../../../reactions/components/web/ReactionsMenu';
+// @ts-ignore
+import { ReactionEmoji, ReactionsMenu } from '../../../reactions/components';
 import { REACTIONS_MENU_HEIGHT } from '../../../reactions/constants';
 import { getReactionsQueue } from '../../../reactions/functions.any';
 import { DRAWER_MAX_HEIGHT } from '../../constants';
@@ -14,7 +15,9 @@ import { showOverflowDrawer } from '../../functions.web';
 
 import Drawer from './Drawer';
 import JitsiPortal from './JitsiPortal';
+// @ts-ignore
 import OverflowToggleButton from './OverflowToggleButton';
+/* eslint-enable lines-around-comment */
 
 /**
  * The type of the React {@code Component} props of {@link OverflowMenuButton}.
@@ -120,7 +123,6 @@ const OverflowMenuButton = ({
                 ) : (
                     <Popover
                         content = { children }
-                        headingId = 'overflow-context-menu'
                         onPopoverClose = { onCloseDialog }
                         onPopoverOpen = { onOpenDialog }
                         position = 'top'

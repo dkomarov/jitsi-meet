@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * The type of (redux) action which sets the audio-only flag for the current
  * conference.

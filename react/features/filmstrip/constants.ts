@@ -64,6 +64,30 @@ export const DEFAULT_MAX_COLUMNS = 5;
 export const ABSOLUTE_MAX_COLUMNS = 7;
 
 /**
+ * An array of attributes of the video element that will be used for adding a listener for every event in the list.
+ * The latest event will be stored in redux. This is currently used by torture only.
+ */
+export const VIDEO_TEST_EVENTS = [
+    'onAbort',
+    'onCanPlay',
+    'onCanPlayThrough',
+    'onEmptied',
+    'onEnded',
+    'onError',
+    'onLoadedData',
+    'onLoadedMetadata',
+    'onLoadStart',
+    'onPause',
+    'onPlay',
+    'onPlaying',
+    'onRateChange',
+    'onStalled',
+    'onSuspend',
+    'onWaiting'
+];
+
+
+/**
  * Display mode constant used when video is being displayed on the small video.
  *
  * @type {number}
@@ -222,9 +246,7 @@ export const STATS_POPOVER_POSITION = {
 /**
  * The tooltip position for the indicators on the thumbnail.
  */
-export const INDICATORS_TOOLTIP_POSITION: {
-    [x: string]: 'right' | 'left' | 'top';
-} = {
+export const INDICATORS_TOOLTIP_POSITION = {
     [THUMBNAIL_TYPE.TILE]: 'right',
     [THUMBNAIL_TYPE.VERTICAL]: 'left',
     [THUMBNAIL_TYPE.HORIZONTAL]: 'top'

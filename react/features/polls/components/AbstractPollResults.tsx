@@ -1,6 +1,5 @@
 import React, { ComponentType, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GestureResponderEvent } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { createPollEvent } from '../../analytics/AnalyticsEvents';
@@ -34,13 +33,13 @@ export type AnswerInfo = {
  */
 export type AbstractProps = {
     answers: Array<AnswerInfo>;
-    changeVote: (e?: React.MouseEvent<HTMLButtonElement> | GestureResponderEvent) => void;
+    changeVote: (e: React.MouseEvent) => void;
     creatorName: string;
     haveVoted: boolean;
     question: string;
     showDetails: boolean;
     t: Function;
-    toggleIsDetailed: (e?: React.MouseEvent<HTMLButtonElement> | GestureResponderEvent) => void;
+    toggleIsDetailed: (e: React.MouseEvent) => void;
 };
 
 /**

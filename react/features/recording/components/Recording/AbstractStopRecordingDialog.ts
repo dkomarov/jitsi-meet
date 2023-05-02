@@ -9,7 +9,6 @@ import { JitsiRecordingConstants } from '../../../base/lib-jitsi-meet';
 import { setVideoMuted } from '../../../base/media/actions';
 import { stopLocalVideoRecording } from '../../actions';
 import { getActiveSession } from '../../functions';
-import { ISessionData } from '../../reducer';
 
 import LocalRecordingManager from './LocalRecordingManager';
 
@@ -22,12 +21,12 @@ export interface IProps extends WithTranslation {
     /**
      * The {@code JitsiConference} for the current conference.
      */
-    _conference?: IJitsiConference;
+    _conference: IJitsiConference;
 
     /**
      * The redux representation of the recording session to be stopped.
      */
-    _fileRecordingSession?: ISessionData;
+    _fileRecordingSession: Object;
 
     /**
      * Whether the recording is a local recording or not.
@@ -83,8 +82,8 @@ export default class AbstractStopRecordingDialog<P extends IProps>
         } else {
             const { _fileRecordingSession } = this.props;
 
-            if (_fileRecordingSession) {
-                this.props._conference?.stopRecording(_fileRecordingSession.id);
+            if (_fileRecordingSession) { // @ts-ignore
+                this.props._conference.stopRecording(_fileRecordingSession.id);
                 this._toggleScreenshotCapture();
             }
         }

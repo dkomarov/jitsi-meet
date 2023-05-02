@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 
 import DialogPortal from './DialogPortal';
 
-interface IProps {
+type Props = {
 
     /**
      * The component(s) to be displayed within the drawer portal.
@@ -13,7 +13,7 @@ interface IProps {
      * Class name used to add custom styles to the portal.
      */
     className?: string;
-}
+};
 
 /**
  * Component meant to render a drawer at the bottom of the screen,
@@ -21,7 +21,7 @@ interface IProps {
  *
  * @returns {ReactElement}
  */
-function JitsiPortal({ children, className }: IProps) {
+function JitsiPortal({ children, className }: Props) {
     return (
         <DialogPortal className = { `drawer-portal ${className ?? ''}` }>
             { children }

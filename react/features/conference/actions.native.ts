@@ -2,11 +2,8 @@ import { IStore } from '../app/types';
 import { openDialog } from '../base/dialog/actions';
 // eslint-disable-next-line lines-around-comment
 // @ts-ignore
-import AlertDialog from '../base/dialog/components/native/AlertDialog';
+import { AlertDialog } from '../base/dialog/components/native';
 import { getParticipantDisplayName } from '../base/participants/functions';
-
-import { DISMISS_CALENDAR_NOTIFICATION } from './actionTypes';
-
 
 /**
  * Notify that we've been kicked out of the conference.
@@ -33,16 +30,5 @@ export function notifyKickedOut(participant: any, submit?: Function) {
             },
             onSubmit: submit
         }));
-    };
-}
-
-/**
- * Dismisses calendar notification about next or ongoing event.
- *
- * @returns {Object}
- */
-export function dismissCalendarNotification() {
-    return {
-        type: DISMISS_CALENDAR_NOTIFICATION
     };
 }

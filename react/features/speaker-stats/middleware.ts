@@ -1,4 +1,3 @@
-import { batch } from 'react-redux';
 import { AnyAction } from 'redux';
 
 import { IStore } from '../app/types';
@@ -50,14 +49,11 @@ MiddlewareRegistry.register(({ dispatch, getState }: IStore) => (next: Function)
             const stats = filterBySearchCriteria(state, speakerStats);
             const pendingReorder = getPendingReorder(state);
 
-            batch(() => {
-                if (pendingReorder) {
-                    dispatch(updateSortedSpeakerStatsIds(getSortedSpeakerStatsIds(state, stats) ?? []));
-                }
+            if (pendingReorder) {
+                dispatch(updateSortedSpeakerStatsIds(getSortedSpeakerStatsIds(state, stats) ?? []));
+            }
 
-                dispatch(updateStats(stats));
-            });
-
+            dispatch(updateStats(stats));
         }
 
         break;
@@ -73,11 +69,8 @@ MiddlewareRegistry.register(({ dispatch, getState }: IStore) => (next: Function)
     case PARTICIPANT_LEFT:
     case PARTICIPANT_KICKED:
     case PARTICIPANT_UPDATED: {
-        const { pendingReorder } = getState()['features/speaker-stats'];
+        dispatch(initReorderStats());
 
-        if (!pendingReorder) {
-            dispatch(initReorderStats());
-        }
         break;
     }
 

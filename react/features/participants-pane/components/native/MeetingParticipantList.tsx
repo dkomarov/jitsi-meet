@@ -3,32 +3,25 @@
 import React, { PureComponent } from 'react';
 import { WithTranslation } from 'react-i18next';
 import { FlatList, Text } from 'react-native';
-import { connect } from 'react-redux';
 
 import { IReduxState } from '../../../app/types';
 import { translate } from '../../../base/i18n/functions';
-import Icon from '../../../base/icons/components/Icon';
-import { IconAddUser } from '../../../base/icons/svg';
+// @ts-ignore
+import { Icon, IconAddUser } from '../../../base/icons';
 import {
-    addPeopleFeatureControl,
     getLocalParticipant,
     getParticipantCountWithFake,
-    getRemoteParticipants,
-    setShareDialogVisiblity
+    getRemoteParticipants
 } from '../../../base/participants/functions';
+import { connect } from '../../../base/redux/functions';
 import Button from '../../../base/ui/components/native/Button';
 import Input from '../../../base/ui/components/native/Input';
 import { BUTTON_TYPES } from '../../../base/ui/constants.native';
-import {
-    getBreakoutRooms,
-    getCurrentRoomId
-} from '../../../breakout-rooms/functions';
+import { getBreakoutRooms, getCurrentRoomId } from '../../../breakout-rooms/functions';
 import { doInvitePeople } from '../../../invite/actions.native';
+import { toggleShareDialog } from '../../../share-room/actions';
 import { getInviteOthersControl } from '../../../share-room/functions';
-import {
-    participantMatchesSearch,
-    shouldRenderInviteButton
-} from '../../functions';
+import { participantMatchesSearch, shouldRenderInviteButton } from '../../functions';
 
 // @ts-ignore
 import CollapsibleList from './CollapsibleList';
@@ -38,7 +31,7 @@ import MeetingParticipantItem from './MeetingParticipantItem';
 import styles from './styles';
 
 
-interface IProps extends WithTranslation {
+type Props = WithTranslation & {
 
     /**
      * Current breakout room, if we are in one.
@@ -49,11 +42,6 @@ interface IProps extends WithTranslation {
      * Control for invite other button.
      */
     _inviteOthersControl: any;
-
-    /**
-     * Checks if add-people feature is enabled.
-     */
-    _isAddPeopleFeatureEnabled: boolean;
 
     /**
      * The local participant.
@@ -78,7 +66,7 @@ interface IProps extends WithTranslation {
     /**
      * The remote participants.
      */
-    _sortedRemoteParticipants: string[];
+    _sortedRemoteParticipants: Map<string, string>;
 
     /**
      * The current visitors count if any.
@@ -114,19 +102,24 @@ interface IProps extends WithTranslation {
      * Function to update the search string.
      */
     setSearchString: Function;
-}
+
+    /**
+     * Translation function.
+     */
+    t: Function;
+};
 
 /**
  *  The meeting participant list component.
  */
-class MeetingParticipantList extends PureComponent<IProps> {
+class MeetingParticipantList extends PureComponent<Props> {
 
     /**
      * Creates new MeetingParticipantList instance.
      *
-     * @param {IProps} props - The props of the component.
+     * @param {Props} props - The props of the component.
      */
-    constructor(props: IProps) {
+    constructor(props: Props) {
         super(props);
 
         this._keyExtractor = this._keyExtractor.bind(this);
@@ -151,11 +144,8 @@ class MeetingParticipantList extends PureComponent<IProps> {
      * @returns {void}
      */
     _onInvite() {
-        const { _isAddPeopleFeatureEnabled, dispatch } = this.props;
-
-        setShareDialogVisiblity(_isAddPeopleFeatureEnabled, dispatch);
-
-        dispatch(doInvitePeople());
+        this.props.dispatch(toggleShareDialog(true));
+        this.props.dispatch(doInvitePeople());
     }
 
     /**
@@ -211,6 +201,8 @@ class MeetingParticipantList extends PureComponent<IProps> {
             t
         } = this.props;
         const title = _currentRoom?.name
+
+            // $FlowExpectedError
             ? `${_currentRoom.name} (${_participantsCount})`
             : t('participantsPane.headings.participantsList',
                 { count: _participantsCount });
@@ -229,7 +221,7 @@ class MeetingParticipantList extends PureComponent<IProps> {
             = isLocalModerator
                 ? containerStyleModerator : styles.notLocalModeratorContainer;
         const finalContainerStyle
-            = _participantsCount > 6 ? containerStyle : undefined;
+            = _participantsCount > 6 && containerStyle;
         const { color, shareDialogVisible } = _inviteOthersControl;
         const _visitorsLabelText = _visitorsCount > 0
             ? t('participantsPane.headings.visitors', { count: _visitorsCount })
@@ -287,14 +279,13 @@ class MeetingParticipantList extends PureComponent<IProps> {
  *
  * @param {Object} state - The Redux state.
  * @private
- * @returns {IProps}
+ * @returns {Props}
  */
-function _mapStateToProps(state: IReduxState) {
+function _mapStateToProps(state: IReduxState): Object {
     const _participantsCount = getParticipantCountWithFake(state);
     const { remoteParticipants } = state['features/filmstrip'];
     const { shareDialogVisible } = state['features/share-room'];
     const _inviteOthersControl = getInviteOthersControl(state);
-    const _isAddPeopleFeatureEnabled = addPeopleFeatureControl(state);
     const _showInviteButton = shouldRenderInviteButton(state);
     const _remoteParticipants = getRemoteParticipants(state);
     const currentRoomId = getCurrentRoomId(state);
@@ -302,7 +293,6 @@ function _mapStateToProps(state: IReduxState) {
 
     return {
         _currentRoom,
-        _isAddPeopleFeatureEnabled,
         _inviteOthersControl,
         _participantsCount,
         _remoteParticipants,

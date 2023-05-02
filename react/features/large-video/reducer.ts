@@ -5,11 +5,13 @@ import {
     SELECT_LARGE_VIDEO_PARTICIPANT,
     SET_LARGE_VIDEO_DIMENSIONS,
     SET_SEE_WHAT_IS_BEING_SHARED,
-    UPDATE_KNOWN_LARGE_VIDEO_RESOLUTION
+    UPDATE_KNOWN_LARGE_VIDEO_RESOLUTION,
+    UPDATE_LAST_LARGE_VIDEO_MEDIA_EVENT
 } from './actionTypes';
 
 export interface ILargeVideoState {
     height?: number;
+    lastMediaEvent?: string;
     participantId?: string;
     resolution?: number;
     seeWhatIsBeingShared?: boolean;
@@ -50,6 +52,12 @@ ReducerRegistry.register<ILargeVideoState>('features/large-video', (state = {}, 
         return {
             ...state,
             resolution: action.resolution
+        };
+
+    case UPDATE_LAST_LARGE_VIDEO_MEDIA_EVENT:
+        return {
+            ...state,
+            lastMediaEvent: action.name
         };
 
     case SET_SEE_WHAT_IS_BEING_SHARED:

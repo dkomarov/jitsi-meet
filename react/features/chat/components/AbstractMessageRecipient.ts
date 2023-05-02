@@ -37,6 +37,8 @@ export interface IProps extends WithTranslation {
       * Shows widget if it is necessary.
       */
     _visible: boolean;
+
+    classes?: any;
 }
 
 /**
@@ -67,10 +69,9 @@ export function _mapDispatchToProps(dispatch: Function) {
  * Maps part of the Redux store to the props of this component.
  *
  * @param {Object} state - The Redux state.
- * @param {any} _ownProps - Components' own props.
  * @returns {IProps}
  */
-export function _mapStateToProps(state: IReduxState, _ownProps: any) {
+export function _mapStateToProps(state: IReduxState) {
     const { privateMessageRecipient, lobbyMessageRecipient, isLobbyChatActive } = state['features/chat'];
 
     return {

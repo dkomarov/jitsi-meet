@@ -3,12 +3,12 @@ import { useCallback, useRef, useState } from 'react';
 import { findAncestorByClass } from '../functions.web';
 
 
-type RaiseContext<T> = {
+type RaiseContext = {
 
     /**
      * The entity for which the menu is context menu is raised.
      */
-    entity?: T;
+    entity?: string | Object;
 
     /**
      * Target elements against which positioning calculations are made.
@@ -18,13 +18,13 @@ type RaiseContext<T> = {
 
 const initialState = Object.freeze({});
 
-const useContextMenu = <T>(): [(force?: boolean | Object) => void,
-    (entity: T, target: HTMLElement | null) => void,
-    (entity: T) => (e?: MouseEvent) => void,
+const useContextMenu = (): [(force?: boolean | Object) => void,
+    (entity: string | Object, target: HTMLElement | null) => void,
+    (entity: string | Object) => (e: MouseEvent) => void,
     () => void,
     () => void,
-    RaiseContext<T>] => {
-    const [ raiseContext, setRaiseContext ] = useState < RaiseContext<T> >(initialState);
+    RaiseContext] => {
+    const [ raiseContext, setRaiseContext ] = useState < RaiseContext >(initialState);
     const isMouseOverMenu = useRef(false);
 
     const lowerMenu = useCallback((force: boolean | Object = false) => {
@@ -45,21 +45,21 @@ const useContextMenu = <T>(): [(force?: boolean | Object) => void,
         });
     }, [ raiseContext ]);
 
-    const raiseMenu = useCallback((entity: T, target: HTMLElement | null) => {
+    const raiseMenu = useCallback((entity: string | Object, target: HTMLElement | null) => {
         setRaiseContext({
             entity,
             offsetTarget: findAncestorByClass(target, 'list-item-container')
         });
     }, [ raiseContext ]);
 
-    const toggleMenu = useCallback((entity: T) => (e?: MouseEvent) => {
-        e?.stopPropagation();
+    const toggleMenu = useCallback((entity: string | Object) => (e: MouseEvent) => {
+        e.stopPropagation();
         const { entity: raisedEntity } = raiseContext;
 
         if (raisedEntity && raisedEntity === entity) {
             lowerMenu();
         } else {
-            raiseMenu(entity, e?.target as HTMLElement);
+            raiseMenu(entity, e.target as HTMLElement);
         }
     }, [ raiseContext ]);
 

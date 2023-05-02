@@ -3,18 +3,14 @@ import { getGravatarURL } from '@jitsi/js-utils/avatar';
 
 import { IReduxState, IStore } from '../../app/types';
 import { isStageFilmstripAvailable } from '../../filmstrip/functions';
-import { isAddPeopleEnabled, isDialOutEnabled } from '../../invite/functions';
-import { toggleShareDialog } from '../../share-room/actions';
 import { IStateful } from '../app/types';
 import { GRAVATAR_BASE_URL } from '../avatar/constants';
 import { isCORSAvatarURL } from '../avatar/functions';
 import { getCurrentConference } from '../conference/functions';
-import { ADD_PEOPLE_ENABLED } from '../flags/constants';
-import { getFeatureFlag } from '../flags/functions';
 import i18next from '../i18n/i18next';
 import { MEDIA_TYPE, VIDEO_TYPE } from '../media/constants';
 import { toState } from '../redux/functions';
-import { getScreenShareTrack } from '../tracks/functions.any';
+import { getScreenShareTrack } from '../tracks/functions';
 import { createDeferred } from '../util/helpers';
 
 import {
@@ -26,13 +22,12 @@ import {
 import { preloadImage } from './preloadImage';
 import { FakeParticipant, IJitsiParticipant, IParticipant, ISourceInfo } from './types';
 
-
 /**
  * Temp structures for avatar urls to be checked/preloaded.
  */
 const AVATAR_QUEUE: Object[] = [];
 const AVATAR_CHECKED_URLS = new Map();
-/* eslint-disable arrow-body-style */
+/* eslint-disable arrow-body-style, no-unused-vars */
 const AVATAR_CHECKER_FUNCTIONS = [
     (participant: IParticipant) => {
         return participant?.isJigasi ? JIGASI_PARTICIPANT_ICON : null;
@@ -58,7 +53,7 @@ const AVATAR_CHECKER_FUNCTIONS = [
         return null;
     }
 ];
-/* eslint-enable arrow-body-style */
+/* eslint-enable arrow-body-style, no-unused-vars */
 
 /**
  * Returns the list of active speakers that should be moved to the top of the sorted list of participants so that the
@@ -606,7 +601,7 @@ export function getDominantSpeakerParticipant(stateful: IStateful) {
 export function isEveryoneModerator(stateful: IStateful) {
     const state = toState(stateful)['features/base/participants'];
 
-    return state.numberOfNonModeratorParticipants === 0;
+    return state.everyoneIsModerator === true;
 }
 
 /**
@@ -711,32 +706,3 @@ export function getRaiseHandsQueue(stateful: IStateful): Array<{ id: string; rai
 export function hasRaisedHand(participant?: IParticipant): boolean {
     return Boolean(participant?.raisedHandTimestamp);
 }
-
-/**
- * Add people feature enabling/disabling.
- *
- * @param {Object|Function} stateful - Object or function that can be resolved
- * to the Redux state.
- * @returns {boolean}
- */
-export const addPeopleFeatureControl = (stateful: IStateful) => {
-    const state = toState(stateful);
-
-    return getFeatureFlag(state, ADD_PEOPLE_ENABLED, true)
-    && (isAddPeopleEnabled(state) || isDialOutEnabled(state));
-};
-
-/**
- * Controls share dialog visibility.
- *
- * @param {boolean} addPeopleFeatureEnabled - Checks if add people functionality is enabled.
- * @param {Function} dispatch - The Redux dispatch function.
- * @returns {Function}
- */
-export const setShareDialogVisiblity = (addPeopleFeatureEnabled: boolean, dispatch: Function) => {
-    if (addPeopleFeatureEnabled) {
-        dispatch(toggleShareDialog(false));
-    } else {
-        dispatch(toggleShareDialog(true));
-    }
-};

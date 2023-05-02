@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { isMobileBrowser } from '../../../environment/utils';
@@ -10,7 +10,6 @@ interface ITabProps {
     selected: string;
     tabs: Array<{
         accessibilityLabel: string;
-        controlsId: string;
         countBadge?: number;
         disabled?: boolean;
         id: string;
@@ -44,7 +43,7 @@ const useStyles = makeStyles()(theme => {
                 borderColor: theme.palette.ui10
             },
 
-            '&.focus-visible': {
+            '&:focus': {
                 outline: 0,
                 boxShadow: `0px 0px 0px 2px ${theme.palette.focus01}`,
                 border: 0,
@@ -86,52 +85,26 @@ const Tabs = ({
 }: ITabProps) => {
     const { classes, cx } = useStyles();
     const isMobile = isMobileBrowser();
-    const onClick = useCallback(id => () => {
-        onChange(id);
+
+    const handleChange = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+        onChange(e.currentTarget.id);
     }, []);
-    const onKeyDown = useCallback((index: number) => (event: React.KeyboardEvent<HTMLButtonElement>) => {
-        let newIndex: number | null = null;
-
-        if (event.key === 'ArrowLeft') {
-            event.preventDefault();
-            newIndex = index === 0 ? tabs.length - 1 : index - 1;
-        }
-
-        if (event.key === 'ArrowRight') {
-            event.preventDefault();
-            newIndex = index === tabs.length - 1 ? 0 : index + 1;
-        }
-
-        if (newIndex !== null) {
-            onChange(tabs[newIndex].id);
-        }
-    }, [ tabs ]);
-
-    useEffect(() => {
-        // this test is needed to make sure the effect is triggered because of user actually changing tab
-        if (document.activeElement?.getAttribute('role') === 'tab') {
-            document.querySelector<HTMLButtonElement>(`#${selected}`)?.focus();
-        }
-    }, [ selected ]);
 
     return (
         <div
             aria-label = { accessibilityLabel }
             className = { classes.container }
             role = 'tablist'>
-            {tabs.map((tab, index) => (
+            {tabs.map(tab => (
                 <button
-                    aria-controls = { tab.controlsId }
                     aria-label = { tab.accessibilityLabel }
                     aria-selected = { selected === tab.id }
                     className = { cx(classes.tab, selected === tab.id && 'selected', isMobile && 'is-mobile') }
                     disabled = { tab.disabled }
                     id = { tab.id }
                     key = { tab.id }
-                    onClick = { onClick(tab.id) }
-                    onKeyDown = { onKeyDown(index) }
-                    role = 'tab'
-                    tabIndex = { selected === tab.id ? undefined : -1 }>
+                    onClick = { handleChange }
+                    role = 'tab'>
                     {tab.label}
                     {tab.countBadge && <span className = { classes.badge }>{tab.countBadge}</span>}
                 </button>

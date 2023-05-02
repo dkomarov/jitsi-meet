@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { IconArrowBack } from '../../../../base/icons/svg';
+import { IconArrowBack } from '../../../../base/icons';
 import HeaderNavigationButton
     from '../HeaderNavigationButton';
 

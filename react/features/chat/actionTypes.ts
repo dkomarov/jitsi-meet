@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * The type of the action which signals to add a new chat message.
  *

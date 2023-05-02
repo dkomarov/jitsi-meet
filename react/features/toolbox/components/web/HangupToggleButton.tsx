@@ -1,13 +1,14 @@
-import { connect } from 'react-redux';
-
-import { translate } from '../../../base/i18n/functions';
+// @ts-ignore
+import { translate } from '../../../base/i18n';
 import { IconCloseLarge, IconHangup } from '../../../base/icons/svg';
-import AbstractButton, { IProps as AbstractButtonProps } from '../../../base/toolbox/components/AbstractButton';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
 
 /**
  * The type of the React {@code Component} props of {@link HangupToggleButton}.
  */
-interface IProps extends AbstractButtonProps {
+type Props = AbstractButtonProps & {
 
     /**
      * Whether the more options menu is open.
@@ -18,18 +19,34 @@ interface IProps extends AbstractButtonProps {
      * External handler for key down action.
      */
     onKeyDown: Function;
-}
+};
 
 /**
  * Implementation of a button for toggling the hangup menu.
  */
-class HangupToggleButton extends AbstractButton<IProps> {
+class HangupToggleButton extends AbstractButton<Props, any, any> {
     accessibilityLabel = 'toolbar.accessibilityLabel.hangup';
     icon = IconHangup;
     label = 'toolbar.hangup';
     toggledIcon = IconCloseLarge;
     toggledLabel = 'toolbar.hangup';
-    tooltip = 'toolbar.hangup';
+    props: Props;
+
+    /**
+     * Retrieves tooltip dynamically.
+     */
+    get tooltip() {
+        return 'toolbar.hangup';
+    }
+
+    /**
+     * Required by linter due to AbstractButton overwritten prop being writable.
+     *
+     * @param {string} _value - The value.
+     */
+    set tooltip(_value) {
+        // Unused.
+    }
 
     /**
      * Indicates whether this button is in toggled state or not.
@@ -54,4 +71,4 @@ class HangupToggleButton extends AbstractButton<IProps> {
     }
 }
 
-export default connect()(translate(HangupToggleButton));
+export default translate(HangupToggleButton);

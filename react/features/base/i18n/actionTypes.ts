@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * The type of (redux) action which signals that i18next has been initialized.
  */

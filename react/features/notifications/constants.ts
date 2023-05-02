@@ -25,6 +25,7 @@ export const NOTIFICATION_TIMEOUT_TYPE = {
  */
 export const NOTIFICATION_TYPE = {
     ERROR: 'error',
+    INFO: 'info',
     NORMAL: 'normal',
     SUCCESS: 'success',
     WARNING: 'warning'
@@ -37,6 +38,7 @@ export const NOTIFICATION_TYPE = {
  */
 export const NOTIFICATION_TYPE_PRIORITIES = {
     [NOTIFICATION_TYPE.ERROR]: 5,
+    [NOTIFICATION_TYPE.INFO]: 3,
     [NOTIFICATION_TYPE.NORMAL]: 3,
     [NOTIFICATION_TYPE.SUCCESS]: 3,
     [NOTIFICATION_TYPE.WARNING]: 4
@@ -53,13 +55,6 @@ export const NOTIFICATION_ICON = {
     PARTICIPANT: 'participant',
     PARTICIPANTS: 'participants'
 };
-
-/**
- * The identifier of the calendar notification.
- *
- * @type {string}
- */
-export const CALENDAR_NOTIFICATION_ID = 'CALENDAR_NOTIFICATION_ID';
 
 /**
  * The identifier of the disable self view notification.

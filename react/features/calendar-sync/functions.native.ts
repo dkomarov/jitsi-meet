@@ -5,7 +5,9 @@ import { IReduxState, IStore } from '../app/types';
 import { IStateful } from '../base/app/types';
 import { CALENDAR_ENABLED } from '../base/flags/constants';
 import { getFeatureFlag } from '../base/flags/functions';
-import { getShareInfoText } from '../invite/functions';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import { getShareInfoText } from '../invite';
 
 import { setCalendarAuthorization } from './actions.native';
 import { FETCH_END_DAYS, FETCH_START_DAYS } from './constants';

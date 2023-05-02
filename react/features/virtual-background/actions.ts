@@ -1,4 +1,6 @@
 import { IStore } from '../app/types';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
 import { createVirtualBackgroundEffect } from '../stream-effects/virtual-background';
 
 import { BACKGROUND_ENABLED, SET_VIRTUAL_BACKGROUND } from './actionTypes';

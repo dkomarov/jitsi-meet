@@ -3,33 +3,32 @@
 import { Alert, NativeModules, Platform } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 
-import { createTrackMutedEvent } from '../../analytics/AnalyticsEvents';
-import { sendAnalytics } from '../../analytics/functions';
+import { createTrackMutedEvent, sendAnalytics } from '../../analytics';
 import { appNavigate } from '../../app/actions';
-import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../../base/app/actionTypes';
-import { SET_AUDIO_ONLY } from '../../base/audio-only/actionTypes';
+import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../../base/app';
+import { SET_AUDIO_ONLY } from '../../base/audio-only';
 import {
     CONFERENCE_FAILED,
     CONFERENCE_JOINED,
     CONFERENCE_LEFT,
     CONFERENCE_WILL_JOIN,
-    CONFERENCE_WILL_LEAVE
-} from '../../base/conference/actionTypes';
-import {
+    CONFERENCE_WILL_LEAVE,
     getConferenceName,
     getCurrentConference
-} from '../../base/conference/functions';
-import { getInviteURL } from '../../base/connection/functions';
-import { setAudioMuted } from '../../base/media/actions';
-import { MEDIA_TYPE } from '../../base/media/constants';
-import { isVideoMutedByAudioOnly } from '../../base/media/functions';
-import MiddlewareRegistry from '../../base/redux/MiddlewareRegistry';
+} from '../../base/conference';
+import { getInviteURL } from '../../base/connection';
+import {
+    MEDIA_TYPE,
+    isVideoMutedByAudioOnly,
+    setAudioMuted
+} from '../../base/media';
+import { MiddlewareRegistry } from '../../base/redux';
 import {
     TRACK_ADDED,
     TRACK_REMOVED,
-    TRACK_UPDATED
-} from '../../base/tracks/actionTypes';
-import { isLocalTrackMuted } from '../../base/tracks/functions.any';
+    TRACK_UPDATED,
+    isLocalTrackMuted
+} from '../../base/tracks';
 
 import CallKit from './CallKit';
 import ConnectionService from './ConnectionService';

@@ -7,6 +7,8 @@ import {
     _STORE_CURRENT_CONFERENCE,
     _UPDATE_CONFERENCE_DURATION
 } from './actionTypes';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
 import { isRecentListEnabled } from './functions';
 
 interface IRecent {

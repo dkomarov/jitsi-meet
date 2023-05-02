@@ -6,11 +6,7 @@ import Button from '../../../../../base/ui/components/web/Button';
 import { BUTTON_TYPES } from '../../../../../base/ui/constants.web';
 import { autoAssignToBreakoutRooms } from '../../../../../breakout-rooms/actions';
 
-interface IProps {
-    className?: string;
-}
-
-export const AutoAssignButton = ({ className }: IProps) => {
+export const AutoAssignButton = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -21,7 +17,6 @@ export const AutoAssignButton = ({ className }: IProps) => {
     return (
         <Button
             accessibilityLabel = { t('breakoutRooms.actions.autoAssign') }
-            className = { className }
             fullWidth = { true }
             labelKey = { 'breakoutRooms.actions.autoAssign' }
             onClick = { onAutoAssign }

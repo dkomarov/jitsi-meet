@@ -1,12 +1,12 @@
 /* eslint-disable lines-around-comment */
 
-import { NavigationContainer, Theme } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
 import { StatusBar } from 'react-native';
-import { connect } from 'react-redux';
 
 import { IReduxState } from '../../../app/types';
+import { connect } from '../../../base/redux/functions';
 // @ts-ignore
 import DialInSummary from '../../../invite/components/dial-in-summary/native/DialInSummary';
 import Prejoin from '../../../prejoin/components/native/Prejoin';
@@ -37,7 +37,7 @@ import ConferenceNavigationContainer
 const RootStack = createStackNavigator();
 
 
-interface IProps {
+type Props = {
 
     /**
      * Redux dispatch function.
@@ -48,10 +48,10 @@ interface IProps {
     * Is welcome page available?
     */
     isWelcomePageAvailable: boolean;
-}
+};
 
 
-const RootNavigationContainer = ({ dispatch, isWelcomePageAvailable }: IProps) => {
+const RootNavigationContainer = ({ dispatch, isWelcomePageAvailable }: Props) => {
     const initialRouteName = isWelcomePageAvailable
         ? screen.welcome.main : screen.connecting;
     const onReady = useCallback(() => {
@@ -66,7 +66,7 @@ const RootNavigationContainer = ({ dispatch, isWelcomePageAvailable }: IProps) =
             independent = { true }
             onReady = { onReady }
             ref = { rootNavigationRef }
-            theme = { navigationContainerTheme as Theme }>
+            theme = { navigationContainerTheme }>
             <StatusBar
                 animated = { true }
                 backgroundColor = 'transparent'
@@ -77,12 +77,11 @@ const RootNavigationContainer = ({ dispatch, isWelcomePageAvailable }: IProps) =
                 {
                     isWelcomePageAvailable
                         && <>
-                            <RootStack.Screen // @ts-ignore
+                            <RootStack.Screen
                                 component = { WelcomePage }
                                 name = { screen.welcome.main }
                                 options = { welcomeScreenOptions } />
                             <RootStack.Screen
-                                // @ts-ignore
                                 component = { DialInSummary }
                                 name = { screen.dialInSummary }
                                 options = { dialInSummaryScreenOptions } />
@@ -109,7 +108,7 @@ const RootNavigationContainer = ({ dispatch, isWelcomePageAvailable }: IProps) =
  * Maps part of the Redux store to the props of this component.
  *
  * @param {Object} state - The Redux state.
- * @returns {IProps}
+ * @returns {Props}
  */
 function mapStateToProps(state: IReduxState) {
     return {

@@ -8,8 +8,10 @@ import { sendAnalytics } from '../../../analytics/functions';
 // @ts-ignore
 import { appNavigate } from '../../../app/actions';
 import { IReduxState } from '../../../app/types';
-import ColorSchemeRegistry from '../../../base/color-scheme/ColorSchemeRegistry';
-import { endConference } from '../../../base/conference/actions';
+// @ts-ignore
+import { ColorSchemeRegistry } from '../../../base/color-scheme';
+// @ts-ignore
+import { endConference } from '../../../base/conference';
 import { hideSheet } from '../../../base/dialog/actions';
 // @ts-ignore
 import BottomSheet from '../../../base/dialog/components/native/BottomSheet';
@@ -27,7 +29,7 @@ import { isInBreakoutRoom } from '../../../breakout-rooms/functions';
  */
 function HangupMenu() {
     const dispatch = useDispatch();
-    const _styles: any = useSelector((state: IReduxState) => ColorSchemeRegistry.get(state, 'Toolbox'));
+    const _styles = useSelector(state => ColorSchemeRegistry.get(state, 'Toolbox'));
     const inBreakoutRoom = useSelector(isInBreakoutRoom);
     const isModerator = useSelector((state: IReduxState) =>
         getLocalParticipant(state)?.role === PARTICIPANT_ROLE.MODERATOR);

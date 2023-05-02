@@ -1,5 +1,4 @@
-import React, { KeyboardEvent, ReactNode, useCallback } from 'react';
-import ReactFocusLock from 'react-focus-lock';
+import React, { ReactNode, useCallback } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { DRAWER_MAX_HEIGHT } from '../../constants';
@@ -16,11 +15,6 @@ interface IProps {
      * Class name for custom styles.
      */
     className?: string;
-
-    /**
-     * The id of the dom element acting as the Drawer label.
-     */
-    headingId?: string;
 
     /**
      * Whether the drawer should be shown or not.
@@ -51,7 +45,6 @@ const useStyles = makeStyles()(theme => {
 function Drawer({
     children,
     className = '',
-    headingId,
     isOpen,
     onClose
 }: IProps) {
@@ -78,38 +71,15 @@ function Drawer({
         onClose?.();
     }, [ onClose ]);
 
-    /**
-     * Handles pressing the escape key, closing the drawer.
-     *
-     * @param {KeyboardEvent<HTMLDivElement>} event - The keydown event.
-     * @returns {void}
-     */
-    const handleEscKey = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === 'Escape') {
-            event.preventDefault();
-            event.stopPropagation();
-            onClose?.();
-        }
-    }, [ onClose ]);
-
     return (
         isOpen ? (
             <div
                 className = 'drawer-menu-container'
-                onClick = { handleOutsideClick }
-                onKeyDown = { handleEscKey }>
+                onClick = { handleOutsideClick }>
                 <div
                     className = { `drawer-menu ${styles.drawer} ${className}` }
                     onClick = { handleInsideClick }>
-                    <ReactFocusLock
-                        lockProps = {{
-                            role: 'dialog',
-                            'aria-modal': true,
-                            'aria-labelledby': `#${headingId}`
-                        }}
-                        returnFocus = { true }>
-                        {children}
-                    </ReactFocusLock>
+                    {children}
                 </div>
             </div>
         ) : null

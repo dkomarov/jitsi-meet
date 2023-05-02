@@ -6,7 +6,6 @@ import { IReduxState } from '../../../app/types';
 import { IconPin } from '../../../base/icons/svg';
 import { getParticipantById } from '../../../base/participants/functions';
 import BaseIndicator from '../../../base/react/components/web/BaseIndicator';
-import { TOOLTIP_POSITION } from '../../../base/ui/constants.any';
 import { getPinnedActiveParticipants, isStageFilmstripAvailable } from '../../functions.web';
 
 /**
@@ -28,7 +27,7 @@ interface IProps {
     /**
      * From which side of the indicator the tooltip should appear from.
      */
-    tooltipPosition: TOOLTIP_POSITION;
+    tooltipPosition: string;
 }
 
 const useStyles = makeStyles()(() => {

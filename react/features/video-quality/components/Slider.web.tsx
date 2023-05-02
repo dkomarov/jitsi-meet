@@ -51,8 +51,8 @@ const useStyles = makeStyles()(theme => {
         width: 24
     };
 
-    const focused = {
-        outline: `1px solid ${theme.palette.ui06}`
+    const focused = { // @ts-ignore
+        outline: `1px solid ${theme.palette.action03Focus}`
     };
 
     return {
@@ -94,7 +94,7 @@ const useStyles = makeStyles()(theme => {
                 top: 0,
                 width: '100%',
 
-                '&.focus-visible': {
+                '&:focus': {
                     // override global styles in order to use our own color
                     outline: 'none !important',
 

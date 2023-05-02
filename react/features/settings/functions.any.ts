@@ -10,12 +10,13 @@ import {
 } from '../base/participants/functions';
 import { toState } from '../base/redux/functions';
 import { getHideSelfView } from '../base/settings/functions';
-import { getLocalVideoTrack } from '../base/tracks/functions.any';
 import { parseStandardURIString } from '../base/util/uri';
 import { isStageFilmstripEnabled } from '../filmstrip/functions';
 import { isFollowMeActive } from '../follow-me/functions';
 import { getParticipantsPaneConfig } from '../participants-pane/functions';
 import { isReactionsEnabled } from '../reactions/functions.any';
+
+import { SS_DEFAULT_FRAME_RATE, SS_SUPPORTED_FRAMERATES } from './constants';
 
 /**
  * Used for web. Indicates if the setting section is enabled.
@@ -120,7 +121,19 @@ export function getMoreTabProps(stateful: IStateful) {
     const enabledNotifications = getNotificationsMap(stateful);
     const stageFilmstripEnabled = isStageFilmstripEnabled(state);
 
+    // when self view is controlled by the config we hide the settings
+    const { disableSelfView, disableSelfViewSettings } = state['features/base/config'];
+
     return {
+        currentFramerate: framerate,
+        currentLanguage: language,
+        desktopShareFramerates: SS_SUPPORTED_FRAMERATES,
+        disableHideSelfView: disableSelfViewSettings || disableSelfView,
+        hideSelfView: getHideSelfView(state),
+        languages: LANGUAGES,
+        showLanguageSettings: configuredTabs.includes('language'),
+        enabledNotifications,
+        showNotificationsSettings: Object.keys(enabledNotifications).length > 0,
         showPrejoinPage: !state['features/base/settings'].userSelectedSkipPrejoin,
         showPrejoinSettings: state['features/base/config'].prejoinConfig?.enabled,
         maxStageParticipants: state['features/base/settings'].maxStageParticipants,
@@ -194,25 +207,14 @@ export function getProfileTabProps(stateful: IStateful) {
     } = state['features/base/conference'];
     const { hideEmailInSettings } = state['features/base/config'];
     const localParticipant = getLocalParticipant(state);
-    const language = i18next.language || DEFAULT_LANGUAGE;
-    const configuredTabs: string[] = interfaceConfig.SETTINGS_SECTIONS || [];
-
-    // when self view is controlled by the config we hide the settings
-    const { disableSelfView, disableSelfViewSettings } = state['features/base/config'];
 
     return {
         authEnabled: Boolean(conference && authEnabled),
         authLogin,
-        disableHideSelfView: disableSelfViewSettings || disableSelfView,
-        currentLanguage: language,
         displayName: localParticipant?.name,
         email: localParticipant?.email,
-        hideEmailInSettings,
-        hideSelfView: getHideSelfView(state),
-        id: localParticipant?.id,
-        languages: LANGUAGES,
         readOnlyName: isNameReadOnly(state),
-        showLanguageSettings: configuredTabs.includes('language')
+        hideEmailInSettings
     };
 }
 
@@ -222,11 +224,10 @@ export function getProfileTabProps(stateful: IStateful) {
  *
  * @param {(Function|Object)} stateful -The (whole) redux state, or redux's
  * {@code getState} function to be used to retrieve the state.
- * @param {boolean} showSoundsSettings - Whether to show the sound settings or not.
  * @returns {Object} - The properties for the "Sounds" tab from settings
  * dialog.
  */
-export function getNotificationsTabProps(stateful: IStateful, showSoundsSettings?: boolean) {
+export function getSoundsTabProps(stateful: IStateful) {
     const state = toState(stateful);
     const {
         soundsIncomingMessage,
@@ -238,12 +239,8 @@ export function getNotificationsTabProps(stateful: IStateful, showSoundsSettings
     } = state['features/base/settings'];
     const enableReactions = isReactionsEnabled(state);
     const moderatorMutedSoundsReactions = state['features/base/conference'].startReactionsMuted ?? false;
-    const enabledNotifications = getNotificationsMap(stateful);
 
     return {
-        disabledSounds: state['features/base/config'].disabledSounds || [],
-        enabledNotifications,
-        showNotificationsSettings: Object.keys(enabledNotifications).length > 0,
         soundsIncomingMessage,
         soundsParticipantJoined,
         soundsParticipantKnocking,
@@ -251,8 +248,7 @@ export function getNotificationsTabProps(stateful: IStateful, showSoundsSettings
         soundsTalkWhileMuted,
         soundsReactions,
         enableReactions,
-        moderatorMutedSoundsReactions,
-        showSoundsSettings
+        moderatorMutedSoundsReactions
     };
 }
 
@@ -274,23 +270,4 @@ export function getAudioSettingsVisibility(state: IReduxState) {
  */
 export function getVideoSettingsVisibility(state: IReduxState) {
     return state['features/settings'].videoSettingsVisible;
-}
-
-/**
- * Returns the properties for the "Virtual Background" tab from settings dialog from Redux
- * state.
- *
- * @param {(Function|Object)} stateful -The (whole) redux state, or redux's
- * {@code getState} function to be used to retrieve the state.
- * @returns {Object} - The properties for the "Shortcuts" tab from settings
- * dialog.
- */
-export function getVirtualBackgroundTabProps(stateful: IStateful) {
-    const state = toState(stateful);
-
-    return {
-        _virtualBackground: state['features/virtual-background'],
-        selectedThumbnail: state['features/virtual-background'].selectedThumbnail,
-        _jitsiTrack: getLocalVideoTrack(state['features/base/tracks'])?.jitsiTrack
-    };
 }

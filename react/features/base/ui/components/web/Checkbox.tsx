@@ -11,7 +11,7 @@ interface ICheckboxProps {
     /**
      * Whether the input is checked or not.
      */
-    checked?: boolean;
+    checked: boolean;
 
     /**
      * Class name for additional styles.
@@ -53,10 +53,6 @@ const useStyles = makeStyles()(theme => {
             }
         },
 
-        disabled: {
-            cursor: 'not-allowed'
-        },
-
         activeArea: {
             display: 'grid',
             placeContent: 'center',
@@ -77,6 +73,7 @@ const useStyles = makeStyles()(theme => {
                 height: '18px',
                 border: `2px solid ${theme.palette.icon03}`,
                 borderRadius: '3px',
+                cursor: 'pointer',
 
                 display: 'grid',
                 placeContent: 'center',
@@ -157,7 +154,7 @@ const Checkbox = ({
 
     return (
         <div className = { cx(styles.formControl, isMobile && 'is-mobile', className) }>
-            <label className = { cx(styles.activeArea, isMobile && 'is-mobile', disabled && styles.disabled) }>
+            <label className = { cx(styles.activeArea, isMobile && 'is-mobile') }>
                 <input
                     checked = { checked }
                     disabled = { disabled }

@@ -6,7 +6,9 @@ import { makeStyles } from 'tss-react/mui';
 import { IReduxState } from '../../../app/types';
 import { IconUsers } from '../../../base/icons/svg';
 import Label from '../../../base/label/components/web/Label';
-import Tooltip from '../../../base/tooltip/components/Tooltip';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import { Tooltip } from '../../../base/tooltip';
 import { getVisitorsShortText, iAmVisitor } from '../../functions';
 
 const useStyles = makeStyles()(theme => {
@@ -25,8 +27,8 @@ const VisitorsCountLabel = () => {
         state['features/visitors'].count || 0);
     const { t } = useTranslation();
 
-    return !visitorsMode && visitorsCount > 0 ? (<Tooltip
-        content = { t('visitors.labelTooltip', { count: visitorsCount }) }
+    return visitorsMode && (<Tooltip
+        content = { t('visitorsLabel', { count: visitorsCount }) }
         position = { 'bottom' }>
         <Label
             className = { styles.label }
@@ -34,7 +36,7 @@ const VisitorsCountLabel = () => {
             iconColor = { theme.palette.icon04 }
             id = 'visitorsCountLabel'
             text = { `${getVisitorsShortText(visitorsCount)}` } />
-    </Tooltip>) : null;
+    </Tooltip>);
 };
 
 export default VisitorsCountLabel;

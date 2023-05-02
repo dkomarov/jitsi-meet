@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * The id of the Follow Me moderator.
  *

@@ -4,7 +4,8 @@ import JitsiMeetJS from '../base/lib-jitsi-meet';
 import { showNotification } from '../notifications/actions';
 import { NOTIFICATION_TIMEOUT_TYPE } from '../notifications/constants';
 
-import RecordingLimitNotificationDescription from './components/web/RecordingLimitNotificationDescription';
+// @ts-ignore
+import { RecordingLimitNotificationDescription } from './components';
 
 export * from './actions.any';
 

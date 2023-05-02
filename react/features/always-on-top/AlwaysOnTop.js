@@ -199,7 +199,7 @@ export default class AlwaysOnTop extends Component<*, State> {
                         color = { getAvatarColor(displayName, customAvatarBackgrounds) }
                         id = 'avatar'
                         initials = { getInitials(displayName) }
-                        url = { avatarURL } />)
+                        url = { displayName ? null : avatarURL } />)
                 </div>
                 <div
                     className = 'displayname'

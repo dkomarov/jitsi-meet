@@ -1,26 +1,29 @@
+/* eslint-disable lines-around-comment */
+
 import React from 'react';
 
-import { IconModerator } from '../../../base/icons/svg';
-import BaseIndicator from '../../../base/react/components/web/BaseIndicator';
-import { TOOLTIP_POSITION } from '../../../base/ui/constants.any';
+// @ts-ignore
+import { IconModerator } from '../../../base/icons';
+// @ts-ignore
+import { BaseIndicator } from '../../../base/react';
 
 /**
  * The type of the React {@code Component} props of {@link ModeratorIndicator}.
  */
-interface IProps {
+type Props = {
 
     /**
      * From which side of the indicator the tooltip should appear from.
      */
-    tooltipPosition: TOOLTIP_POSITION;
-}
+    tooltipPosition: string;
+};
 
 /**
  * React {@code Component} for showing a moderator icon with a tooltip.
  *
  * @returns {JSX.Element}
  */
-const ModeratorIndicator = ({ tooltipPosition }: IProps): JSX.Element => (
+const ModeratorIndicator = ({ tooltipPosition }: Props): JSX.Element => (
     <BaseIndicator
         icon = { IconModerator }
         iconSize = { 16 }

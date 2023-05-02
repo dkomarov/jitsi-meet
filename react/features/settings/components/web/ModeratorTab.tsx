@@ -1,23 +1,18 @@
-import { Theme } from '@mui/material';
-import { withStyles } from '@mui/styles';
 import React from 'react';
 import { WithTranslation } from 'react-i18next';
 
-import AbstractDialogTab, {
-    IProps as AbstractDialogTabProps } from '../../../base/dialog/components/web/AbstractDialogTab';
+// @ts-ignore
+import { AbstractDialogTab } from '../../../base/dialog';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import type { Props as AbstractDialogTabProps } from '../../../base/dialog';
 import { translate } from '../../../base/i18n/functions';
-import { withPixelLineHeight } from '../../../base/styles/functions.web';
 import Checkbox from '../../../base/ui/components/web/Checkbox';
 
 /**
  * The type of the React {@code Component} props of {@link ModeratorTab}.
  */
-export interface IProps extends AbstractDialogTabProps, WithTranslation {
-
-    /**
-     * CSS classes object.
-     */
-    classes: any;
+export type Props = AbstractDialogTabProps & WithTranslation & {
 
     /**
      * If set hides the reactions moderation setting.
@@ -51,25 +46,11 @@ export interface IProps extends AbstractDialogTabProps, WithTranslation {
      * enabled.
      */
     startVideoMuted: boolean;
-}
 
-const styles = (theme: Theme) => {
-    return {
-        container: {
-            display: 'flex',
-            flexDirection: 'column' as const
-        },
-
-        title: {
-            ...withPixelLineHeight(theme.typography.heading6),
-            color: `${theme.palette.text01} !important`,
-            marginBottom: theme.spacing(3)
-        },
-
-        checkbox: {
-            marginBottom: theme.spacing(3)
-        }
-    };
+    /**
+     * Invoked to obtain translated strings.
+     */
+    t: Function;
 };
 
 /**
@@ -77,14 +58,14 @@ const styles = (theme: Theme) => {
  *
  * @augments Component
  */
-class ModeratorTab extends AbstractDialogTab<IProps, any> {
+class ModeratorTab extends AbstractDialogTab<Props> {
     /**
      * Initializes a new {@code ModeratorTab} instance.
      *
      * @param {Object} props - The read-only properties with which the new
      * instance is to be initialized.
      */
-    constructor(props: IProps) {
+    constructor(props: Props) {
         super(props);
 
         // Bind event handler so it is only bound once for every instance.
@@ -92,6 +73,16 @@ class ModeratorTab extends AbstractDialogTab<IProps, any> {
         this._onStartVideoMutedChanged = this._onStartVideoMutedChanged.bind(this);
         this._onStartReactionsMutedChanged = this._onStartReactionsMutedChanged.bind(this);
         this._onFollowMeEnabledChanged = this._onFollowMeEnabledChanged.bind(this);
+    }
+
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        return <div className = 'moderator-tab box'>{ this._renderModeratorSettings() }</div>;
     }
 
     /**
@@ -143,59 +134,58 @@ class ModeratorTab extends AbstractDialogTab<IProps, any> {
     }
 
     /**
-     * Implements React's {@link Component#render()}.
+     * Returns the React Element for modifying conference-wide settings.
      *
-     * @inheritdoc
+     * @private
      * @returns {ReactElement}
      */
-    render() {
+    _renderModeratorSettings() {
         const {
-            classes,
             disableReactionsModeration,
             followMeActive,
             followMeEnabled,
             startAudioMuted,
             startVideoMuted,
             startReactionsMuted,
-            t
+            t // @ts-ignore
         } = this.props;
 
         return (
             <div
-                className = { `moderator-tab ${classes.container}` }
+                className = 'settings-sub-pane-element'
                 key = 'moderator'>
-                <h2 className = { classes.title }>
-                    {t('settings.moderatorOptions')}
-                </h2>
-                <Checkbox
-                    checked = { startAudioMuted }
-                    className = { classes.checkbox }
-                    label = { t('settings.startAudioMuted') }
-                    name = 'start-audio-muted'
-                    onChange = { this._onStartAudioMutedChanged } />
-                <Checkbox
-                    checked = { startVideoMuted }
-                    className = { classes.checkbox }
-                    label = { t('settings.startVideoMuted') }
-                    name = 'start-video-muted'
-                    onChange = { this._onStartVideoMutedChanged } />
-                <Checkbox
-                    checked = { followMeEnabled && !followMeActive }
-                    className = { classes.checkbox }
-                    disabled = { followMeActive }
-                    label = { t('settings.followMe') }
-                    name = 'follow-me'
-                    onChange = { this._onFollowMeEnabledChanged } />
-                { !disableReactionsModeration
+                <div className = 'moderator-settings-wrapper'>
+                    <Checkbox
+                        checked = { startAudioMuted }
+                        className = 'settings-checkbox'
+                        label = { t('settings.startAudioMuted') }
+                        name = 'start-audio-muted'
+                        onChange = { this._onStartAudioMutedChanged } />
+                    <Checkbox
+                        checked = { startVideoMuted }
+                        className = 'settings-checkbox'
+                        label = { t('settings.startVideoMuted') }
+                        name = 'start-video-muted'
+                        onChange = { this._onStartVideoMutedChanged } />
+                    <Checkbox
+                        checked = { followMeEnabled && !followMeActive }
+                        className = 'settings-checkbox'
+                        disabled = { followMeActive }
+                        label = { t('settings.followMe') }
+                        name = 'follow-me'
+                        onChange = { this._onFollowMeEnabledChanged } />
+                    { !disableReactionsModeration
                         && <Checkbox
                             checked = { startReactionsMuted }
-                            className = { classes.checkbox }
+                            className = 'settings-checkbox'
                             label = { t('settings.startReactionsMuted') }
                             name = 'start-reactions-muted'
                             onChange = { this._onStartReactionsMutedChanged } /> }
+                </div>
             </div>
         );
     }
 }
 
-export default withStyles(styles)(translate(ModeratorTab));
+// @ts-ignore
+export default translate(ModeratorTab);

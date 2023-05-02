@@ -786,7 +786,7 @@ export function getCountryCodeFromPhone(phoneNumber: string): string {
  * @param {string} text - The text containing the dial code.
  * @returns {Object}
  */
-export function getCountryFromDialCodeText(text: string) {
+export function getCountryFromDialCodeText(text: string): Object {
     return (
         countriesByCodeMap[text.slice(0, 4)]
         || countriesByCodeMap[text.slice(0, 3)]

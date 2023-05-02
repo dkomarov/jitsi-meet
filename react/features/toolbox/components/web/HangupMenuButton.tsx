@@ -83,13 +83,12 @@ class HangupMenuButton extends Component<IProps> {
      * @returns {ReactElement}
      */
     render() {
-        const { children, isOpen, t } = this.props;
+        const { children, isOpen } = this.props;
 
         return (
             <div className = 'toolbox-button-wth-dialog context-menu'>
                 <Popover
                     content = { children }
-                    headingLabel = { t('toolbar.accessibilityLabel.hangup') }
                     onPopoverClose = { this._onCloseDialog }
                     position = 'top'
                     trigger = 'click'

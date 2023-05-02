@@ -1,3 +1,5 @@
+// @flow
+
 import '../analytics/reducer';
 import '../authentication/reducer';
 import '../av-moderation/reducer';

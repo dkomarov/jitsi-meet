@@ -72,6 +72,7 @@ export const KEYS = {
     PLUS: '+'
 };
 
+/* eslint-disable max-len */
 /**
  * Mapping between the key codes and keys defined in KEYS.
  * The mappings are based on
@@ -153,7 +154,8 @@ const keyCodeToKey = {
  * Generate codes for digit keys (0-9).
  */
 for (let i = 0; i < 10; i++) {
-    keyCodeToKey[(i + 48) as keyof typeof keyCodeToKey] = `${i}`;
+    // @ts-ignore
+    keyCodeToKey[i + 48] = `${i}`;
 }
 
 /**

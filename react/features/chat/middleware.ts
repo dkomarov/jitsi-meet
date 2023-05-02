@@ -6,7 +6,6 @@ import { CONFERENCE_JOINED } from '../base/conference/actionTypes';
 import { getCurrentConference } from '../base/conference/functions';
 import { IJitsiConference } from '../base/conference/reducer';
 import { openDialog } from '../base/dialog/actions';
-import i18next from '../base/i18n/i18next';
 import {
     JitsiConferenceErrors,
     JitsiConferenceEvents
@@ -30,6 +29,8 @@ import { pushReactions } from '../reactions/actions.any';
 import { ENDPOINT_REACTION_NAME } from '../reactions/constants';
 import { getReactionMessageFromBuffer, isReactionsEnabled } from '../reactions/functions.any';
 import { endpointMessageReceived } from '../subtitles/actions.any';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
 import { showToolbox } from '../toolbox/actions';
 
 
@@ -228,14 +229,10 @@ function _addChatMsgListener(conference: IJitsiConference, store: IStore) {
 
     conference.on(
         JitsiConferenceEvents.MESSAGE_RECEIVED,
-        // eslint-disable-next-line max-params
-        (id: string, message: string, timestamp: number, displayName: string, isGuest?: boolean) => {
-            _onConferenceMessageReceived(store, {
-                id: id || displayName, // in case of messages coming from visitors we can have unknown id
+        (id: string, message: string, timestamp: number) => {
+            _onConferenceMessageReceived(store, { id,
                 message,
                 timestamp,
-                displayName,
-                isGuest,
                 privateMessage: false });
         }
     );
@@ -294,9 +291,8 @@ function _addChatMsgListener(conference: IJitsiConference, store: IStore) {
  * @param {Object} message - The message object.
  * @returns {void}
  */
-function _onConferenceMessageReceived(store: IStore, { displayName, id, isGuest, message, timestamp, privateMessage }: {
-    displayName?: string; id: string; isGuest?: boolean;
-    message: string; privateMessage: boolean; timestamp: number; }) {
+function _onConferenceMessageReceived(store: IStore, { id, message, timestamp, privateMessage }: {
+    id: string; message: string; privateMessage: boolean; timestamp: number; }) {
     const isGif = isGifMessage(message);
 
     if (isGif) {
@@ -306,9 +302,7 @@ function _onConferenceMessageReceived(store: IStore, { displayName, id, isGuest,
         }
     }
     _handleReceivedMessage(store, {
-        displayName,
         id,
-        isGuest,
         message,
         privateMessage,
         lobbyChat: false,
@@ -395,14 +389,13 @@ function getLobbyChatDisplayName(state: IReduxState, id: string) {
  *
  * @param {Store} store - The Redux store.
  * @param {Object} message - The message object.
- * @param {boolean} shouldPlaySound - Whether to play the incoming message sound.
- * @param {boolean} isReaction - Whether the message is a reaction message.
+ * @param {boolean} shouldPlaySound - Whether or not to play the incoming message sound.
+ * @param {boolean} isReaction - Whether or not the message is a reaction message.
  * @returns {void}
  */
 function _handleReceivedMessage({ dispatch, getState }: IStore,
-        { displayName, id, isGuest, message, privateMessage, timestamp, lobbyChat }: {
-        displayName?: string; id: string; isGuest?: boolean; lobbyChat: boolean;
-        message: string; privateMessage: boolean; timestamp: number; },
+        { id, message, privateMessage, timestamp, lobbyChat }: {
+        id: string; lobbyChat: boolean; message: string; privateMessage: boolean; timestamp: number; },
         shouldPlaySound = true,
         isReaction = false
 ) {
@@ -415,14 +408,14 @@ function _handleReceivedMessage({ dispatch, getState }: IStore,
         dispatch(playSound(INCOMING_MSG_SOUND_ID));
     }
 
-    // Provide a default for the case when a message is being
+    // Provide a default for for the case when a message is being
     // backfilled for a participant that has left the conference.
     const participant = getParticipantById(state, id) || { local: undefined };
 
     const localParticipant = getLocalParticipant(getState);
-    let displayNameToShow = lobbyChat
+    const displayName = lobbyChat
         ? getLobbyChatDisplayName(state, id)
-        : displayName || getParticipantDisplayName(state, id);
+        : getParticipantDisplayName(state, id);
     const hasRead = participant.local || isChatOpen;
     const timestampToDate = timestamp ? new Date(timestamp) : new Date();
     const millisecondsTimestamp = timestampToDate.getTime();
@@ -431,12 +424,8 @@ function _handleReceivedMessage({ dispatch, getState }: IStore,
     const shouldShowNotification = userSelectedNotifications?.['notify.chatMessages']
         && !hasRead && !isReaction && !timestamp;
 
-    if (isGuest) {
-        displayNameToShow = `${displayNameToShow} ${i18next.t('visitors.chatIndicator')}`;
-    }
-
     dispatch(addMessage({
-        displayName: displayNameToShow,
+        displayName,
         hasRead,
         id,
         messageType: participant.local ? MESSAGE_TYPE_LOCAL : MESSAGE_TYPE_REMOTE,
@@ -450,7 +439,7 @@ function _handleReceivedMessage({ dispatch, getState }: IStore,
 
     if (shouldShowNotification) {
         dispatch(showMessageNotification({
-            title: displayNameToShow,
+            title: displayName,
             description: message
         }, NOTIFICATION_TIMEOUT_TYPE.MEDIUM));
     }
@@ -461,7 +450,7 @@ function _handleReceivedMessage({ dispatch, getState }: IStore,
         APP.API.notifyReceivedChatMessage({
             body: message,
             id,
-            nick: displayNameToShow,
+            nick: displayName,
             privateMessage,
             ts: timestamp
         });

@@ -1,15 +1,17 @@
 import Tabs from '@atlaskit/tabs';
 import React, { PureComponent } from 'react';
 import { WithTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 
 import { IStore } from '../../app/types';
 import { hideDialog } from '../../base/dialog/actions';
 import { translate } from '../../base/i18n/functions';
+import { connect } from '../../base/redux/functions';
 import Dialog from '../../base/ui/components/web/Dialog';
-import Tabs from '../../base/ui/components/web/Tabs';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
 import { obtainDesktopSources } from '../functions';
 
+// @ts-ignore
 import DesktopPickerPane from './DesktopPickerPane';
 
 /**
@@ -88,7 +90,7 @@ interface IState {
     /**
      * An object containing all the DesktopCapturerSources.
      */
-    sources: any;
+    sources: Object;
 
     /**
      * The desktop source types to fetch previews for.
@@ -189,8 +191,6 @@ class DesktopPicker extends PureComponent<IProps, IState> {
      * @inheritdoc
      */
     render() {
-        const { selectedTab, selectedSource, sources, types } = this.state;
-
         return (
             <Dialog
                 ok = {{
@@ -348,9 +348,6 @@ class DesktopPicker extends PureComponent<IProps, IState> {
                             selectedSourceId = { selectedSource.id }
                             sources = { sources[type as keyof typeof sources] }
                             type = { type } />,
-                        accessibilityLabel: t(TAB_LABELS[type as keyof typeof TAB_LABELS]),
-                        id: `${type}`,
-                        controlsId: `${type}-panel`,
                         label: t(TAB_LABELS[type as keyof typeof TAB_LABELS])
                     };
                 });
@@ -358,11 +355,7 @@ class DesktopPicker extends PureComponent<IProps, IState> {
         return (
             <Tabs
                 onSelect = { this._onTabSelected }
-                accessibilityLabel = { t('dialog.sharingTabs') }
-                className = 'desktop-picker-tabs-container'
-                onChange = { this._onTabSelected }
-                selected = { `${this.state.selectedTab}` }
-
+                selected = { this.state.selectedTab }
                 tabs = { tabs } />);
     }
 

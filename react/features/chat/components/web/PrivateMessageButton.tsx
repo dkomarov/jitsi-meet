@@ -11,7 +11,7 @@ import Button from '../../../base/ui/components/web/Button';
 import { BUTTON_TYPES } from '../../../base/ui/constants.any';
 import { handleLobbyChatInitialized, openChat } from '../../actions.web';
 
-export interface IProps {
+interface IProps {
 
     /**
     * True if the message is a lobby chat message.

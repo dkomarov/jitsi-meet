@@ -10,7 +10,9 @@ import {
 } from '../../../base/participants/functions';
 import { updateSettings } from '../../../base/settings/actions';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
-import Tooltip from '../../../base/tooltip/components/Tooltip';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import { Tooltip } from '../../../base/tooltip';
 import { getIndicatorsTooltipPosition } from '../../../filmstrip/functions.web';
 import { appendSuffix } from '../../functions';
 
@@ -43,7 +45,7 @@ interface IProps {
     /**
      * The type of thumbnail.
      */
-    thumbnailType?: string;
+    thumbnailType: string;
 }
 
 const useStyles = makeStyles()(theme => {

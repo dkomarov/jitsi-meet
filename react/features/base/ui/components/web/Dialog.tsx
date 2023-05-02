@@ -138,6 +138,12 @@ const useStyles = makeStyles()(theme => {
             justifyContent: 'space-between'
         },
 
+        closeIcon: {
+            '&:focus': {
+                boxShadow: 'none'
+            }
+        },
+
         title: {
             color: theme.palette.text01,
             ...withPixelLineHeight(theme.typography.heading5),
@@ -259,35 +265,7 @@ const Dialog = ({
     }, []);
 
     return (
-        <BaseDialog
-            className = { className }
-            description = { description }
-            disableBackdropClose = { disableBackdropClose }
-            disableEnter = { disableEnter }
-            onClose = { onClose }
-            size = { size }
-            submit = { submit }
-            title = { title }
-            titleKey = { titleKey }>
-            <div className = { classes.header }>
-                <p
-                    className = { classes.title }
-                    id = 'dialog-title'>
-                    {title ?? t(titleKey ?? '')}
-                </p>
-                {!hideCloseButton && (
-                    <ClickableIcon
-                        accessibilityLabel = { t('dialog.accessibilityLabel.close') }
-                        icon = { IconCloseLarge }
-                        id = 'modal-header-close-button'
-                        onClick = { onClose } />
-                )}
-            </div>
-            <div
-                className = { classes.content }
-                data-autofocus-inside = 'true'>
-                {children}
-            </div>
+        <div className = { cx(classes.container, isUnmounting && 'unmount') }>
             <div
                 className = { classes.backdrop }
                 onClick = { onBackdropClick } />

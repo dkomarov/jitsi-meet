@@ -1,5 +1,7 @@
 import { Sounds } from '../config/configType';
-import { AudioElement } from '../media/components/AbstractAudio';
+// eslint-disable-next-line lines-around-comment
+// @ts-ignore
+import type { AudioElement } from '../media';
 
 import {
     PLAY_SOUND,
