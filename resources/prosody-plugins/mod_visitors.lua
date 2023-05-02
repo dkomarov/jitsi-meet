@@ -63,7 +63,10 @@ local function send_visitors_iq(conference_service, room, type)
         id = iq_id })
       :tag('visitors', { xmlns = 'jitsi:visitors',
                          room = jid.join(jid.node(room.jid), conference_service) })
-      :tag(type, { xmlns = 'jitsi:visitors', password = room:get_password() or '' }):up();
+      :tag(type, { xmlns = 'jitsi:visitors',
+        password = type ~= 'disconnect' and room:get_password() or '',
+        meetingId = room._data.meetingId
+      }):up();
 
       module:send(connect_done);
 end
@@ -140,6 +143,8 @@ local function disconnect_vnode(event)
     -- we are counting vnode main participants and we should be clearing it there
     -- let's do it here just in case
     visitors_nodes[room.jid].nodes[conference_service] = nil;
+
+    send_visitors_iq(conference_service, room, 'disconnect');
 end
 module:hook('jitsi-disconnect-vnode', disconnect_vnode);
 
@@ -159,9 +164,7 @@ module:hook('presence/full', function(event)
         if visitors_nodes[room_jid] and visitors_nodes[room_jid].nodes
                 and visitors_nodes[room_jid].nodes[from_host] then
             visitors_nodes[room_jid].nodes[from_host] = visitors_nodes[room_jid].nodes[from_host] - 1;
-            if visitors_nodes[room_jid].nodes[from_host] == 0 then
-                visitors_nodes[room_jid].nodes[from_host] = nil;
-            end
+            -- we clean only on disconnect coming from jicofo
         end
     end
 end, 900);
@@ -310,10 +313,13 @@ process_host_module(main_muc_component_config, function(host_module, host)
     host_module:hook('muc-config-submitted/muc#roomconfig_roomsecret', function(event)
         if event.status_codes['104'] then
             local room = event.room;
-            -- we need to update all vnodes
-            local vnodes = visitors_nodes[room.jid].nodes;
-            for conference_service in pairs(vnodes) do
-                send_visitors_iq(conference_service, room, 'update');
+
+            if visitors_nodes[room.jid] then
+                -- we need to update all vnodes
+                local vnodes = visitors_nodes[room.jid].nodes;
+                for conference_service in pairs(vnodes) do
+                    send_visitors_iq(conference_service, room, 'update');
+                end
             end
         end
 end, -100); -- we want to run last in order to check is the status code 104
