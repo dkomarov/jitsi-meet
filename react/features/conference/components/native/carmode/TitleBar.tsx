@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { StyleProp, Text, View, ViewStyle } from 'react-native';
-import { useSelector } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 import { IReduxState } from '../../../../app/types';
 import { getConferenceName } from '../../../../base/conference/functions';
@@ -10,13 +10,12 @@ import { MEETING_NAME_ENABLED } from '../../../../base/flags/constants';
 import { getFeatureFlag } from '../../../../base/flags/functions';
 import { JitsiRecordingConstants } from '../../../../base/lib-jitsi-meet';
 import { getLocalParticipant } from '../../../../base/participants/functions';
-import { connect } from '../../../../base/redux/functions';
 // @ts-ignore
 import ConnectionIndicator from '../../../../connection-indicator/components/native/ConnectionIndicator';
 // @ts-ignore
 import RecordingLabel from '../../../../recording/components/native/RecordingLabel';
 // @ts-ignore
-import { VideoQualityLabel } from '../../../../video-quality';
+import VideoQualityLabel from '../../../../video-quality/components/VideoQualityLabel.native';
 
 // @ts-ignore
 import styles from './styles';
@@ -47,9 +46,8 @@ const TitleBar = (props: IProps): JSX.Element => {
     const localParticipant = useSelector(getLocalParticipant);
     const localParticipantId = localParticipant?.id;
 
-    return (<>
+    return (
         <View
-            pointerEvents = 'box-none'
             style = { styles.titleBarWrapper as StyleProp<ViewStyle> }>
             <View
                 pointerEvents = 'box-none'
@@ -78,7 +76,7 @@ const TitleBar = (props: IProps): JSX.Element => {
                 }
             </View>
         </View>
-    </>);
+    );
 };
 
 /**

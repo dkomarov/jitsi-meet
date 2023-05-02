@@ -1,21 +1,20 @@
 // @flow
 
+import { connect } from 'react-redux';
 import { type Dispatch } from 'redux';
 
-import {
-    createToolbarEvent,
-    sendAnalytics
-} from '../../../analytics';
-import { RAISE_HAND_ENABLED, getFeatureFlag } from '../../../base/flags';
-import { translate } from '../../../base/i18n';
-import { IconRaiseHand } from '../../../base/icons';
+import { createToolbarEvent } from '../../../analytics/AnalyticsEvents';
+import { sendAnalytics } from '../../../analytics/functions';
+import { RAISE_HAND_ENABLED } from '../../../base/flags/constants';
+import { getFeatureFlag } from '../../../base/flags/functions';
+import { translate } from '../../../base/i18n/functions';
+import { IconRaiseHand } from '../../../base/icons/svg';
+import { raiseHand } from '../../../base/participants/actions';
 import {
     getLocalParticipant,
-    hasRaisedHand,
-    raiseHand
-} from '../../../base/participants';
-import { connect } from '../../../base/redux';
-import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
+    hasRaisedHand
+} from '../../../base/participants/functions';
+import AbstractButton, { IProps as AbstractButtonProps } from '../../../base/toolbox/components/AbstractButton';
 
 /**
  * The type of the React {@code Component} props of {@link RaiseHandButton}.

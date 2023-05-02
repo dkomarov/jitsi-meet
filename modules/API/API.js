@@ -2,10 +2,8 @@
 
 import Logger from '@jitsi/logger';
 
-import {
-    createApiEvent,
-    sendAnalytics
-} from '../../react/features/analytics';
+import { createApiEvent } from '../../react/features/analytics/AnalyticsEvents';
+import { sendAnalytics } from '../../react/features/analytics/functions';
 import {
     approveParticipantAudio,
     approveParticipantVideo,
@@ -19,37 +17,41 @@ import {
 import { isEnabledFromState } from '../../react/features/av-moderation/functions';
 import {
     endConference,
-    getCurrentConference,
     sendTones,
     setFollowMe,
     setLocalSubject,
     setPassword,
     setSubject
-} from '../../react/features/base/conference';
-import { getWhitelistedJSON, overwriteConfig } from '../../react/features/base/config';
+} from '../../react/features/base/conference/actions';
+import { getCurrentConference } from '../../react/features/base/conference/functions';
+import { overwriteConfig } from '../../react/features/base/config/actions';
+import { getWhitelistedJSON } from '../../react/features/base/config/functions.any';
 import { toggleDialog } from '../../react/features/base/dialog/actions';
-import { isSupportedBrowser } from '../../react/features/base/environment';
-import { parseJWTFromURLParams } from '../../react/features/base/jwt';
+import { isSupportedBrowser } from '../../react/features/base/environment/environment';
+import { parseJWTFromURLParams } from '../../react/features/base/jwt/functions';
 import JitsiMeetJS, { JitsiRecordingConstants } from '../../react/features/base/lib-jitsi-meet';
-import { MEDIA_TYPE, VIDEO_TYPE } from '../../react/features/base/media';
+import { MEDIA_TYPE, VIDEO_TYPE } from '../../react/features/base/media/constants';
 import {
-    LOCAL_PARTICIPANT_DEFAULT_ID,
-    getLocalParticipant,
-    getParticipantById,
-    getScreenshareParticipantIds,
-    getVirtualScreenshareParticipantByOwnerId,
     grantModerator,
-    hasRaisedHand,
-    isLocalParticipantModerator,
-    isParticipantModerator,
     kickParticipant,
     overwriteParticipantsNames,
     pinParticipant,
     raiseHand
-} from '../../react/features/base/participants';
-import { updateSettings } from '../../react/features/base/settings';
+} from '../../react/features/base/participants/actions';
+import { LOCAL_PARTICIPANT_DEFAULT_ID } from '../../react/features/base/participants/constants';
+import {
+    getLocalParticipant,
+    getParticipantById,
+    getScreenshareParticipantIds,
+    getVirtualScreenshareParticipantByOwnerId,
+    hasRaisedHand,
+    isLocalParticipantModerator,
+    isParticipantModerator
+} from '../../react/features/base/participants/functions';
+import { updateSettings } from '../../react/features/base/settings/actions';
 import { getDisplayName } from '../../react/features/base/settings/functions.web';
-import { isToggleCameraEnabled, toggleCamera } from '../../react/features/base/tracks';
+import { toggleCamera } from '../../react/features/base/tracks/actions.any';
+import { isToggleCameraEnabled } from '../../react/features/base/tracks/functions';
 import {
     autoAssignToBreakoutRooms,
     closeBreakoutRoom,
@@ -68,8 +70,8 @@ import { openChat } from '../../react/features/chat/actions.web';
 import {
     processExternalDeviceRequest
 } from '../../react/features/device-selection/functions';
-import { appendSuffix } from '../../react/features/display-name';
-import { isEnabled as isDropboxEnabled } from '../../react/features/dropbox';
+import { appendSuffix } from '../../react/features/display-name/functions';
+import { isEnabled as isDropboxEnabled } from '../../react/features/dropbox/functions';
 import { setMediaEncryptionKey, toggleE2EE } from '../../react/features/e2ee/actions';
 import {
     addStageParticipant,
@@ -78,7 +80,7 @@ import {
     togglePinStageParticipant
 } from '../../react/features/filmstrip/actions.web';
 import { getPinnedActiveParticipants, isStageFilmstripAvailable } from '../../react/features/filmstrip/functions.web';
-import { invite } from '../../react/features/invite';
+import { invite } from '../../react/features/invite/actions.any';
 import {
     selectParticipantInLargeVideo
 } from '../../react/features/large-video/actions.any';
@@ -88,35 +90,36 @@ import {
 } from '../../react/features/large-video/actions.web';
 import { answerKnockingParticipant, toggleLobbyMode } from '../../react/features/lobby/actions';
 import { setNoiseSuppressionEnabled } from '../../react/features/noise-suppression/actions';
-import {
-    NOTIFICATION_TIMEOUT_TYPE,
-    NOTIFICATION_TYPE,
-    hideNotification,
-    showNotification
-} from '../../react/features/notifications';
+import { hideNotification, showNotification } from '../../react/features/notifications/actions';
+import { NOTIFICATION_TIMEOUT_TYPE, NOTIFICATION_TYPE } from '../../react/features/notifications/constants';
 import {
     close as closeParticipantsPane,
     open as openParticipantsPane
 } from '../../react/features/participants-pane/actions';
 import { getParticipantsPaneOpen, isForceMuted } from '../../react/features/participants-pane/functions';
-import { startLocalVideoRecording, stopLocalVideoRecording } from '../../react/features/recording';
+import { startLocalVideoRecording, stopLocalVideoRecording } from '../../react/features/recording/actions.any';
 import { RECORDING_TYPES } from '../../react/features/recording/constants';
 import { getActiveSession, supportsLocalRecording } from '../../react/features/recording/functions';
 import { startAudioScreenShareFlow, startScreenShareFlow } from '../../react/features/screen-share/actions';
 import { isScreenAudioSupported } from '../../react/features/screen-share/functions';
-import { toggleScreenshotCaptureSummary } from '../../react/features/screenshot-capture';
+import { toggleScreenshotCaptureSummary } from '../../react/features/screenshot-capture/actions';
 import { isScreenshotCaptureEnabled } from '../../react/features/screenshot-capture/functions';
+import SettingsDialog from '../../react/features/settings/components/web/SettingsDialog';
+import { SETTINGS_TABS } from '../../react/features/settings/constants';
 import { playSharedVideo, stopSharedVideo } from '../../react/features/shared-video/actions.any';
 import { extractYoutubeIdOrURL } from '../../react/features/shared-video/functions';
 import { setRequestingSubtitles, toggleRequestingSubtitles } from '../../react/features/subtitles/actions';
 import { isAudioMuteButtonDisabled } from '../../react/features/toolbox/functions';
-import { setTileView, toggleTileView } from '../../react/features/video-layout';
+import { setTileView, toggleTileView } from '../../react/features/video-layout/actions.any';
 import { muteAllParticipants } from '../../react/features/video-menu/actions';
-import { setVideoQuality } from '../../react/features/video-quality';
-import VirtualBackgroundDialog from '../../react/features/virtual-background/components/VirtualBackgroundDialog';
+import { setVideoQuality } from '../../react/features/video-quality/actions';
 import { getJitsiMeetTransport } from '../transport';
 
-import { API_ID, ENDPOINT_TEXT_MESSAGE_NAME } from './constants';
+import {
+    API_ID,
+    ASSUMED_BANDWIDTH_BPS,
+    ENDPOINT_TEXT_MESSAGE_NAME
+} from './constants';
 
 const logger = Logger.getLogger(__filename);
 
@@ -310,6 +313,23 @@ function initCommands() {
             const { duration, tones, pause } = options;
 
             APP.store.dispatch(sendTones(tones, duration, pause));
+        },
+        'set-assumed-bandwidth-bps': value => {
+            logger.debug('Set assumed bandwidth bps command received', value);
+
+            if (typeof value !== 'number' || isNaN(value)) {
+                logger.error('Assumed bandwidth bps must be a number.');
+
+                return;
+            }
+
+            const { conference } = APP.store.getState()['features/base/conference'];
+
+            if (conference) {
+                conference.setAssumedBandwidthBps(value < ASSUMED_BANDWIDTH_BPS
+                    ? ASSUMED_BANDWIDTH_BPS
+                    : value);
+            }
         },
         'set-follow-me': value => {
             logger.debug('Set follow me command received');
@@ -798,7 +818,8 @@ function initCommands() {
             APP.store.dispatch(overwriteConfig(whitelistedConfig));
         },
         'toggle-virtual-background': () => {
-            APP.store.dispatch(toggleDialog(VirtualBackgroundDialog));
+            APP.store.dispatch(toggleDialog(SettingsDialog, {
+                defaultTab: SETTINGS_TABS.VIRTUAL_BACKGROUND }));
         },
         'end-conference': () => {
             APP.store.dispatch(endConference());
@@ -1226,6 +1247,22 @@ class API {
             name: 'moderation-participant-rejected',
             id: participantId,
             mediaType
+        });
+    }
+
+    /**
+     * Notify the external app that a notification has been triggered.
+     *
+     * @param {string} title - The notification title.
+     * @param {string} description - The notification description.
+     *
+     * @returns {void}
+     */
+    notifyNotificationTriggered(title: string, description: string) {
+        this._sendEvent({
+            description,
+            name: 'notification-triggered',
+            title
         });
     }
 

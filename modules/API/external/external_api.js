@@ -59,6 +59,7 @@ const commands = {
     sendEndpointTextMessage: 'send-endpoint-text-message',
     sendParticipantToRoom: 'send-participant-to-room',
     sendTones: 'send-tones',
+    setAssumedBandwidthBps: 'set-assumed-bandwidth-bps',
     setFollowMe: 'set-follow-me',
     setLargeVideoParticipant: 'set-large-video-participant',
     setMediaEncryptionKey: 'set-media-encryption-key',
@@ -127,6 +128,7 @@ const events = {
     'mouse-enter': 'mouseEnter',
     'mouse-leave': 'mouseLeave',
     'mouse-move': 'mouseMove',
+    'notification-triggered': 'notificationTriggered',
     'outgoing-message': 'outgoingMessage',
     'participant-joined': 'participantJoined',
     'participant-kicked-out': 'participantKickedOut',
@@ -388,11 +390,10 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
         const frameName = `jitsiConferenceFrame${id}`;
 
         this._frame = document.createElement('iframe');
-        this._frame.allow = 'camera; microphone; display-capture; autoplay; clipboard-write';
+        this._frame.allow = 'camera; microphone; display-capture; autoplay; clipboard-write; hid';
         this._frame.name = frameName;
         this._frame.id = frameName;
         this._setSize(height, width);
-        this._frame.sandbox = 'allow-scripts allow-same-origin allow-popups allow-forms allow-downloads';
         this._frame.setAttribute('allowFullScreen', 'true');
         this._frame.style.border = 0;
 
@@ -401,10 +402,9 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             // and fires event when it is done
             this._frame.onload = onload;
         }
+        this._frame.src = this._url;
 
         this._frame = this._parentNode.appendChild(this._frame);
-
-        this._frame.src = this._url;
     }
 
     /**

@@ -1,15 +1,15 @@
 import React, { PureComponent } from 'react';
 import { Text, View } from 'react-native';
+import { connect } from 'react-redux';
 
-import { Avatar } from '../../../base/avatar';
-import { BottomSheet } from '../../../base/dialog';
+import Avatar from '../../../base/avatar/components/Avatar';
+import BottomSheet from '../../../base/dialog/components/native/BottomSheet';
 import { bottomSheetStyles } from '../../../base/dialog/components/native/styles';
-import { translate } from '../../../base/i18n';
+import { translate } from '../../../base/i18n/functions';
 import {
     getLocalParticipant,
     getParticipantDisplayName
-} from '../../../base/participants';
-import { connect } from '../../../base/redux';
+} from '../../../base/participants/functions';
 import ToggleSelfViewButton from '../../../toolbox/components/native/ToggleSelfViewButton';
 
 import ConnectionStatusButton from './ConnectionStatusButton';

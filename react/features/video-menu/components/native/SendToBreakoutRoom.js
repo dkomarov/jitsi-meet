@@ -1,11 +1,13 @@
 // @flow
 
-import { createBreakoutRoomsEvent, sendAnalytics } from '../../../analytics';
-import { translate } from '../../../base/i18n';
-import { IconRingGroup } from '../../../base/icons';
-import { isLocalParticipantModerator } from '../../../base/participants';
-import { connect } from '../../../base/redux';
-import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
+import { connect } from 'react-redux';
+
+import { createBreakoutRoomsEvent } from '../../../analytics/AnalyticsEvents';
+import { sendAnalytics } from '../../../analytics/functions';
+import { translate } from '../../../base/i18n/functions';
+import { IconRingGroup } from '../../../base/icons/svg';
+import { isLocalParticipantModerator } from '../../../base/participants/functions';
+import AbstractButton, { IProps as AbstractButtonProps } from '../../../base/toolbox/components/AbstractButton';
 import { sendParticipantToRoom } from '../../../breakout-rooms/actions';
 
 export type Props = AbstractButtonProps & {

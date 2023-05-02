@@ -1,11 +1,10 @@
 import { ModalTransition } from '@atlaskit/modal-dialog';
 import React, { Component, ComponentType } from 'react';
+import { connect } from 'react-redux';
 
 import { IReduxState } from '../../../../app/types';
-import { IReactionEmojiProps } from '../../../../reactions/constants';
 import JitsiPortal from '../../../../toolbox/components/web/JitsiPortal';
 import { showOverflowDrawer } from '../../../../toolbox/functions.web';
-import { connect } from '../../../redux/functions';
 
 import DialogTransition from './DialogTransition';
 
@@ -14,12 +13,12 @@ interface IProps {
     /**
      * The component to render.
      */
-    _component: ComponentType;
+    _component?: ComponentType;
 
     /**
      * The props to pass to the component that will be rendered.
      */
-    _componentProps: Object;
+    _componentProps?: Object;
 
     /**
      * Whether the dialog is using the new component.
@@ -30,11 +29,6 @@ interface IProps {
      * Whether the overflow drawer should be used.
      */
     _overflowDrawer: boolean;
-
-    /**
-     * Array of reactions to be displayed.
-     */
-    _reactionsQueue: Array<IReactionEmojiProps>;
 
     /**
      * True if the UI is in a compact state where we don't show dialogs.

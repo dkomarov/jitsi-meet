@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 import { IReduxState } from '../../app/types';
 import { browser } from '../lib-jitsi-meet';
+import { IMediaState } from '../media/reducer';
 import { parseURLParams } from '../util/parseURLParams';
 
 import { IConfig } from './configType';
@@ -62,11 +63,11 @@ export function getMeetingRegion(state: IReduxState) {
 /**
  * Selector for determining if sending multiple stream support is enabled.
  *
- * @param {Object} state - The global state.
+ * @param {Object} _state - The global state.
  * @returns {boolean}
  */
-export function getMultipleVideoSendingSupportFeatureFlag(state: IReduxState) {
-    return isUnifiedPlanEnabled(state);
+export function getMultipleVideoSendingSupportFeatureFlag(_state: IReduxState | IMediaState) {
+    return browser.supportsUnifiedPlan();
 }
 
 /**
@@ -206,19 +207,6 @@ export function isDisplayNameVisible(state: IReduxState): boolean {
 }
 
 /**
- * Selector for determining if Unified plan support is enabled.
- *
- * @param {Object} state - The state of the app.
- * @returns {boolean}
- */
-export function isUnifiedPlanEnabled(state: IReduxState): boolean {
-    const { enableUnifiedOnChrome = true } = state['features/base/config'];
-
-    return browser.supportsUnifiedPlan()
-        && (!browser.isChromiumBased() || (browser.isChromiumBased() && enableUnifiedOnChrome));
-}
-
-/**
  * Restores a Jitsi Meet config.js from {@code localStorage} if it was
  * previously downloaded from a specific {@code baseURL} and stored with
  * {@link storeConfig}.
@@ -244,8 +232,6 @@ export function restoreConfig(baseURL: string) {
 
     return undefined;
 }
-
-/* eslint-disable max-params */
 
 /**
  * Inspects the hash part of the location URI and overrides values specified

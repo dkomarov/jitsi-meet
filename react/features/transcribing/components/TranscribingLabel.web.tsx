@@ -3,13 +3,11 @@ import { connect } from 'react-redux';
 
 import { translate } from '../../base/i18n/functions';
 import Label from '../../base/label/components/web/Label';
-// eslint-disable-next-line lines-around-comment
-// @ts-ignore
-import { Tooltip } from '../../base/tooltip';
+import Tooltip from '../../base/tooltip/components/Tooltip';
 
-import { Props, _mapStateToProps } from './AbstractTranscribingLabel';
+import { IProps, _mapStateToProps } from './AbstractTranscribingLabel';
 
-const TranscribingLabel = ({ _showLabel, t }: Props) => {
+const TranscribingLabel = ({ _showLabel, t }: IProps) => {
     if (!_showLabel) {
         return null;
     }
