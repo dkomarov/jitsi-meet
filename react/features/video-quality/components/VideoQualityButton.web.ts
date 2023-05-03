@@ -1,19 +1,17 @@
 // @flow
 
-import { translate } from "../../base/i18n";
 import {
     IconVideoQualityAudioOnly,
     IconVideoQualityHD,
     IconVideoQualityLD,
-    IconVideoQualitySD,
-} from "../../base/icons";
-import { connect } from "../../base/redux";
-import {
-    AbstractButton,
-    type AbstractButtonProps,
-} from "../../base/toolbox/components";
-import { VIDEO_QUALITY_LEVELS } from "../constants";
-import { findNearestQualityLevel } from "../functions";
+    IconVideoQualitySD
+} from '../../base/icons';
+
+// import { connect } from '../../base/redux';
+import { connect } from 'react-redux';
+
+import { VIDEO_QUALITY_LEVELS } from '../constants';
+import { findNearestQualityLevel } from '../functions';
 
 /**
  * A map of of selectable receive resolutions to corresponding icons.
@@ -25,18 +23,19 @@ const VIDEO_QUALITY_TO_ICON = {
     [VIDEO_QUALITY_LEVELS.ULTRA]: IconVideoQualityHD,
     [VIDEO_QUALITY_LEVELS.HIGH]: IconVideoQualityHD,
     [VIDEO_QUALITY_LEVELS.STANDARD]: IconVideoQualitySD,
-    [VIDEO_QUALITY_LEVELS.LOW]: IconVideoQualityLD,
+    [VIDEO_QUALITY_LEVELS.LOW]: IconVideoQualityLD
 };
 import { translate } from '../../base/i18n/functions';
 import { IconPerformance } from '../../base/icons/svg';
-import AbstractButton, { IProps as AbstractButtonProps } from '../../base/toolbox/components/AbstractButton';
+import AbstractButton, {
+    IProps as AbstractButtonProps
+} from '../../base/toolbox/components/AbstractButton';
 
 /**
  * The type of the React {@code Component} props of
  * {@link VideoQualityButton}.
  */
 interface IProps extends AbstractButtonProps {
-
     /**
      * Whether or not audio only mode is currently enabled.
      */
@@ -46,13 +45,13 @@ interface IProps extends AbstractButtonProps {
      * The currently configured maximum quality resolution to be received from
      * and sent to remote participants.
      */
-    _videoQuality: number,
+    _videoQuality: number;
 
     /**
      * Invoked to obtain translated strings.
      */
-    t: Function,
-};
+    t: Function;
+}
 
 /**
  * React {@code Component} responsible for displaying a button in the overflow
@@ -61,10 +60,10 @@ interface IProps extends AbstractButtonProps {
  *
  * @augments Component
  */
-class VideoQualityButton extends AbstractButton<Props, *> {
-    accessibilityLabel = "toolbar.accessibilityLabel.callQuality";
-    label = "toolbar.callQuality";
-    tooltip = "toolbar.callQuality";
+class VideoQualityButton extends AbstractButton<IProps, *> {
+    accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
+    label = 'toolbar.callQuality';
+    tooltip = 'toolbar.callQuality';
 
     /**
      * Dynamically retrieves the icon.
@@ -122,8 +121,8 @@ class VideoQualityButton extends AbstractButton<Props, *> {
  */
 function _mapStateToProps(state) {
     return {
-        _audioOnly: state["features/base/audio-only"].enabled,
-        _videoQuality: state["features/video-quality"].preferredVideoQuality,
+        _audioOnly: state['features/base/audio-only'].enabled,
+        _videoQuality: state['features/video-quality'].preferredVideoQuality
     };
 }
 

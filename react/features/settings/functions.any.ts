@@ -17,6 +17,7 @@ import { isFollowMeActive } from '../follow-me/functions';
 import { getParticipantsPaneConfig } from '../participants-pane/functions';
 import { isReactionsEnabled } from '../reactions/functions.any';
 import { iAmVisitor } from '../visitors/functions';
+import { SS_DEFAULT_FRAME_RATE, SS_SUPPORTED_FRAMERATES } from './constants';
 
 /**
  * Used for web. Indicates if the setting section is enabled.
@@ -60,8 +61,10 @@ export function normalizeUserInputURL(url: string) {
         const urlRegExp = new RegExp('^(\\w+://)?(.+)$');
         const urlComponents = urlRegExp.exec(url);
 
-        if (urlComponents && (!urlComponents[1]
-                || !urlComponents[1].startsWith('http'))) {
+        if (
+            urlComponents &&
+            (!urlComponents[1] || !urlComponents[1].startsWith('http'))
+        ) {
             url = `https://${urlComponents[2]}`;
         }
 
@@ -96,7 +99,7 @@ export function getNotificationsMap(stateful: IStateful) {
     }
 
     return Object.keys(userSelectedNotifications)
-        .filter(key => !notifications || notifications.includes(key))
+        .filter((key) => !notifications || notifications.includes(key))
         .reduce((notificationsMap, key) => {
             return {
                 ...notificationsMap,
@@ -115,16 +118,21 @@ export function getNotificationsMap(stateful: IStateful) {
  */
 export function getMoreTabProps(stateful: IStateful) {
     const state = toState(stateful);
-    const framerate = state['features/screen-share'].captureFrameRate ?? SS_DEFAULT_FRAME_RATE;
+    const framerate =
+        state['features/screen-share'].captureFrameRate ??
+        SS_DEFAULT_FRAME_RATE;
     const language = i18next.language || DEFAULT_LANGUAGE;
     const configuredTabs = interfaceConfig.SETTINGS_SECTIONS || [];
     const enabledNotifications = getNotificationsMap(stateful);
     const stageFilmstripEnabled = isStageFilmstripEnabled(state);
 
     return {
-        showPrejoinPage: !state['features/base/settings'].userSelectedSkipPrejoin,
-        showPrejoinSettings: state['features/base/config'].prejoinConfig?.enabled,
-        maxStageParticipants: state['features/base/settings'].maxStageParticipants,
+        showPrejoinPage:
+            !state['features/base/settings'].userSelectedSkipPrejoin,
+        showPrejoinSettings:
+            state['features/base/config'].prejoinConfig?.enabled,
+        maxStageParticipants:
+            state['features/base/settings'].maxStageParticipants,
         stageFilmstripEnabled
     };
 }
@@ -172,7 +180,9 @@ export function getModeratorTabProps(stateful: IStateful) {
 export function shouldShowModeratorSettings(stateful: IStateful) {
     const state = toState(stateful);
     const { hideModeratorSettingsTab } = getParticipantsPaneConfig(state);
-    const hasModeratorRights = Boolean(isSettingEnabled('moderator') && isLocalParticipantModerator(state));
+    const hasModeratorRights = Boolean(
+        isSettingEnabled('moderator') && isLocalParticipantModerator(state)
+    );
 
     return hasModeratorRights && !hideModeratorSettingsTab;
 }
@@ -188,18 +198,16 @@ export function shouldShowModeratorSettings(stateful: IStateful) {
  */
 export function getProfileTabProps(stateful: IStateful) {
     const state = toState(stateful);
-    const {
-        authEnabled,
-        authLogin,
-        conference
-    } = state['features/base/conference'];
+    const { authEnabled, authLogin, conference } =
+        state['features/base/conference'];
     const { hideEmailInSettings } = state['features/base/config'];
     const localParticipant = getLocalParticipant(state);
     const language = i18next.language || DEFAULT_LANGUAGE;
     const configuredTabs: string[] = interfaceConfig.SETTINGS_SECTIONS || [];
 
     // when self view is controlled by the config we hide the settings
-    const { disableSelfView, disableSelfViewSettings } = state['features/base/config'];
+    const { disableSelfView, disableSelfViewSettings } =
+        state['features/base/config'];
 
     return {
         authEnabled: Boolean(conference && authEnabled),
@@ -228,7 +236,10 @@ export function getProfileTabProps(stateful: IStateful) {
  * @returns {Object} - The properties for the "Sounds" tab from settings
  * dialog.
  */
-export function getNotificationsTabProps(stateful: IStateful, showSoundsSettings?: boolean) {
+export function getNotificationsTabProps(
+    stateful: IStateful,
+    showSoundsSettings?: boolean
+) {
     const state = toState(stateful);
     const {
         soundsIncomingMessage,
@@ -239,7 +250,8 @@ export function getNotificationsTabProps(stateful: IStateful, showSoundsSettings
         soundsReactions
     } = state['features/base/settings'];
     const enableReactions = isReactionsEnabled(state);
-    const moderatorMutedSoundsReactions = state['features/base/conference'].startReactionsMuted ?? false;
+    const moderatorMutedSoundsReactions =
+        state['features/base/conference'].startReactionsMuted ?? false;
     const enabledNotifications = getNotificationsMap(stateful);
 
     return {
@@ -292,7 +304,9 @@ export function getVirtualBackgroundTabProps(stateful: IStateful) {
 
     return {
         _virtualBackground: state['features/virtual-background'],
-        selectedThumbnail: state['features/virtual-background'].selectedThumbnail,
-        _jitsiTrack: getLocalVideoTrack(state['features/base/tracks'])?.jitsiTrack
+        selectedThumbnail:
+            state['features/virtual-background'].selectedThumbnail,
+        _jitsiTrack: getLocalVideoTrack(state['features/base/tracks'])
+            ?.jitsiTrack
     };
 }

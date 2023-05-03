@@ -1,14 +1,14 @@
 // @flow
 
-import React from "react";
+import React from 'react';
 
-import { translate } from "../../base/i18n";
+import { translate } from '../../base/i18n/functions';
 // import { Label } from "../../base/label";
-import { MEDIA_TYPE } from "../../base/media";
+import { MEDIA_TYPE } from '../../base/media/constants';
 // import { connect } from "../../base/redux";
 // import { Tooltip } from "../../base/tooltip";
-import { getTrackByMediaTypeAndParticipant } from "../../base/tracks";
-import { shouldDisplayTileView } from "../../video-layout";
+import { getTrackByMediaTypeAndParticipant } from '../../base/tracks/functions.any';
+import { shouldDisplayTileView } from '../../video-layout/functions.web';
 import { connect } from 'react-redux';
 import { IReduxState, IStore } from '../../app/types';
 import { openDialog } from '../../base/dialog/actions';
@@ -17,7 +17,6 @@ import { IconPerformance } from '../../base/icons/svg';
 import Label from '../../base/label/components/web/Label';
 import { COLORS } from '../../base/label/constants';
 import Tooltip from '../../base/tooltip/components/Tooltip';
-import { shouldDisplayTileView } from '../../video-layout/functions.web';
 
 import AbstractVideoQualityLabel, {
     IProps as AbstractProps,
@@ -25,8 +24,9 @@ import AbstractVideoQualityLabel, {
 } from './AbstractVideoQualityLabel';
 import VideoQualityDialog from './VideoQualityDialog.web';
 
-interface IProps extends AbstractProps {
+declare var interfaceConfig: Object;
 
+interface IProps extends AbstractProps {
     /**
      * The message to show within the label's tooltip.
      */
@@ -40,7 +40,7 @@ interface IProps extends AbstractProps {
     /**
      * The redux representation of the JitsiTrack displayed on large video.
      */
-    _videoTrack: Object,
+    _videoTrack: Object;
 
     /**
      * Flag controlling visibility of the component.
@@ -54,9 +54,9 @@ interface IProps extends AbstractProps {
  * @type {Object}
  */
 const RESOLUTION_TO_TRANSLATION_KEY = {
-    "720": "videoStatus.hd",
-    "360": "videoStatus.sd",
-    "180": "videoStatus.ld",
+    '720': 'videoStatus.hd',
+    '360': 'videoStatus.sd',
+    '180': 'videoStatus.ld'
 };
 
 /**
@@ -77,7 +77,6 @@ const RESOLUTIONS = Object.keys(RESOLUTION_TO_TRANSLATION_KEY)
  * being displayed.
  */
 export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
-
     /**
      * Implements React's {@link Component#render()}.
      *
@@ -95,15 +94,15 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
         let className, labelContent, tooltipKey;
 
         if (_audioOnly) {
-            className = "audio-only";
-            labelContent = t("videoStatus.audioOnly");
-            tooltipKey = "videoStatus.labelTooltipAudioOnly";
+            className = 'audio-only';
+            labelContent = t('videoStatus.audioOnly');
+            tooltipKey = 'videoStatus.labelTooltipAudioOnly';
         } else if (!_videoTrack || _videoTrack.muted) {
-            className = "no-video";
-            labelContent = t("videoStatus.audioOnly");
-            tooltipKey = "videoStatus.labelTooiltipNoVideo";
+            className = 'no-video';
+            labelContent = t('videoStatus.audioOnly');
+            tooltipKey = 'videoStatus.labelTooiltipNoVideo';
         } else {
-            className = "current-video-quality";
+            className = 'current-video-quality';
             labelContent = t(_labelKey);
             tooltipKey = _tooltipKey;
         }
@@ -111,7 +110,7 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
         const onClick = () => dispatch(openDialog(VideoQualityDialog));
 
         return (
-            <Tooltip content={t(tooltipKey)} position={"bottom"}>
+            <Tooltip content={t(tooltipKey)} position={'bottom'}>
                 <Label
                     className={className}
                     id="videoResolutionLabel"
@@ -151,7 +150,7 @@ function _mapResolutionToTranslationsKeys(resolution) {
 
     return {
         labelKey,
-        tooltipKey: `${labelKey}Tooltip`,
+        tooltipKey: `${labelKey}Tooltip`
     };
 }
 
@@ -168,10 +167,10 @@ function _mapResolutionToTranslationsKeys(resolution) {
  * }}
  */
 function _mapStateToProps(state) {
-    const { enabled: audioOnly } = state["features/base/audio-only"];
-    const { resolution, participantId } = state["features/large-video"];
+    const { enabled: audioOnly } = state['features/base/audio-only'];
+    const { resolution, participantId } = state['features/large-video'];
     const videoTrackOnLargeVideo = getTrackByMediaTypeAndParticipant(
-        state["features/base/tracks"],
+        state['features/base/tracks'],
         MEDIA_TYPE.VIDEO,
         participantId
     );
@@ -188,7 +187,7 @@ function _mapStateToProps(state) {
         _visible: !(
             shouldDisplayTileView(state) ||
             interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
-        ),
+        )
     };
 }
 
