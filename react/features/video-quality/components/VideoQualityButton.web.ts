@@ -27,9 +27,14 @@ const VIDEO_QUALITY_TO_ICON = {
 };
 import { translate } from '../../base/i18n/functions';
 import { IconPerformance } from '../../base/icons/svg';
-import AbstractButton, {
-    IProps as AbstractButtonProps
-} from '../../base/toolbox/components/AbstractButton';
+// import AbstractButton, {
+//     IProps as AbstractButtonProps
+// } from '../../base/toolbox/components/AbstractButton';
+
+// import {
+//     AbstractButton,
+//     Props as AbstractButtonProps
+// } from '../../base/toolbox/components/AbstractButton';
 
 /**
  * The type of the React {@code Component} props of
@@ -47,10 +52,10 @@ interface IProps extends AbstractButtonProps {
      */
     _videoQuality: number;
 
-    /**
-     * Invoked to obtain translated strings.
-     */
-    t: Function;
+    // /**
+    //  * Invoked to obtain translated strings.
+    //  */
+    // t: Function;
 }
 
 /**

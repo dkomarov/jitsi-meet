@@ -9,6 +9,7 @@ import { MEDIA_TYPE } from '../../base/media/constants';
 // import { Tooltip } from "../../base/tooltip";
 import { getTrackByMediaTypeAndParticipant } from '../../base/tracks/functions.any';
 import { shouldDisplayTileView } from '../../video-layout/functions.web';
+import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { IReduxState, IStore } from '../../app/types';
 import { openDialog } from '../../base/dialog/actions';
@@ -28,6 +29,14 @@ declare var interfaceConfig: Object;
 
 interface IProps extends AbstractProps {
     /**
+     * The message to show within the label.
+     */
+    _labelKey: string;
+    /**
+     * Whether to show video quality label or not.
+     */
+    _showVideoQualityLabel: boolean;
+    /**
      * The message to show within the label's tooltip.
      */
     _tooltipKey: string;
@@ -40,10 +49,10 @@ interface IProps extends AbstractProps {
     /**
      * The redux representation of the JitsiTrack displayed on large video.
      */
-    _videoTrack: Object;
+    // _videoTrack: Object;
 
     /**
-     * Flag controlling visibility of the component.
+     * The redux dispatch function.
      */
     dispatch: IStore['dispatch'];
 }
@@ -84,8 +93,15 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
      * @returns {ReactElement}
      */
     render() {
-        const { _audioOnly, _labelKey, _tooltipKey, _videoTrack, _visible, t } =
-            this.props;
+        const {
+            _audioOnly,
+            _labelKey,
+            _tooltipKey,
+            // _videoTrack,
+            _visible,
+            dispatch,
+            t
+        } = this.props;
 
         if (!_visible) {
             return null;
@@ -97,10 +113,10 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
             className = 'audio-only';
             labelContent = t('videoStatus.audioOnly');
             tooltipKey = 'videoStatus.labelTooltipAudioOnly';
-        } else if (!_videoTrack || _videoTrack.muted) {
-            className = 'no-video';
-            labelContent = t('videoStatus.audioOnly');
-            tooltipKey = 'videoStatus.labelTooiltipNoVideo';
+            // } else if (!_videoTrack || _videoTrack.muted) {
+            //     className = 'no-video';
+            //     labelContent = t('videoStatus.audioOnly');
+            //     tooltipKey = 'videoStatus.labelTooiltipNoVideo';
         } else {
             className = 'current-video-quality';
             labelContent = t(_labelKey);
@@ -166,7 +182,7 @@ function _mapResolutionToTranslationsKeys(resolution) {
  *     _videoTrack: Object
  * }}
  */
-function _mapStateToProps(state) {
+function _mapStateToProps(state: IReduxState) {
     const { enabled: audioOnly } = state['features/base/audio-only'];
     const { resolution, participantId } = state['features/large-video'];
     const videoTrackOnLargeVideo = getTrackByMediaTypeAndParticipant(
@@ -190,5 +206,63 @@ function _mapStateToProps(state) {
         )
     };
 }
+
+// /**
+//  * Maps (parts of) the Redux state to the associated {@code VideoQualityLabel}'s
+//  * props.
+//  *
+//  * @param {Object} state - The Redux state.
+//  * @private
+//  * @returns {{
+//  *     _audioOnly: boolean,
+//  *     _visible: boolean
+//  * }}
+//  */
+// function _mapStateToProps(state: IReduxState) {
+//     return {
+//         ..._abstractMapStateToProps(state),
+//         _visible: !(
+//             shouldDisplayTileView(state) ||
+//             interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
+//         )
+//     };
+// }
+
+// /**
+//  * Maps (parts of) the Redux state to the associated {@code VideoQualityLabel}'s
+//  * props.
+//  *
+//  * @param {Object} state - The Redux state.
+//  * @private
+//  * @returns {{
+//  *     _labelKey: string,
+//  *     _tooltipKey: string,
+//  *     _videoTrack: Object
+//  * }}
+//  */
+// function _mapStateToProps(state) {
+//     const { enabled: audioOnly } = state['features/base/audio-only'];
+//     const { resolution, participantId } = state['features/large-video'];
+//     const videoTrackOnLargeVideo = getTrackByMediaTypeAndParticipant(
+//         state['features/base/tracks'],
+//         MEDIA_TYPE.VIDEO,
+//         participantId
+//     );
+
+//     const translationKeys = audioOnly
+//         ? {}
+//         : _mapResolutionToTranslationsKeys(resolution);
+
+//     return {
+//         ..._abstractMapStateToProps(state),
+//         _labelKey: translationKeys.labelKey,
+//         _tooltipKey: translationKeys.tooltipKey,
+//         _videoTrack: videoTrackOnLargeVideo,
+//         _visible: !(
+//             shouldDisplayTileView(state) ||
+//             interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
+//         )
+//     };
+// }
 
 export default translate(connect(_mapStateToProps)(VideoQualityLabel));

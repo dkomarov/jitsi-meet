@@ -22,8 +22,8 @@ import {
     submitAudioDeviceSelectionTab,
     submitVideoDeviceSelectionTab
 } from '../../../device-selection/actions.web';
-import AudioDevicesSelection from '../../../device-selection/components/AudioDevicesSelection';
-import VideoDeviceSelection from '../../../device-selection/components/VideoDeviceSelection';
+import AudioDevicesSelection from '../../../device-selection/components/AudioDevicesSelection.web';
+import VideoDeviceSelection from '../../../device-selection/components/VideoDeviceSelection.web';
 import {
     getAudioDeviceSelectionDialogProps,
     getVideoDeviceSelectionDialogProps
@@ -37,7 +37,7 @@ import {
     submitProfileTab,
     submitShortcutsTab,
     submitVirtualBackgroundTab
-} from '../../actions';
+} from '../../actions.web';
 import { SETTINGS_TABS } from '../../constants';
 import {
     getModeratorTabProps,
@@ -47,7 +47,7 @@ import {
     getProfileTabProps,
     getShortcutsTabProps,
     getVirtualBackgroundTabProps
-} from '../../functions';
+} from '../../functions.web';
 
 import CalendarTab from './CalendarTab';
 import ModeratorTab from './ModeratorTab';
@@ -56,6 +56,8 @@ import NotificationsTab from './NotificationsTab';
 import ProfileTab from './ProfileTab';
 import ShortcutsTab from './ShortcutsTab';
 import VirtualBackgroundTab from './VirtualBackgroundTab';
+
+declare var interfaceConfig: Object;
 
 /**
  * The type of the React {@code Component} props of

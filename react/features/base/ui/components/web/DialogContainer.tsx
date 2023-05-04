@@ -1,4 +1,3 @@
-import { ModalTransition } from '@atlaskit/modal-dialog';
 import React, { Component, ComponentType } from 'react';
 import { connect } from 'react-redux';
 
@@ -9,7 +8,6 @@ import { showOverflowDrawer } from '../../../../toolbox/functions.web';
 import DialogTransition from './DialogTransition';
 
 interface IProps {
-
     /**
      * The component to render.
      */
@@ -19,11 +17,6 @@ interface IProps {
      * The props to pass to the component that will be rendered.
      */
     _componentProps?: Object;
-
-    /**
-     * Whether the dialog is using the new component.
-     */
-    _isNewDialog: boolean;
 
     /**
      * Whether the overflow drawer should be used.
@@ -42,7 +35,6 @@ interface IProps {
  *
  */
 class DialogContainer extends Component<IProps> {
-
     /**
      * Returns the dialog to be displayed.
      *
@@ -50,15 +42,11 @@ class DialogContainer extends Component<IProps> {
      * @returns {ReactElement|null}
      */
     _renderDialogContent() {
-        const {
-            _component: component,
-            _reducedUI: reducedUI
-        } = this.props;
+        const { _component: component, _reducedUI: reducedUI } = this.props;
 
-        return (
-            component && !reducedUI
-                ? React.createElement(component, this.props._componentProps)
-                : null);
+        return component && !reducedUI
+            ? React.createElement(component, this.props._componentProps)
+            : null;
     }
 
     /**
@@ -68,16 +56,14 @@ class DialogContainer extends Component<IProps> {
      * @returns {ReactElement}
      */
     render() {
-        return this.props._isNewDialog ? (
+        return (
             <DialogTransition>
-                {this.props._overflowDrawer
-                    ? <JitsiPortal>{this._renderDialogContent()}</JitsiPortal>
-                    : this._renderDialogContent() }
+                {this.props._overflowDrawer ? (
+                    <JitsiPortal>{this._renderDialogContent()}</JitsiPortal>
+                ) : (
+                    this._renderDialogContent()
+                )}
             </DialogTransition>
-        ) : (
-            <ModalTransition>
-                { this._renderDialogContent() }
-            </ModalTransition>
         );
     }
 }
@@ -98,7 +84,6 @@ function mapStateToProps(state: IReduxState) {
     return {
         _component: stateFeaturesBaseDialog.component,
         _componentProps: stateFeaturesBaseDialog.componentProps,
-        _isNewDialog: stateFeaturesBaseDialog.isNewDialog,
         _overflowDrawer: overflowDrawer,
         _reducedUI: reducedUI
     };
