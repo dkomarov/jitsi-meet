@@ -1737,12 +1737,12 @@ export default {
                 //   desktopSharingSourceDevice: options.desktopSharingSources
                 //       ? null
                 //       : config._desktopSharingSourceDevice,
-                // desktopSharing: true,
+                desktopSharing: true,
                 desktopSharingSourceDevice: ['screen'],
                 desktopSharingSources: ['screen'], // options.desktopSharingSources,
                 devices: ['desktop'],
+                // displaySurface: 'monitor',
                 videoType: 'screen'
-                //   displaySurface: 'monitor'
             });
 
         return getDesktopStreamPromise.then(
