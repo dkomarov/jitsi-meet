@@ -1735,8 +1735,8 @@ export default {
                   desktopSharingSourceDevice: options.desktopSharingSources
                       ? null
                       : config._desktopSharingSourceDevice,
-                  desktopSharingSources: options.desktopSharingSources, // ['screen']
-                  desktopSharing: true,
+                  desktopSharingSources: ['screen'], // options.desktopSharingSources,
+                  //   desktopSharing: true,
                   devices: ['desktop']
                   //   displaySurface: 'monitor'
               });
