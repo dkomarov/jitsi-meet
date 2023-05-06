@@ -1732,9 +1732,9 @@ export default {
         const getDesktopStreamPromise = options.desktopStream
             ? Promise.resolve([options.desktopStream])
             : createLocalTracksF({
-                  desktopSharingSourceDevice: options.desktopSharingSources
-                      ? null
-                      : config._desktopSharingSourceDevice,
+                  //   desktopSharingSourceDevice: options.desktopSharingSources
+                  //       ? null
+                  //       : config._desktopSharingSourceDevice,
                   desktopSharingSources: ['screen'], // options.desktopSharingSources,
                   //   desktopSharing: true,
                   devices: ['desktop']
