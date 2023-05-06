@@ -1737,7 +1737,8 @@ export default {
                   //       : config._desktopSharingSourceDevice,
                   desktopSharingSources: ['screen'], // options.desktopSharingSources,
                   //   desktopSharing: true,
-                  devices: ['desktop']
+                  devices: ['desktop'],
+                  videoType: 'screen'
                   //   displaySurface: 'monitor'
               });
 
