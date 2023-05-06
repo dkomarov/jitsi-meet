@@ -1735,9 +1735,10 @@ export default {
                   desktopSharingSourceDevice: options.desktopSharingSources
                       ? null
                       : config._desktopSharingSourceDevice,
-                  desktopSharingSources: options.desktopSharingSources,
-                  devices: ['desktop'],
-                  displaySurface: 'monitor'
+                  desktopSharingSources: options.desktopSharingSources, // ['screen']
+                  desktopSharing: true,
+                  devices: ['desktop']
+                  //   displaySurface: 'monitor'
               });
 
         return getDesktopStreamPromise.then(
