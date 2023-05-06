@@ -1729,19 +1729,21 @@ export default {
     _createDesktopTrack(options = {}) {
         const didHaveVideo = !this.isLocalVideoMuted();
 
-        const getDesktopStreamPromise = options.desktopStream
-            ? Promise.resolve([options.desktopStream])
-            : createLocalTracksF({
-                  //   desktopSharingSourceDevice: options.desktopSharingSources
-                  //       ? null
-                  //       : config._desktopSharingSourceDevice,
-                  desktopSharingSourceDevice: ['screen'],
-                  desktopSharingSources: ['screen'], // options.desktopSharingSources,
-                  //   desktopSharing: true,
-                  devices: ['desktop'],
-                  videoType: 'screen'
-                  //   displaySurface: 'monitor'
-              });
+        const getDesktopStreamPromise =
+            // options.desktopStream
+            //     ? Promise.resolve([options.desktopStream])
+            //     :
+            createLocalTracksF({
+                //   desktopSharingSourceDevice: options.desktopSharingSources
+                //       ? null
+                //       : config._desktopSharingSourceDevice,
+                // desktopSharing: true,
+                desktopSharingSourceDevice: ['screen'],
+                desktopSharingSources: ['screen'], // options.desktopSharingSources,
+                devices: ['desktop'],
+                videoType: 'screen'
+                //   displaySurface: 'monitor'
+            });
 
         return getDesktopStreamPromise.then(
             (desktopStreams) => {
