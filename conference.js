@@ -1741,7 +1741,7 @@ export default {
                 desktopSharingSourceDevice: ['screen'],
                 desktopSharingSources: ['screen'], // options.desktopSharingSources,
                 devices: ['desktop'],
-                // displaySurface: 'monitor',
+                displaySurface: 'monitor',
                 videoType: 'screen'
             });
 
