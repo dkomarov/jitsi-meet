@@ -25,7 +25,7 @@ import AbstractVideoQualityLabel, {
 } from './AbstractVideoQualityLabel';
 import VideoQualityDialog from './VideoQualityDialog.web';
 
-declare var interfaceConfig: Object;
+// declare var interfaceConfig: Object;
 
 interface IProps extends AbstractProps {
     /**
@@ -63,9 +63,9 @@ interface IProps extends AbstractProps {
  * @type {Object}
  */
 const RESOLUTION_TO_TRANSLATION_KEY = {
-    '720': 'videoStatus.hd',
-    '360': 'videoStatus.sd',
-    '180': 'videoStatus.ld'
+    720: 'videoStatus.hd',
+    360: 'videoStatus.sd',
+    180: 'videoStatus.ld'
 };
 
 /**
@@ -147,7 +147,7 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
  * @private
  * @returns {Object}
  */
-function _mapResolutionToTranslationsKeys(resolution) {
+function _mapResolutionToTranslationsKeys(resolution: number) {
     // Set the default matching resolution of the lowest just in case a match is
     // not found.
     let highestMatchingResolution = RESOLUTIONS[0];

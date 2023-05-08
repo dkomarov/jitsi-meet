@@ -2,7 +2,7 @@ import { IReduxState } from '../../app/types';
 import { IStateful } from '../app/types';
 import { toState } from '../redux/functions';
 
-export * from './functions.any';
+export * from './functions.web';
 
 /**
  * Returns the deviceId for the currently used camera.
@@ -42,10 +42,10 @@ export function getCurrentOutputDeviceId(state: IReduxState) {
  * @returns {string}
  */
 function getDeviceIdByType(state: IReduxState, isType: string) {
-    const [ deviceId ] = state['features/base/tracks']
-        .map(t => t.jitsiTrack)
-        .filter(t => t?.isLocal() && t[isType as keyof typeof t]())
-        .map(t => t.getDeviceId());
+    const [deviceId] = state['features/base/tracks']
+        .map((t) => t.jitsiTrack)
+        .filter((t) => t?.isLocal() && t[isType as keyof typeof t]())
+        .map((t) => t.getDeviceId());
 
     return deviceId || '';
 }
@@ -70,10 +70,8 @@ export function getDisplayName(state: IReduxState): string {
  */
 export function getUserSelectedCameraDeviceId(stateful: IStateful) {
     const state = toState(stateful);
-    const {
-        userSelectedCameraDeviceId,
-        userSelectedCameraDeviceLabel
-    } = state['features/base/settings'];
+    const { userSelectedCameraDeviceId, userSelectedCameraDeviceLabel } =
+        state['features/base/settings'];
     const { videoInput } = state['features/base/devices'].availableDevices;
 
     return _getUserSelectedDeviceId({
@@ -98,10 +96,8 @@ export function getUserSelectedCameraDeviceId(stateful: IStateful) {
  */
 export function getUserSelectedMicDeviceId(stateful: IStateful) {
     const state = toState(stateful);
-    const {
-        userSelectedMicDeviceId,
-        userSelectedMicDeviceLabel
-    } = state['features/base/settings'];
+    const { userSelectedMicDeviceId, userSelectedMicDeviceLabel } =
+        state['features/base/settings'];
     const { audioInput } = state['features/base/devices'].availableDevices;
 
     return _getUserSelectedDeviceId({
@@ -185,17 +181,18 @@ function _getUserSelectedDeviceId(options: {
     }
 
     const foundMatchingBasedonDeviceId = availableDevices?.find(
-        candidate => candidate.deviceId === userSelectedDeviceId);
+        (candidate) => candidate.deviceId === userSelectedDeviceId
+    );
 
     // Prioritize matching the deviceId
     if (foundMatchingBasedonDeviceId) {
         return userSelectedDeviceId;
     }
 
-    const strippedDeviceLabel
-        = matchRegex ? userSelectedDeviceLabel.replace(matchRegex, replacement)
-            : userSelectedDeviceLabel;
-    const foundMatchBasedOnLabel = availableDevices?.find(candidate => {
+    const strippedDeviceLabel = matchRegex
+        ? userSelectedDeviceLabel.replace(matchRegex, replacement)
+        : userSelectedDeviceLabel;
+    const foundMatchBasedOnLabel = availableDevices?.find((candidate) => {
         const { label } = candidate;
 
         if (!label) {
@@ -204,12 +201,12 @@ function _getUserSelectedDeviceId(options: {
             return true;
         }
 
-        const strippedCandidateLabel
-            = label.replace(matchRegex, replacement);
+        const strippedCandidateLabel = label.replace(matchRegex, replacement);
 
         return strippedDeviceLabel === strippedCandidateLabel;
     });
 
     return foundMatchBasedOnLabel
-        ? foundMatchBasedOnLabel.deviceId : userSelectedDeviceId;
+        ? foundMatchBasedOnLabel.deviceId
+        : userSelectedDeviceId;
 }

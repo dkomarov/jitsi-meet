@@ -27,9 +27,9 @@ const VIDEO_QUALITY_TO_ICON = {
 };
 import { translate } from '../../base/i18n/functions';
 import { IconPerformance } from '../../base/icons/svg';
-// import AbstractButton, {
-//     IProps as AbstractButtonProps
-// } from '../../base/toolbox/components/AbstractButton';
+import AbstractButton, {
+    IProps as AbstractButtonProps
+} from '../../base/toolbox/components/AbstractButton';
 
 // import {
 //     AbstractButton,
@@ -65,7 +65,7 @@ interface IProps extends AbstractButtonProps {
  *
  * @augments Component
  */
-class VideoQualityButton extends AbstractButton<IProps, *> {
+class VideoQualityButton extends AbstractButton<IProps> {
     accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
     label = 'toolbar.callQuality';
     tooltip = 'toolbar.callQuality';
@@ -73,7 +73,8 @@ class VideoQualityButton extends AbstractButton<IProps, *> {
     /**
      * Dynamically retrieves the icon.
      */
-    get icon() {
+    get() {
+        // icon
         const { _audioOnly, _videoQuality } = this.props;
 
         const videoQualityLevel = findNearestQualityLevel(_videoQuality);
@@ -91,7 +92,8 @@ class VideoQualityButton extends AbstractButton<IProps, *> {
      *
      * @param {string} value - The icon value.
      */
-    set icon(value) {
+    set(value) {
+        // icon
         return value;
     }
 

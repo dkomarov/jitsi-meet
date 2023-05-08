@@ -18,17 +18,25 @@ export type ActionTrigger = 'Hover' | 'Permanent';
 /**
  * Enum of possible participant action triggers.
  */
-export const ACTION_TRIGGER: { HOVER: ActionTrigger; PERMANENT: ActionTrigger; } = {
+export const ACTION_TRIGGER: {
+    HOVER: ActionTrigger;
+    PERMANENT: ActionTrigger;
+} = {
     HOVER: 'Hover',
     PERMANENT: 'Permanent'
 };
 
-export type MediaState = 'DominantSpeaker' | 'Muted' | 'ForceMuted' | 'Unmuted' | 'None';
+export type MediaState =
+    | 'DominantSpeaker'
+    | 'Muted'
+    | 'ForceMuted'
+    | 'Unmuted'
+    | 'None';
 
 /**
  * Enum of possible participant media states.
  */
-export const MEDIA_STATE: { [key: string]: MediaState; } = {
+export const MEDIA_STATE: { [key: string]: MediaState } = {
     DOMINANT_SPEAKER: 'DominantSpeaker',
     MUTED: 'Muted',
     FORCE_MUTED: 'ForceMuted',
@@ -36,7 +44,12 @@ export const MEDIA_STATE: { [key: string]: MediaState; } = {
     NONE: 'None'
 };
 
-export type QuickActionButtonType = 'Mute' | 'AskToUnmute' | 'AllowVideo' | 'StopVideo' | 'None';
+export type QuickActionButtonType =
+    | 'Mute'
+    | 'AskToUnmute'
+    | 'AllowVideo'
+    | 'StopVideo'
+    | 'None';
 
 /**
  * Enum of possible participant mute button states.
@@ -60,27 +73,13 @@ export const QUICK_ACTION_BUTTON: {
  */
 export const AudioStateIcons = {
     [MEDIA_STATE.DOMINANT_SPEAKER]: (
-        <Icon
-            className = 'jitsi-icon-dominant-speaker'
-            size = { 16 }
-            src = { IconMic } />
+        <Icon className="jitsi-icon-dominant-speaker" size={16} src={IconMic} />
     ),
     [MEDIA_STATE.FORCE_MUTED]: (
-        <Icon
-            color = '#E04757'
-            size = { 16 }
-            src = { IconMicSlash } />
+        <Icon color="#E04757" size={16} src={IconMicSlash} />
     ),
-    [MEDIA_STATE.MUTED]: (
-        <Icon
-            size = { 16 }
-            src = { IconMicSlash } />
-    ),
-    [MEDIA_STATE.UNMUTED]: (
-        <Icon
-            size = { 16 }
-            src = { IconMic } />
-    ),
+    [MEDIA_STATE.MUTED]: <Icon size={16} src={IconMicSlash} />,
+    [MEDIA_STATE.UNMUTED]: <Icon size={16} src={IconMic} />,
     [MEDIA_STATE.NONE]: null
 };
 
@@ -90,23 +89,10 @@ export const AudioStateIcons = {
 export const VideoStateIcons = {
     [MEDIA_STATE.DOMINANT_SPEAKER]: null,
     [MEDIA_STATE.FORCE_MUTED]: (
-        <Icon
-            color = '#E04757'
-            id = 'videoMuted'
-            size = { 16 }
-            src = { IconVideoOff } />
+        <Icon color="#E04757" id="videoMuted" size={16} src={IconVideoOff} />
     ),
-    [MEDIA_STATE.MUTED]: (
-        <Icon
-            id = 'videoMuted'
-            size = { 16 }
-            src = { IconVideoOff } />
-    ),
-    [MEDIA_STATE.UNMUTED]: (
-        <Icon
-            size = { 16 }
-            src = { IconVideo } />
-    ),
+    [MEDIA_STATE.MUTED]: <Icon id="videoMuted" size={16} src={IconVideoOff} />,
+    [MEDIA_STATE.UNMUTED]: <Icon size={16} src={IconVideo} />,
     [MEDIA_STATE.NONE]: null
 };
 

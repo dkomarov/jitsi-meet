@@ -379,7 +379,7 @@ class DesktopPicker extends PureComponent<IProps, IState> {
         return (
             <Tabs
                 accessibilityLabel={t('dialog.sharingTabs')}
-                className="desktop-picker-tabs-container"
+                // className="desktop-picker-tabs-container"
                 onChange={this._onTabSelected}
                 selected={`${this.state.selectedTab}`}
                 tabs={tabs}

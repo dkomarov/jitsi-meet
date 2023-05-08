@@ -2,9 +2,12 @@ import { IReduxState, IStore } from '../app/types';
 import { TILE_VIEW_ENABLED } from '../base/flags/constants';
 import { getFeatureFlag } from '../base/flags/functions';
 import { pinParticipant } from '../base/participants/actions';
-import { getParticipantCount, getPinnedParticipant } from '../base/participants/functions';
+import {
+    getParticipantCount,
+    getPinnedParticipant
+} from '../base/participants/functions';
 import { FakeParticipant } from '../base/participants/types';
-import { isStageFilmstripAvailable } from '../filmstrip/functions';
+import { isStageFilmstripAvailable } from '../filmstrip/functions.web';
 import { isVideoPlaying } from '../shared-video/functions';
 import { VIDEO_QUALITY_LEVELS } from '../video-quality/constants';
 import { getReceiverVideoQualityLevel } from '../video-quality/functions';
@@ -68,7 +71,11 @@ export function shouldDisplayTileView(state: IReduxState) {
         return tileViewEnabled;
     }
 
-    const tileViewEnabledFeatureFlag = getFeatureFlag(state, TILE_VIEW_ENABLED, true);
+    const tileViewEnabledFeatureFlag = getFeatureFlag(
+        state,
+        TILE_VIEW_ENABLED,
+        true
+    );
     const { disableTileView } = state['features/base/config'];
 
     if (disableTileView || !tileViewEnabledFeatureFlag) {
@@ -81,23 +88,18 @@ export function shouldDisplayTileView(state: IReduxState) {
     // None tile view mode is easier to calculate (no need for many negations), so we do
     // that and negate it only once.
     const shouldDisplayNormalMode = Boolean(
-
         // Reasons for normal mode:
 
         // Editing etherpad
-        state['features/etherpad']?.editing
-
-        // We pinned a participant
-        || getPinnedParticipant(state)
-
-        // It's a 1-on-1 meeting
-        || participantCount < 3
-
-        // There is a shared YouTube video in the meeting
-        || isVideoPlaying(state)
-
-        // We want jibri to use stage view by default
-        || iAmRecorder
+        state['features/etherpad']?.editing ||
+            // We pinned a participant
+            getPinnedParticipant(state) ||
+            // It's a 1-on-1 meeting
+            participantCount < 3 ||
+            // There is a shared YouTube video in the meeting
+            isVideoPlaying(state) ||
+            // We want jibri to use stage view by default
+            iAmRecorder
     );
 
     return !shouldDisplayNormalMode;
@@ -113,22 +115,28 @@ export function shouldDisplayTileView(state: IReduxState) {
  * @returns {void}
  */
 export function updateAutoPinnedParticipant(
-        screenShares: Array<string>, { dispatch, getState }: IStore) {
+    screenShares: Array<string>,
+    { dispatch, getState }: IStore
+) {
     const state = getState();
-    const remoteScreenShares = state['features/video-layout'].remoteScreenShares;
+    const remoteScreenShares =
+        state['features/video-layout'].remoteScreenShares;
     const pinned = getPinnedParticipant(getState);
 
     // if the pinned participant is shared video or some other fake participant we want to skip auto-pinning
-    if (pinned?.fakeParticipant && pinned.fakeParticipant !== FakeParticipant.RemoteScreenShare) {
+    if (
+        pinned?.fakeParticipant &&
+        pinned.fakeParticipant !== FakeParticipant.RemoteScreenShare
+    ) {
         return;
     }
 
     // Unpin the screen share when the screen sharing participant leaves. Switch to tile view if no other
     // participant was pinned before screen share was auto-pinned, pin the previously pinned participant otherwise.
     if (!remoteScreenShares?.length) {
-        let participantId = null;
+        let participantId;
 
-        if (pinned && !screenShares.find(share => share === pinned.id)) {
+        if (pinned && !screenShares.find((share) => share === pinned.id)) {
             participantId = pinned.id;
         }
         dispatch(pinParticipant(participantId));
@@ -136,7 +144,8 @@ export function updateAutoPinnedParticipant(
         return;
     }
 
-    const latestScreenShareParticipantId = remoteScreenShares[remoteScreenShares.length - 1];
+    const latestScreenShareParticipantId =
+        remoteScreenShares[remoteScreenShares.length - 1];
 
     if (latestScreenShareParticipantId) {
         dispatch(pinParticipant(latestScreenShareParticipantId));
@@ -183,12 +192,18 @@ function getVideoQualityForHeight(height: number) {
  * @param {Object} state - Redux state.
  * @returns {number}
  */
-export function getVideoQualityForResizableFilmstripThumbnails(height: number, state: IReduxState) {
+export function getVideoQualityForResizableFilmstripThumbnails(
+    height: number,
+    state: IReduxState
+) {
     if (!height) {
         return VIDEO_QUALITY_LEVELS.LOW;
     }
 
-    return getReceiverVideoQualityLevel(height, getMinHeightForQualityLvlMap(state));
+    return getReceiverVideoQualityLevel(
+        height,
+        getMinHeightForQualityLvlMap(state)
+    );
 }
 
 /**
@@ -198,12 +213,18 @@ export function getVideoQualityForResizableFilmstripThumbnails(height: number, s
  * @param {Object} state - Redux state.
  * @returns {number}
  */
-export function getVideoQualityForScreenSharingFilmstrip(height: number, state: IReduxState) {
+export function getVideoQualityForScreenSharingFilmstrip(
+    height: number,
+    state: IReduxState
+) {
     if (!height) {
         return VIDEO_QUALITY_LEVELS.LOW;
     }
 
-    return getReceiverVideoQualityLevel(height, getMinHeightForQualityLvlMap(state));
+    return getReceiverVideoQualityLevel(
+        height,
+        getMinHeightForQualityLvlMap(state)
+    );
 }
 
 /**
@@ -223,10 +244,16 @@ export function getVideoQualityForLargeVideo(largeVideoHeight: number) {
  * @param {Object} state - Redux state.
  * @returns {number}
  */
-export function getVideoQualityForStageThumbnails(height: number, state: IReduxState) {
+export function getVideoQualityForStageThumbnails(
+    height: number,
+    state: IReduxState
+) {
     if (!height) {
         return VIDEO_QUALITY_LEVELS.LOW;
     }
 
-    return getReceiverVideoQualityLevel(height, getMinHeightForQualityLvlMap(state));
+    return getReceiverVideoQualityLevel(
+        height,
+        getMinHeightForQualityLvlMap(state)
+    );
 }

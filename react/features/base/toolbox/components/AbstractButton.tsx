@@ -7,10 +7,9 @@ import { NOTIFY_CLICK_MODE } from '../../../toolbox/constants';
 import { combineStyles } from '../../styles/functions.any';
 
 import { Styles } from './AbstractToolboxItem';
-import ToolboxItem from './ToolboxItem';
+import ToolboxItem from './ToolboxItem.web';
 
 export interface IProps extends WithTranslation {
-
     /**
      * Function to be called after the click handler has been processed.
      */
@@ -97,7 +96,10 @@ export const defaultDisabledButtonStyles = {
 /**
  * An abstract implementation of a button.
  */
-export default class AbstractButton<P extends IProps, S=any> extends Component<P, S> {
+export default class AbstractButton<
+    P extends IProps,
+    S = any
+> extends Component<P, S> {
     static defaultProps = {
         afterClick: undefined,
         disabledStyles: defaultDisabledButtonStyles,
@@ -230,9 +232,7 @@ export default class AbstractButton<P extends IProps, S=any> extends Component<P
      * @returns {string}
      */
     _getIcon() {
-        return (
-            this._isToggled() ? this.toggledIcon : this.icon
-        ) || this.icon;
+        return (this._isToggled() ? this.toggledIcon : this.icon) || this.icon;
     }
 
     /**
@@ -244,8 +244,9 @@ export default class AbstractButton<P extends IProps, S=any> extends Component<P
      * @returns {string}
      */
     _getLabel() {
-        return (this._isToggled() ? this.toggledLabel : this.label)
-            || this.label;
+        return (
+            (this._isToggled() ? this.toggledLabel : this.label) || this.label
+        );
     }
 
     /**
@@ -260,10 +261,11 @@ export default class AbstractButton<P extends IProps, S=any> extends Component<P
      * @returns {string}
      */
     _getAccessibilityLabel() {
-        return (this._isToggled()
-            ? this.toggledAccessibilityLabel
-            : this.accessibilityLabel
-        ) || this.accessibilityLabel;
+        return (
+            (this._isToggled()
+                ? this.toggledAccessibilityLabel
+                : this.accessibilityLabel) || this.accessibilityLabel
+        );
     }
 
     /**
@@ -276,17 +278,23 @@ export default class AbstractButton<P extends IProps, S=any> extends Component<P
      */
     _getStyles(): Styles | undefined {
         const { disabledStyles, styles, toggledStyles } = this.props;
-        const buttonStyles
-            = (this._isToggled() ? toggledStyles : styles) || styles;
+        const buttonStyles =
+            (this._isToggled() ? toggledStyles : styles) || styles;
 
         if (this._isDisabled() && buttonStyles && disabledStyles) {
             return {
                 iconStyle: combineStyles(
-                    buttonStyles.iconStyle ?? {}, disabledStyles.iconStyle ?? {}),
+                    buttonStyles.iconStyle ?? {},
+                    disabledStyles.iconStyle ?? {}
+                ),
                 labelStyle: combineStyles(
-                    buttonStyles.labelStyle ?? {}, disabledStyles.labelStyle ?? {}),
+                    buttonStyles.labelStyle ?? {},
+                    disabledStyles.labelStyle ?? {}
+                ),
                 style: combineStyles(
-                    buttonStyles.style ?? {}, disabledStyles.style ?? {}),
+                    buttonStyles.style ?? {},
+                    disabledStyles.style ?? {}
+                ),
                 underlayColor:
                     disabledStyles.underlayColor || buttonStyles.underlayColor
             };
@@ -302,9 +310,11 @@ export default class AbstractButton<P extends IProps, S=any> extends Component<P
      * @returns {string}
      */
     _getTooltip() {
-        return (this._isToggled() ? this.toggledTooltip : this.tooltip)
-            || this.tooltip
-            || '';
+        return (
+            (this._isToggled() ? this.toggledTooltip : this.tooltip) ||
+            this.tooltip ||
+            ''
+        );
     }
 
     /**
@@ -342,7 +352,8 @@ export default class AbstractButton<P extends IProps, S=any> extends Component<P
 
         if (typeof APP !== 'undefined' && notifyMode) {
             APP.API.notifyToolbarButtonClicked(
-                buttonKey, notifyMode === NOTIFY_CLICK_MODE.PREVENT_AND_NOTIFY
+                buttonKey,
+                notifyMode === NOTIFY_CLICK_MODE.PREVENT_AND_NOTIFY
             );
         }
 
@@ -382,10 +393,11 @@ export default class AbstractButton<P extends IProps, S=any> extends Component<P
 
         return (
             <ToolboxItem
-                disabled = { this._isDisabled() }
-                onClick = { this._onClick }
-                onKeyDown = { this._onKeyDown }
-                { ...props } />
+                disabled={this._isDisabled()}
+                onClick={this._onClick}
+                onKeyDown={this._onKeyDown}
+                {...props}
+            />
         );
     }
 }

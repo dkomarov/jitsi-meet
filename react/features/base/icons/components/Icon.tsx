@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
 
-import { Container } from '../../react/components/index';
-import { StyleType, styleTypeToObject } from '../../styles/functions';
+import { Container } from '../../react/components/index.web';
+import { StyleType, styleTypeToObject } from '../../styles/functions.web';
 
-import { IIconProps } from './types';
+import { IIconProps } from './types.web';
 
 interface IProps extends IIconProps {
-
     /**
      * The id of the element this button icon controls.
      */
@@ -103,7 +102,8 @@ interface IProps extends IIconProps {
     testId?: string;
 }
 
-export const DEFAULT_COLOR = navigator.product === 'ReactNative' ? 'white' : undefined;
+export const DEFAULT_COLOR =
+    navigator.product === 'ReactNative' ? 'white' : undefined;
 export const DEFAULT_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
 
 /**
@@ -145,41 +145,48 @@ export default function Icon(props: IProps) {
     const calculatedColor = color ?? styleColor ?? DEFAULT_COLOR;
     const calculatedSize = size ?? styleSize ?? DEFAULT_SIZE;
 
-    const onKeyPressHandler = useCallback(e => {
-        if ((e.key === 'Enter' || e.key === ' ') && onClick) {
-            e.preventDefault();
-            onClick(e);
-        } else if (onKeyPress) {
-            onKeyPress(e);
-        }
-    }, [ onClick, onKeyPress ]);
+    const onKeyPressHandler = useCallback(
+        (e) => {
+            if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+                e.preventDefault();
+                onClick(e);
+            } else if (onKeyPress) {
+                onKeyPress(e);
+            }
+        },
+        [onClick, onKeyPress]
+    );
 
-    const jitsiIconClassName = calculatedColor ? 'jitsi-icon' : 'jitsi-icon jitsi-icon-default';
+    const jitsiIconClassName = calculatedColor
+        ? 'jitsi-icon'
+        : 'jitsi-icon jitsi-icon-default';
 
     return (
         <Container
-            { ...rest }
-            aria-controls = { ariaControls }
-            aria-describedby = { ariaDescribedBy }
-            aria-disabled = { ariaDisabled }
-            aria-expanded = { ariaExpanded }
-            aria-haspopup = { ariaHasPopup }
-            aria-label = { ariaLabel }
-            aria-pressed = { ariaPressed }
-            className = { `${jitsiIconClassName} ${className || ''}` }
-            data-testid = { testId }
-            id = { containerId }
-            onClick = { onClick }
-            onKeyDown = { onKeyDown }
-            onKeyPress = { onKeyPressHandler }
-            role = { role }
-            style = { restStyle }
-            tabIndex = { tabIndex }>
+            {...rest}
+            aria-controls={ariaControls}
+            aria-describedby={ariaDescribedBy}
+            aria-disabled={ariaDisabled}
+            aria-expanded={ariaExpanded}
+            aria-haspopup={ariaHasPopup}
+            aria-label={ariaLabel}
+            aria-pressed={ariaPressed}
+            className={`${jitsiIconClassName} ${className || ''}`}
+            data-testid={testId}
+            id={containerId}
+            onClick={onClick}
+            onKeyDown={onKeyDown}
+            onKeyPress={onKeyPressHandler}
+            role={role}
+            style={restStyle}
+            tabIndex={tabIndex}
+        >
             <IconComponent
-                fill = { calculatedColor }
-                height = { calculatedSize }
-                id = { id }
-                width = { calculatedSize } />
+                fill={calculatedColor}
+                height={calculatedSize}
+                id={id}
+                width={calculatedSize}
+            />
         </Container>
     );
 }
