@@ -11,7 +11,8 @@ declare global {
         conference: any;
         debugLogs: any;
     };
-    // const interfaceConfig: any;
+
+    const interfaceConfig: any;
 
     interface Window {
         config: IConfig;
