@@ -81,18 +81,18 @@ interface IProps extends WithTranslation {
 const styles = (theme: Theme) => {
     return {
         dialog: {
-            color: theme.palette.text01
+            color: theme.palette.text //01
         },
         dialogDetails: {
-            ...withPixelLineHeight(theme.typography.bodyShortRegularLarge),
+            ...withPixelLineHeight(theme.typography.body1), // bodyShortRegularLarge
             marginBottom: 16
         },
         dialogContents: {
-            background: theme.palette.ui01,
+            background: theme.palette.grey, //ui01,
             padding: '16px 16px 48px 16px'
         },
         sliderDescription: {
-            ...withPixelLineHeight(theme.typography.heading6),
+            ...withPixelLineHeight(theme.typography.h6), // heading6
 
             display: 'flex',
             justifyContent: 'space-between',
@@ -208,7 +208,7 @@ class VideoQualitySlider extends Component<IProps> {
      */
     _enableAudioOnly() {
         sendAnalytics(createEvent('audio.only'));
-        logger.log('Video quality: audio only enabled');
+        console.log('Video quality: audio only enabled');
         this.props.dispatch(setAudioOnly(true));
     }
 
@@ -222,7 +222,7 @@ class VideoQualitySlider extends Component<IProps> {
      */
     _enableHighDefinition() {
         sendAnalytics(createEvent('high'));
-        logger.log('Video quality: high enabled');
+        console.log('Video quality: high enabled');
         this._setPreferredVideoQuality(HIGH);
     }
 
@@ -235,7 +235,7 @@ class VideoQualitySlider extends Component<IProps> {
      */
     _enableLowDefinition() {
         sendAnalytics(createEvent('low'));
-        logger.log('Video quality: low enabled');
+        console.log('Video quality: low enabled');
         this._setPreferredVideoQuality(LOW);
     }
 
@@ -261,7 +261,7 @@ class VideoQualitySlider extends Component<IProps> {
      */
     _enableUltraHighDefinition() {
         sendAnalytics(createEvent('ultra high'));
-        logger.log('Video quality: ultra high enabled');
+        console.log('Video quality: ultra high enabled');
         this._setPreferredVideoQuality(ULTRA);
     }
 

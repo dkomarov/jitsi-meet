@@ -327,7 +327,8 @@ export function submitVirtualBackgroundTab(newState: any, isCancel = false) {
                     })
                 );
 
-                virtualBackgroundLogger.info(
+                // virtualBackgroundLogger.info(
+                console.log(
                     `Virtual background type: '${
                         typeof newState.options.backgroundType === 'undefined'
                             ? 'none'

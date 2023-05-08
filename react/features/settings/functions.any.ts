@@ -1,6 +1,6 @@
 import { IReduxState } from '../app/types';
 import { IStateful } from '../base/app/types';
-import { isNameReadOnly } from '../base/config/functions';
+import { isNameReadOnly } from '../base/config/functions.web';
 import { SERVER_URL_CHANGE_ENABLED } from '../base/flags/constants';
 import { getFeatureFlag } from '../base/flags/functions';
 import i18next, { DEFAULT_LANGUAGE, LANGUAGES } from '../base/i18n/i18next';
@@ -9,10 +9,10 @@ import {
     isLocalParticipantModerator
 } from '../base/participants/functions';
 import { toState } from '../base/redux/functions';
-import { getHideSelfView } from '../base/settings/functions';
+import { getHideSelfView } from '../base/settings/functions.any';
 import { getLocalVideoTrack } from '../base/tracks/functions.any';
 import { parseStandardURIString } from '../base/util/uri';
-import { isStageFilmstripEnabled } from '../filmstrip/functions';
+import { isStageFilmstripEnabled } from '../filmstrip/functions.web';
 import { isFollowMeActive } from '../follow-me/functions';
 import { getParticipantsPaneConfig } from '../participants-pane/functions';
 import { isReactionsEnabled } from '../reactions/functions.any';

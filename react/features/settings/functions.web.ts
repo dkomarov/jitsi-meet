@@ -1,7 +1,10 @@
 import { IStateful } from '../base/app/types';
-import { createLocalTrack } from '../base/lib-jitsi-meet/functions';
+import { createLocalTrack } from '../base/lib-jitsi-meet/functions.web';
 import { toState } from '../base/redux/functions';
-import { areKeyboardShortcutsEnabled, getKeyboardShortcutsHelpDescriptions } from '../keyboard-shortcuts/functions';
+import {
+    areKeyboardShortcutsEnabled,
+    getKeyboardShortcutsHelpDescriptions
+} from '../keyboard-shortcuts/functions';
 import { isPrejoinPageVisible } from '../prejoin/functions';
 
 export * from './functions.any';
@@ -16,22 +19,25 @@ export * from './functions.any';
  * @returns {Promise<Object[]>}
  */
 export function createLocalVideoTracks(ids: string[], timeout?: number) {
-    return Promise.all(ids.map(deviceId => createLocalTrack('video', deviceId, timeout)
-                    .then((jitsiTrack: any) => {
-                        return {
-                            jitsiTrack,
-                            deviceId
-                        };
-                    })
-                    .catch(() => {
-                        return {
-                            jitsiTrack: null,
-                            deviceId,
-                            error: 'deviceSelection.previewUnavailable'
-                        };
-                    })));
+    return Promise.all(
+        ids.map((deviceId) =>
+            createLocalTrack('video', deviceId, timeout)
+                .then((jitsiTrack: any) => {
+                    return {
+                        jitsiTrack,
+                        deviceId
+                    };
+                })
+                .catch(() => {
+                    return {
+                        jitsiTrack: null,
+                        deviceId,
+                        error: 'deviceSelection.previewUnavailable'
+                    };
+                })
+        )
+    );
 }
-
 
 /**
  * Returns a promise which resolves with a list of objects containing
@@ -46,7 +52,10 @@ export function createLocalVideoTracks(ids: string[], timeout?: number) {
  *   label: string
  * }[]>}
  */
-export function createLocalAudioTracks(devices: Array<{ deviceId: string; label: string; }>, timeout?: number) {
+export function createLocalAudioTracks(
+    devices: Array<{ deviceId: string; label: string }>,
+    timeout?: number
+) {
     return Promise.all(
         devices.map(async ({ deviceId, label }) => {
             let jitsiTrack = null;
@@ -64,7 +73,8 @@ export function createLocalAudioTracks(devices: Array<{ deviceId: string; label:
                 jitsiTrack,
                 label
             };
-        }));
+        })
+    );
 }
 
 /**
@@ -78,12 +88,17 @@ export function createLocalAudioTracks(devices: Array<{ deviceId: string; label:
  * @returns {Object} - The properties for the "Shortcuts" tab from settings
  * dialog.
  */
-export function getShortcutsTabProps(stateful: IStateful, isDisplayedOnWelcomePage?: boolean) {
+export function getShortcutsTabProps(
+    stateful: IStateful,
+    isDisplayedOnWelcomePage?: boolean
+) {
     const state = toState(stateful);
 
     return {
-        displayShortcuts: !isDisplayedOnWelcomePage && !isPrejoinPageVisible(state),
+        displayShortcuts:
+            !isDisplayedOnWelcomePage && !isPrejoinPageVisible(state),
         keyboardShortcutsEnabled: areKeyboardShortcutsEnabled(state),
-        keyboardShortcutsHelpDescriptions: getKeyboardShortcutsHelpDescriptions(state)
+        keyboardShortcutsHelpDescriptions:
+            getKeyboardShortcutsHelpDescriptions(state)
     };
 }

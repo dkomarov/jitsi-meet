@@ -134,7 +134,8 @@ const SettingsDialog = ({ _tabs, defaultTab, dispatch }: IProps) => {
  */
 function _mapStateToProps(state: IReduxState, ownProps: any) {
     const { isDisplayedOnWelcomePage } = ownProps;
-    const configuredTabs = interfaceConfig != '' ? interfaceConfig.SETTINGS_SECTIONS || [];
+    const configuredTabs =
+        interfaceConfig != '' ? interfaceConfig.SETTINGS_SECTIONS : [];
 
     // The settings sections to display.
     const showDeviceSettings = configuredTabs.includes('devices');
