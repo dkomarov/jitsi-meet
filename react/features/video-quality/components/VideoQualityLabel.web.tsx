@@ -197,12 +197,12 @@ function _mapStateToProps(state: IReduxState) {
 
     return {
         ..._abstractMapStateToProps(state),
-        _labelKey: translationKeys.labelKey,
-        _tooltipKey: translationKeys.tooltipKey,
+        _labelKey: translationKeys != `{}` ? translationKeys.labelKey,
+        _tooltipKey: translationKeys != `{}` ? translationKeys.tooltipKey,
         _videoTrack: videoTrackOnLargeVideo,
         _visible: !(
             shouldDisplayTileView(state) ||
-            interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
+            interfaceConfig != '' ? interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
         )
     };
 }
