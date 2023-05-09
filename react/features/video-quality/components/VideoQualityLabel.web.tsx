@@ -63,9 +63,9 @@ interface IProps extends AbstractProps {
  * @type {Object}
  */
 const RESOLUTION_TO_TRANSLATION_KEY = {
-    720: 'videoStatus.hd',
-    360: 'videoStatus.sd',
-    180: 'videoStatus.ld'
+    '720': 'videoStatus.hd',
+    '360': 'videoStatus.sd',
+    '180': 'videoStatus.ld'
 };
 
 /**
@@ -197,10 +197,11 @@ function _mapStateToProps(state: IReduxState) {
 
     return {
         ..._abstractMapStateToProps(state),
-        _labelKey: translationKeys != `{}` ? translationKeys.labelKey,
-        _tooltipKey: translationKeys != `{}` ? translationKeys.tooltipKey,
+        _labelKey: translationKeys != `{}` ? translationKeys.labelKey : `{}`,
+        _tooltipKey: translationKeys != `{}` ? translationKeys.tooltipKey : `{}`,
         _videoTrack: videoTrackOnLargeVideo,
         _visible: !(
+            // ts-ignore // ts-expect-error
             shouldDisplayTileView(state) ||
             interfaceConfig != '' ? interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
         )

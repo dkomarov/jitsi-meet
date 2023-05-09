@@ -1,6 +1,6 @@
 import { IStateful } from '../base/app/types';
 import { toState } from '../base/redux/functions';
-import { getServerURL } from '../base/settings/functions.web';
+import { getServerURL } from '../base/settings/functions.any';
 
 export * from './functions.any';
 

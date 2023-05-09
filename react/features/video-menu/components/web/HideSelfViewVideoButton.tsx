@@ -5,14 +5,13 @@ import { connect } from 'react-redux';
 import { IReduxState, IStore } from '../../../app/types';
 import { translate } from '../../../base/i18n/functions';
 import { updateSettings } from '../../../base/settings/actions';
-import { getHideSelfView } from '../../../base/settings/functions';
+import { getHideSelfView } from '../../../base/settings/functions.any';
 import ContextMenuItem from '../../../base/ui/components/web/ContextMenuItem';
 
 /**
  * The type of the React {@code Component} props of {@link HideSelfViewVideoButton}.
  */
 interface IProps extends WithTranslation {
-
     /**
      * Button text class name.
      */
@@ -60,19 +59,17 @@ class HideSelfViewVideoButton extends PureComponent<IProps> {
      * @returns {null|ReactElement}
      */
     render() {
-        const {
-            className,
-            t
-        } = this.props;
+        const { className, t } = this.props;
 
         return (
             <ContextMenuItem
-                accessibilityLabel = { t('videothumbnail.hideSelfView') }
-                className = 'hideselflink'
-                id = 'hideselfviewButton'
-                onClick = { this._onClick }
-                text = { t('videothumbnail.hideSelfView') }
-                textClassName = { className } />
+                accessibilityLabel={t('videothumbnail.hideSelfView')}
+                className="hideselflink"
+                id="hideselfviewButton"
+                onClick={this._onClick}
+                text={t('videothumbnail.hideSelfView')}
+                textClassName={className}
+            />
         );
     }
 
@@ -86,9 +83,11 @@ class HideSelfViewVideoButton extends PureComponent<IProps> {
         const { disableSelfView, dispatch, onClick } = this.props;
 
         onClick?.();
-        dispatch(updateSettings({
-            disableSelfView: !disableSelfView
-        }));
+        dispatch(
+            updateSettings({
+                disableSelfView: !disableSelfView
+            })
+        );
     }
 }
 

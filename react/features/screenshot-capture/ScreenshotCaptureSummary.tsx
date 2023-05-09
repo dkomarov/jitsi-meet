@@ -6,7 +6,10 @@ import { createScreensharingCaptureTakenEvent } from '../analytics/AnalyticsEven
 import { sendAnalytics } from '../analytics/functions';
 import { IReduxState } from '../app/types';
 import { getCurrentConference } from '../base/conference/functions';
-import { getLocalParticipant, getRemoteParticipants } from '../base/participants/functions';
+import {
+    getLocalParticipant,
+    getRemoteParticipants
+} from '../base/participants/functions';
 import { ITrack } from '../base/tracks/types';
 import { extractFqnFromPath } from '../dynamic-branding/functions.any';
 
@@ -52,7 +55,9 @@ export default class ScreenshotCaptureSummary {
         // Bind handlers such that they access the same instance.
         this._handleWorkerAction = this._handleWorkerAction.bind(this);
         this._initScreenshotCapture = this._initScreenshotCapture.bind(this);
-        this._streamWorker = new Worker(timerWorkerScript, { name: 'Screenshot capture worker' });
+        this._streamWorker = new Worker(timerWorkerScript, {
+            name: 'Screenshot capture worker'
+        });
         this._streamWorker.onmessage = this._handleWorkerAction;
 
         this._initializedRegion = false;
@@ -64,7 +69,8 @@ export default class ScreenshotCaptureSummary {
      * @returns {void}
      */
     async _initRegionSelection() {
-        const { _screenshotHistoryRegionUrl } = this._state['features/base/config'];
+        const { _screenshotHistoryRegionUrl } =
+            this._state['features/base/config'];
         const conference = getCurrentConference(this._state);
         const sessionId = conference?.getMeetingUniqueId();
         const { jwt } = this._state['features/base/jwt'];
@@ -74,7 +80,7 @@ export default class ScreenshotCaptureSummary {
         }
 
         const headers = {
-            ...jwt && { 'Authorization': `Bearer ${jwt}` }
+            ...(jwt && { Authorization: `Bearer ${jwt}` })
         };
 
         await fetch(`${_screenshotHistoryRegionUrl}/${sessionId}`, {
@@ -100,8 +106,8 @@ export default class ScreenshotCaptureSummary {
             return;
         }
         const desktopTrack = stream.getVideoTracks()[0];
-        const { height, width }
-            = desktopTrack.getSettings() ?? desktopTrack.getConstraints();
+        const { height, width } =
+            desktopTrack.getSettings() ?? desktopTrack.getConstraints();
 
         this._streamHeight = height;
         this._streamWidth = width;
@@ -136,8 +142,19 @@ export default class ScreenshotCaptureSummary {
     async _initScreenshotCapture() {
         const imageBitmap = await this._imageCapture.grabFrame();
 
-        this._currentCanvasContext?.drawImage(imageBitmap, 0, 0, this._streamWidth, this._streamHeight);
-        const imageData = this._currentCanvasContext?.getImageData(0, 0, this._streamWidth, this._streamHeight);
+        this._currentCanvasContext?.drawImage(
+            imageBitmap,
+            0,
+            0,
+            this._streamWidth,
+            this._streamHeight
+        );
+        const imageData = this._currentCanvasContext?.getImageData(
+            0,
+            0,
+            this._streamWidth,
+            this._streamHeight
+        );
 
         this._storedImageData = imageData;
         this._streamWorker.postMessage({
@@ -153,7 +170,7 @@ export default class ScreenshotCaptureSummary {
      * @param {EventHandler} message - Message received from the Worker.
      * @returns {void}
      */
-    _handleWorkerAction(message: { data: { id: number; }; }) {
+    _handleWorkerAction(message: { data: { id: number } }) {
         return message.data.id === INTERVAL_TIMEOUT && this._handleScreenshot();
     }
 
@@ -178,7 +195,7 @@ export default class ScreenshotCaptureSummary {
         const participants = [];
 
         participants.push(getLocalParticipant(this._state)?.id);
-        remoteParticipants.forEach(p => participants.push(p.id));
+        remoteParticipants.forEach((p) => participants.push(p.id));
         this._storedImageData = imageData;
 
         processScreenshot(this._currentCanvas, {
@@ -200,13 +217,26 @@ export default class ScreenshotCaptureSummary {
     async _handleScreenshot() {
         const imageBitmap = await this._imageCapture.grabFrame();
 
-        this._currentCanvasContext?.drawImage(imageBitmap, 0, 0, this._streamWidth, this._streamHeight);
-        const imageData = this._currentCanvasContext?.getImageData(0, 0, this._streamWidth, this._streamHeight);
+        this._currentCanvasContext?.drawImage(
+            imageBitmap,
+            0,
+            0,
+            this._streamWidth,
+            this._streamHeight
+        );
+        const imageData = this._currentCanvasContext?.getImageData(
+            0,
+            0,
+            this._streamWidth,
+            this._streamHeight
+        );
 
         resemble(imageData ?? '')
             .compareTo(this._storedImageData ?? '')
             .setReturnEarlyThreshold(PERCENTAGE_LOWER_BOUND)
-            .onComplete(resultData => {
+            // ts-ignore // ts-expect-error
+            .onComplete((resultData) => {
+                // ts-ignore // ts-expect-error
                 if (resultData.rawMisMatchPercentage > PERCENTAGE_LOWER_BOUND) {
                     this._doProcessScreenshot(imageData);
                 }

@@ -30,6 +30,7 @@ import { IconPerformance } from '../../base/icons/svg';
 import AbstractButton, {
     IProps as AbstractButtonProps
 } from '../../base/toolbox/components/AbstractButton';
+import { IReduxState } from '../../app/types';
 
 // import {
 //     AbstractButton,
@@ -92,7 +93,7 @@ class VideoQualityButton extends AbstractButton<IProps> {
      *
      * @param {string} value - The icon value.
      */
-    set(value) {
+    set(value: string) {
         // icon
         return value;
     }
@@ -126,7 +127,7 @@ class VideoQualityButton extends AbstractButton<IProps> {
  *     _videoQuality: number
  * }}
  */
-function _mapStateToProps(state) {
+function _mapStateToProps(state: IReduxState) {
     return {
         _audioOnly: state['features/base/audio-only'].enabled,
         _videoQuality: state['features/video-quality'].preferredVideoQuality

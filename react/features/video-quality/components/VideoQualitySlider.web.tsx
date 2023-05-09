@@ -248,7 +248,7 @@ class VideoQualitySlider extends Component<IProps> {
      */
     _enableStandardDefinition() {
         sendAnalytics(createEvent('standard'));
-        logger.log('Video quality: standard enabled');
+        console.log('Video quality: standard enabled');
         this._setPreferredVideoQuality(STANDARD);
     }
 

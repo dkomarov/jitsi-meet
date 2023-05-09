@@ -134,6 +134,7 @@ const SettingsDialog = ({ _tabs, defaultTab, dispatch }: IProps) => {
  */
 function _mapStateToProps(state: IReduxState, ownProps: any) {
     const { isDisplayedOnWelcomePage } = ownProps;
+    // ts-ignore // ts-expect-error
     const configuredTabs =
         interfaceConfig != '' ? interfaceConfig.SETTINGS_SECTIONS : [];
 

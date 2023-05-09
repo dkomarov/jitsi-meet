@@ -1,7 +1,7 @@
 import { IStore } from '../app/types';
 import { openDialog } from '../base/dialog/actions';
 import { browser } from '../base/lib-jitsi-meet';
-import { shouldHideShareAudioHelper } from '../base/settings/functions.web';
+import { shouldHideShareAudioHelper } from '../base/settings/functions.any';
 import { toggleScreensharing } from '../base/tracks/actions.web';
 
 import {
@@ -59,7 +59,11 @@ export function startAudioScreenShareFlow() {
 
         // If we're already in a normal screen sharing session, warn the user.
         if (isScreenVideoShared(state)) {
-            dispatch(openDialog(ShareMediaWarningDialog, { _isAudioScreenShareWarning: true }));
+            dispatch(
+                openDialog(ShareMediaWarningDialog, {
+                    _isAudioScreenShareWarning: true
+                })
+            );
 
             return;
         }
@@ -68,7 +72,11 @@ export function startAudioScreenShareFlow() {
         // If we're in an electron environment the helper dialog is not needed as there's only one option
         // available for audio screen sharing, namely full window audio.
         // If we're already sharing audio, toggle off.
-        if (shouldHideShareAudioHelper(state) || browser.isElectron() || audioOnlySharing) {
+        if (
+            shouldHideShareAudioHelper(state) ||
+            browser.isElectron() ||
+            audioOnlySharing
+        ) {
             // We don't want to explicitly set the screens share state, by passing undefined we let the
             // underlying logic decide if it's on or off.
             dispatch(toggleScreensharing(undefined, true));
@@ -94,7 +102,11 @@ export function startScreenShareFlow(enabled: boolean) {
 
         // If we're in an audio screen sharing session, warn the user.
         if (audioOnlySharing) {
-            dispatch(openDialog(ShareMediaWarningDialog, { _isAudioScreenShareWarning: false }));
+            dispatch(
+                openDialog(ShareMediaWarningDialog, {
+                    _isAudioScreenShareWarning: false
+                })
+            );
 
             return;
         }

@@ -192,7 +192,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
     async startLocalRecording(store, onlySelf) {
         const { dispatch, getState } = store;
 
-        // @ts-ignore
+        // @ts-ignore // @ts-expect-error
         const supportsCaptureHandle =
             Boolean(navigator.mediaDevices.setCaptureHandleConfig) &&
             !inIframe();
@@ -232,7 +232,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
                 throw new Error('NoLocalStreams');
             }
             this.selfRecording.withVideo = Boolean(videoTrack);
-            let localTracks;
+            let localTracks: Array<MediaStreamTrack> = [];
 
             audioTrack && localTracks.push(audioTrack);
             videoTrack && localTracks.push(videoTrack);
@@ -270,9 +270,9 @@ const LocalRecordingManager: ILocalRecordingManager = {
 
             document.title = i18next.t('localRecording.selectTabTitle');
 
-            // @ts-ignore
+            // @ts-ignore // @ts-expect-error
             gdmStream = await navigator.mediaDevices.getDisplayMedia({
-                // @ts-ignore
+                // @ts-ignore // @ts-expect-error
                 video: { displaySurface: 'browser', frameRate: 30 },
                 audio: false
                 // preferCurrentTab: true

@@ -1,9 +1,8 @@
 import { IStateful } from '../app/types';
 import { toState } from '../redux/functions';
-import { getPropertyValue } from '../settings/functions';
+import { getPropertyValue } from '../settings/functions.any';
 
 import { VIDEO_MUTISM_AUTHORITY } from './constants';
-
 
 // XXX The configurations/preferences/settings startWithAudioMuted and startWithVideoMuted were introduced for
 // conferences/meetings. So it makes sense for these to not be considered outside of conferences/meetings
@@ -43,8 +42,10 @@ export function isAudioMuted(stateful: IStateful) {
  * @returns {boolean}
  */
 export function isVideoMutedByAudioOnly(stateful: IStateful) {
-    return (
-        _isVideoMutedByAuthority(stateful, VIDEO_MUTISM_AUTHORITY.AUDIO_ONLY));
+    return _isVideoMutedByAuthority(
+        stateful,
+        VIDEO_MUTISM_AUTHORITY.AUDIO_ONLY
+    );
 }
 
 /**
@@ -59,8 +60,9 @@ export function isVideoMutedByAudioOnly(stateful: IStateful) {
  * {@code videoMutismAuthority}, then {@code true}; otherwise, {@code false}.
  */
 function _isVideoMutedByAuthority(
-        stateful: IStateful,
-        videoMutismAuthority: number) {
+    stateful: IStateful,
+    videoMutismAuthority: number
+) {
     const { muted } = toState(stateful)['features/base/media'].video;
 
     // eslint-disable-next-line no-bitwise
@@ -74,8 +76,22 @@ function _isVideoMutedByAuthority(
  * @returns {boolean} - The computed startWithAudioMuted value that will be used.
  */
 export function getStartWithAudioMuted(stateful: IStateful) {
-    return Boolean(getPropertyValue(stateful, 'startWithAudioMuted', START_WITH_AUDIO_VIDEO_MUTED_SOURCES))
-        || Boolean(getPropertyValue(stateful, 'startSilent', START_WITH_AUDIO_VIDEO_MUTED_SOURCES));
+    return (
+        Boolean(
+            getPropertyValue(
+                stateful,
+                'startWithAudioMuted',
+                START_WITH_AUDIO_VIDEO_MUTED_SOURCES
+            )
+        ) ||
+        Boolean(
+            getPropertyValue(
+                stateful,
+                'startSilent',
+                START_WITH_AUDIO_VIDEO_MUTED_SOURCES
+            )
+        )
+    );
 }
 
 /**
@@ -85,7 +101,13 @@ export function getStartWithAudioMuted(stateful: IStateful) {
  * @returns {boolean} - The computed startWithVideoMuted value that will be used.
  */
 export function getStartWithVideoMuted(stateful: IStateful) {
-    return Boolean(getPropertyValue(stateful, 'startWithVideoMuted', START_WITH_AUDIO_VIDEO_MUTED_SOURCES));
+    return Boolean(
+        getPropertyValue(
+            stateful,
+            'startWithVideoMuted',
+            START_WITH_AUDIO_VIDEO_MUTED_SOURCES
+        )
+    );
 }
 
 /**
@@ -120,10 +142,12 @@ export function isVideoMutedByUser(stateful: IStateful) {
  * otherwise, false.
  */
 export function shouldRenderVideoTrack(
-        videoTrack: { muted: boolean; videoStarted: boolean; } | undefined,
-        waitForVideoStarted: boolean) {
+    videoTrack: { muted: boolean; videoStarted: boolean } | undefined,
+    waitForVideoStarted: boolean
+) {
     return (
-        videoTrack
-            && !videoTrack.muted
-            && (!waitForVideoStarted || videoTrack.videoStarted));
+        videoTrack &&
+        !videoTrack.muted &&
+        (!waitForVideoStarted || videoTrack.videoStarted)
+    );
 }

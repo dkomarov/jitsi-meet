@@ -9,8 +9,8 @@ import { IconDotsHorizontal } from '../../../base/icons/svg';
 import { getLocalParticipant } from '../../../base/participants/functions';
 import Popover from '../../../base/popover/components/Popover.web';
 import { setParticipantContextMenuOpen } from '../../../base/responsive-ui/actions';
-import { getHideSelfView } from '../../../base/settings/functions.web';
-import { getLocalVideoTrack } from '../../../base/tracks/functions';
+import { getHideSelfView } from '../../../base/settings/functions.any';
+import { getLocalVideoTrack } from '../../../base/tracks/functions.any';
 import Button from '../../../base/ui/components/web/Button';
 import ContextMenu from '../../../base/ui/components/web/ContextMenu';
 import ContextMenuItemGroup from '../../../base/ui/components/web/ContextMenuItemGroup';
@@ -29,7 +29,6 @@ import TogglePinToStageButton from './TogglePinToStageButton';
  * {@link LocalVideoMenuTriggerButton}.
  */
 interface IProps {
-
     /**
      * The id of the local participant.
      */
@@ -153,58 +152,66 @@ const LocalVideoMenuTriggerButton = ({
         });
     }, []);
 
-    const content = _showConnectionInfo
-        ? <ConnectionIndicatorContent participantId = { _localParticipantId } />
-        : (
-            <ContextMenu
-                className = { classes.contextMenu }
-                hidden = { false }
-                inDrawer = { _overflowDrawer }>
-                <ContextMenuItemGroup>
-                    {_showLocalVideoFlipButton
-                        && <FlipLocalVideoButton
-                            className = { _overflowDrawer ? classes.flipText : '' }
-                            onClick = { hidePopover } />
-                    }
-                    {_showHideSelfViewButton
-                        && <HideSelfViewVideoButton
-                            className = { _overflowDrawer ? classes.flipText : '' }
-                            onClick = { hidePopover } />
-                    }
-                    {
-                        _showPinToStage && <TogglePinToStageButton
-                            className = { _overflowDrawer ? classes.flipText : '' }
-                            noIcon = { true }
-                            onClick = { hidePopover }
-                            participantID = { _localParticipantId } />
-                    }
-                    {isMobileBrowser()
-                        && <ConnectionStatusButton participantId = { _localParticipantId } />
-                    }
-                </ContextMenuItemGroup>
-            </ContextMenu>
-        );
-
-    return (
-        isMobileBrowser() || _showLocalVideoFlipButton || _showHideSelfViewButton
-            ? <Popover
-                content = { content }
-                headingLabel = { t('dialog.localUserControls') }
-                id = 'local-video-menu-trigger'
-                onPopoverClose = { _onPopoverClose }
-                onPopoverOpen = { _onPopoverOpen }
-                position = { _menuPosition }
-                visible = { Boolean(popoverVisible) }>
-                {buttonVisible && !isMobileBrowser() && (
-                    <Button
-                        accessibilityLabel = { t('dialog.localUserControls') }
-                        className = { classes.triggerButton }
-                        icon = { IconDotsHorizontal }
-                        size = 'small' />
+    const content = _showConnectionInfo ? (
+        <ConnectionIndicatorContent participantId={_localParticipantId} />
+    ) : (
+        <ContextMenu
+            className={classes.contextMenu}
+            hidden={false}
+            inDrawer={_overflowDrawer}
+        >
+            <ContextMenuItemGroup>
+                {_showLocalVideoFlipButton && (
+                    <FlipLocalVideoButton
+                        className={_overflowDrawer ? classes.flipText : ''}
+                        onClick={hidePopover}
+                    />
                 )}
-            </Popover>
-            : null
+                {_showHideSelfViewButton && (
+                    <HideSelfViewVideoButton
+                        className={_overflowDrawer ? classes.flipText : ''}
+                        onClick={hidePopover}
+                    />
+                )}
+                {_showPinToStage && (
+                    <TogglePinToStageButton
+                        className={_overflowDrawer ? classes.flipText : ''}
+                        noIcon={true}
+                        onClick={hidePopover}
+                        participantID={_localParticipantId}
+                    />
+                )}
+                {isMobileBrowser() && (
+                    <ConnectionStatusButton
+                        participantId={_localParticipantId}
+                    />
+                )}
+            </ContextMenuItemGroup>
+        </ContextMenu>
     );
+
+    return isMobileBrowser() ||
+        _showLocalVideoFlipButton ||
+        _showHideSelfViewButton ? (
+        <Popover
+            content={content}
+            headingLabel={t('dialog.localUserControls')}
+            id="local-video-menu-trigger"
+            onPopoverClose={_onPopoverClose}
+            onPopoverOpen={_onPopoverOpen}
+            position={_menuPosition}
+            visible={Boolean(popoverVisible)}
+        >
+            {buttonVisible && !isMobileBrowser() && (
+                <Button
+                    accessibilityLabel={t('dialog.localUserControls')}
+                    className={classes.triggerButton}
+                    icon={IconDotsHorizontal}
+                    size="small"
+                />
+            )}
+        </Popover>
+    ) : null;
 };
 
 /**
@@ -218,31 +225,34 @@ const LocalVideoMenuTriggerButton = ({
 function _mapStateToProps(state: IReduxState, ownProps: Partial<IProps>) {
     const { thumbnailType } = ownProps;
     const localParticipant = getLocalParticipant(state);
-    const { disableLocalVideoFlip, disableSelfViewSettings } = state['features/base/config'];
+    const { disableLocalVideoFlip, disableSelfViewSettings } =
+        state['features/base/config'];
     const videoTrack = getLocalVideoTrack(state['features/base/tracks']);
     const { overflowDrawer } = state['features/toolbox'];
     const { showConnectionInfo } = state['features/base/connection'];
-    const showHideSelfViewButton = !disableSelfViewSettings && !getHideSelfView(state);
+    const showHideSelfViewButton =
+        !disableSelfViewSettings && !getHideSelfView(state);
 
     let _menuPosition;
 
     switch (thumbnailType) {
-    case THUMBNAIL_TYPE.TILE:
-        _menuPosition = 'left-start';
-        break;
-    case THUMBNAIL_TYPE.VERTICAL:
-        _menuPosition = 'left-start';
-        break;
-    case THUMBNAIL_TYPE.HORIZONTAL:
-        _menuPosition = 'top-start';
-        break;
-    default:
-        _menuPosition = 'auto';
+        case THUMBNAIL_TYPE.TILE:
+            _menuPosition = 'left-start';
+            break;
+        case THUMBNAIL_TYPE.VERTICAL:
+            _menuPosition = 'left-start';
+            break;
+        case THUMBNAIL_TYPE.HORIZONTAL:
+            _menuPosition = 'top-start';
+            break;
+        default:
+            _menuPosition = 'auto';
     }
 
     return {
         _menuPosition,
-        _showLocalVideoFlipButton: !disableLocalVideoFlip && videoTrack?.videoType !== 'desktop',
+        _showLocalVideoFlipButton:
+            !disableLocalVideoFlip && videoTrack?.videoType !== 'desktop',
         _showHideSelfViewButton: showHideSelfViewButton,
         _overflowDrawer: overflowDrawer,
         _localParticipantId: localParticipant?.id ?? '',
