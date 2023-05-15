@@ -147,6 +147,7 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
  * @private
  * @returns {Object}
  */
+// @ts-ignore // @ts-expect-error
 function _mapResolutionToTranslationsKeys(resolution) {
     // Set the default matching resolution of the lowest just in case a match is
     // not found.
