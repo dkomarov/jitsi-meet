@@ -192,8 +192,9 @@ const LocalRecordingManager: ILocalRecordingManager = {
     async startLocalRecording(store, onlySelf) {
         const { dispatch, getState } = store;
 
-        // @ts-ignore // @ts-expect-error
+        // @ts-ignore
         const supportsCaptureHandle =
+            // @ts-ignore // @ts-expect-error
             Boolean(navigator.mediaDevices.setCaptureHandleConfig) &&
             !inIframe();
         const tabId = uuidV4();
@@ -281,6 +282,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
 
             // @ts-ignore
             const isBrowser =
+                // @ts-ignore // @ts-expect-error
                 gdmStream.getVideoTracks()[0].getSettings().displaySurface ===
                 'browser';
 

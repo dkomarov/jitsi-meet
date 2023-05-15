@@ -5,7 +5,7 @@ import {
     IconVideoQualityHD,
     IconVideoQualityLD,
     IconVideoQualitySD
-} from '../../base/icons';
+} from '../../base/icons/svg/index';
 
 // import { connect } from '../../base/redux';
 import { connect } from 'react-redux';

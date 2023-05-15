@@ -147,7 +147,7 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
  * @private
  * @returns {Object}
  */
-function _mapResolutionToTranslationsKeys(resolution: number) {
+function _mapResolutionToTranslationsKeys(resolution) {
     // Set the default matching resolution of the lowest just in case a match is
     // not found.
     let highestMatchingResolution = RESOLUTIONS[0];
@@ -162,6 +162,7 @@ function _mapResolutionToTranslationsKeys(resolution: number) {
         }
     }
 
+    // @ts-ignore // @ts-expect-error
     const labelKey = RESOLUTION_TO_TRANSLATION_KEY[highestMatchingResolution];
 
     return {
@@ -197,13 +198,18 @@ function _mapStateToProps(state: IReduxState) {
 
     return {
         ..._abstractMapStateToProps(state),
-        _labelKey: translationKeys != `{}` ? translationKeys.labelKey : `{}`,
-        _tooltipKey: translationKeys != `{}` ? translationKeys.tooltipKey : `{}`,
+        // @ts-ignore
+        _labelKey: translationKeys.labelKey,
+        // @ts-ignore
+        _tooltipKey: translationKeys.tooltipKey,
         _videoTrack: videoTrackOnLargeVideo,
         _visible: !(
-            // ts-ignore // ts-expect-error
-            shouldDisplayTileView(state) ||
-            interfaceConfig != '' ? interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
+            // ts-ignore
+            (
+                shouldDisplayTileView(state) ||
+                // ts-ignore // ts-expect-error
+                interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
+            )
         )
     };
 }
