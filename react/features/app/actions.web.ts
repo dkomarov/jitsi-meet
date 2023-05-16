@@ -1,4 +1,3 @@
-// @ts-expect-error
 import { API_ID } from '../../../modules/API';
 import { setRoom } from '../base/conference/actions';
 import {
@@ -33,7 +32,6 @@ import { IStore } from './types';
 
 export * from './actions.any';
 
-
 /**
  * Triggers an in-app navigation to a specific route. Allows navigation to be
  * abstracted between the mobile/React Native and Web/React applications.
@@ -44,7 +42,10 @@ export * from './actions.any';
  * @returns {Function}
  */
 export function appNavigate(uri?: string) {
-    return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
+    return async (
+        dispatch: IStore['dispatch'],
+        getState: IStore['getState']
+    ) => {
         let location = parseURIString(uri);
 
         // If the specified location (URI) does not identify a host, use the app's
@@ -58,8 +59,8 @@ export function appNavigate(uri?: string) {
                 // FIXME Turn location's host, hostname, and port properties into
                 // setters in order to reduce the risks of inconsistent state.
                 location.hostname = defaultLocation.hostname;
-                location.pathname
-                    = defaultLocation.pathname + location.pathname.substr(1);
+                location.pathname =
+                    defaultLocation.pathname + location.pathname.substr(1);
                 location.port = defaultLocation.port;
                 location.protocol = defaultLocation.protocol;
             } else {
@@ -87,7 +88,12 @@ export function appNavigate(uri?: string) {
         let url = `${baseURL}config.js`;
 
         // XXX In order to support multiple shards, tell the room to the deployment.
-        room && (url = appendURLParam(url, 'room', getBackendSafeRoomName(room) ?? ''));
+        room &&
+            (url = appendURLParam(
+                url,
+                'room',
+                getBackendSafeRoomName(room) ?? ''
+            ));
 
         const { release } = parseURLParams(location, true, 'search');
 
@@ -115,14 +121,21 @@ export function appNavigate(uri?: string) {
                     }
 
                     // If there is no room (we are on the welcome page), don't fail, just create a fake one.
-                    logger.warn('Failed to load config but there is no room, applying a fake one');
+                    console.log(
+                        'Failed to load config but there is no room, applying a fake one'
+                    );
                     config = createFakeConfig(baseURL);
                 }
             }
         }
 
         if (getState()['features/base/config'].locationURL !== locationURL) {
-            dispatch(loadConfigError(new Error('Config no longer needed!'), locationURL));
+            dispatch(
+                loadConfigError(
+                    new Error('Config no longer needed!'),
+                    locationURL
+                )
+            );
 
             return;
         }
@@ -146,12 +159,11 @@ export function appNavigate(uri?: string) {
  * @param {boolean} options.feedbackSubmitted - Whether feedback was submitted.
  * @returns {Function}
  */
-export function maybeRedirectToWelcomePage(options: { feedbackSubmitted?: boolean; showThankYou?: boolean; } = {}) {
+export function maybeRedirectToWelcomePage(
+    options: { feedbackSubmitted?: boolean; showThankYou?: boolean } = {}
+) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
-
-        const {
-            enableClosePage
-        } = getState()['features/base/config'];
+        const { enableClosePage } = getState()['features/base/config'];
 
         // if close page is enabled redirect to it, without further action
         if (enableClosePage) {
@@ -195,10 +207,15 @@ export function maybeRedirectToWelcomePage(options: { feedbackSubmitted?: boolea
 
         // else: show thankYou dialog only if there is no feedback
         if (options.showThankYou) {
-            dispatch(showNotification({
-                titleArguments: { appName: getName() },
-                titleKey: 'dialog.thankYou'
-            }, NOTIFICATION_TIMEOUT_TYPE.STICKY));
+            dispatch(
+                showNotification(
+                    {
+                        titleArguments: { appName: getName() },
+                        titleKey: 'dialog.thankYou'
+                    },
+                    NOTIFICATION_TIMEOUT_TYPE.STICKY
+                )
+            );
         }
 
         // if Welcome page is enabled redirect to welcome page after 3 sec, if
@@ -208,7 +225,8 @@ export function maybeRedirectToWelcomePage(options: { feedbackSubmitted?: boolea
                 () => {
                     dispatch(redirectWithStoredParams('/'));
                 },
-                options.showThankYou ? 3000 : 500);
+                options.showThankYou ? 3000 : 500
+            );
         }
     };
 }
@@ -221,11 +239,10 @@ export function maybeRedirectToWelcomePage(options: { feedbackSubmitted?: boolea
  */
 export function reloadNow() {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
-
         const state = getState();
         const { locationURL } = state['features/base/connection'];
 
-        logger.info(`Reloading the conference using URL: ${locationURL}`);
+        console.log(`Reloading the conference using URL: ${locationURL}`);
 
         dispatch(reloadWithStoredParams());
     };

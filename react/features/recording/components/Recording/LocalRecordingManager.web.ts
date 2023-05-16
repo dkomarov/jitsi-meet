@@ -144,6 +144,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
     async saveRecording(recordingData, filename) {
         // @ts-ignore
         const blob = await fixWebmDuration(
+            // @ts-ignore
             new Blob(recordingData, { type: this.mediaType })
         );
 
