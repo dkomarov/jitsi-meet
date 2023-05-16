@@ -1,3 +1,4 @@
+// @ts-ignore
 import { API_ID } from '../../../modules/API';
 import { setRoom } from '../base/conference/actions';
 import {
