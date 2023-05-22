@@ -74,8 +74,8 @@ class VideoQualityButton extends AbstractButton<IProps> {
     /**
      * Dynamically retrieves the icon.
      */
-    get() {
-        // icon
+    // @ts-ignore
+    get icon() {
         const { _audioOnly, _videoQuality } = this.props;
 
         const videoQualityLevel = findNearestQualityLevel(_videoQuality);
@@ -93,8 +93,8 @@ class VideoQualityButton extends AbstractButton<IProps> {
      *
      * @param {string} value - The icon value.
      */
-    set(value: string) {
-        // icon
+    set icon(value: string) {
+        // @ts-ignore
         return value;
     }
 
