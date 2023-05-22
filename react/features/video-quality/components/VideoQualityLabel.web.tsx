@@ -21,6 +21,7 @@ import Tooltip from '../../base/tooltip/components/Tooltip';
 
 import AbstractVideoQualityLabel, {
     IProps as AbstractProps,
+    // type Props as AbstractProps,
     _abstractMapStateToProps
 } from './AbstractVideoQualityLabel';
 import VideoQualityDialog from './VideoQualityDialog.web';
@@ -49,7 +50,7 @@ interface IProps extends AbstractProps {
     /**
      * The redux representation of the JitsiTrack displayed on large video.
      */
-    // _videoTrack: Object;
+    _videoTrack: Object;
 
     /**
      * The redux dispatch function.
@@ -97,7 +98,7 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
             _audioOnly,
             _labelKey,
             _tooltipKey,
-            // _videoTrack,
+            _videoTrack,
             _visible,
             dispatch,
             t
@@ -113,10 +114,11 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
             className = 'audio-only';
             labelContent = t('videoStatus.audioOnly');
             tooltipKey = 'videoStatus.labelTooltipAudioOnly';
-            // } else if (!_videoTrack || _videoTrack.muted) {
-            //     className = 'no-video';
-            //     labelContent = t('videoStatus.audioOnly');
-            //     tooltipKey = 'videoStatus.labelTooiltipNoVideo';
+            // @ts-ignore
+        } else if (!_videoTrack || _videoTrack.muted) {
+            className = 'no-video';
+            labelContent = t('videoStatus.audioOnly');
+            tooltipKey = 'videoStatus.labelTooiltipNoVideo';
         } else {
             className = 'current-video-quality';
             labelContent = t(_labelKey);
@@ -273,4 +275,5 @@ function _mapStateToProps(state: IReduxState) {
 //     };
 // }
 
+// @ts-ignore
 export default translate(connect(_mapStateToProps)(VideoQualityLabel));
