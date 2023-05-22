@@ -41,7 +41,8 @@ import { IReduxState } from '../../app/types';
  * The type of the React {@code Component} props of
  * {@link VideoQualityButton}.
  */
-interface IProps extends AbstractButtonProps {
+// interface IProps extends AbstractButtonProps {
+type Props = AbstractButtonProps & {
     /**
      * Whether or not audio only mode is currently enabled.
      */
@@ -53,11 +54,11 @@ interface IProps extends AbstractButtonProps {
      */
     _videoQuality: number;
 
-    // /**
-    //  * Invoked to obtain translated strings.
-    //  */
-    // t: Function;
-}
+    /**
+     * Invoked to obtain translated strings.
+     */
+    t: Function;
+};
 
 /**
  * React {@code Component} responsible for displaying a button in the overflow
@@ -66,7 +67,7 @@ interface IProps extends AbstractButtonProps {
  *
  * @augments Component
  */
-class VideoQualityButton extends AbstractButton<IProps> {
+class VideoQualityButton extends AbstractButton<Props> {
     accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
     label = 'toolbar.callQuality';
     tooltip = 'toolbar.callQuality';
