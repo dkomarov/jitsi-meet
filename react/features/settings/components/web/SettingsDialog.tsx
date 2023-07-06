@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
 
-import { IReduxState } from '../../../app/types';
+import { IReduxState, IStore } from '../../../app/types';
 import {
     IconBell,
     IconCalendar,
@@ -78,7 +78,7 @@ interface IProps {
     /**
      * Invoked to save changed settings.
      */
-    dispatch: Function;
+    dispatch: IStore['dispatch'];
 
     /**
      * Indicates whether the device selection dialog is displayed on the
@@ -233,25 +233,47 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             name: SETTINGS_TABS.VIRTUAL_BACKGROUND,
             component: VirtualBackgroundTab,
             labelKey: 'virtualBackground.title',
-            props: getVirtualBackgroundTabProps(state),
+            props: getVirtualBackgroundTabProps(state, isDisplayedOnWelcomePage),
+            propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getVirtualBackgroundTabProps>,
+                    tabStates: any) => {
+                const videoTabState = tabStates[tabs.findIndex(tab => tab.name === SETTINGS_TABS.VIDEO)];
+
+                return {
+                    ...newProps,
+                    selectedVideoInputId: videoTabState.selectedVideoInputId || newProps.selectedVideoInputId,
+                    options: tabState.options
+                };
+            },
             submit: (newState: any) => submitVirtualBackgroundTab(newState),
             cancel: () => {
-                const { _virtualBackground } =
-                    getVirtualBackgroundTabProps(state);
+                // const { _virtualBackground } =
+                //     getVirtualBackgroundTabProps(state);
+                //
+                // return submitVirtualBackgroundTab(
+                //     {
+                //         options: {
+                //             backgroundType: _virtualBackground.backgroundType,
+                //             enabled: _virtualBackground.backgroundEffectEnabled,
+                //             url: _virtualBackground.virtualSource,
+                //             selectedThumbnail:
+                //                 _virtualBackground.selectedThumbnail,
+                //             blurValue: _virtualBackground.blurValue
+                //         }
+                //     },
+                //     true
+                // );
 
-                return submitVirtualBackgroundTab(
-                    {
-                        options: {
-                            backgroundType: _virtualBackground.backgroundType,
-                            enabled: _virtualBackground.backgroundEffectEnabled,
-                            url: _virtualBackground.virtualSource,
-                            selectedThumbnail:
-                                _virtualBackground.selectedThumbnail,
-                            blurValue: _virtualBackground.blurValue
-                        }
-                    },
-                    true
-                );
+                const { options } = getVirtualBackgroundTabProps(state, isDisplayedOnWelcomePage);
+
+                return submitVirtualBackgroundTab({
+                    options: {
+                        backgroundType: options.backgroundType,
+                        enabled: options.backgroundEffectEnabled,
+                        url: options.virtualSource,
+                        selectedThumbnail: options.selectedThumbnail,
+                        blurValue: options.blurValue
+                    }
+                }, true);
             },
             icon: IconImage
         });

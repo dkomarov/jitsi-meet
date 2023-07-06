@@ -9,6 +9,7 @@ import {
 import { openDialog } from '../base/dialog/actions';
 import i18next from '../base/i18n/i18next';
 import { updateSettings } from '../base/settings/actions';
+import { getLocalVideoTrack } from '../base/tracks/functions.any';
 import {
     disableKeyboardShortcuts,
     enableKeyboardShortcuts
@@ -27,8 +28,7 @@ import {
     getMoreTabProps,
     getNotificationsTabProps,
     getProfileTabProps,
-    getShortcutsTabProps,
-    getVirtualBackgroundTabProps
+    getShortcutsTabProps
 } from './functions.web';
 
 /**
@@ -51,10 +51,7 @@ export function openLogoutDialog(onLogout: Function) {
  * welcome page or not.
  * @returns {Function}
  */
-export function openSettingsDialog(
-    defaultTab: string,
-    isDisplayedOnWelcomePage?: boolean
-) {
+export function openSettingsDialog(defaultTab?: string, isDisplayedOnWelcomePage?: boolean) {
     return openDialog(SettingsDialog, {
         defaultTab,
         isDisplayedOnWelcomePage
@@ -115,6 +112,14 @@ export function submitMoreTab(newState: any) {
                     maxStageParticipants: Number(newState.maxStageParticipants)
                 })
             );
+        }
+
+        if (newState.hideSelfView !== currentState.hideSelfView) {
+            dispatch(updateSettings({ disableSelfView: newState.hideSelfView }));
+        }
+
+        if (newState.currentLanguage !== currentState.currentLanguage) {
+            i18next.changeLanguage(newState.currentLanguage);
         }
     };
 }
@@ -179,15 +184,17 @@ export function submitProfileTab(newState: any) {
             APP.conference.changeLocalEmail(newState.email);
         }
 
-        if (newState.hideSelfView !== currentState.hideSelfView) {
-            dispatch(
-                updateSettings({ disableSelfView: newState.hideSelfView })
-            );
-        }
+        //
+        // if (newState.hideSelfView !== currentState.hideSelfView) {
+        //     dispatch(
+        //         updateSettings({ disableSelfView: newState.hideSelfView })
+        //     );
+        // }
+        //
+        // if (newState.currentLanguage !== currentState.currentLanguage) {
+        //     i18next.changeLanguage(newState.currentLanguage);
+        // }
 
-        if (newState.currentLanguage !== currentState.currentLanguage) {
-            i18next.changeLanguage(newState.currentLanguage);
-        }
     };
 }
 
@@ -305,19 +312,20 @@ export function submitShortcutsTab(newState: any) {
  * @returns {Function}
  */
 export function submitVirtualBackgroundTab(newState: any, isCancel = false) {
-    return async (
-        dispatch: IStore['dispatch'],
-        getState: IStore['getState']
-    ) => {
-        const currentState = getVirtualBackgroundTabProps(getState());
+    return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
+      //      const currentState = getVirtualBackgroundTabProps(getState());
+        const state = getState();
+        const track = getLocalVideoTrack(state['features/base/tracks'])?.jitsiTrack;
 
         if (newState.options?.selectedThumbnail) {
-            await dispatch(
-                toggleBackgroundEffect(
-                    newState.options,
-                    currentState._jitsiTrack
-                )
-            );
+            await dispatch(toggleBackgroundEffect(newState.options, track));
+            // await dispatch(
+            //     toggleBackgroundEffect(
+            //         newState.options,
+            //         currentState._jitsiTrack
+            //     )
+            // );
+
 
             if (!isCancel) {
                 // Set x scale to default value.

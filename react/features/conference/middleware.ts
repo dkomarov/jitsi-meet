@@ -28,8 +28,6 @@ import { SET_REDUCED_UI } from '../base/responsive-ui/actionTypes';
 import { BUTTON_TYPES } from '../base/ui/constants.any';
 import { inIframe } from '../base/util/iframeUtils';
 import { isCalendarEnabled } from '../calendar-sync/functions';
-// eslint-disable-next-line lines-around-comment
-// @ts-ignore
 import FeedbackDialog from '../feedback/components/FeedbackDialog';
 import { setFilmstripEnabled } from '../filmstrip/actions.any';
 import { isVpaasMeeting } from '../jaas/functions';
@@ -178,7 +176,7 @@ function _conferenceJoined({ dispatch, getState }: IStore) {
 function _checkIframe(state: IReduxState, dispatch: IStore['dispatch']) {
     let allowIframe = false;
 
-    if (document.referrer === '') {
+    if (document.referrer === '' && browser.isElectron()) {
         // no iframe
         allowIframe = true;
     } else {

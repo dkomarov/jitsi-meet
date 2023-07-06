@@ -1,6 +1,7 @@
 // @ts-expect-error
 import { AUDIO_ONLY_SCREEN_SHARE_NO_TRACK } from '../../../../modules/UI/UIErrors';
 import { IReduxState, IStore } from '../../app/types';
+import { showModeratedNotification } from '../../av-moderation/actions';
 import { shouldShowModeratedNotification } from '../../av-moderation/functions';
 import { setNoiseSuppressionEnabled } from '../../noise-suppression/actions';
 import { showNotification } from '../../notifications/actions';
@@ -10,8 +11,6 @@ import { setScreenAudioShareState, setScreenshareAudioTrack } from '../../screen
 import { isAudioOnlySharing, isScreenVideoShared } from '../../screen-share/functions';
 import { toggleScreenshotCaptureSummary } from '../../screenshot-capture/actions';
 import { isScreenshotCaptureEnabled } from '../../screenshot-capture/functions';
-// eslint-disable-next-line lines-around-comment
-// @ts-ignore
 import { AudioMixerEffect } from '../../stream-effects/audio-mixer/AudioMixerEffect';
 import { getCurrentConference } from '../conference/functions';
 import { JitsiTrackErrors, JitsiTrackEvents } from '../lib-jitsi-meet';
@@ -46,6 +45,7 @@ export function toggleScreensharing(
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         // check for A/V Moderation when trying to start screen sharing
         if ((enabled || enabled === undefined) && shouldShowModeratedNotification(MEDIA_TYPE.VIDEO, getState())) {
+            dispatch(showModeratedNotification(MEDIA_TYPE.SCREENSHARE));
 
             return Promise.reject();
         }

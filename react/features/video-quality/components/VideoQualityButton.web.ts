@@ -1,3 +1,4 @@
+
 // @flow
 
 import {
@@ -9,6 +10,10 @@ import {
 
 // import { connect } from '../../base/redux';
 import { connect } from 'react-redux';
+
+import { createToolbarEvent } from '../../analytics/AnalyticsEvents';
+import { sendAnalytics } from '../../analytics/functions';
+import { openDialog } from '../../base/dialog/actions';
 
 import { VIDEO_QUALITY_LEVELS } from '../constants';
 import { findNearestQualityLevel } from '../functions';
@@ -25,6 +30,7 @@ const VIDEO_QUALITY_TO_ICON = {
     [VIDEO_QUALITY_LEVELS.STANDARD]: IconVideoQualitySD,
     [VIDEO_QUALITY_LEVELS.LOW]: IconVideoQualityLD
 };
+
 import { translate } from '../../base/i18n/functions';
 import { IconPerformance } from '../../base/icons/svg';
 import AbstractButton, {
@@ -36,6 +42,8 @@ import { IReduxState } from '../../app/types';
 //     AbstractButton,
 //     Props as AbstractButtonProps
 // } from '../../base/toolbox/components/AbstractButton';
+
+import VideoQualityDialog from './VideoQualityDialog.web';
 
 /**
  * The type of the React {@code Component} props of
@@ -69,6 +77,7 @@ type Props = AbstractButtonProps & {
  */
 class VideoQualityButton extends AbstractButton<Props> {
     accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
+
     label = 'toolbar.callQuality';
     tooltip = 'toolbar.callQuality';
 
@@ -136,3 +145,23 @@ function _mapStateToProps(state: IReduxState) {
 }
 
 export default translate(connect(_mapStateToProps)(VideoQualityButton));
+
+
+    // icon = IconPerformance;
+
+    /**
+    * Handles clicking the button, and opens the video quality dialog.
+    *
+    * @private
+    * @returns {void}
+    */
+    // _handleClick() {
+    //     const { dispatch } = this.props;
+    //
+    //     sendAnalytics(createToolbarEvent('video.quality'));
+    //
+    //     dispatch(openDialog(VideoQualityDialog));
+    // }
+}
+
+// export default connect()(translate(VideoQualityButton));

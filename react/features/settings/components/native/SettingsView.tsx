@@ -15,7 +15,7 @@ import { Divider } from 'react-native-paper';
 import { connect } from 'react-redux';
 
 import { getDefaultURL } from '../../../app/functions.native';
-import { IReduxState } from '../../../app/types';
+import { IReduxState, IStore } from '../../../app/types';
 import Avatar from '../../../base/avatar/components/Avatar';
 import { getLegalUrls } from '../../../base/config/functions.native';
 import { translate } from '../../../base/i18n/functions';
@@ -156,7 +156,7 @@ interface IProps extends WithTranslation {
     /**
      * Redux store dispatch function.
      */
-    dispatch: Function;
+    dispatch: IStore['dispatch'];
 
     /**
      * Default prop for navigating between screen components(React Navigation).
@@ -383,6 +383,14 @@ class SettingsView extends Component<IProps, IState> {
                             label = 'settingsView.version'>
                             <Text style = { styles.text }>
                                 {`${AppInfo.version} build ${AppInfo.buildNumber}`}
+                            </Text>
+                        </FormRow>
+                        {/* @ts-ignore */}
+                        <Divider style = { styles.fieldSeparator } />
+                        <FormRow
+                            label = 'settingsView.sdkVersion'>
+                            <Text style = { styles.text }>
+                                {AppInfo.sdkVersion}
                             </Text>
                         </FormRow>
                     </FormSection>

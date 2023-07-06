@@ -17,6 +17,13 @@ function GlobalStyles() {
             ...commonStyles(theme),
             ...getGlobalStyles(theme)
         }} />);
+//     return (
+//         <MUIGlobalStyles
+//             styles = {
+//                 commonStyles(theme)
+//             } />
+//     );
+// >>>>>>> f71f6d9a0d68cf7210da9e0c5bc1b2895cc6b85c
 }
 
 export default GlobalStyles;

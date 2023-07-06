@@ -142,6 +142,7 @@ export interface IConfig {
         rtcstatsEndpoint?: string;
         rtcstatsPollInterval?: number;
         rtcstatsSendSdp?: boolean;
+        rtcstatsStoreLogs?: boolean;
         rtcstatsUseLegacy?: boolean;
         scriptURLs?: Array<string>;
         whiteListedEvents?: string[];
@@ -170,6 +171,7 @@ export interface IConfig {
     }>;
     callDisplayName?: string;
     callFlowsEnabled?: boolean;
+    callHandle?: string;
     callStatsConfigParams?: {
         additionalIDs?: {
             customerID?: string;
@@ -191,6 +193,7 @@ export interface IConfig {
     };
     callStatsID?: string;
     callStatsSecret?: string;
+    callUUID?: string;
     channelLastN?: number;
     chromeExtensionBanner?: {
         chromeExtensionsInfo?: Array<{ id: string; path: string; }>;
@@ -290,12 +293,6 @@ export interface IConfig {
     };
     dynamicBrandingUrl?: string;
     e2ee?: {
-        e2eeLabels?: {
-            description?: string;
-            label?: string;
-            tooltip?: string;
-            warning?: string;
-        };
         externallyManagedKey?: boolean;
         labels?: {
             description?: string;
@@ -406,6 +403,7 @@ export interface IConfig {
     legalUrls?: {
         helpCentre: string;
         privacy: string;
+        security: string;
         terms: string;
     };
     liveStreaming?: {
@@ -443,10 +441,10 @@ export interface IConfig {
     opusMaxAverageBitrate?: number;
     p2p?: {
         backToP2PDelay?: number;
-        disabledCodec?: string;
+        codecPreferenceOrder?: Array<string>;
         enabled?: boolean;
         iceTransportPolicy?: string;
-        preferredCodec?: string;
+        mobileCodecPreferenceOrder?: Array<string>;
         stunServers?: Array<{ urls: string; }>;
     };
     participantsPane?: {
@@ -514,6 +512,7 @@ export interface IConfig {
     stereo?: boolean;
     subject?: string;
     testing?: {
+        assumeBandwidth?: boolean;
         callStatsThreshold?: number;
         disableE2EE?: boolean;
         mobileXmppWsThreshold?: number;
@@ -546,8 +545,7 @@ export interface IConfig {
     useHostPageLocalStorage?: boolean;
     useTurnUdp?: boolean;
     videoQuality?: {
-        disabledCodec?: string;
-        enforcePreferredCodec?: boolean;
+        codecPreferenceOrder?: Array<string>;
         maxBitratesVideo?: {
             [key: string]: {
                 high?: number;
@@ -558,8 +556,8 @@ export interface IConfig {
         minHeightForQualityLvl?: {
             [key: number]: string;
         };
+        mobileCodecPreferenceOrder?: Array<string>;
         persist?: boolean;
-        preferredCodec?: string;
     };
     webhookProxyUrl?: string;
     webrtcIceTcpDisable?: boolean;

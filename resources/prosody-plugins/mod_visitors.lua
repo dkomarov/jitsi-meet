@@ -65,6 +65,7 @@ local function send_visitors_iq(conference_service, room, type)
                          room = jid.join(jid.node(room.jid), conference_service) })
       :tag(type, { xmlns = 'jitsi:visitors',
         password = type ~= 'disconnect' and room:get_password() or '',
+        lobby = room._data.lobbyroom and 'true' or 'false',
         meetingId = room._data.meetingId
       }):up();
 
@@ -128,7 +129,8 @@ local function stanza_handler(event)
         return;
     end
 
-    if stanza.attr.type == 'result' and sent_iq_cache:get(stanza.attr.id) then
+    -- we receive error from vnode for our disconnect message as the room was already destroyed (all visitors left)
+    if (stanza.attr.type == 'result' or stanza.attr.type == 'error') and sent_iq_cache:get(stanza.attr.id) then
         sent_iq_cache:set(stanza.attr.id, nil);
         return true;
     end
@@ -138,10 +140,14 @@ module:hook('iq/host', stanza_handler, 10);
 -- an event received from visitors component, which receives iqs from jicofo
 local function disconnect_vnode(event)
     local room, vnode = event.room, event.vnode;
+
+    if visitors_nodes[event.room.jid] == nil then
+        -- maybe the room was already destroyed and vnodes cleared
+        return;
+    end
+
     local conference_service = muc_domain_prefix..'.'..vnode..'.meet.jitsi';
 
-    -- we are counting vnode main participants and we should be clearing it there
-    -- let's do it here just in case
     visitors_nodes[room.jid].nodes[conference_service] = nil;
 
     send_visitors_iq(conference_service, room, 'disconnect');
@@ -236,7 +242,17 @@ process_host_module(main_muc_component_config, function(host_module, host)
 
     -- cleanup cache
     host_module:hook('muc-room-destroyed',function(event)
-        visitors_nodes[event.room.jid] = nil;
+        local room = event.room;
+
+        -- room is destroyed let's disconnect all vnodes
+        if visitors_nodes[room.jid] then
+            local vnodes = visitors_nodes[room.jid].nodes;
+            for conference_service in pairs(vnodes) do
+                send_visitors_iq(conference_service, room, 'disconnect');
+            end
+
+            visitors_nodes[room.jid] = nil;
+        end
     end);
 
     -- detects new participants joining main room and sending them to the visitor nodes
@@ -296,6 +312,8 @@ process_host_module(main_muc_component_config, function(host_module, host)
             -- send it to the nick to be able to route it to the room (ljm multiple rooms) from unknown occupant
             room:route_to_occupant(o, stanza);
         end
+        -- let's add the message to the history of the room
+        host_module:fire_event("muc-add-history", { room = room; stanza = stanza; });
 
         -- now we need to send to rest of visitor nodes
         local vnodes = visitors_nodes[room.jid].nodes;
@@ -322,5 +340,26 @@ process_host_module(main_muc_component_config, function(host_module, host)
                 end
             end
         end
-end, -100); -- we want to run last in order to check is the status code 104
+    end, -100); -- we want to run last in order to check is the status code 104
+end);
+
+module:hook('jitsi-lobby-enabled', function(event)
+    local room = event.room;
+    if visitors_nodes[room.jid] then
+        -- we need to update all vnodes
+        local vnodes = visitors_nodes[room.jid].nodes;
+        for conference_service in pairs(vnodes) do
+            send_visitors_iq(conference_service, room, 'update');
+        end
+    end
+end);
+module:hook('jitsi-lobby-disabled', function(event)
+local room = event.room;
+    if visitors_nodes[room.jid] then
+        -- we need to update all vnodes
+        local vnodes = visitors_nodes[room.jid].nodes;
+        for conference_service in pairs(vnodes) do
+            send_visitors_iq(conference_service, room, 'update');
+        end
+    end
 end);

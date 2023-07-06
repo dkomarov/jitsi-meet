@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 import Bourne from '@hapi/bourne';
 
 import { reportError } from './helpers';
@@ -25,6 +25,10 @@ export function parseURLParams(
         url: URL | string,
         dontParse = false,
         source = 'hash') {
+    if (!url) {
+        return {};
+    }
+
     if (typeof url === 'string') {
         // eslint-disable-next-line no-param-reassign
         url = new URL(url);

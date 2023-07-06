@@ -84,9 +84,9 @@ class ShareAudioDialog extends Component<IProps> {
             >
                 <div className="share-audio-dialog">
                     <img
-                        className="share-audio-animation"
-                        src="images/share-audio.gif"
-                    />
+                        alt = ''
+                        className = 'share-audio-animation'
+                        src = 'images/share-audio.gif' />
                     <Checkbox
                         checked={this.props._shouldHideShareAudioHelper}
                         label={t('dialog.hideShareAudioHelper')}

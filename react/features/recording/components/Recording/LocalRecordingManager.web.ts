@@ -73,6 +73,9 @@ const LocalRecordingManager: ILocalRecordingManager = {
     },
 
     get mediaType() {
+        if (this.selfRecording.on && !this.selfRecording.withVideo) {
+            return 'audio/webm;';
+        }
         if (!preferredMediaType) {
             preferredMediaType = getMimeType();
         }

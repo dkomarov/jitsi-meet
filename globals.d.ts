@@ -22,6 +22,7 @@ declare global {
         JitsiMeetElectron?: any;
         // selenium tests handler
         _sharedVideoPlayer: any;
+        alwaysOnTop: { api: any };
     }
 
     interface Document {

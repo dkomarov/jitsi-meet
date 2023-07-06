@@ -8,6 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 import { hideDialog } from '../../../dialog/actions';
 import { IconCloseLarge } from '../../../icons/svg';
 import { withPixelLineHeight } from '../../../styles/functions.web';
+import { operatesWithEnterKey } from '../../functions.web';
 
 import BaseDialog, { IProps as IBaseDialogProps } from './BaseDialog';
 import Button from './Button';
@@ -234,46 +235,56 @@ const Dialog = ({
         onCancel?.();
     }, [onCancel]);
 
-    const submit = useCallback(() => {
-        !disableAutoHideOnSubmit && dispatch(hideDialog());
-        onSubmit?.();
-    }, [onSubmit]);
+    // const submit = useCallback(() => {
+    //     !disableAutoHideOnSubmit && dispatch(hideDialog());
+    //     onSubmit?.();
+    // }, [onSubmit]);
+    //
+    // const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    //     if (e.key === 'Escape') {
+    //         onClose();
+    //     }
+    //     if (e.key === 'Enter' && !disableEnter) {
+    //         submit();
+    //     }
+    // }, []);
+    //
+    // const onBackdropClick = useCallback(() => {
+    //     !disableBackdropClose && onClose();
+    // }, [disableBackdropClose, onClose]);
+    //
+    // useEffect(() => {
+    //     window.addEventListener('keydown', handleKeyDown);
+    //
+    //     return () => window.removeEventListener('keydown', handleKeyDown);
+    // }, []);
 
-    const handleKeyDown = useCallback((e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-            onClose();
+        if (onSubmit && (
+            (document.activeElement && !operatesWithEnterKey(document.activeElement))
+            || !document.activeElement
+        )) {
+            !disableAutoHideOnSubmit && dispatch(hideDialog());
+            onSubmit();
         }
-        if (e.key === 'Enter' && !disableEnter) {
-            submit();
-        }
-    }, []);
-
-    const onBackdropClick = useCallback(() => {
-        !disableBackdropClose && onClose();
-    }, [disableBackdropClose, onClose]);
-
-    useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
-
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
+    }, [ onSubmit ]);
 
     return (
         <BaseDialog
-            className={className}
-            description={description}
-            disableBackdropClose={disableBackdropClose}
-            disableEnter={disableEnter}
-            onClose={onClose}
-            size={size}
-            submit={submit}
-            title={title}
-            titleKey={titleKey}
-        >
-            <div className={classes.header}>
-                <p className={classes.title} id="dialog-title">
+            className = { className }
+            description = { description }
+            disableBackdropClose = { disableBackdropClose }
+            disableEnter = { disableEnter }
+            onClose = { onClose }
+            size = { size }
+            submit = { submit }
+            title = { title }
+            titleKey = { titleKey }>
+            <div className = { classes.header }>
+                <h1
+                    className = { classes.title }
+                    id = 'dialog-title'>
                     {title ?? t(titleKey ?? '')}
-                </p>
+                </h1>
                 {!hideCloseButton && (
                     <ClickableIcon
                         accessibilityLabel={t(
@@ -318,33 +329,56 @@ const Dialog = ({
                         data-autofocus-inside = 'true'>
                         {children}
                     </div> */}
-            <div className={classes.footer} data-autofocus-inside="true">
-                {!back.hidden && (
-                    <Button
-                        accessibilityLabel={t(back.translationKey ?? '')}
-                        labelKey={back.translationKey}
-                        // eslint-disable-next-line react/jsx-handler-names
-                        onClick={back.onClick}
-                        type="secondary"
-                    />
-                )}
-                {!cancel.hidden && (
-                    <Button
-                        accessibilityLabel={t(cancel.translationKey ?? '')}
-                        labelKey={cancel.translationKey}
-                        onClick={onClose}
-                        type="tertiary"
-                    />
-                )}
-                {!ok.hidden && (
-                    <Button
-                        accessibilityLabel={t(ok.translationKey ?? '')}
-                        disabled={ok.disabled}
-                        id="modal-dialog-ok-button"
-                        labelKey={ok.translationKey}
-                        onClick={submit}
-                    />
-                )}
+            // <div className={classes.footer} data-autofocus-inside="true">
+            //     {!back.hidden && (
+            //         <Button
+            //             accessibilityLabel={t(back.translationKey ?? '')}
+            //             labelKey={back.translationKey}
+            //             // eslint-disable-next-line react/jsx-handler-names
+            //             onClick={back.onClick}
+            //             type="secondary"
+            //         />
+            //     )}
+            //     {!cancel.hidden && (
+            //         <Button
+            //             accessibilityLabel={t(cancel.translationKey ?? '')}
+            //             labelKey={cancel.translationKey}
+            //             onClick={onClose}
+            //             type="tertiary"
+            //         />
+            //     )}
+            //     {!ok.hidden && (
+            //         <Button
+            //             accessibilityLabel={t(ok.translationKey ?? '')}
+            //             disabled={ok.disabled}
+            //             id="modal-dialog-ok-button"
+            //             labelKey={ok.translationKey}
+            //             onClick={submit}
+            //         />
+            //     )}
+
+            <div
+                className = { classes.footer }
+                data-autofocus-inside = 'true'>
+                {!back.hidden && <Button
+                    accessibilityLabel = { t(back.translationKey ?? '') }
+                    labelKey = { back.translationKey }
+                    // eslint-disable-next-line react/jsx-handler-names
+                    onClick = { back.onClick }
+                    type = 'secondary' />}
+                {!cancel.hidden && <Button
+                    accessibilityLabel = { t(cancel.translationKey ?? '') }
+                    labelKey = { cancel.translationKey }
+                    onClick = { onClose }
+                    type = 'tertiary' />}
+                {!ok.hidden && <Button
+                    accessibilityLabel = { t(ok.translationKey ?? '') }
+                    disabled = { ok.disabled }
+                    id = 'modal-dialog-ok-button'
+                    isSubmit = { true }
+                    labelKey = { ok.translationKey }
+                    onClick = { submit } />}
+
             </div>
         </BaseDialog> //</div>
         //     </FocusLock>

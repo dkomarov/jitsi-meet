@@ -203,7 +203,7 @@ class LoginDialog extends Component<IProps, IState> {
             t
         } = this.props;
         const { username, password } = this.state;
-        const messageOptions: any = {};
+        const messageOptions: { msg?: string; } = {};
         let messageKey;
 
         if (progress && progress < 1) {
@@ -268,6 +268,7 @@ class LoginDialog extends Component<IProps, IState> {
                 titleKey = { t('dialog.authenticationRequired') }>
                 <Input
                     autoFocus = { true }
+                    id = 'login-dialog-username'
                     label = { t('dialog.user') }
                     name = 'username'
                     onChange = { this._onUsernameChange }
@@ -277,6 +278,7 @@ class LoginDialog extends Component<IProps, IState> {
                 <br />
                 <Input
                     className = 'dialog-bottom-margin'
+                    id = 'login-dialog-password'
                     label = { t('dialog.userPassword') }
                     name = 'password'
                     onChange = { this._onPasswordChange }
