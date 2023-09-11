@@ -202,7 +202,8 @@ function mapStateToProps(state: IReduxState, ownProps: Partial<IProps>) {
         iAmRecorder || (!addPeopleEnabled && !dialOutEnabled);
     const dialIn = state['features/invite']; // @ts-ignore
     const phoneNumber = dialIn?.numbers
-        ? _getDefaultPhoneNumber(dialIn.numbers)
+        ? // @ts-ignore  @ts-expect-error
+          _getDefaultPhoneNumber(dialIn.numbers)
         : undefined;
     const isDialInOverLimit =
         dialIn?.error?.status === StatusCode.PaymentRequired;
