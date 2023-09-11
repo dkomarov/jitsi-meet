@@ -31,7 +31,6 @@ import InviteContactsSection from './InviteContactsSection';
 import LiveStreamSection from './LiveStreamSection';
 
 interface IProps extends WithTranslation {
-
     /**
      * The object representing the dialIn feature.
      */
@@ -120,7 +119,6 @@ function AddPeopleDialog({
     t,
     updateNumbers
 }: IProps) {
-
     /**
      * Updates the dial-in numbers.
      */
@@ -136,12 +134,10 @@ function AddPeopleDialog({
      * @returns {void}
      */
     useEffect(() => {
-        sendAnalytics(createInviteDialogEvent(
-            'opened', 'dialog'));
+        sendAnalytics(createInviteDialogEvent('opened', 'dialog'));
 
         return () => {
-            sendAnalytics(createInviteDialogEvent(
-                'closed', 'dialog'));
+            sendAnalytics(createInviteDialogEvent('closed', 'dialog'));
         };
     }, []);
 
@@ -150,34 +146,36 @@ function AddPeopleDialog({
     });
 
     return (
+        // @ts-ignore  @ts-expect-error
         <Dialog
-            cancel = {{ hidden: true }}
-            ok = {{ hidden: true }}
-            titleKey = 'addPeople.inviteMorePrompt'>
-            <div className = 'invite-more-dialog'>
-                { _inviteContactsVisible && <InviteContactsSection /> }
-                {_urlSharingVisible ? <CopyMeetingLinkSection url = { _inviteUrl } /> : null}
-                {
-                    _emailSharingVisible
-                        ? <InviteByEmailSection
-                            inviteSubject = { inviteSubject }
-                            inviteText = { _invitationText }
-                            inviteTextiOS = { _invitationTextiOS } />
-                        : null
-                }
-                <div className = 'invite-more-dialog separator' />
-                {
-                    _liveStreamViewURL
-                        && <LiveStreamSection liveStreamViewURL = { _liveStreamViewURL } />
-                }
-                {
-                    _phoneNumber
-                        && _dialInVisible
-                        && <DialInSection phoneNumber = { _phoneNumber } />
-                }
-                {
-                    !_phoneNumber && _dialInVisible && _isDialInOverLimit && <DialInLimit />
-                }
+            cancel={{ hidden: true }}
+            ok={{ hidden: true }}
+            titleKey="addPeople.inviteMorePrompt"
+        >
+            <div className="invite-more-dialog">
+                {_inviteContactsVisible && <InviteContactsSection />}
+                {_urlSharingVisible ? (
+                    <CopyMeetingLinkSection url={_inviteUrl} />
+                ) : null}
+                {_emailSharingVisible ? (
+                    <InviteByEmailSection
+                        inviteSubject={inviteSubject}
+                        inviteText={_invitationText}
+                        inviteTextiOS={_invitationTextiOS}
+                    />
+                ) : null}
+                <div className="invite-more-dialog separator" />
+                {_liveStreamViewURL && (
+                    // @ts-ignore  @ts-expect-error
+                    <LiveStreamSection liveStreamViewURL={_liveStreamViewURL} />
+                )}
+                {_phoneNumber && _dialInVisible && (
+                    <DialInSection phoneNumber={_phoneNumber} />
+                )}
+                {!_phoneNumber && _dialInVisible && _isDialInOverLimit && (
+                    // @ts-ignore  @ts-expect-error
+                    <DialInLimit />
+                )}
             </div>
         </Dialog>
     );
@@ -193,29 +191,38 @@ function AddPeopleDialog({
  * @returns {IProps}
  */
 function mapStateToProps(state: IReduxState, ownProps: Partial<IProps>) {
-    const currentLiveStreamingSession
-        = getActiveSession(state, JitsiRecordingConstants.mode.STREAM);
+    const currentLiveStreamingSession = getActiveSession(
+        state,
+        JitsiRecordingConstants.mode.STREAM
+    );
     const { iAmRecorder, inviteAppName } = state['features/base/config'];
     const addPeopleEnabled = isAddPeopleEnabled(state);
     const dialOutEnabled = isDialOutEnabled(state);
-    const hideInviteContacts = iAmRecorder || (!addPeopleEnabled && !dialOutEnabled);
+    const hideInviteContacts =
+        iAmRecorder || (!addPeopleEnabled && !dialOutEnabled);
     const dialIn = state['features/invite']; // @ts-ignore
-    const phoneNumber = dialIn?.numbers ? _getDefaultPhoneNumber(dialIn.numbers) : undefined;
-    const isDialInOverLimit = dialIn?.error?.status === StatusCode.PaymentRequired;
+    const phoneNumber = dialIn?.numbers
+        ? _getDefaultPhoneNumber(dialIn.numbers)
+        : undefined;
+    const isDialInOverLimit =
+        dialIn?.error?.status === StatusCode.PaymentRequired;
 
     return {
         _dialIn: dialIn,
         _dialInVisible: isSharingEnabled(sharingFeatures.dialIn),
-        _urlSharingVisible: isDynamicBrandingDataLoaded(state) && isSharingEnabled(sharingFeatures.url),
+        _urlSharingVisible:
+            isDynamicBrandingDataLoaded(state) &&
+            isSharingEnabled(sharingFeatures.url),
         _emailSharingVisible: isSharingEnabled(sharingFeatures.email),
-        _invitationText: getInviteText({ state,
+        _invitationText: getInviteText({ state, phoneNumber, t: ownProps.t }),
+        _invitationTextiOS: getInviteTextiOS({
+            state,
             phoneNumber,
-            t: ownProps.t }),
-        _invitationTextiOS: getInviteTextiOS({ state,
-            phoneNumber,
-            t: ownProps.t }),
+            t: ownProps.t
+        }),
         _inviteAppName: inviteAppName,
-        _inviteContactsVisible: interfaceConfig.ENABLE_DIAL_OUT && !hideInviteContacts,
+        _inviteContactsVisible:
+            interfaceConfig.ENABLE_DIAL_OUT && !hideInviteContacts,
         _inviteUrl: getInviteURL(state),
         _isDialInOverLimit: isDialInOverLimit,
         _liveStreamViewURL: currentLiveStreamingSession?.liveStreamViewURL,

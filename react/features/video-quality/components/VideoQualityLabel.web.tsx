@@ -130,22 +130,22 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
         return (
             <Tooltip content={t(tooltipKey)} position={'bottom'}>
                 <Label
+                    //     className={className}
+                    //     id="videoResolutionLabel"
+                    //     text={labelContent}
+                    // />
 
-                //     className={className}
-                //     id="videoResolutionLabel"
-                //     text={labelContent}
-                // />
-
-                    accessibilityText = { t(tooltipKey) }
-                    className = { className }
-                    color = { COLORS.white }
-                    icon = { icon }
-                    iconColor = '#fff'
-                    id = 'videoResolutionLabel'
+                    accessibilityText={t(tooltipKey)}
+                    className={className}
+                    color={COLORS.white}
+                    // @ts-ignore  @ts-expect-error
+                    icon={icon}
+                    iconColor="#fff"
+                    id="videoResolutionLabel"
                     // eslint-disable-next-line react/jsx-no-bind
-                    onClick = { onClick }
-                    text = { labelContent } />
-
+                    onClick={onClick}
+                    text={labelContent}
+                />
             </Tooltip>
         );
     }

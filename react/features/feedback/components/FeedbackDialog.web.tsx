@@ -92,7 +92,6 @@ type Scrollable = {
  * The type of the React {@code Component} props of {@link FeedbackDialog}.
  */
 interface IProps extends WithTranslation {
-
     /**
      * The cached feedback message, if any, that was set when closing a previous
      * instance of {@code FeedbackDialog}.
@@ -132,7 +131,6 @@ interface IProps extends WithTranslation {
  * The type of the React {@code Component} state of {@link FeedbackDialog}.
  */
 interface IState {
-
     /**
      * The currently entered feedback message.
      */
@@ -227,8 +225,8 @@ class FeedbackDialog extends Component<IProps, IState> {
         // Bind event handlers so they are only bound once for every instance.
         this._onCancel = this._onCancel.bind(this);
         this._onMessageChange = this._onMessageChange.bind(this);
-        this._onScoreContainerMouseLeave
-            = this._onScoreContainerMouseLeave.bind(this);
+        this._onScoreContainerMouseLeave =
+            this._onScoreContainerMouseLeave.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
 
         // On some mobile browsers opening Feedback dialog scrolls down the whole content because of the keyboard.
@@ -269,8 +267,8 @@ class FeedbackDialog extends Component<IProps, IState> {
      */
     render() {
         const { message, mousedOverScore, score } = this.state;
-        const scoreToDisplayAsSelected
-            = mousedOverScore > -1 ? mousedOverScore : score;
+        const scoreToDisplayAsSelected =
+            mousedOverScore > -1 ? mousedOverScore : score;
 
         const { classes, t } = this.props;
 
@@ -278,70 +276,72 @@ class FeedbackDialog extends Component<IProps, IState> {
             (config, index) => {
                 const isFilled = index <= scoreToDisplayAsSelected;
                 const activeClass = isFilled ? 'active' : '';
-                const className
-                    = `${classes.starBtn} ${activeClass}`;
+                const className = `${classes.starBtn} ${activeClass}`;
 
                 return (
                     <span
-                        aria-label = { t(SCORES[index]) }
-                        className = { className }
-                        key = { index }
-                        onClick = { config._onClick }
-                        onKeyDown = { config._onKeyDown }
-                        role = 'button'
-                        tabIndex = { 0 }
-                        { ...(isMobileBrowser() ? {} : {
-                            onMouseOver: config._onMouseOver
-                        }) }>
-                        { isFilled
-                            ? <Icon
-                                size = { ICON_SIZE }
-                                src = { IconFavoriteSolid } />
-                            : <Icon
-                                size = { ICON_SIZE }
-                                src = { IconFavorite } /> }
+                        aria-label={t(SCORES[index])}
+                        className={className}
+                        key={index}
+                        onClick={config._onClick}
+                        onKeyDown={config._onKeyDown}
+                        role="button"
+                        tabIndex={0}
+                        {...(isMobileBrowser()
+                            ? {}
+                            : {
+                                  onMouseOver: config._onMouseOver
+                              })}
+                    >
+                        {isFilled ? (
+                            <Icon size={ICON_SIZE} src={IconFavoriteSolid} />
+                        ) : (
+                            <Icon size={ICON_SIZE} src={IconFavorite} />
+                        )}
                     </span>
                 );
-            });
-
+            }
+        );
 
         return (
+            // @ts-ignore  @ts-expect-error
             <Dialog
-                ok = {{
+                ok={{
                     translationKey: 'dialog.Submit'
                 }}
-                onCancel = { this._onCancel }
-                onSubmit = { this._onSubmit }
-                size = 'large'
-                titleKey = 'feedback.rateExperience'>
-                <div className = { classes.dialog }>
-                    <div className = { classes.rating }>
+                onCancel={this._onCancel}
+                onSubmit={this._onSubmit}
+                size="large"
+                titleKey="feedback.rateExperience"
+            >
+                <div className={classes.dialog}>
+                    <div className={classes.rating}>
                         <div
-                            className = { classes.stars }
-                            onMouseLeave = { this._onScoreContainerMouseLeave }>
-                            { scoreIcons }
+                            className={classes.stars}
+                            onMouseLeave={this._onScoreContainerMouseLeave}
+                        >
+                            {scoreIcons}
                         </div>
-                        <div
-                            className = { classes.ratingLabel } >
-                            <p className = 'sr-only'>
-                                { t('feedback.accessibilityLabel.yourChoice', {
+                        <div className={classes.ratingLabel}>
+                            <p className="sr-only">
+                                {t('feedback.accessibilityLabel.yourChoice', {
                                     rating: t(SCORES[scoreToDisplayAsSelected])
-                                }) }
+                                })}
                             </p>
-                            <p
-                                aria-hidden = { true }
-                                id = 'starLabel'>
-                                { t(SCORES[scoreToDisplayAsSelected]) }
+                            <p aria-hidden={true} id="starLabel">
+                                {t(SCORES[scoreToDisplayAsSelected])}
                             </p>
                         </div>
                     </div>
-                    <div className = { classes.details }>
+                    <div className={classes.details}>
+                        {/* @ts-ignore  @ts-expect-error */}
                         <Input
-                            id = 'feedbackTextArea'
-                            label = { t('feedback.detailsLabel') }
-                            onChange = { this._onMessageChange }
-                            textarea = { true }
-                            value = { message } />
+                            id="feedbackTextArea"
+                            label={t('feedback.detailsLabel')}
+                            onChange={this._onMessageChange}
+                            textarea={true}
+                            value={message}
+                        />
                     </div>
                 </div>
             </Dialog>
@@ -460,4 +460,6 @@ function _mapStateToProps(state: IReduxState) {
     };
 }
 
-export default withStyles(styles)(translate(connect(_mapStateToProps)(FeedbackDialog)));
+export default withStyles(styles)(
+    translate(connect(_mapStateToProps)(FeedbackDialog))
+);

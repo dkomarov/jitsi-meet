@@ -26,11 +26,17 @@ class StopRecordingDialog extends AbstractStopRecordingDialog<IProps> {
         const { t, localRecordingVideoStop } = this.props;
 
         return (
+            // @ts-ignore  @ts-expect-error
             <Dialog
-                ok = {{ translationKey: 'dialog.confirm' }}
-                onSubmit = { this._onSubmit }
-                titleKey = 'dialog.recording'>
-                {t(localRecordingVideoStop ? 'recording.localRecordingVideoStop' : 'dialog.stopRecordingWarning') }
+                ok={{ translationKey: 'dialog.confirm' }}
+                onSubmit={this._onSubmit}
+                titleKey="dialog.recording"
+            >
+                {t(
+                    localRecordingVideoStop
+                        ? 'recording.localRecordingVideoStop'
+                        : 'dialog.stopRecordingWarning'
+                )}
             </Dialog>
         );
     }

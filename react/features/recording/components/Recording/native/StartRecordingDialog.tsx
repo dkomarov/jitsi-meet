@@ -3,10 +3,8 @@ import { connect } from 'react-redux';
 
 import { translate } from '../../../../base/i18n/functions';
 import JitsiScreen from '../../../../base/modal/components/JitsiScreen';
-import HeaderNavigationButton
-    from '../../../../mobile/navigation/components/HeaderNavigationButton';
-import { goBack } from
-    '../../../../mobile/navigation/components/conference/ConferenceNavigationContainerRef';
+import HeaderNavigationButton from '../../../../mobile/navigation/components/HeaderNavigationButton';
+import { goBack } from '../../../../mobile/navigation/components/conference/ConferenceNavigationContainerRef';
 import { RECORDING_TYPES } from '../../../constants';
 import AbstractStartRecordingDialog, {
     IProps,
@@ -16,7 +14,6 @@ import styles from '../styles.native';
 
 import StartRecordingDialogContent from './StartRecordingDialogContent';
 
-
 /**
  * React Component for getting confirmation to start a file recording session in
  * progress.
@@ -24,7 +21,6 @@ import StartRecordingDialogContent from './StartRecordingDialogContent';
  * @augments Component
  */
 class StartRecordingDialog extends AbstractStartRecordingDialog {
-
     /**
      * Constructor of the component.
      *
@@ -51,10 +47,11 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
         navigation.setOptions({
             headerRight: () => (
                 <HeaderNavigationButton
-                    disabled = { this.isStartRecordingDisabled() }
-                    label = { t('dialog.start') }
-                    onPress = { this._onStartPress }
-                    twoActions = { true } />
+                    disabled={this.isStartRecordingDisabled()}
+                    label={t('dialog.start')}
+                    onPress={this._onStartPress}
+                    twoActions={true}
+                />
             )
         });
     }
@@ -75,10 +72,11 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
             // eslint-disable-next-line react/no-multi-comp
             headerRight: () => (
                 <HeaderNavigationButton
-                    disabled = { this.isStartRecordingDisabled() }
-                    label = { t('dialog.start') }
-                    onPress = { this._onStartPress }
-                    twoActions = { true } />
+                    disabled={this.isStartRecordingDisabled()}
+                    label={t('dialog.start')}
+                    onPress={this._onStartPress}
+                    twoActions={true}
+                />
             )
         });
     }
@@ -111,7 +109,6 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
         }
 
         return true;
-
     }
 
     /**
@@ -134,19 +131,23 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
         } = this.props;
 
         return (
-            <JitsiScreen style = { styles.startRecodingContainer }>
+            <JitsiScreen style={styles.startRecodingContainer}>
+                {/* @ts-ignore @ts-expect-error */}
                 <StartRecordingDialogContent
-                    fileRecordingsServiceEnabled = { _fileRecordingsServiceEnabled }
-                    fileRecordingsServiceSharingEnabled = { _fileRecordingsServiceSharingEnabled }
-                    integrationsEnabled = { this._areIntegrationsEnabled() }
-                    isTokenValid = { isTokenValid }
-                    isValidating = { isValidating }
-                    onChange = { this._onSelectedRecordingServiceChanged }
-                    onSharingSettingChanged = { this._onSharingSettingChanged }
-                    selectedRecordingService = { selectedRecordingService }
-                    sharingSetting = { sharingEnabled }
-                    spaceLeft = { spaceLeft }
-                    userName = { userName } />
+                    fileRecordingsServiceEnabled={_fileRecordingsServiceEnabled}
+                    fileRecordingsServiceSharingEnabled={
+                        _fileRecordingsServiceSharingEnabled
+                    }
+                    integrationsEnabled={this._areIntegrationsEnabled()}
+                    isTokenValid={isTokenValid}
+                    isValidating={isValidating}
+                    onChange={this._onSelectedRecordingServiceChanged}
+                    onSharingSettingChanged={this._onSharingSettingChanged}
+                    selectedRecordingService={selectedRecordingService}
+                    sharingSetting={sharingEnabled}
+                    spaceLeft={spaceLeft}
+                    userName={userName}
+                />
             </JitsiScreen>
         );
     }

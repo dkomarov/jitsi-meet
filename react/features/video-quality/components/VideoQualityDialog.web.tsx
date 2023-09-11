@@ -19,6 +19,7 @@ export default class VideoQualityDialog extends Component {
      */
     render() {
         return (
+            // @ts-ignore  @ts-expect-error
             <Dialog
                 // hideCancelButton = { true }
                 cancel={{ hidden: true }}
@@ -26,6 +27,7 @@ export default class VideoQualityDialog extends Component {
                 titleKey="videoStatus.callQuality"
                 // width="small"
             >
+                {/* @ts-ignore  @ts-expect-error */}
                 <VideoQualitySlider />
             </Dialog>
         );

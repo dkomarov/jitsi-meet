@@ -13,8 +13,7 @@ import AbstractLanguageSelectorDialog, {
 
 import LanguageList from './LanguageList';
 
-
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()((theme) => {
     return {
         paragraphWrapper: {
             fontSize: 14,
@@ -33,39 +32,51 @@ const useStyles = makeStyles()(theme => {
     };
 });
 
-
-const LanguageSelectorDialog = (props: IAbstractLanguageSelectorDialogProps) => {
-    const { dispatch, language, listItems, onLanguageSelected, subtitles, t } = props;
+const LanguageSelectorDialog = (
+    props: IAbstractLanguageSelectorDialogProps
+) => {
+    const { dispatch, language, listItems, onLanguageSelected, subtitles, t } =
+        props;
 
     const { classes: styles } = useStyles();
 
-    const onSelected = useCallback((e: string) => {
-        onLanguageSelected(e);
-        dispatch(toggleLanguageSelectorDialog());
-    }, [ language ]);
+    const onSelected = useCallback(
+        (e: string) => {
+            onLanguageSelected(e);
+            dispatch(toggleLanguageSelectorDialog());
+        },
+        [language]
+    );
 
     const onSourceLanguageClick = useCallback(() => {
         dispatch(openSettingsDialog(SETTINGS_TABS.MORE, false));
     }, []);
 
     return (
+        // @ts-ignore  @ts-expect-error
         <Dialog
-            cancel = {{ hidden: true }}
-            ok = {{ hidden: true }}
-            titleKey = 'transcribing.subtitles'>
-            <p className = { styles.paragraphWrapper } >
-                {
-                    translateToHTML(t, 'transcribing.sourceLanguageDesc', {
-                        'sourceLanguage': t(`languages:${i18next.language}`).toLowerCase()
-                    })
-                }<span
-                    className = { styles.spanWrapper }
-                    onClick = { onSourceLanguageClick }>{t('transcribing.sourceLanguageHere')}.</span>
+            cancel={{ hidden: true }}
+            ok={{ hidden: true }}
+            titleKey="transcribing.subtitles"
+        >
+            <p className={styles.paragraphWrapper}>
+                {translateToHTML(t, 'transcribing.sourceLanguageDesc', {
+                    sourceLanguage: t(
+                        `languages:${i18next.language}`
+                    ).toLowerCase()
+                })}
+                <span
+                    className={styles.spanWrapper}
+                    onClick={onSourceLanguageClick}
+                >
+                    {t('transcribing.sourceLanguageHere')}.
+                </span>
             </p>
             <LanguageList
-                items = { listItems }
-                onLanguageSelected = { onSelected }
-                selectedLanguage = { subtitles } />
+                items={listItems}
+                onLanguageSelected={onSelected}
+                selectedLanguage={subtitles}
+            />
         </Dialog>
     );
 };
@@ -75,4 +86,6 @@ const LanguageSelectorDialog = (props: IAbstractLanguageSelectorDialogProps) => 
  * to both the web and native implementations.
  */
 // eslint-disable-next-line new-cap
-export default translate(AbstractLanguageSelectorDialog(LanguageSelectorDialog));
+export default translate(
+    AbstractLanguageSelectorDialog(LanguageSelectorDialog)
+);

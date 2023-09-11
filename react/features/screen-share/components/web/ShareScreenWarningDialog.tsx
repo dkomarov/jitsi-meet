@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 
 import { IStore } from '../../../app/types';
 import { translate } from '../../../base/i18n/functions';
-import { toggleScreensharing } from '../../../base/tracks/actions';
+import { toggleScreensharing } from '../../../base/tracks/actions.web';
 import Dialog from '../../../base/ui/components/web/Dialog';
 
 export interface IProps extends WithTranslation {
-
     /**
      * Whether or not the dialog was opened for the audio screen sharing flow or the normal one.
      */
@@ -24,7 +23,6 @@ export interface IProps extends WithTranslation {
  *  Component that displays the share audio helper dialog.
  */
 class ShareScreenWarningDialog extends Component<IProps> {
-
     /**
      * Instantiates a new component.
      *
@@ -44,8 +42,12 @@ class ShareScreenWarningDialog extends Component<IProps> {
     _onStopSharing() {
         // Depending on the context from which this dialog is opened we'll either be toggling off an audio only
         // share session or a normal screen sharing one, this is indicated by the _isAudioScreenShareWarning prop.
-        this.props.dispatch(toggleScreensharing(undefined,
-            !this.props._isAudioScreenShareWarning));
+        this.props.dispatch(
+            toggleScreensharing(
+                undefined,
+                !this.props._isAudioScreenShareWarning
+            )
+        );
 
         return true;
     }
@@ -77,18 +79,22 @@ class ShareScreenWarningDialog extends Component<IProps> {
             stopSharing = 'toolbar.stopAudioSharing';
         }
 
-        return (<Dialog
-            ok = {{ translationKey: stopSharing }}
-            onSubmit = { this._onStopSharing }
-            titleKey = { t(title) }>
-            <div className = 'share-screen-warn-dialog'>
-                <p className = 'header'> { t(header1) } </p>
-                <p className = 'description' > { t(description1) } </p>
-                <div className = 'separator-line' />
-                <p className = 'header' > { t(header2) } </p>
-                <p className = 'description' > { t(description2) } </p>
-            </div>
-        </Dialog>);
+        return (
+            // @ts-ignore  @ts-expect-error
+            <Dialog
+                ok={{ translationKey: stopSharing }}
+                onSubmit={this._onStopSharing}
+                titleKey={t(title)}
+            >
+                <div className="share-screen-warn-dialog">
+                    <p className="header"> {t(header1)} </p>
+                    <p className="description"> {t(description1)} </p>
+                    <div className="separator-line" />
+                    <p className="header"> {t(header2)} </p>
+                    <p className="description"> {t(description2)} </p>
+                </div>
+            </Dialog>
+        );
     }
 }
 

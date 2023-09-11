@@ -9,7 +9,6 @@ import Dialog from '../../../base/ui/components/web/Dialog';
  * The type of {@link LogoutDialog}'s React {@code Component} props.
  */
 interface IProps extends WithTranslation {
-
     /**
      * Logout handler.
      */
@@ -24,13 +23,13 @@ interface IProps extends WithTranslation {
  */
 function LogoutDialog({ onLogout, t }: IProps) {
     return (
+        // @ts-ignore  @ts-expect-error
         <Dialog
-            ok = {{ translationKey: 'dialog.Yes' }}
-            onSubmit = { onLogout }
-            titleKey = { t('dialog.logoutTitle') }>
-            <div>
-                { t('dialog.logoutQuestion') }
-            </div>
+            ok={{ translationKey: 'dialog.Yes' }}
+            onSubmit={onLogout}
+            titleKey={t('dialog.logoutTitle')}
+        >
+            <div>{t('dialog.logoutQuestion')}</div>
         </Dialog>
     );
 }

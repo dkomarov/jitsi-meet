@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 
 import ConfirmDialog from '../../../base/dialog/components/native/ConfirmDialog';
 import { translate } from '../../../base/i18n/functions';
-import AbstractGrantModeratorDialog, { abstractMapStateToProps }
-    from '../AbstractGrantModeratorDialog';
+import AbstractGrantModeratorDialog, {
+    abstractMapStateToProps
+} from '../AbstractGrantModeratorDialog';
 
 /**
  * Dialog to confirm a remote participant kick action.
@@ -18,14 +19,17 @@ class GrantModeratorDialog extends AbstractGrantModeratorDialog {
      */
     render() {
         return (
+            // @ts-ignore  @ts-expect-error
             <ConfirmDialog
-                descriptionKey = {
-                    `${this.props.t('dialog.grantModeratorDialog',
-                        { participantName: this.props.participantName })}`
-                }
-                onSubmit = { this._onSubmit } />
+                descriptionKey={`${this.props.t('dialog.grantModeratorDialog', {
+                    participantName: this.props.participantName
+                })}`}
+                onSubmit={this._onSubmit}
+            />
         );
     }
 }
 
-export default translate(connect(abstractMapStateToProps)(GrantModeratorDialog));
+export default translate(
+    connect(abstractMapStateToProps)(GrantModeratorDialog)
+);

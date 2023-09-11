@@ -1,10 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-    Text,
-    TextStyle,
-    View,
-    ViewStyle
-} from 'react-native';
+import { Text, TextStyle, View, ViewStyle } from 'react-native';
 import { connect } from 'react-redux';
 
 import { IReduxState, IStore } from '../../../../app/types';
@@ -22,11 +17,11 @@ import { BUTTON_TYPES } from '../../../../base/ui/constants.native';
 import { copyText } from '../../../../base/util/copyText.native';
 import { isInBreakoutRoom } from '../../../../breakout-rooms/functions';
 import { toggleLobbyMode } from '../../../../lobby/actions.any';
+import { endRoomLockRequest, unlockRoom } from '../../../../room-lock/actions';
 import {
-    endRoomLockRequest,
-    unlockRoom
-} from '../../../../room-lock/actions';
-import { LOCKED_LOCALLY, LOCKED_REMOTELY } from '../../../../room-lock/constants';
+    LOCKED_LOCALLY,
+    LOCKED_REMOTELY
+} from '../../../../room-lock/constants';
 
 import styles from './styles';
 
@@ -44,7 +39,6 @@ const _TEXT_INPUT_PROPS = {
  * The type of the React {@code Component} props of {@link SecurityDialog}.
  */
 interface IProps {
-
     /**
      * The JitsiConference which requires a password.
      */
@@ -106,7 +100,6 @@ interface IProps {
  * The type of the React {@code Component} state of {@link SecurityDialog}.
  */
 interface IState {
-
     /**
      * Password added by the participant for room lock.
      */
@@ -124,7 +117,6 @@ interface IState {
  * @returns {React$Element<any>}
  */
 class SecurityDialog extends PureComponent<IProps, IState> {
-
     /**
      * Instantiates a new {@code SecurityDialog}.
      *
@@ -153,9 +145,9 @@ class SecurityDialog extends PureComponent<IProps, IState> {
      */
     render() {
         return (
-            <JitsiScreen style = { styles.securityDialogContainer }>
-                { this._renderLobbyMode() }
-                { this._renderSetRoomPassword() }
+            <JitsiScreen style={styles.securityDialogContainer}>
+                {this._renderLobbyMode()}
+                {this._renderSetRoomPassword()}
             </JitsiScreen>
         );
     }
@@ -167,29 +159,31 @@ class SecurityDialog extends PureComponent<IProps, IState> {
      * @private
      */
     _renderLobbyMode() {
-        const {
-            _lobbyEnabled,
-            _lobbyModeSwitchVisible,
-            t
-        } = this.props;
+        const { _lobbyEnabled, _lobbyModeSwitchVisible, t } = this.props;
 
         if (!_lobbyModeSwitchVisible) {
             return null;
         }
 
         return (
-            <View style = { styles.lobbyModeContainer }>
-                <View style = { styles.lobbyModeContent } >
-                    <Text style = { styles.lobbyModeText }>
-                        { t('lobby.enableDialogText') }
+            // @ts-ignore  @ts-expect-error
+            <View style={styles.lobbyModeContainer}>
+                {/* @ts-ignore @ts-expect-error */}
+                <View style={styles.lobbyModeContent}>
+                    {/* @ts-ignore @ts-expect-error */}
+                    <Text style={styles.lobbyModeText}>
+                        {t('lobby.enableDialogText')}
                     </Text>
-                    <View style = { styles.lobbyModeSection as ViewStyle }>
-                        <Text style = { styles.lobbyModeLabel as TextStyle } >
-                            { t('lobby.toggleLabel') }
+                    {/* @ts-ignore @ts-expect-error */}
+                    <View style={styles.lobbyModeSection as ViewStyle}>
+                        {/* @ts-ignore @ts-expect-error */}
+                        <Text style={styles.lobbyModeLabel as TextStyle}>
+                            {t('lobby.toggleLabel')}
                         </Text>
                         <Switch
-                            checked = { _lobbyEnabled }
-                            onChange = { this._onToggleLobbyMode } />
+                            checked={_lobbyEnabled}
+                            onChange={this._onToggleLobbyMode}
+                        />
                     </View>
                 </View>
             </View>
@@ -222,99 +216,119 @@ class SecurityDialog extends PureComponent<IProps, IState> {
             setPasswordControls = (
                 <>
                     <Button
-                        accessibilityLabel = 'dialog.Remove'
-                        labelKey = 'dialog.Remove'
-                        labelStyle = { styles.passwordSetupButtonLabel }
-                        onClick = { this._onCancel }
-                        type = { BUTTON_TYPES.TERTIARY } />
-                    {
-                        _password
-                        && <Button
-                            accessibilityLabel = 'dialog.copy'
-                            labelKey = 'dialog.copy'
-                            labelStyle = { styles.passwordSetupButtonLabel }
-                            onClick = { this._onCopy }
-                            type = { BUTTON_TYPES.TERTIARY } />
-                    }
+                        accessibilityLabel="dialog.Remove"
+                        labelKey="dialog.Remove"
+                        labelStyle={styles.passwordSetupButtonLabel}
+                        onClick={this._onCancel}
+                        type={BUTTON_TYPES.TERTIARY}
+                    />
+                    {_password && (
+                        <Button
+                            accessibilityLabel="dialog.copy"
+                            labelKey="dialog.copy"
+                            labelStyle={styles.passwordSetupButtonLabel}
+                            onClick={this._onCopy}
+                            type={BUTTON_TYPES.TERTIARY}
+                        />
+                    )}
                 </>
             );
         } else if (!_lockedConference && showElement) {
             setPasswordControls = (
                 <>
                     <Button
-                        accessibilityLabel = 'dialog.Cancel'
-                        labelKey = 'dialog.Cancel'
-                        labelStyle = { styles.passwordSetupButtonLabel }
-                        onClick = { this._onCancel }
-                        type = { BUTTON_TYPES.TERTIARY } />
+                        accessibilityLabel="dialog.Cancel"
+                        labelKey="dialog.Cancel"
+                        labelStyle={styles.passwordSetupButtonLabel}
+                        onClick={this._onCancel}
+                        type={BUTTON_TYPES.TERTIARY}
+                    />
                     <Button
-                        accessibilityLabel = 'dialog.add'
-                        labelKey = 'dialog.add'
-                        labelStyle = { styles.passwordSetupButtonLabel }
-                        onClick = { this._onSubmit }
-                        type = { BUTTON_TYPES.TERTIARY } />
+                        accessibilityLabel="dialog.add"
+                        labelKey="dialog.add"
+                        labelStyle={styles.passwordSetupButtonLabel}
+                        onClick={this._onSubmit}
+                        type={BUTTON_TYPES.TERTIARY}
+                    />
                 </>
             );
         } else if (!_lockedConference && !showElement) {
             setPasswordControls = (
                 <Button
-                    accessibilityLabel = 'info.addPassword'
-                    disabled = { !_isModerator }
-                    labelKey = 'info.addPassword'
-                    labelStyle = { styles.passwordSetupButtonLabel }
-                    onClick = { this._onAddPassword }
-                    type = { BUTTON_TYPES.TERTIARY } />
+                    accessibilityLabel="info.addPassword"
+                    disabled={!_isModerator}
+                    labelKey="info.addPassword"
+                    labelStyle={styles.passwordSetupButtonLabel}
+                    onClick={this._onAddPassword}
+                    type={BUTTON_TYPES.TERTIARY}
+                />
             );
         }
 
         if (_locked === LOCKED_REMOTELY) {
             if (_isModerator) {
                 setPasswordControls = (
-                    <View style = { styles.passwordSetRemotelyContainer as ViewStyle }>
-                        <Text style = { styles.passwordSetRemotelyText }>
-                            { t('passwordSetRemotely') }
+                    // @ts-ignore @ts-expect-error
+                    <View
+                        style={styles.passwordSetRemotelyContainer as ViewStyle}
+                    >
+                        {/* @ts-ignore @ts-expect-error */}
+                        <Text style={styles.passwordSetRemotelyText}>
+                            {t('passwordSetRemotely')}
                         </Text>
                         <Button
-                            accessibilityLabel = 'dialog.Remove'
-                            labelKey = 'dialog.Remove'
-                            labelStyle = { styles.passwordSetupButtonLabel }
-                            onClick = { this._onCancel }
-                            type = { BUTTON_TYPES.TERTIARY } />
+                            accessibilityLabel="dialog.Remove"
+                            labelKey="dialog.Remove"
+                            labelStyle={styles.passwordSetupButtonLabel}
+                            onClick={this._onCancel}
+                            type={BUTTON_TYPES.TERTIARY}
+                        />
                     </View>
                 );
             } else {
                 setPasswordControls = (
-                    <View style = { styles.passwordSetRemotelyContainer as ViewStyle }>
-                        <Text style = { styles.passwordSetRemotelyTextDisabled }>
-                            { t('passwordSetRemotely') }
+                    // @ts-ignore @ts-expect-error
+                    <View
+                        style={styles.passwordSetRemotelyContainer as ViewStyle}
+                    >
+                        {/* @ts-ignore @ts-expect-error */}
+                        <Text style={styles.passwordSetRemotelyTextDisabled}>
+                            {t('passwordSetRemotely')}
                         </Text>
                         <Button
-                            accessibilityLabel = 'info.addPassword'
-                            disabled = { !_isModerator }
-                            labelKey = 'info.addPassword'
-                            labelStyle = { styles.passwordSetupButtonLabel }
-                            onClick = { this._onAddPassword }
-                            type = { BUTTON_TYPES.TERTIARY } />
+                            accessibilityLabel="info.addPassword"
+                            disabled={!_isModerator}
+                            labelKey="info.addPassword"
+                            labelStyle={styles.passwordSetupButtonLabel}
+                            onClick={this._onAddPassword}
+                            type={BUTTON_TYPES.TERTIARY}
+                        />
                     </View>
                 );
             }
         }
 
         return (
-            <View
-                style = { styles.passwordContainer } >
-                <Text style = { styles.passwordContainerText }>
-                    { t(_isModerator ? 'security.about' : 'security.aboutReadOnly') }
+            // @ts-ignore  @ts-expect-error
+            <View style={styles.passwordContainer}>
+                {/* @ts-ignore  @ts-expect-error */}
+                <Text style={styles.passwordContainerText}>
+                    {t(
+                        _isModerator
+                            ? 'security.about'
+                            : 'security.aboutReadOnly'
+                    )}
                 </Text>
+                {/* @ts-ignore  @ts-expect-error */}
                 <View
-                    style = {
-                        _locked !== LOCKED_REMOTELY
-                        && styles.passwordContainerControls as ViewStyle
-                    }>
-                    <View>
-                        { this._setRoomPasswordMessage() }
-                    </View>
-                    { _isModerator && setPasswordControls }
+                    style={
+                        _locked !== LOCKED_REMOTELY &&
+                        (styles.passwordContainerControls as ViewStyle)
+                    }
+                >
+                    {/* @ts-ignore  @ts-expect-error */}
+                    <View>{this._setRoomPasswordMessage()}</View>
+                    {_isModerator && setPasswordControls}
                 </View>
             </View>
         );
@@ -328,13 +342,8 @@ class SecurityDialog extends PureComponent<IProps, IState> {
      */
     _setRoomPasswordMessage() {
         let textInputProps: any = _TEXT_INPUT_PROPS;
-        const {
-            _isModerator,
-            _locked,
-            _password,
-            _passwordNumberOfDigits,
-            t
-        } = this.props;
+        const { _isModerator, _locked, _password, _passwordNumberOfDigits, t } =
+            this.props;
         const { passwordInputValue, showElement } = this.state;
 
         if (_passwordNumberOfDigits) {
@@ -352,25 +361,37 @@ class SecurityDialog extends PureComponent<IProps, IState> {
         if (showElement) {
             if (typeof _locked === 'undefined') {
                 return (
+                    // @ts-ignore  @ts-expect-error
                     <Input
-                        accessibilityLabel = { t('info.addPassword') }
-                        autoFocus = { true }
-                        clearable = { true }
-                        customStyles = {{ container: styles.customContainer }}
-                        onChange = { this._onChangeText }
-                        placeholder = { t('dialog.password') }
-                        value = { passwordInputValue }
-                        { ...textInputProps } />
+                        accessibilityLabel={t('info.addPassword')}
+                        autoFocus={true}
+                        clearable={true}
+                        customStyles={{ container: styles.customContainer }}
+                        onChange={this._onChangeText}
+                        placeholder={t('dialog.password')}
+                        value={passwordInputValue}
+                        {...textInputProps}
+                    />
                 );
             } else if (_locked) {
-                if (_locked === LOCKED_LOCALLY && typeof _password !== 'undefined') {
+                if (
+                    _locked === LOCKED_LOCALLY &&
+                    typeof _password !== 'undefined'
+                ) {
                     return (
-                        <View style = { styles.savedPasswordContainer as ViewStyle }>
-                            <Text style = { styles.savedPasswordLabel as TextStyle }>
-                                { t('info.password') }
+                        // @ts-ignore  @ts-expect-error
+                        <View
+                            style={styles.savedPasswordContainer as ViewStyle}
+                        >
+                            {/* @ts-ignore  @ts-expect-error */}
+                            <Text
+                                style={styles.savedPasswordLabel as TextStyle}
+                            >
+                                {t('info.password')}
                             </Text>
-                            <Text style = { styles.savedPassword }>
-                                { _password }
+                            {/* @ts-ignore  @ts-expect-error */}
+                            <Text style={styles.savedPassword}>
+                                {_password}
                             </Text>
                         </View>
                     );
@@ -421,9 +442,11 @@ class SecurityDialog extends PureComponent<IProps, IState> {
 
         // we want only digits,
         // but both number-pad and numeric add ',' and '.' as symbols
-        if (_passwordNumberOfDigits
-            && passwordInputValue.length > 0
-            && !/^\d+$/.test(passwordInputValue)) {
+        if (
+            _passwordNumberOfDigits &&
+            passwordInputValue.length > 0 &&
+            !/^\d+$/.test(passwordInputValue)
+        ) {
             return false;
         }
 
@@ -477,13 +500,11 @@ class SecurityDialog extends PureComponent<IProps, IState> {
      * @returns {void}
      */
     _onSubmit() {
-        const {
-            _conference,
-            dispatch
-        } = this.props;
+        const { _conference, dispatch } = this.props;
         const { passwordInputValue } = this.state;
 
-        _conference && dispatch(endRoomLockRequest(_conference, passwordInputValue));
+        _conference &&
+            dispatch(endRoomLockRequest(_conference, passwordInputValue));
     }
 }
 
@@ -495,7 +516,8 @@ class SecurityDialog extends PureComponent<IProps, IState> {
  */
 function _mapStateToProps(state: IReduxState) {
     const { conference, locked, password } = state['features/base/conference'];
-    const { disableLobbyPassword, hideLobbyButton } = getSecurityUiConfig(state);
+    const { disableLobbyPassword, hideLobbyButton } =
+        getSecurityUiConfig(state);
     const { lobbyEnabled } = state['features/lobby'];
     const { roomPasswordNumberOfDigits } = state['features/base/config'];
     const lobbySupported = conference?.isLobbySupported();
@@ -506,7 +528,10 @@ function _mapStateToProps(state: IReduxState) {
         _isModerator: isLocalParticipantModerator(state),
         _lobbyEnabled: lobbyEnabled,
         _lobbyModeSwitchVisible:
-            lobbySupported && isLocalParticipantModerator(state) && !hideLobbyButton && !isInBreakoutRoom(state),
+            lobbySupported &&
+            isLocalParticipantModerator(state) &&
+            !hideLobbyButton &&
+            !isInBreakoutRoom(state),
         _locked: locked,
         _lockedConference: Boolean(conference && locked),
         _password: password,
@@ -514,6 +539,5 @@ function _mapStateToProps(state: IReduxState) {
         _roomPasswordControls: visible && !disableLobbyPassword
     };
 }
-
 
 export default translate(connect(_mapStateToProps)(SecurityDialog));

@@ -13,7 +13,6 @@ import { deny, grant } from '../actions';
  * {@link RemoteControlAuthorizationDialog}.
  */
 interface IProps {
-
     /**
      * The display name of the participant who is requesting authorization for
      * remote desktop control session.
@@ -64,19 +63,17 @@ class RemoteControlAuthorizationDialog extends Component<IProps> {
      */
     render() {
         return (
+            // @ts-ignore  @ts-expect-error
             <Dialog
-                ok = {{ translationKey: 'dialog.allow' }}
-                onCancel = { this._onCancel }
-                onSubmit = { this._onSubmit }
-                titleKey = 'dialog.remoteControlTitle'>
-                {
-                    this.props.t(
-                        'dialog.remoteControlRequestMessage',
-                        { user: this.props._displayName })
-                }
-                {
-                    this._getAdditionalMessage()
-                }
+                ok={{ translationKey: 'dialog.allow' }}
+                onCancel={this._onCancel}
+                onSubmit={this._onSubmit}
+                titleKey="dialog.remoteControlTitle"
+            >
+                {this.props.t('dialog.remoteControlRequestMessage', {
+                    user: this.props._displayName
+                })}
+                {this._getAdditionalMessage()}
             </Dialog>
         );
     }
@@ -97,7 +94,7 @@ class RemoteControlAuthorizationDialog extends Component<IProps> {
         return (
             <div>
                 <br />
-                { this.props.t('dialog.remoteControlShareScreenWarning') }
+                {this.props.t('dialog.remoteControlShareScreenWarning')}
             </div>
         );
     }
@@ -167,4 +164,5 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
 }
 
 export default translate(
-    connect(_mapStateToProps)(RemoteControlAuthorizationDialog));
+    connect(_mapStateToProps)(RemoteControlAuthorizationDialog)
+);

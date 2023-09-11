@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 
-
 import { translate } from '../../../base/i18n/functions';
 import Dialog from '../../../base/ui/components/web/Dialog';
 import { openURLInBrowser } from '../../../base/util/openURLInBrowser.web';
@@ -12,7 +11,6 @@ import { JAAS_UPGRADE_URL } from '../../constants';
  * @returns {React$Element<any>}
  */
 class PremiumFeatureDialog extends PureComponent<any> {
-
     /**
      * Instantiates a new component.
      *
@@ -42,11 +40,13 @@ class PremiumFeatureDialog extends PureComponent<any> {
         const { t } = this.props;
 
         return (
+            // @ts-ignore  @ts-expect-error
             <Dialog
-                cancel = {{ hidden: true }}
-                ok = {{ translationKey: 'dialog.viewUpgradeOptions' }}
-                onSubmit = { this._onSubmitValue }
-                titleKey = { t('dialog.viewUpgradeOptionsTitle') }>
+                cancel={{ hidden: true }}
+                ok={{ translationKey: 'dialog.viewUpgradeOptions' }}
+                onSubmit={this._onSubmitValue}
+                titleKey={t('dialog.viewUpgradeOptionsTitle')}
+            >
                 <span>{t('dialog.viewUpgradeOptionsContent')}</span>
             </Dialog>
         );

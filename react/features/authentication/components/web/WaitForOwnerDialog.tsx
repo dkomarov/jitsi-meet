@@ -11,7 +11,6 @@ import { cancelWaitForOwner } from '../../actions.web';
  * The type of the React {@code Component} props of {@link WaitForOwnerDialog}.
  */
 interface IProps extends WithTranslation {
-
     /**
      * Redux store dispatch method.
      */
@@ -72,21 +71,19 @@ class WaitForOwnerDialog extends PureComponent<IProps> {
      * @inheritdoc
      */
     render() {
-        const {
-            t
-        } = this.props;
+        const { t } = this.props;
 
         return (
+            // @ts-ignore  @ts-expect-error
             <Dialog
-                disableBackdropClose = { true }
-                hideCloseButton = { true }
-                ok = {{ translationKey: 'dialog.IamHost' }}
-                onCancel = { this._onCancelWaitForOwner }
-                onSubmit = { this._onIAmHost }
-                titleKey = { t('dialog.WaitingForHostTitle') }>
-                <span>
-                    { t('dialog.WaitForHostMsg') }
-                </span>
+                disableBackdropClose={true}
+                hideCloseButton={true}
+                ok={{ translationKey: 'dialog.IamHost' }}
+                onCancel={this._onCancelWaitForOwner}
+                onSubmit={this._onIAmHost}
+                titleKey={t('dialog.WaitingForHostTitle')}
+            >
+                <span>{t('dialog.WaitForHostMsg')}</span>
             </Dialog>
         );
     }

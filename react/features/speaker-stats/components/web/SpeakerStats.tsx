@@ -17,18 +17,19 @@ import {
 import Tooltip from '../../../base/tooltip/components/Tooltip';
 import Dialog from '../../../base/ui/components/web/Dialog';
 import { escapeRegexp } from '../../../base/util/helpers';
-import { initSearch, resetSearchCriteria, toggleFaceExpressions } from '../../actions.any';
 import {
-    DISPLAY_SWITCH_BREAKPOINT,
-    MOBILE_BREAKPOINT
-} from '../../constants';
+    initSearch,
+    resetSearchCriteria,
+    toggleFaceExpressions
+} from '../../actions.any';
+import { DISPLAY_SWITCH_BREAKPOINT, MOBILE_BREAKPOINT } from '../../constants';
 
 import FaceExpressionsSwitch from './FaceExpressionsSwitch';
 import SpeakerStatsLabels from './SpeakerStatsLabels';
 import SpeakerStatsList from './SpeakerStatsList';
 import SpeakerStatsSearch from './SpeakerStatsSearch';
 
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()((theme) => {
     return {
         speakerStats: {
             '& .header': {
@@ -197,86 +198,107 @@ const EMOTIONS_LEGEND = [
 ];
 
 const SpeakerStats = () => {
-    const { faceLandmarks } = useSelector((state: IReduxState) => state['features/base/config']);
-    const { showFaceExpressions } = useSelector((state: IReduxState) => state['features/speaker-stats']);
-    const { clientWidth } = useSelector((state: IReduxState) => state['features/base/responsive-ui']);
-    const displaySwitch = faceLandmarks?.enableDisplayFaceExpressions && clientWidth > DISPLAY_SWITCH_BREAKPOINT;
+    const { faceLandmarks } = useSelector(
+        (state: IReduxState) => state['features/base/config']
+    );
+    const { showFaceExpressions } = useSelector(
+        (state: IReduxState) => state['features/speaker-stats']
+    );
+    const { clientWidth } = useSelector(
+        (state: IReduxState) => state['features/base/responsive-ui']
+    );
+    const displaySwitch =
+        faceLandmarks?.enableDisplayFaceExpressions &&
+        clientWidth > DISPLAY_SWITCH_BREAKPOINT;
     const displayLabels = clientWidth > MOBILE_BREAKPOINT;
     const dispatch = useDispatch();
     const { classes } = useStyles();
     const { t } = useTranslation();
 
-    const onToggleFaceExpressions = useCallback(() =>
-        dispatch(toggleFaceExpressions())
-    , [ dispatch ]);
+    const onToggleFaceExpressions = useCallback(
+        () => dispatch(toggleFaceExpressions()),
+        [dispatch]
+    );
 
-    const onSearch = useCallback((criteria = '') => {
-        dispatch(initSearch(escapeRegexp(criteria)));
-    }
-    , [ dispatch ]);
+    const onSearch = useCallback(
+        (criteria = '') => {
+            dispatch(initSearch(escapeRegexp(criteria)));
+        },
+        [dispatch]
+    );
 
     useEffect(() => {
-        showFaceExpressions && !displaySwitch && dispatch(toggleFaceExpressions());
-    }, [ clientWidth ]);
+        showFaceExpressions &&
+            !displaySwitch &&
+            dispatch(toggleFaceExpressions());
+    }, [clientWidth]);
 
-    useEffect(() => () => {
-        dispatch(resetSearchCriteria());
-    }, []);
+    useEffect(
+        () => () => {
+            dispatch(resetSearchCriteria());
+        },
+        []
+    );
 
     return (
+        // @ts-ignore  @ts-expect-error
         <Dialog
-            cancel = {{ hidden: true }}
-            ok = {{ hidden: true }}
-            size = { showFaceExpressions ? 'large' : 'medium' }
-            titleKey = 'speakerStats.speakerStats'>
-            <div className = { classes.speakerStats }>
-                <div className = { `header ${showFaceExpressions ? 'large' : 'medium'}` }>
-                    <div className = 'upper-header'>
+            cancel={{ hidden: true }}
+            ok={{ hidden: true }}
+            size={showFaceExpressions ? 'large' : 'medium'}
+            titleKey="speakerStats.speakerStats"
+        >
+            <div className={classes.speakerStats}>
+                <div
+                    className={`header ${
+                        showFaceExpressions ? 'large' : 'medium'
+                    }`}
+                >
+                    <div className="upper-header">
                         <div
-                            className = {
-                                `search-switch-container
-                        ${showFaceExpressions ? 'expressions-on' : ''}`
-                            }>
+                            className={`search-switch-container
+                        ${showFaceExpressions ? 'expressions-on' : ''}`}
+                        >
                             <div
-                                className = {
+                                className={
                                     displaySwitch
                                         ? 'search-container'
-                                        : 'search-container-full-width' }>
-                                <SpeakerStatsSearch
-                                    onSearch = { onSearch } />
+                                        : 'search-container-full-width'
+                                }
+                            >
+                                <SpeakerStatsSearch onSearch={onSearch} />
                             </div>
 
-                            { displaySwitch
-                    && <FaceExpressionsSwitch
-                        onChange = { onToggleFaceExpressions }
-                        showFaceExpressions = { showFaceExpressions } />
-
-                            }
+                            {displaySwitch && (
+                                <FaceExpressionsSwitch
+                                    onChange={onToggleFaceExpressions}
+                                    showFaceExpressions={showFaceExpressions}
+                                />
+                            )}
                         </div>
-                        { showFaceExpressions && <div className = 'emotions-icons'>
-                            {
-                                EMOTIONS_LEGEND.map(emotion => (
+                        {showFaceExpressions && (
+                            <div className="emotions-icons">
+                                {EMOTIONS_LEGEND.map((emotion) => (
                                     <Tooltip
-                                        content = { t(emotion.translationKey) }
-                                        key = { emotion.translationKey }
-                                        position = { 'top' }>
-                                        <Icon
-                                            size = { 20 }
-                                            src = { emotion.icon } />
+                                        content={t(emotion.translationKey)}
+                                        key={emotion.translationKey}
+                                        position={'top'}
+                                    >
+                                        <Icon size={20} src={emotion.icon} />
                                     </Tooltip>
-                                ))
-                            }
-                        </div>}
+                                ))}
+                            </div>
+                        )}
                     </div>
-                    { displayLabels && (
+                    {displayLabels && (
                         <SpeakerStatsLabels
-                            showFaceExpressions = { showFaceExpressions ?? false } />
+                            showFaceExpressions={showFaceExpressions ?? false}
+                        />
                     )}
                 </div>
                 <SpeakerStatsList />
             </div>
         </Dialog>
-
     );
 };
 

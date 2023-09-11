@@ -53,52 +53,54 @@ const ParticipantVerificationDialog = ({
         dispatch(participantVerified(pId, false));
 
         return true;
-    }, [ pId ]);
+    }, [pId]);
 
     const _onConfirmed = useCallback(() => {
         dispatch(participantVerified(pId, true));
 
         return true;
-    }, [ pId ]);
+    }, [pId]);
 
     const { emoji } = sas;
 
     return (
+        // @ts-ignore  @ts-expect-error
         <Dialog
-            cancel = {{ translationKey: 'dialog.verifyParticipantDismiss' }}
-            ok = {{ translationKey: 'dialog.verifyParticipantConfirm' }}
-            onCancel = { _onDismissed }
-            onSubmit = { _onConfirmed }
-            titleKey = 'dialog.verifyParticipantTitle'>
+            cancel={{ translationKey: 'dialog.verifyParticipantDismiss' }}
+            ok={{ translationKey: 'dialog.verifyParticipantConfirm' }}
+            onCancel={_onDismissed}
+            onSubmit={_onConfirmed}
+            titleKey="dialog.verifyParticipantTitle"
+        >
             <div>
                 {t('dialog.verifyParticipantQuestion', { participantName })}
             </div>
 
-            <div className = { classes.container }>
-                <div className = { classes.row }>
+            <div className={classes.container}>
+                <div className={classes.row}>
                     {/* @ts-ignore */}
-                    {emoji.slice(0, 4).map((e: Array<string>) =>
-                        (<div
-                            className = { classes.item }
-                            key = { e.toString() }>
-                            <div className = { classes.emoji }>{e[0]}</div>
-                            <div>{e[1].charAt(0).toUpperCase() + e[1].slice(1)}</div>
-                        </div>))}
+                    {emoji.slice(0, 4).map((e: Array<string>) => (
+                        <div className={classes.item} key={e.toString()}>
+                            <div className={classes.emoji}>{e[0]}</div>
+                            <div>
+                                {e[1].charAt(0).toUpperCase() + e[1].slice(1)}
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
-                <div className = { classes.row }>
+                <div className={classes.row}>
                     {/* @ts-ignore */}
-                    {emoji.slice(4, 7).map((e: Array<string>) =>
-                        (<div
-                            className = { classes.item }
-                            key = { e.toString() }>
-                            <div className = { classes.emoji }>{e[0]} </div>
-                            <div>{e[1].charAt(0).toUpperCase() + e[1].slice(1)}</div>
-                        </div>))}
+                    {emoji.slice(4, 7).map((e: Array<string>) => (
+                        <div className={classes.item} key={e.toString()}>
+                            <div className={classes.emoji}>{e[0]} </div>
+                            <div>
+                                {e[1].charAt(0).toUpperCase() + e[1].slice(1)}
+                            </div>
+                        </div>
+                    ))}
                 </div>
-
             </div>
-
         </Dialog>
     );
 };

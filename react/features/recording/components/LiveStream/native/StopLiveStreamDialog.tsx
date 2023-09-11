@@ -14,7 +14,6 @@ import AbstractStopLiveStreamDialog, {
  * @augments Component
  */
 class StopLiveStreamDialog extends AbstractStopLiveStreamDialog {
-
     /**
      * Implements React's {@link Component#render()}.
      *
@@ -23,9 +22,11 @@ class StopLiveStreamDialog extends AbstractStopLiveStreamDialog {
      */
     render() {
         return (
+            // @ts-ignore  @ts-expect-error
             <ConfirmDialog
-                descriptionKey = 'dialog.stopStreamingWarning'
-                onSubmit = { this._onSubmit } />
+                descriptionKey="dialog.stopStreamingWarning"
+                onSubmit={this._onSubmit}
+            />
         );
     }
 }

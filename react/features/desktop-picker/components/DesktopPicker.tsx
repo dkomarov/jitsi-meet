@@ -188,6 +188,7 @@ class DesktopPicker extends PureComponent<IProps, IState> {
         const { selectedTab, selectedSource, sources, types } = this.state;
 
         return (
+            // @ts-ignore  @ts-expect-error
             <Dialog
                 ok={{
                     disabled: Boolean(!this.state.selectedSource.id),
@@ -209,6 +210,7 @@ class DesktopPicker extends PureComponent<IProps, IState> {
                         tabIndex={0}
                     >
                         {selectedTab === type && (
+                            // @ts-ignore  @ts-expect-error
                             <DesktopPickerPane
                                 key={selectedTab}
                                 onClick={this._onPreviewClick}

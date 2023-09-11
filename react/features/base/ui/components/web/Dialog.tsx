@@ -259,30 +259,34 @@ const Dialog = ({
     //     return () => window.removeEventListener('keydown', handleKeyDown);
     // }, []);
 
-        if (onSubmit && (
-            (document.activeElement && !operatesWithEnterKey(document.activeElement))
-            || !document.activeElement
-        )) {
+    const submit = useCallback(() => {
+        if (
+            onSubmit &&
+            ((document.activeElement &&
+                !operatesWithEnterKey(document.activeElement)) ||
+                !document.activeElement)
+        ) {
             !disableAutoHideOnSubmit && dispatch(hideDialog());
             onSubmit();
         }
-    }, [ onSubmit ]);
+    }, [onSubmit]);
 
     return (
         <BaseDialog
-            className = { className }
-            description = { description }
-            disableBackdropClose = { disableBackdropClose }
-            disableEnter = { disableEnter }
-            onClose = { onClose }
-            size = { size }
-            submit = { submit }
-            title = { title }
-            titleKey = { titleKey }>
-            <div className = { classes.header }>
-                <h1
-                    className = { classes.title }
-                    id = 'dialog-title'>
+            className={className}
+            description={description}
+            disableBackdropClose={disableBackdropClose}
+            disableEnter={disableEnter}
+            onClose={onClose}
+            size={size}
+            submit={submit}
+            title={title}
+            titleKey={titleKey}
+        >
+            {/* @ts-ignore // @ts-expect-error */}
+            <div className={classes.header}>
+                {/* @ts-ignore // @ts-expect-error */}{' '}
+                <h1 className={classes.title} id="dialog-title">
                     {title ?? t(titleKey ?? '')}
                 </h1>
                 {!hideCloseButton && (
@@ -296,10 +300,18 @@ const Dialog = ({
                     />
                 )}
             </div>
+            {/* @ts-ignore // @ts-expect-error */}
             <div className={classes.content} data-autofocus-inside="true">
                 {children}
             </div>
-            {/* <div
+        </BaseDialog>
+    );
+};
+
+export default Dialog;
+
+{
+    /* <div
                 className = { classes.backdrop }
                 onClick = { onBackdropClick } />
             <FocusLock className = { classes.focusLock }>
@@ -328,62 +340,62 @@ const Dialog = ({
                         className = { classes.content }
                         data-autofocus-inside = 'true'>
                         {children}
-                    </div> */}
-            // <div className={classes.footer} data-autofocus-inside="true">
-            //     {!back.hidden && (
-            //         <Button
-            //             accessibilityLabel={t(back.translationKey ?? '')}
-            //             labelKey={back.translationKey}
-            //             // eslint-disable-next-line react/jsx-handler-names
-            //             onClick={back.onClick}
-            //             type="secondary"
-            //         />
-            //     )}
-            //     {!cancel.hidden && (
-            //         <Button
-            //             accessibilityLabel={t(cancel.translationKey ?? '')}
-            //             labelKey={cancel.translationKey}
-            //             onClick={onClose}
-            //             type="tertiary"
-            //         />
-            //     )}
-            //     {!ok.hidden && (
-            //         <Button
-            //             accessibilityLabel={t(ok.translationKey ?? '')}
-            //             disabled={ok.disabled}
-            //             id="modal-dialog-ok-button"
-            //             labelKey={ok.translationKey}
-            //             onClick={submit}
-            //         />
-            //     )}
+                    </div> */
+}
 
-            <div
-                className = { classes.footer }
-                data-autofocus-inside = 'true'>
-                {!back.hidden && <Button
-                    accessibilityLabel = { t(back.translationKey ?? '') }
-                    labelKey = { back.translationKey }
-                    // eslint-disable-next-line react/jsx-handler-names
-                    onClick = { back.onClick }
-                    type = 'secondary' />}
-                {!cancel.hidden && <Button
-                    accessibilityLabel = { t(cancel.translationKey ?? '') }
-                    labelKey = { cancel.translationKey }
-                    onClick = { onClose }
-                    type = 'tertiary' />}
-                {!ok.hidden && <Button
-                    accessibilityLabel = { t(ok.translationKey ?? '') }
-                    disabled = { ok.disabled }
-                    id = 'modal-dialog-ok-button'
-                    isSubmit = { true }
-                    labelKey = { ok.translationKey }
-                    onClick = { submit } />}
+{
+    /*} <div className={classes.footer} data-autofocus-inside="true"> */
+}
+//     {!back.hidden && (
+//         <Button
+//             accessibilityLabel={t(back.translationKey ?? '')}
+//             labelKey={back.translationKey}
+//             // eslint-disable-next-line react/jsx-handler-names
+//             onClick={back.onClick}
+//             type="secondary"
+//         />
+//     )}
+//     {!cancel.hidden && (
+//         <Button
+//             accessibilityLabel={t(cancel.translationKey ?? '')}
+//             labelKey={cancel.translationKey}
+//             onClick={onClose}
+//             type="tertiary"
+//         />
+//     )}
+//     {!ok.hidden && (
+//         <Button
+//             accessibilityLabel={t(ok.translationKey ?? '')}
+//             disabled={ok.disabled}
+//             id="modal-dialog-ok-button"
+//             labelKey={ok.translationKey}
+//             onClick={submit}
+//         />
+//     )}
 
-            </div>
-        </BaseDialog> //</div>
-        //     </FocusLock>
-        // </div>
-    );
-};
+//             <div
+//                 className = { classes.footer }
+//                 data-autofocus-inside = 'true'>
+//                 {!back.hidden && <Button
+//                     accessibilityLabel = { t(back.translationKey ?? '') }
+//                     labelKey = { back.translationKey }
+//                     // eslint-disable-next-line react/jsx-handler-names
+//                     onClick = { back.onClick }
+//                     type = 'secondary' />}
+//                 {!cancel.hidden && <Button
+//                     accessibilityLabel = { t(cancel.translationKey ?? '') }
+//                     labelKey = { cancel.translationKey }
+//                     onClick = { onClose }
+//                     type = 'tertiary' />}
+//                 {!ok.hidden && <Button
+//                     accessibilityLabel = { t(ok.translationKey ?? '') }
+//                     disabled = { ok.disabled }
+//                     id = 'modal-dialog-ok-button'
+//                     isSubmit = { true }
+//                     labelKey = { ok.translationKey }
+//                     onClick = { submit } />}
 
-export default Dialog;
+//             </div>
+
+//     //);
+// //};

@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 
 import ConfirmDialog from '../../../base/dialog/components/native/ConfirmDialog';
 import { translate } from '../../../base/i18n/functions';
-import AbstractKickRemoteParticipantDialog
-    from '../AbstractKickRemoteParticipantDialog';
+import AbstractKickRemoteParticipantDialog from '../AbstractKickRemoteParticipantDialog';
 
 /**
  * Dialog to confirm a remote participant kick action.
@@ -18,13 +17,15 @@ class KickRemoteParticipantDialog extends AbstractKickRemoteParticipantDialog {
      */
     render() {
         return (
+            // @ts-ignore  @ts-expect-error
             <ConfirmDialog
-                cancelLabel = 'dialog.Cancel'
-                confirmLabel = 'dialog.kickParticipantButton'
-                descriptionKey = 'dialog.kickParticipantDialog'
-                isConfirmDestructive = { true }
-                onSubmit = { this._onSubmit }
-                title = 'dialog.kickParticipantTitle' />
+                cancelLabel="dialog.Cancel"
+                confirmLabel="dialog.kickParticipantButton"
+                descriptionKey="dialog.kickParticipantDialog"
+                isConfirmDestructive={true}
+                onSubmit={this._onSubmit}
+                title="dialog.kickParticipantTitle"
+            />
         );
     }
 }

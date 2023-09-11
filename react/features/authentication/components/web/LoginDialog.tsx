@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { WithTranslation } from 'react-i18next';
 import { connect as reduxConnect } from 'react-redux';
 
-// @ts-expect-error
 import { connect } from '../../../../../connection';
 import { IReduxState, IStore } from '../../../app/types';
 import { IJitsiConference } from '../../../base/conference/reducer';
@@ -12,16 +11,12 @@ import { translate, translateToHTML } from '../../../base/i18n/functions';
 import { JitsiConnectionErrors } from '../../../base/lib-jitsi-meet';
 import Dialog from '../../../base/ui/components/web/Dialog';
 import Input from '../../../base/ui/components/web/Input';
-import {
-    authenticateAndUpgradeRole,
-    cancelLogin
-} from '../../actions.web';
+import { authenticateAndUpgradeRole, cancelLogin } from '../../actions.web';
 
 /**
  * The type of the React {@code Component} props of {@link LoginDialog}.
  */
 interface IProps extends WithTranslation {
-
     /**
      * {@link JitsiConference} That needs authentication - will hold a valid
      * value in XMPP login + guest access mode.
@@ -69,7 +64,6 @@ interface IProps extends WithTranslation {
  * The type of the React {@code Component} state of {@link LoginDialog}.
  */
 interface IState {
-
     /**
      * Authentication process starts before joining the conference room.
      */
@@ -140,10 +134,13 @@ class LoginDialog extends Component<IProps, IState> {
             dispatch
         } = this.props;
         const { password, username } = this.state;
-        const jid = toJid(username, configHosts ?? {
-            authdomain: '',
-            domain: ''
-        });
+        const jid = toJid(
+            username,
+            configHosts ?? {
+                authdomain: '',
+                domain: ''
+            }
+        );
 
         if (conference) {
             dispatch(authenticateAndUpgradeRole(jid, password, conference));
@@ -152,7 +149,7 @@ class LoginDialog extends Component<IProps, IState> {
                 loginStarted: true
             });
 
-            connect(jid, password, roomName)
+            connect(jid, password) // roomName
                 .then((connection: any) => {
                     onSuccess?.(connection);
                 })
@@ -203,7 +200,7 @@ class LoginDialog extends Component<IProps, IState> {
             t
         } = this.props;
         const { username, password } = this.state;
-        const messageOptions: { msg?: string; } = {};
+        const messageOptions: { msg?: string } = {};
         let messageKey;
 
         if (progress && progress < 1) {
@@ -214,10 +211,15 @@ class LoginDialog extends Component<IProps, IState> {
             if (name === JitsiConnectionErrors.PASSWORD_REQUIRED) {
                 const { credentials } = error;
 
-                if (credentials
-                    && credentials.jid === toJid(username, configHosts ?? { authdomain: '',
-                        domain: '' })
-                    && credentials.password === password) {
+                if (
+                    credentials &&
+                    credentials.jid ===
+                        toJid(
+                            username,
+                            configHosts ?? { authdomain: '', domain: '' }
+                        ) &&
+                    credentials.password === password
+                ) {
                     messageKey = 'dialog.incorrectPassword';
                 }
             } else if (name) {
@@ -230,9 +232,7 @@ class LoginDialog extends Component<IProps, IState> {
 
         if (messageKey) {
             return (
-                <span>
-                    { translateToHTML(t, messageKey, messageOptions) }
-                </span>
+                <span>{translateToHTML(t, messageKey, messageOptions)}</span>
             );
         }
 
@@ -245,47 +245,49 @@ class LoginDialog extends Component<IProps, IState> {
      * @inheritdoc
      */
     render() {
-        const {
-            _connecting: connecting,
-            t
-        } = this.props;
+        const { _connecting: connecting, t } = this.props;
         const { password, loginStarted, username } = this.state;
 
         return (
+            // @ts-ignore // @ts-expect-error
             <Dialog
-                disableAutoHideOnSubmit = { true }
-                disableBackdropClose = { true }
-                hideCloseButton = { true }
-                ok = {{
-                    disabled: connecting
-                        || loginStarted
-                        || !password
-                        || !username,
+                disableAutoHideOnSubmit={true}
+                disableBackdropClose={true}
+                hideCloseButton={true}
+                ok={{
+                    disabled:
+                        connecting || loginStarted || !password || !username,
                     translationKey: 'dialog.login'
                 }}
-                onCancel = { this._onCancelLogin }
-                onSubmit = { this._onLogin }
-                titleKey = { t('dialog.authenticationRequired') }>
+                onCancel={this._onCancelLogin}
+                onSubmit={this._onLogin}
+                titleKey={t('dialog.authenticationRequired')}
+            >
+                {/* @ts-ignore  @ts-expect-error */}
+
                 <Input
-                    autoFocus = { true }
-                    id = 'login-dialog-username'
-                    label = { t('dialog.user') }
-                    name = 'username'
-                    onChange = { this._onUsernameChange }
-                    placeholder = { t('dialog.userIdentifier') }
-                    type = 'text'
-                    value = { username } />
+                    autoFocus={true}
+                    id="login-dialog-username"
+                    label={t('dialog.user')}
+                    name="username"
+                    onChange={this._onUsernameChange}
+                    placeholder={t('dialog.userIdentifier')}
+                    type="text"
+                    value={username}
+                />
                 <br />
+                {/* @ts-ignore  @ts-expect-error */}
                 <Input
-                    className = 'dialog-bottom-margin'
-                    id = 'login-dialog-password'
-                    label = { t('dialog.userPassword') }
-                    name = 'password'
-                    onChange = { this._onPasswordChange }
-                    placeholder = { t('dialog.password') }
-                    type = 'password'
-                    value = { password } />
-                { this.renderMessage() }
+                    className="dialog-bottom-margin"
+                    id="login-dialog-password"
+                    label={t('dialog.userPassword')}
+                    name="password"
+                    onChange={this._onPasswordChange}
+                    placeholder={t('dialog.password')}
+                    type="password"
+                    value={password}
+                />
+                {this.renderMessage()}
             </Dialog>
         );
     }
@@ -307,10 +309,8 @@ function mapStateToProps(state: IReduxState) {
     } = state['features/authentication'];
     const { authRequired, conference } = state['features/base/conference'];
     const { hosts: configHosts } = state['features/base/config'];
-    const {
-        connecting,
-        error: connectionError
-    } = state['features/base/connection'];
+    const { connecting, error: connectionError } =
+        state['features/base/connection'];
 
     return {
         _conference: authRequired || conference,

@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 
 import InputDialog from '../../../base/dialog/components/native/InputDialog';
 import { translate } from '../../../base/i18n/functions';
-import AbstractSharedVideoDialog, { IProps } from '../AbstractSharedVideoDialog';
+import AbstractSharedVideoDialog, {
+    IProps
+} from '../AbstractSharedVideoDialog';
 
 interface IState {
     error: boolean;
@@ -54,15 +56,17 @@ class SharedVideoDialog extends AbstractSharedVideoDialog<IState> {
         const { error } = this.state;
 
         return (
+            // @ts-ignore  @ts-expect-error
             <InputDialog
-                messageKey = { error ? 'dialog.sharedVideoDialogError' : undefined }
-                onSubmit = { this._onSubmitValue }
-                textInputProps = {{
+                messageKey={error ? 'dialog.sharedVideoDialogError' : undefined}
+                onSubmit={this._onSubmitValue}
+                textInputProps={{
                     autoCapitalize: 'none',
                     autoCorrect: false,
                     placeholder: t('dialog.sharedVideoLinkPlaceholder')
                 }}
-                titleKey = 'dialog.shareVideoTitle' />
+                titleKey="dialog.shareVideoTitle"
+            />
         );
     }
 }

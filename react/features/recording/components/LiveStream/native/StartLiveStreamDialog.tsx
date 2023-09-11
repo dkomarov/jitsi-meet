@@ -7,12 +7,14 @@ import { StyleType } from '../../../../base/styles/functions.any';
 // eslint-disable-next-line lines-around-comment
 // @ts-ignore
 import googleApi from '../../../../google-api/googleApi.native';
-import HeaderNavigationButton
-    from '../../../../mobile/navigation/components/HeaderNavigationButton';
-import { goBack }
-    from '../../../../mobile/navigation/components/conference/ConferenceNavigationContainerRef';
-import { setLiveStreamKey } from '../../../actions';
-import AbstractStartLiveStreamDialog, { IProps, _mapStateToProps } from '../AbstractStartLiveStreamDialog';
+import HeaderNavigationButton from '../../../../mobile/navigation/components/HeaderNavigationButton';
+import { goBack } from '../../../../mobile/navigation/components/conference/ConferenceNavigationContainerRef';
+
+import { setLiveStreamKey } from '../../../actions.any';
+import AbstractStartLiveStreamDialog, {
+    IProps,
+    _mapStateToProps
+} from '../AbstractStartLiveStreamDialog';
 
 import GoogleSigninForm from './GoogleSigninForm';
 import StreamKeyForm from './StreamKeyForm';
@@ -34,8 +36,8 @@ class StartLiveStreamDialog extends AbstractStartLiveStreamDialog<IProps> {
 
         // Bind event handlers so they are only bound once per instance.
         this._onStartPress = this._onStartPress.bind(this);
-        this._onStreamKeyChangeNative
-            = this._onStreamKeyChangeNative.bind(this);
+        this._onStreamKeyChangeNative =
+            this._onStreamKeyChangeNative.bind(this);
         this._onStreamKeyPick = this._onStreamKeyPick.bind(this);
         this._onUserChanged = this._onUserChanged.bind(this);
     }
@@ -53,9 +55,10 @@ class StartLiveStreamDialog extends AbstractStartLiveStreamDialog<IProps> {
         navigation.setOptions({
             headerRight: () => (
                 <HeaderNavigationButton
-                    label = { t('dialog.start') }
-                    onPress = { this._onStartPress }
-                    twoActions = { true } />
+                    label={t('dialog.start')}
+                    onPress={this._onStartPress}
+                    twoActions={true}
+                />
             )
         });
     }
@@ -76,17 +79,19 @@ class StartLiveStreamDialog extends AbstractStartLiveStreamDialog<IProps> {
      */
     render() {
         return (
-            <JitsiScreen style = { styles.startLiveStreamContainer as StyleType }>
-                <GoogleSigninForm
-                    onUserChanged = { this._onUserChanged } />
+            <JitsiScreen style={styles.startLiveStreamContainer as StyleType}>
+                {/* @ts-ignore  @ts-expect-error */}
+                <GoogleSigninForm onUserChanged={this._onUserChanged} />
+                {/* @ts-ignore  @ts-expect-error */}
                 <StreamKeyPicker
-                    broadcasts = { this.state.broadcasts }
-                    onChange = { this._onStreamKeyPick } />
+                    broadcasts={this.state.broadcasts}
+                    onChange={this._onStreamKeyPick}
+                />
+                {/* @ts-ignore  @ts-expect-error */}
                 <StreamKeyForm
-                    onChange = { this._onStreamKeyChangeNative }
-                    value = {
-                        this.state.streamKey || this.props._streamKey || ''
-                    } />
+                    onChange={this._onStreamKeyChangeNative}
+                    value={this.state.streamKey || this.props._streamKey || ''}
+                />
             </JitsiScreen>
         );
     }
@@ -133,9 +138,11 @@ class StartLiveStreamDialog extends AbstractStartLiveStreamDialog<IProps> {
      */
     _onUserChanged(response: Object) {
         if (response) {
-            googleApi.getTokens()
+            googleApi
+                .getTokens()
                 .then((tokens: any) => {
-                    googleApi.getYouTubeLiveStreams(tokens.accessToken)
+                    googleApi
+                        .getYouTubeLiveStreams(tokens.accessToken)
                         .then((broadcasts: any) => {
                             this.setState({
                                 broadcasts

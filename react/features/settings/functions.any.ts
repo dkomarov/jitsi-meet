@@ -118,18 +118,16 @@ export function getMoreTabProps(stateful: IStateful) {
     const framerate =
         state['features/screen-share'].captureFrameRate ??
         SS_DEFAULT_FRAME_RATE;
-    const language = i18next.language || DEFAULT_LANGUAGE;
-    const configuredTabs = interfaceConfig.SETTINGS_SECTIONS || [];
     const enabledNotifications = getNotificationsMap(stateful);
     const stageFilmstripEnabled = isStageFilmstripEnabled(state);
     const language = i18next.language || DEFAULT_LANGUAGE;
     const configuredTabs: string[] = interfaceConfig.SETTINGS_SECTIONS || [];
 
     // when self view is controlled by the config we hide the settings
-    const { disableSelfView, disableSelfViewSettings } = state['features/base/config'];
+    const { disableSelfView, disableSelfViewSettings } =
+        state['features/base/config'];
 
     return {
-
         // showPrejoinPage:
         //     !state['features/base/settings'].userSelectedSkipPrejoin,
         // showPrejoinSettings:
@@ -142,10 +140,13 @@ export function getMoreTabProps(stateful: IStateful) {
         hideSelfView: getHideSelfView(state),
         iAmVisitor: iAmVisitor(state),
         languages: LANGUAGES,
-        maxStageParticipants: state['features/base/settings'].maxStageParticipants,
+        maxStageParticipants:
+            state['features/base/settings'].maxStageParticipants,
         showLanguageSettings: configuredTabs.includes('language'),
-        showPrejoinPage: !state['features/base/settings'].userSelectedSkipPrejoin,
-        showPrejoinSettings: state['features/base/config'].prejoinConfig?.enabled,
+        showPrejoinPage:
+            !state['features/base/settings'].userSelectedSkipPrejoin,
+        showPrejoinSettings:
+            state['features/base/config'].prejoinConfig?.enabled,
 
         stageFilmstripEnabled
     };
@@ -224,8 +225,6 @@ export function getProfileTabProps(stateful: IStateful) {
     const { disableSelfView, disableSelfViewSettings } =
         state['features/base/config'];
 
-
-
     return {
         authEnabled: Boolean(conference && authEnabled),
         authLogin,
@@ -300,7 +299,6 @@ export function getAudioSettingsVisibility(state: IReduxState) {
 export function getVideoSettingsVisibility(state: IReduxState) {
     return state['features/settings'].videoSettingsVisible;
 }
-
 
 /**
  * Returns the properties for the "Virtual Background" tab from settings dialog from Redux

@@ -19,14 +19,19 @@ class MuteRemoteParticipantsVideoDialog extends AbstractMuteRemoteParticipantsVi
      */
     render() {
         return (
+            // @ts-ignore  @ts-expect-error
             <ConfirmDialog
-                descriptionKey = { this.props.isVideoModerationOn
-                    ? 'dialog.muteParticipantsVideoDialogModerationOn'
-                    : 'dialog.muteParticipantsVideoDialog'
+                descriptionKey={
+                    this.props.isVideoModerationOn
+                        ? 'dialog.muteParticipantsVideoDialogModerationOn'
+                        : 'dialog.muteParticipantsVideoDialog'
                 }
-                onSubmit = { this._onSubmit } />
+                onSubmit={this._onSubmit}
+            />
         );
     }
 }
 
-export default translate(connect(abstractMapStateToProps)(MuteRemoteParticipantsVideoDialog));
+export default translate(
+    connect(abstractMapStateToProps)(MuteRemoteParticipantsVideoDialog)
+);

@@ -11,14 +11,13 @@ import Dialog from '../../base/ui/components/web/Dialog';
 import Input from '../../base/ui/components/web/Input';
 
 interface IProps extends WithTranslation {
-
     /**
      * The URL of the conference.
      */
     url: string;
 }
 
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()((theme) => {
     return {
         container: {
             paddingTop: theme.spacing(1)
@@ -44,29 +43,34 @@ function EmbedMeeting({ t, url }: IProps) {
      * @returns {string} The iframe embed code.
      */
     const getEmbedCode = () =>
-        `<iframe allow="camera; microphone; fullscreen; display-capture; autoplay" src="${url}"`
-        + ' style="height: 100%; width: 100%; border: 0px;"></iframe>';
+        `<iframe allow="camera; microphone; fullscreen; display-capture; autoplay" src="${url}"` +
+        ' style="height: 100%; width: 100%; border: 0px;"></iframe>';
 
     return (
+        // @ts-ignore  @ts-expect-error
         <Dialog
-            cancel = {{ hidden: true }}
-            ok = {{ hidden: true }}
-            titleKey = { 'embedMeeting.title' }>
-            <div className = { classes.container }>
+            cancel={{ hidden: true }}
+            ok={{ hidden: true }}
+            titleKey={'embedMeeting.title'}
+        >
+            <div className={classes.container}>
+                {/* @ts-ignore  @ts-expect-error */}
                 <Input
-                    accessibilityLabel = { t('dialog.embedMeeting') }
-                    id = 'embed-meeting-input'
-                    readOnly = { true }
-                    textarea = { true }
-                    value = { getEmbedCode() } />
+                    accessibilityLabel={t('dialog.embedMeeting')}
+                    id="embed-meeting-input"
+                    readOnly={true}
+                    textarea={true}
+                    value={getEmbedCode()}
+                />
                 <CopyButton
-                    accessibilityText = { t('addPeople.copyLink') }
-                    className = { classes.button }
-                    displayedText = { t('dialog.copy') }
-                    id = 'embed-meeting-copy-button'
-                    textOnCopySuccess = { t('dialog.copied') }
-                    textOnHover = { t('dialog.copy') }
-                    textToCopy = { getEmbedCode() } />
+                    accessibilityText={t('addPeople.copyLink')}
+                    className={classes.button}
+                    displayedText={t('dialog.copy')}
+                    id="embed-meeting-copy-button"
+                    textOnCopySuccess={t('dialog.copied')}
+                    textOnHover={t('dialog.copy')}
+                    textToCopy={getEmbedCode()}
+                />
             </div>
         </Dialog>
     );

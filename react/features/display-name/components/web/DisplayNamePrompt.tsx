@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import { translate } from '../../../base/i18n/functions';
 import Dialog from '../../../base/ui/components/web/Dialog';
 import Input from '../../../base/ui/components/web/Input';
-import AbstractDisplayNamePrompt, { IProps } from '../AbstractDisplayNamePrompt';
+import AbstractDisplayNamePrompt, {
+    IProps
+} from '../AbstractDisplayNamePrompt';
 
 /**
  * The type of the React {@code Component} props of {@link DisplayNamePrompt}.
  */
 interface IState {
-
     /**
      * The name to show in the display name text field.
      */
@@ -50,20 +51,24 @@ class DisplayNamePrompt extends AbstractDisplayNamePrompt<IState> {
      */
     render() {
         return (
+            // @ts-ignore  @ts-expect-error
             <Dialog
-                cancel = {{ translationKey: 'dialog.Cancel' }}
-                ok = {{ translationKey: 'dialog.Ok' }}
-                onSubmit = { this._onSubmit }
-                titleKey = 'dialog.displayNameRequired'>
+                cancel={{ translationKey: 'dialog.Cancel' }}
+                ok={{ translationKey: 'dialog.Ok' }}
+                onSubmit={this._onSubmit}
+                titleKey="dialog.displayNameRequired"
+            >
+                {/* @ts-ignore  @ts-expect-error */}
                 <Input
-                    autoFocus = { true }
-                    className = 'dialog-bottom-margin'
-                    id = 'dialog-displayName'
-                    label = { this.props.t('dialog.enterDisplayName') }
-                    name = 'displayName'
-                    onChange = { this._onDisplayNameChange }
-                    type = 'text'
-                    value = { this.state.displayName } />
+                    autoFocus={true}
+                    className="dialog-bottom-margin"
+                    id="dialog-displayName"
+                    label={this.props.t('dialog.enterDisplayName')}
+                    name="displayName"
+                    onChange={this._onDisplayNameChange}
+                    type="text"
+                    value={this.state.displayName}
+                />
             </Dialog>
         );
     }

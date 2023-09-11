@@ -27,8 +27,7 @@ import AvatarListItem from '../../../../base/react/components/native/AvatarListI
 import { Item } from '../../../../base/react/types';
 import BaseTheme from '../../../../base/ui/components/BaseTheme.native';
 import Input from '../../../../base/ui/components/native/Input';
-import HeaderNavigationButton
-    from '../../../../mobile/navigation/components/HeaderNavigationButton';
+import HeaderNavigationButton from '../../../../mobile/navigation/components/HeaderNavigationButton';
 import { beginShareRoom } from '../../../../share-room/actions';
 import { INVITE_TYPES } from '../../../constants';
 import { IInviteSelectItem, IInvitee } from '../../../types';
@@ -41,7 +40,6 @@ import AbstractAddPeopleDialog, {
 import styles, { AVATAR_SIZE } from './styles';
 
 interface IProps extends AbstractProps, WithTranslation {
-
     /**
      * True if the invite dialog should be open, false otherwise.
      */
@@ -59,7 +57,6 @@ interface IProps extends AbstractProps, WithTranslation {
 }
 
 interface IState extends AbstractState {
-
     /**
      * Boolean to show if an extra padding needs to be added to the bottom bar.
      */
@@ -125,7 +122,8 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
         this._onPressItem = this._onPressItem.bind(this);
         this._onShareMeeting = this._onShareMeeting.bind(this);
         this._onTypeQuery = this._onTypeQuery.bind(this);
-        this._renderShareMeetingButton = this._renderShareMeetingButton.bind(this);
+        this._renderShareMeetingButton =
+            this._renderShareMeetingButton.bind(this);
         this._renderIcon = this._renderIcon.bind(this);
     }
 
@@ -142,10 +140,11 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
         navigation.setOptions({
             headerRight: () => (
                 <HeaderNavigationButton
-                    disabled = { this._isAddDisabled() }
-                    label = { t('inviteDialog.send') }
-                    style = { styles.sendBtn }
-                    twoActions = { true } />
+                    disabled={this._isAddDisabled()}
+                    label={t('inviteDialog.send')}
+                    style={styles.sendBtn}
+                    twoActions={true}
+                />
             )
         });
     }
@@ -162,11 +161,12 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
             // eslint-disable-next-line react/no-multi-comp
             headerRight: () => (
                 <HeaderNavigationButton
-                    disabled = { this._isAddDisabled() }
-                    label = { t('inviteDialog.send') }
-                    onPress = { this._onInvite }
-                    style = { styles.sendBtn }
-                    twoActions = { true } />
+                    disabled={this._isAddDisabled()}
+                    label={t('inviteDialog.send')}
+                    onPress={this._onInvite}
+                    style={styles.sendBtn}
+                    twoActions={true}
+                />
             )
         });
 
@@ -182,10 +182,7 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
      * @inheritdoc
      */
     render() {
-        const {
-            _addPeopleEnabled,
-            _dialOutEnabled
-        } = this.props;
+        const { _addPeopleEnabled, _dialOutEnabled } = this.props;
         const { inviteItems, selectableItems } = this.state;
 
         let placeholderKey = 'searchPlaceholder';
@@ -198,30 +195,41 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
 
         return (
             <JitsiScreen
-                footerComponent = { this._renderShareMeetingButton }
-                style = { styles.addPeopleContainer }>
+                footerComponent={this._renderShareMeetingButton}
+                style={styles.addPeopleContainer}
+            >
+                {/* @ts-ignore  @ts-expect-error */}
                 <Input
-                    autoFocus = { false }
-                    clearable = { true }
-                    customStyles = {{ container: styles.customContainer }}
-                    icon = { this._renderIcon }
-                    onChange = { this._onTypeQuery }
-                    placeholder = { this.props.t(`inviteDialog.${placeholderKey}`) }
-                    value = { this.state.fieldValue } />
-                { Boolean(inviteItems.length) && <View style = { styles.invitedList }>
+                    autoFocus={false}
+                    clearable={true}
+                    customStyles={{ container: styles.customContainer }}
+                    icon={this._renderIcon}
+                    onChange={this._onTypeQuery}
+                    placeholder={this.props.t(`inviteDialog.${placeholderKey}`)}
+                    value={this.state.fieldValue}
+                />
+                {/* @ts-ignore  @ts-expect-error */}
+                {Boolean(inviteItems.length) && (
+                    <View style={styles.invitedList}>
+                        {/* @ts-ignore  @ts-expect-error */}
+                        <FlatList
+                            data={inviteItems}
+                            horizontal={true}
+                            keyExtractor={this._keyExtractor}
+                            renderItem={this._renderInvitedItem as any}
+                        />
+                    </View>
+                )}
+                {/* @ts-ignore  @ts-expect-error */}
+                <View style={styles.resultList}>
+                    {/* @ts-ignore  @ts-expect-error */}
                     <FlatList
-                        data = { inviteItems }
-                        horizontal = { true }
-                        keyExtractor = { this._keyExtractor }
-                        renderItem = { this._renderInvitedItem as any } />
-                </View> }
-                <View style = { styles.resultList }>
-                    <FlatList
-                        ItemSeparatorComponent = { this._renderSeparator }
-                        data = { selectableItems }
-                        extraData = { inviteItems }
-                        keyExtractor = { this._keyExtractor }
-                        renderItem = { this._renderItem as any } />
+                        ItemSeparatorComponent={this._renderSeparator}
+                        data={selectableItems}
+                        extraData={inviteItems}
+                        keyExtractor={this._keyExtractor}
+                        renderItem={this._renderItem as any}
+                    />
                 </View>
             </JitsiScreen>
         );
@@ -246,20 +254,20 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
         const { item } = flatListItem;
 
         switch (item.type) {
-        case INVITE_TYPES.PHONE:
-            return {
-                avatar: IconPhoneRinging,
-                key: item.number,
-                title: item.number
-            };
-        case INVITE_TYPES.USER:
-            return {
-                avatar: item.avatar,
-                key: item.id || item.user_id,
-                title: item.name
-            };
-        default:
-            return null;
+            case INVITE_TYPES.PHONE:
+                return {
+                    avatar: IconPhoneRinging,
+                    key: item.number,
+                    title: item.number
+                };
+            case INVITE_TYPES.USER:
+                return {
+                    avatar: item.avatar,
+                    key: item.id || item.user_id,
+                    title: item.name
+                };
+            default:
+                return null;
         }
     }
 
@@ -271,7 +279,9 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
      * @returns {string}
      */
     _keyExtractor(item: any) {
-        return item.type === INVITE_TYPES.USER ? item.id || item.user_id : item.number;
+        return item.type === INVITE_TYPES.USER
+            ? item.id || item.user_id
+            : item.number;
     }
 
     /**
@@ -295,15 +305,16 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
      */
     _onInvite() {
         // @ts-ignore
-        this._invite(this.state.inviteItems)
-            .then((invitesLeftToSend: IInvitee[]) => {
+        this._invite(this.state.inviteItems).then(
+            (invitesLeftToSend: IInvitee[]) => {
                 if (invitesLeftToSend.length) {
                     this.setState({
                         inviteItems: invitesLeftToSend
                     });
                     this._showFailedInviteAlert();
                 }
-            });
+            }
+        );
     }
 
     /**
@@ -315,14 +326,24 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
     _onPressItem(item: Item) {
         return () => {
             const { inviteItems } = this.state;
-            const finderKey = item.type === INVITE_TYPES.PHONE ? 'number' : 'user_id';
+            const finderKey =
+                item.type === INVITE_TYPES.PHONE ? 'number' : 'user_id';
 
-            if (inviteItems.find(
-                _.matchesProperty(finderKey, item[finderKey as keyof typeof item]))) {
+            if (
+                inviteItems.find(
+                    _.matchesProperty(
+                        finderKey,
+                        item[finderKey as keyof typeof item]
+                    )
+                )
+            ) {
                 // Item is already selected, need to unselect it.
                 this.setState({
                     inviteItems: inviteItems.filter(
-                        (element: any) => item[finderKey as keyof typeof item] !== element[finderKey])
+                        (element: any) =>
+                            item[finderKey as keyof typeof item] !==
+                            element[finderKey]
+                    )
                 });
             } else {
                 // Item is not selected yet, need to add to the list.
@@ -330,7 +351,7 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
                 const items = inviteItems.concat(item);
 
                 this.setState({
-                    inviteItems: _.sortBy(items, [ 'name', 'number' ])
+                    inviteItems: _.sortBy(items, ['name', 'number'])
                 });
             }
         };
@@ -364,11 +385,14 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
 
         clearTimeout(this.searchTimeout);
         this.searchTimeout = setTimeout(() => {
-            this.setState({
-                searchInprogress: true
-            }, () => {
-                this._performSearch(query);
-            });
+            this.setState(
+                {
+                    searchInprogress: true
+                },
+                () => {
+                    this._performSearch(query);
+                }
+            );
         }, 500);
     }
 
@@ -379,16 +403,17 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
      * @returns {void}
      */
     _performSearch(query: string) {
-        this._query(query).then(results => {
-            this.setState({
-                selectableItems: _.sortBy(results, [ 'name', 'number' ])
+        this._query(query)
+            .then((results) => {
+                this.setState({
+                    selectableItems: _.sortBy(results, ['name', 'number'])
+                });
+            })
+            .finally(() => {
+                this.setState({
+                    searchInprogress: false
+                });
             });
-        })
-        .finally(() => {
-            this.setState({
-                searchInprogress: false
-            });
-        });
     }
 
     /**
@@ -404,23 +429,23 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
         const renderableItem = this._getRenderableItem(flatListItem);
 
         return (
-            <TouchableOpacity onPress = { this._onPressItem(item) } >
+            <TouchableOpacity onPress={this._onPressItem(item)}>
                 <View
-                    pointerEvents = 'box-only'
-                    style = { styles.itemWrapper as ViewStyle }>
+                    pointerEvents="box-only"
+                    style={styles.itemWrapper as ViewStyle}
+                >
                     <AvatarListItem
-                        avatarOnly = { true }
-                        avatarSize = { AVATAR_SIZE }
-                        avatarStatus = { item.status }
-                        avatarStyle = { styles.avatar }
-                        avatarTextStyle = { styles.avatarText }
-                        item = { renderableItem as any }
-                        key = { index }
-                        linesStyle = { styles.itemLinesStyle }
-                        titleStyle = { styles.itemText } />
-                    <Icon
-                        src = { IconCloseCircle }
-                        style = { styles.unselectIcon } />
+                        avatarOnly={true}
+                        avatarSize={AVATAR_SIZE}
+                        avatarStatus={item.status}
+                        avatarStyle={styles.avatar}
+                        avatarTextStyle={styles.avatarText}
+                        item={renderableItem as any}
+                        key={index}
+                        linesStyle={styles.itemLinesStyle}
+                        titleStyle={styles.itemText}
+                    />
+                    <Icon src={IconCloseCircle} style={styles.unselectIcon} />
                 </View>
             </TouchableOpacity>
         );
@@ -437,7 +462,8 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
     _renderItem(flatListItem: any, index: number): ReactElement | null {
         const { item } = flatListItem;
         const { inviteItems } = this.state;
-        let selected: IInvitee | IInviteSelectItem | undefined | boolean = false;
+        let selected: IInvitee | IInviteSelectItem | undefined | boolean =
+            false;
         const renderableItem = this._getRenderableItem(flatListItem);
 
         if (!renderableItem) {
@@ -445,35 +471,41 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
         }
 
         switch (item.type) {
-        case INVITE_TYPES.PHONE:
-            selected = inviteItems.find(_.matchesProperty('number', item.number));
-            break;
-        case INVITE_TYPES.USER:
-            selected = item.id
-                ? inviteItems.find(_.matchesProperty('id', item.id))
-                : inviteItems.find(_.matchesProperty('user_id', item.user_id));
-            break;
-        default:
-            return null;
+            case INVITE_TYPES.PHONE:
+                selected = inviteItems.find(
+                    _.matchesProperty('number', item.number)
+                );
+                break;
+            case INVITE_TYPES.USER:
+                selected = item.id
+                    ? inviteItems.find(_.matchesProperty('id', item.id))
+                    : inviteItems.find(
+                          _.matchesProperty('user_id', item.user_id)
+                      );
+                break;
+            default:
+                return null;
         }
 
         return (
-            <TouchableOpacity onPress = { this._onPressItem(item) } >
+            <TouchableOpacity onPress={this._onPressItem(item)}>
                 <View
-                    pointerEvents = 'box-only'
-                    style = { styles.itemWrapper as ViewStyle }>
+                    pointerEvents="box-only"
+                    style={styles.itemWrapper as ViewStyle}
+                >
                     <AvatarListItem
-                        avatarSize = { AVATAR_SIZE }
-                        avatarStatus = { item.status }
-                        avatarStyle = { styles.avatar }
-                        avatarTextStyle = { styles.avatarText }
-                        item = { renderableItem as any }
-                        key = { index }
-                        linesStyle = { styles.itemLinesStyle }
-                        titleStyle = { styles.itemText } />
-                    { selected && <Icon
-                        src = { IconCheck }
-                        style = { styles.selectedIcon } /> }
+                        avatarSize={AVATAR_SIZE}
+                        avatarStatus={item.status}
+                        avatarStyle={styles.avatar}
+                        avatarTextStyle={styles.avatarText}
+                        item={renderableItem as any}
+                        key={index}
+                        linesStyle={styles.itemLinesStyle}
+                        titleStyle={styles.itemText}
+                    />
+                    {selected && (
+                        <Icon src={IconCheck} style={styles.selectedIcon} />
+                    )}
                 </View>
             </TouchableOpacity>
         );
@@ -485,9 +517,7 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
      * @returns {?ReactElement<*>}
      */
     _renderSeparator() {
-        return (
-            <View style = { styles.separator } />
-        );
+        return <View style={styles.separator} />;
     }
 
     /**
@@ -498,15 +528,13 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
     _renderShareMeetingButton() {
         return (
             <View
-                style = { [
+                style={[
                     styles.bottomBar as ViewStyle,
                     this.state.bottomPadding ? styles.extraBarPadding : null
-                ] }>
-                <TouchableOpacity
-                    onPress = { this._onShareMeeting }>
-                    <Icon
-                        src = { IconShare }
-                        style = { styles.shareIcon } />
+                ]}
+            >
+                <TouchableOpacity onPress={this._onShareMeeting}>
+                    <Icon src={IconShare} style={styles.shareIcon} />
                 </TouchableOpacity>
             </View>
         );
@@ -521,16 +549,13 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
         if (this.state.searchInprogress) {
             return (
                 <ActivityIndicator
-                    color = { BaseTheme.palette.icon01 }
-                    size = 'small' />
+                    color={BaseTheme.palette.icon01}
+                    size="small"
+                />
             );
         }
 
-        return (
-            <Icon
-                src = { IconSearch }
-                style = { styles.searchIcon } />
-        );
+        return <Icon src={IconSearch} style={styles.searchIcon} />;
     }
 
     /**
@@ -543,11 +568,13 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
      * @returns {void}
      */
     _showFailedInviteAlert() {
-        this.props.dispatch(openDialog(AlertDialog, {
-            contentKey: {
-                key: 'inviteDialog.alertText'
-            }
-        }));
+        this.props.dispatch(
+            openDialog(AlertDialog, {
+                contentKey: {
+                    key: 'inviteDialog.alertText'
+                }
+            })
+        );
     }
 }
 

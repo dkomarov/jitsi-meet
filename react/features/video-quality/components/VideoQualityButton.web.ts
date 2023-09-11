@@ -1,4 +1,3 @@
-
 // @flow
 
 import {
@@ -146,22 +145,21 @@ function _mapStateToProps(state: IReduxState) {
 
 export default translate(connect(_mapStateToProps)(VideoQualityButton));
 
+// icon = IconPerformance;
 
-    // icon = IconPerformance;
-
-    /**
-    * Handles clicking the button, and opens the video quality dialog.
-    *
-    * @private
-    * @returns {void}
-    */
-    // _handleClick() {
-    //     const { dispatch } = this.props;
-    //
-    //     sendAnalytics(createToolbarEvent('video.quality'));
-    //
-    //     dispatch(openDialog(VideoQualityDialog));
-    // }
-}
+/**
+ * Handles clicking the button, and opens the video quality dialog.
+ *
+ * @private
+ * @returns {void}
+ */
+// _handleClick() {
+//     const { dispatch } = this.props;
+//
+//     sendAnalytics(createToolbarEvent('video.quality'));
+//
+//     dispatch(openDialog(VideoQualityDialog));
+// }
+// }
 
 // export default connect()(translate(VideoQualityButton));
