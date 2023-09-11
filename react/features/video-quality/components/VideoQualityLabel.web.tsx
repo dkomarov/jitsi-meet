@@ -108,7 +108,7 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
             return null;
         }
 
-        let className, labelContent, tooltipKey;
+        let className, icon, labelContent, tooltipKey;
 
         if (_audioOnly) {
             className = 'audio-only';
@@ -121,6 +121,7 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
             tooltipKey = 'videoStatus.labelTooiltipNoVideo';
         } else {
             className = 'current-video-quality';
+            icon = IconPerformance;
             labelContent = t(_labelKey);
             tooltipKey = _tooltipKey;
         }
