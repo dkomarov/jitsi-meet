@@ -178,25 +178,15 @@ class VideoQualitySlider extends Component<IProps> {
         const activeSliderOption = this._mapCurrentQualityToSliderValue();
 
         return (
-
-            // <div className={clsx('video-quality-dialog', classes.dialog)}>
-            //     <div className={classes.dialogDetails}>
-            //         {t('videoStatus.adjustFor')}
-            //     </div>
-            //     <div className={classes.dialogContents}>
-            //         <div className={classes.sliderDescription}>
-
-            <div className = { clsx('video-quality-dialog', classes.dialog) }>
-                <div
-                    aria-hidden = { true }
-                    className = { classes.dialogDetails }>
+            <div className={clsx('video-quality-dialog', classes.dialog)}>
+                <div aria-hidden={true} className={classes.dialogDetails}>
                     {t('videoStatus.adjustFor')}
                 </div>
-                <div className = { classes.dialogContents }>
+                <div className={classes.dialogContents}>
                     <div
-                        aria-hidden = { true }
-                        className = { classes.sliderDescription }>
-
+                        aria-hidden={true}
+                        className={classes.sliderDescription}
+                    >
                         <span>{t('videoStatus.bestPerformance')}</span>
                         <span>{t('videoStatus.highestQuality')}</span>
                     </div>
