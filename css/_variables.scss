@@ -1,7 +1,8 @@
 /**
  * Style variables
  */
-$baseFontFamily: -apple-system, BlinkMacSystemFont, 'open_sanslight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$baseFontFamily: -apple-system, BlinkMacSystemFont, 'open_sanslight',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
 
 /**
  * Size variables.
@@ -11,12 +12,17 @@ $baseFontFamily: -apple-system, BlinkMacSystemFont, 'open_sanslight', 'Helvetica
 $thumbnailsBorder: 2px;
 
 /**
+ * Color variables.
+ */
+$defaultColor: #f1f1f1;
+
+/**
  * Toolbar
  */
 $newToolbarBackgroundColor: #131519;
 $newToolbarButtonHoverColor: rgba(255, 255, 255, 0.2);
 $newToolbarButtonToggleColor: rgba(255, 255, 255, 0.15);
-$menuBG:#242528;
+$menuBG: #242528;
 $newToolbarFontSize: 44px; /* 24px; */
 $newToolbarHangupFontSize: 58px; /* 32px; */
 $newToolbarSize: 88px; /*48px;*/
@@ -25,12 +31,11 @@ $newToolbarSizeWithPadding: calc(#{$newToolbarSize} + 24px);
 $toolbarTitleFontSize: 34px; /* 19px; */
 $overflowMenuItemColor: #fff;
 
-
 /**
  * Video layout
  */
 $participantNameColor: #fff;
-$audioLevelBg: #44A5FF;
+$audioLevelBg: #44a5ff;
 $audioLevelShadow: rgba(9, 36, 77, 0.9);
 $videoStateIndicatorColor: $defaultColor;
 $videoStateIndicatorBackground: $toolbarBackground;
@@ -84,7 +89,7 @@ $filmstripVideosZ: $toolbarZ + 1;
 /**
  * Unsupported browser
  */
-$primaryUnsupportedBrowserButtonBgColor: #0052CC;
+$primaryUnsupportedBrowserButtonBgColor: #0052cc;
 $unsupportedBrowserButtonBgColor: rgba(9, 30, 66, 0.04);
 $unsupportedBrowserTextColor: #4a4a4a;
 $unsupportedBrowserTextSmallFontSize: 17px;
@@ -110,7 +115,12 @@ $welcomePageFontFamily: inherit;
 $welcomePageBackground: none;
 $welcomePageTitleColor: #fff;
 
-$welcomePageHeaderBackground: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('../images/welcome-background.png');
+$welcomePageHeaderBackground: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2)
+    ),
+    url('../images/welcome-background.png');
 $welcomePageHeaderBackgroundPosition: center;
 $welcomePageHeaderBackgroundRepeat: none;
 $welcomePageHeaderBackgroundSize: cover;
