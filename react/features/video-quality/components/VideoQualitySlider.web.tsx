@@ -180,8 +180,9 @@ class VideoQualitySlider extends Component<IProps> {
         return (
             <div className={clsx('video-quality-dialog', classes.dialog)}>
                 <div aria-hidden={true} className={classes.dialogDetails}>
-                    {t('videoStatus.adjustFor')}
-                </div>
+                    {t('')}
+                </div>{' '}
+                {/** videoStatus.adjustFor */}
                 <div className={classes.dialogContents}>
                     <div
                         aria-hidden={true}

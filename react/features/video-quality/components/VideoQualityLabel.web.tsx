@@ -131,11 +131,6 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
         return (
             <Tooltip content={t(tooltipKey)} position={'bottom'}>
                 <Label
-                    //     className={className}
-                    //     id="videoResolutionLabel"
-                    //     text={labelContent}
-                    // />
-
                     accessibilityText={t(tooltipKey)}
                     className={className}
                     color={COLORS.white}

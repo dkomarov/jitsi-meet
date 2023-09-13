@@ -286,7 +286,7 @@ const Dialog = ({
             {/* @ts-ignore // @ts-expect-error */}
             <div className={classes.header}>
                 {/* @ts-ignore // @ts-expect-error */}{' '}
-                <h1 className={classes.title} id="dialog-title">
+                <h1 className={classes.dialogDetails} id="dialog-title">
                     {title ?? t(titleKey ?? '')}
                 </h1>
                 {!hideCloseButton && (
