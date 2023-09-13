@@ -8,7 +8,9 @@ $baseFontFamily: -apple-system, BlinkMacSystemFont, 'open_sanslight',
  * Size variables.
  */
 
-// Video layout.
+/** 
+* Video layout.
+*/
 $thumbnailsBorder: 2px;
 
 /**
@@ -38,7 +40,7 @@ $participantNameColor: #fff;
 $audioLevelBg: #44a5ff;
 $audioLevelShadow: rgba(9, 36, 77, 0.9);
 $videoStateIndicatorColor: $defaultColor;
-$videoStateIndicatorBackground: $toolbarBackground;
+$videoStateIndicatorBackground: $newToolbarBackgroundColor;
 $videoStateIndicatorSize: 40px;
 
 /**
