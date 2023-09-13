@@ -75,10 +75,10 @@ type Props = AbstractButtonProps & {
  * @augments Component
  */
 class VideoQualityButton extends AbstractButton<Props> {
-    accessibilityLabel = 'Video Quality'; // 'toolbar.accessibilityLabel.callQuality';
+    accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
 
-    label = 'Video Quality';
-    tooltip = 'Video Quality'; // 'toolbar.callQuality';
+    label = 'toolbar.accessibilityLabel.callQuality';
+    tooltip = 'toolbar.accessibilityLabel.callQuality';
 
     /**
      * Dynamically retrieves the icon.
