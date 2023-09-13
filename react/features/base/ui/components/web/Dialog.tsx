@@ -140,8 +140,8 @@ const useStyles = makeStyles()((theme) => {
         },
 
         title: {
-            color: theme.palette.text, //text01
-            ...withPixelLineHeight(theme.typography.h5), //heading5
+            color: theme.palette.text01, //text
+            ...withPixelLineHeight(theme.typography.heading5), //h5
             margin: 0,
             padding: 0
         },

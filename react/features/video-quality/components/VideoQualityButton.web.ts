@@ -75,7 +75,7 @@ type Props = AbstractButtonProps & {
  * @augments Component
  */
 class VideoQualityButton extends AbstractButton<Props> {
-    accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
+    accessibilityLabel = 'Video Quality'; // 'toolbar.accessibilityLabel.callQuality';
 
     label = 'Video Quality';
     tooltip = 'toolbar.callQuality';
