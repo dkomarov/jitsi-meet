@@ -78,7 +78,7 @@ class VideoQualityButton extends AbstractButton<Props> {
     accessibilityLabel = 'Video Quality'; // 'toolbar.accessibilityLabel.callQuality';
 
     label = 'Video Quality';
-    tooltip = 'toolbar.callQuality';
+    tooltip = 'Video Quality'; // 'toolbar.callQuality';
 
     /**
      * Dynamically retrieves the icon.
