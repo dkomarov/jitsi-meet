@@ -143,7 +143,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             toggled
         } = this.props;
         const iconComponent = (
-            <Icon size={showLabel ? undefined : 24} src={icon} />
+            <Icon size={showLabel ? undefined : 36} src={icon} /> // 24
         );
         const elementType = showLabel ? 'span' : 'div';
         const className = `${
