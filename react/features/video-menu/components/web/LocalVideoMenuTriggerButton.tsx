@@ -4,7 +4,10 @@ import { batch, connect, useSelector } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
 
 import { IReduxState, IStore } from '../../../app/types';
-import { getButtonNotifyMode, getParticipantMenuButtonsWithNotifyClick } from '../../../base/config/functions.web';
+import {
+    getButtonNotifyMode,
+    getParticipantMenuButtonsWithNotifyClick
+} from '../../../base/config/functions.web';
 import { isMobileBrowser } from '../../../base/environment/utils';
 import { IconDotsHorizontal } from '../../../base/icons/svg';
 import { getLocalParticipant } from '../../../base/participants/functions';
@@ -141,22 +144,30 @@ const LocalVideoMenuTriggerButton = ({
 }: IProps) => {
     const { classes } = useStyles();
     const { t } = useTranslation();
-    const buttonsWithNotifyClick = useSelector(getParticipantMenuButtonsWithNotifyClick);
+    const buttonsWithNotifyClick = useSelector(
+        getParticipantMenuButtonsWithNotifyClick
+    );
 
     const notifyClick = useCallback(
         (buttonKey: string) => {
-            const notifyMode = getButtonNotifyMode(buttonKey, buttonsWithNotifyClick);
+            const notifyMode = getButtonNotifyMode(
+                buttonKey,
+                buttonsWithNotifyClick
+            );
 
             if (!notifyMode) {
                 return;
             }
 
+            // @ts-ignore  @ts-expect-error
             APP.API.notifyParticipantMenuButtonClicked(
                 buttonKey,
                 _localParticipantId,
                 notifyMode === NOTIFY_CLICK_MODE.PREVENT_AND_NOTIFY
             );
-        }, [ buttonsWithNotifyClick, getButtonNotifyMode ]);
+        },
+        [buttonsWithNotifyClick, getButtonNotifyMode]
+    );
 
     const _onPopoverOpen = useCallback(() => {
         showPopover?.();
@@ -171,71 +182,67 @@ const LocalVideoMenuTriggerButton = ({
         });
     }, []);
 
-    const content = _showConnectionInfo
-        ? <ConnectionIndicatorContent participantId = { _localParticipantId } />
-        : (
-            <ContextMenu
-                className = { classes.contextMenu }
-                hidden = { false }
-                inDrawer = { _overflowDrawer }>
-                <ContextMenuItemGroup>
-                    {_showLocalVideoFlipButton
-                        && <FlipLocalVideoButton
-                            className = { _overflowDrawer ? classes.flipText : '' }
-                            // eslint-disable-next-line react/jsx-no-bind
-                            notifyClick = { () => notifyClick(BUTTONS.FLIP_LOCAL_VIDEO) }
-                            notifyMode = { getButtonNotifyMode(BUTTONS.FLIP_LOCAL_VIDEO, buttonsWithNotifyClick) }
-                            onClick = { hidePopover } />
-                    }
-                    {_showHideSelfViewButton
-                        && <HideSelfViewVideoButton
-                            className = { _overflowDrawer ? classes.flipText : '' }
-                            // eslint-disable-next-line react/jsx-no-bind
-                            notifyClick = { () => notifyClick(BUTTONS.HIDE_SELF_VIEW) }
-                            notifyMode = { getButtonNotifyMode(BUTTONS.HIDE_SELF_VIEW, buttonsWithNotifyClick) }
-                            onClick = { hidePopover } />
-                    }
-                    {
-                        _showPinToStage && <TogglePinToStageButton
-                            className = { _overflowDrawer ? classes.flipText : '' }
-                            noIcon = { true }
-                            // eslint-disable-next-line react/jsx-no-bind
-                            notifyClick = { () => notifyClick(BUTTONS.PIN_TO_STAGE) }
-                            notifyMode = { getButtonNotifyMode(BUTTONS.PIN_TO_STAGE, buttonsWithNotifyClick) }
-                            onClick = { hidePopover }
-                            participantID = { _localParticipantId } />
-                    }
-                    {
-                        isMobileBrowser() && <ConnectionStatusButton
-                            // eslint-disable-next-line react/jsx-no-bind
-                            notifyClick = { () => notifyClick(BUTTONS.CONN_STATUS) }
-                            notifyMode = { getButtonNotifyMode(BUTTONS.CONN_STATUS, buttonsWithNotifyClick) }
-                            participantID = { _localParticipantId } />
-                    }
-                </ContextMenuItemGroup>
-            </ContextMenu>
-        );
-
-    return (
-        isMobileBrowser() || _showLocalVideoFlipButton || _showHideSelfViewButton
-            ? <Popover
-                content = { content }
-                headingLabel = { t('dialog.localUserControls') }
-                id = 'local-video-menu-trigger'
-                onPopoverClose = { _onPopoverClose }
-                onPopoverOpen = { _onPopoverOpen }
-                position = { _menuPosition }
-                visible = { Boolean(popoverVisible) }>
-                {buttonVisible && !isMobileBrowser() && (
-                    <Button
-                        accessibilityLabel = { t('dialog.localUserControls') }
-                        className = { classes.triggerButton }
-                        icon = { IconDotsHorizontal }
-                        size = 'small' />
+    const content = _showConnectionInfo ? (
+        // @ts-ignore  @ts-expect-error
+        <ConnectionIndicatorContent participantId={_localParticipantId} />
+    ) : (
+        <ContextMenu
+            className={classes.contextMenu}
+            hidden={false}
+            inDrawer={_overflowDrawer}
+        >
+            <ContextMenuItemGroup>
+                {_showLocalVideoFlipButton && (
+                    // @ts-ignore  @ts-expect-error
+                    <FlipLocalVideoButton
+                        className={_overflowDrawer ? classes.flipText : ''}
+                        // eslint-disable-next-line react/jsx-no-bind
+                        notifyClick={() =>
+                            notifyClick(BUTTONS.FLIP_LOCAL_VIDEO)
+                        }
+                        notifyMode={getButtonNotifyMode(
+                            BUTTONS.FLIP_LOCAL_VIDEO,
+                            buttonsWithNotifyClick
+                        )}
+                        onClick={hidePopover}
+                    />
+                )}
+                {_showHideSelfViewButton && (
+                    // @ts-ignore  @ts-expect-error
+                    <HideSelfViewVideoButton
+                        className={_overflowDrawer ? classes.flipText : ''}
+                        // eslint-disable-next-line react/jsx-no-bind
+                        notifyClick={() => notifyClick(BUTTONS.HIDE_SELF_VIEW)}
+                        notifyMode={getButtonNotifyMode(
+                            BUTTONS.HIDE_SELF_VIEW,
+                            buttonsWithNotifyClick
+                        )}
+                        onClick={hidePopover}
+                    />
+                )}
+                {_showPinToStage && (
+                    <TogglePinToStageButton
+                        className={_overflowDrawer ? classes.flipText : ''}
+                        noIcon={true}
+                        // eslint-disable-next-line react/jsx-no-bind
+                        notifyClick={() => notifyClick(BUTTONS.PIN_TO_STAGE)}
+                        notifyMode={getButtonNotifyMode(
+                            BUTTONS.PIN_TO_STAGE,
+                            buttonsWithNotifyClick
+                        )}
+                        onClick={hidePopover}
+                        participantID={_localParticipantId}
+                    />
                 )}
                 {isMobileBrowser() && (
                     <ConnectionStatusButton
-                        participantId={_localParticipantId}
+                        // eslint-disable-next-line react/jsx-no-bind
+                        notifyClick={() => notifyClick(BUTTONS.CONN_STATUS)}
+                        notifyMode={getButtonNotifyMode(
+                            BUTTONS.CONN_STATUS,
+                            buttonsWithNotifyClick
+                        )}
+                        participantID={_localParticipantId}
                     />
                 )}
             </ContextMenuItemGroup>
@@ -245,6 +252,7 @@ const LocalVideoMenuTriggerButton = ({
     return isMobileBrowser() ||
         _showLocalVideoFlipButton ||
         _showHideSelfViewButton ? (
+        // @ts-ignore  @ts-expect-error
         <Popover
             content={content}
             headingLabel={t('dialog.localUserControls')}
@@ -255,6 +263,7 @@ const LocalVideoMenuTriggerButton = ({
             visible={Boolean(popoverVisible)}
         >
             {buttonVisible && !isMobileBrowser() && (
+                // @ts-ignore  @ts-expect-error
                 <Button
                     accessibilityLabel={t('dialog.localUserControls')}
                     className={classes.triggerButton}
