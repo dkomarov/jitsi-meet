@@ -588,7 +588,7 @@ var config = {
     // },
 
     // Configs for the lobby screen.
-    // lobby {
+    // lobby: {
     //     // If Lobby is enabled, it starts knocking automatically. Replaces `autoKnockLobby`.
     //     autoKnock: false,
     //     // Enables the lobby chat. Replaces `enableLobbyChat`.
@@ -826,6 +826,42 @@ var config = {
     //     'whiteboard',
     // ],
 
+    // Participant context menu buttons which have their click/tap event exposed through the API on
+    // `participantMenuButtonClick`. Passing a string for the button key will
+    // prevent execution of the click/tap routine; passing an object with `key` and
+    // `preventExecution` flag on false will not prevent execution of the click/tap
+    // routine. Below array with mixed mode for passing the buttons.
+    // participantMenuButtonsWithNotifyClick: [
+    //     'allow-video',
+    //     {
+    //         key: 'ask-unmute',
+    //         preventExecution: false
+    //     },
+    //     'conn-status',
+    //     'flip-local-video',
+    //     'grant-moderator',
+    //     {
+    //         key: 'kick',
+    //         preventExecution: true
+    //     },
+    //     {
+    //         key: 'hide-self-view',
+    //         preventExecution: false
+    //     },
+    //     'mute',
+    //     'mute-others',
+    //     'mute-others-video',
+    //     'mute-video',
+    //     'pinToStage',
+    //     'privateMessage',
+    //     {
+    //         key: 'remote-control',
+    //         preventExecution: false
+    //     },
+    //     'send-participant-to-room',
+    //     'verify',
+    // ],
+
     // List of pre meeting screens buttons to hide. The values must be one or more of the 5 allowed buttons:
     // 'microphone', 'camera', 'select-background', 'invite', 'settings'
     // hiddenPremeetingButtons: [],
@@ -835,7 +871,7 @@ var config = {
     // customParticipantMenuButtons: [],
 
     // An array with custom option buttons for the toolbar
-    // type:  Array<{ icon: string; id: string; text: string; }>
+    // type:  Array<{ icon: string; id: string; text: string; backgroundColor?: string; }>
     // customToolbarButtons: [],
 
     // Stats
@@ -979,6 +1015,10 @@ var config = {
         // The Amplitude APP Key:
         // amplitudeAPPKey: '<APP_KEY>',
 
+        // Enables Amplitude UTM tracking:
+        // Default value is false.
+        // amplitudeIncludeUTM: false,
+
         // Obfuscates room name sent to analytics (amplitude, rtcstats)
         // Default value is false.
         // obfuscateRoomName: false,
@@ -1008,6 +1048,11 @@ var config = {
         //      "libs/analytics-ga.min.js", // google-analytics
         //      "https://example.com/my-custom-analytics.js",
         // ],
+
+        // By enabling watchRTCEnabled option you would want to use watchRTC feature
+        // This would also require to configure watchRTCConfigParams.
+        // Please remember to keep rtcstatsEnabled disabled for watchRTC to work.
+        // watchRTCEnabled: false,
     },
 
     // Logs that should go be passed through the 'log' event if a handler is defined for it
@@ -1253,6 +1298,16 @@ var config = {
         // A list of images that can be used as video backgrounds.
         // When this field is present, the default images will be replaced with those provided.
         virtualBackgrounds: ['https://example.com/img.jpg'],
+        // Object containing customized icons that should replace the default ones.
+        // The keys need to be the exact same icon names used in here:
+        // https://github.com/jitsi/jitsi-meet/blob/master/react/features/base/icons/svg/index.ts
+        // To avoid having the icons trimmed or displayed in an unexpected way, please provide svg
+        // files containing svg xml icons in the size that the default icons come in.
+        customIcons: {
+            IconArrowUp: 'https://example.com/arrow-up.svg',
+            IconDownload: 'https://example.com/download.svg',
+            IconRemoteControlStart: 'https://example.com/remote-start.svg',
+        },
         // Object containing a theme's properties. It also supports partial overwrites of the main theme.
         // For a list of all possible theme tokens and their current defaults, please check:
         // https://github.com/jitsi/jitsi-meet/tree/master/resources/custom-theme/custom-theme.json
@@ -1305,6 +1360,9 @@ var config = {
     //     // Hides the join breakout room button.
     //     hideJoinRoomButton: false,
     // },
+
+    // When true, virtual background feature will be disabled.
+    // disableVirtualBackground: false,
 
     // When true the user cannot add more images to be used as virtual background.
     // Only the default ones from will be available.
@@ -1403,6 +1461,8 @@ var config = {
      peopleSearchUrl
      requireDisplayName
      tokenAuthUrl
+     tokenAuthUrlAutoRedirect
+     tokenLogoutUrl
      */
 
     /**
@@ -1465,6 +1525,7 @@ var config = {
     //     'dialog.sessTerminated', // shown when there is a failed conference session
     //     'dialog.sessionRestarted', // show when a client reload is initiated because of bridge migration
     //     'dialog.tokenAuthFailed', // show when an invalid jwt is used
+    //     'dialog.tokenAuthFailedWithReasons', // show when an invalid jwt is used with the reason behind the error
     //     'dialog.transcribing', // transcribing notifications (pending, off)
     //     'dialOut.statusMessage', // shown when dial out status is updated.
     //     'liveStreaming.busy', // shown when livestreaming service is busy
@@ -1525,6 +1586,8 @@ var config = {
     // disableFilmstripAutohiding: false,
 
     // filmstrip: {
+    //     // Disable the vertical/horizonal filmstrip.
+    //     disabled: false,
     //     // Disables user resizable filmstrip. Also, allows configuration of the filmstrip
     //     // (width, tiles aspect ratios) through the interfaceConfig options.
     //     disableResizable: false,
@@ -1547,6 +1610,8 @@ var config = {
 
     // Tile view related config options.
     // tileView: {
+    //     // Whether tileview should be disabled.
+    //     disabled: false,
     //     // The optimal number of tiles that are going to be shown in tile view. Depending on the screen size it may
     //     // not be possible to show the exact number of participants specified here.
     //     numberOfVisibleTiles: 25,
@@ -1598,6 +1663,40 @@ var config = {
     //     // The server used to support whiteboard collaboration.
     //     // https://github.com/jitsi/excalidraw-backend
     //     collabServerBaseUrl: 'https://excalidraw-backend.example.com',
+    // },
+
+    // The watchRTC initialize config params as described :
+    // https://testrtc.com/docs/installing-the-watchrtc-javascript-sdk/#h-set-up-the-sdk
+    // https://www.npmjs.com/package/@testrtc/watchrtc-sdk
+    // watchRTCConfigParams: {
+    //         /** Watchrtc api key */
+    //         rtcApiKey: string;
+    //         /** Identifier for the session */
+    //         rtcRoomId?: string;
+    //         /** Identifier for the current peer */
+    //         rtcPeerId?: string;
+    //         /**
+    //          * ["tag1", "tag2", "tag3"]
+    //          * @deprecated use 'keys' instead
+    //          */
+    //         rtcTags?: string[];
+    //         /** { "key1": "value1", "key2": "value2"} */
+    //         keys?: any;
+    //         /** Enables additional logging */
+    //         debug?: boolean;
+    //         rtcToken?: string;
+    //         /**
+    //          * @deprecated No longer needed. Use "proxyUrl" instead.
+    //          */
+    //         wsUrl?: string;
+    //         proxyUrl?: string;
+    //         console?: {
+    //             level: string;
+    //             override: boolean;
+    //         };
+    //         allowBrowserLogCollection?: boolean;
+    //         collectionInterval?: number;
+    //         logGetStats?: boolean;
     // },
 };
 

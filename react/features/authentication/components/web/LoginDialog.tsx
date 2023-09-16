@@ -3,6 +3,7 @@ import { WithTranslation } from 'react-i18next';
 import { connect as reduxConnect } from 'react-redux';
 // @ts-ignore  @ts-expect-error
 import { connect } from '../../../../../connection';
+
 import { IReduxState, IStore } from '../../../app/types';
 import { IJitsiConference } from '../../../base/conference/reducer';
 import { IConfig } from '../../../base/config/configType';
@@ -11,6 +12,7 @@ import { translate, translateToHTML } from '../../../base/i18n/functions';
 import { JitsiConnectionErrors } from '../../../base/lib-jitsi-meet';
 import Dialog from '../../../base/ui/components/web/Dialog';
 import Input from '../../../base/ui/components/web/Input';
+import { joinConference } from '../../../prejoin/actions.web';
 import { authenticateAndUpgradeRole, cancelLogin } from '../../actions.web';
 
 /**
@@ -50,11 +52,6 @@ interface IProps extends WithTranslation {
     dispatch: IStore['dispatch'];
 
     /**
-     * Invoked when username and password are submitted.
-     */
-    onSuccess: Function;
-
-    /**
      * Conference room name.
      */
     roomName: string;
@@ -64,11 +61,6 @@ interface IProps extends WithTranslation {
  * The type of the React {@code Component} state of {@link LoginDialog}.
  */
 interface IState {
-    /**
-     * Authentication process starts before joining the conference room.
-     */
-    loginStarted: boolean;
-
     /**
      * The user entered password for the conference.
      */
@@ -96,8 +88,7 @@ class LoginDialog extends Component<IProps, IState> {
 
         this.state = {
             username: '',
-            password: '',
-            loginStarted: false
+            password: ''
         };
 
         this._onCancelLogin = this._onCancelLogin.bind(this);
@@ -129,8 +120,6 @@ class LoginDialog extends Component<IProps, IState> {
         const {
             _conference: conference,
             _configHosts: configHosts,
-            roomName,
-            onSuccess,
             dispatch
         } = this.props;
         const { password, username } = this.state;
@@ -145,19 +134,9 @@ class LoginDialog extends Component<IProps, IState> {
         if (conference) {
             dispatch(authenticateAndUpgradeRole(jid, password, conference));
         } else {
-            this.setState({
-                loginStarted: true
-            });
-
-            connect(jid, password) // roomName
-                .then((connection: any) => {
-                    onSuccess?.(connection);
-                })
-                .catch(() => {
-                    this.setState({
-                        loginStarted: false
-                    });
-                });
+            // dispatch(connect(jid, password));
+            // FIXME: Workaround for the web version. To be removed once we get rid of conference.js
+            dispatch(joinConference(undefined, false, jid, password));
         }
     }
 
@@ -246,7 +225,7 @@ class LoginDialog extends Component<IProps, IState> {
      */
     render() {
         const { _connecting: connecting, t } = this.props;
-        const { password, loginStarted, username } = this.state;
+        const { password, username } = this.state;
 
         return (
             // @ts-ignore // @ts-expect-error
@@ -255,8 +234,7 @@ class LoginDialog extends Component<IProps, IState> {
                 disableBackdropClose={true}
                 hideCloseButton={true}
                 ok={{
-                    disabled:
-                        connecting || loginStarted || !password || !username,
+                    disabled: connecting || !password || !username,
                     translationKey: 'dialog.login'
                 }}
                 onCancel={this._onCancelLogin}
@@ -315,7 +293,7 @@ function mapStateToProps(state: IReduxState) {
     return {
         _conference: authRequired || conference,
         _configHosts: configHosts,
-        _connecting: connecting || thenableWithCancel,
+        _connecting: Boolean(connecting) || Boolean(thenableWithCancel),
         _error: connectionError || authenticateAndUpgradeRoleError,
         _progress: progress
     };

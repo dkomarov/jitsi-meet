@@ -221,7 +221,8 @@ const Dialog = ({
     ok = { translationKey: 'dialog.Ok' },
     onCancel,
     onSubmit,
-    size = 'medium',
+    size,
+    testId,
     title,
     titleKey
 }: IDialogProps) => {
@@ -285,7 +286,7 @@ const Dialog = ({
         >
             {/* @ts-ignore // @ts-expect-error */}
             <div className={classes.header}>
-                {/* @ts-ignore // @ts-expect-error */}{' '}
+                {/* @ts-ignore // @ts-expect-error */}
                 <h1 className={classes.title} id="dialog-title">
                     {title ?? t(titleKey ?? '')}
                 </h1>

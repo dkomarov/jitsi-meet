@@ -1,6 +1,6 @@
 import { IStore } from '../../app/types';
 import RTCStats from '../../rtcstats/RTCStats';
-import { canSendRtcstatsData } from '../../rtcstats/functions';
+import { isRTCStatsEnabled } from '../../rtcstats/functions';
 import { getCurrentConference } from '../conference/functions';
 
 /**
@@ -60,7 +60,7 @@ export default class JitsiMeetLogStorage {
         // Saving the logs in RTCStats is a new feature and so there is no prior behavior that needs to be maintained.
         // That said, this is still experimental and needs to be rolled out gradually so we want this to be off by
         // default.
-        return config?.analytics?.rtcstatsStoreLogs && canSendRtcstatsData(this.getState());
+        return config?.analytics?.rtcstatsStoreLogs && isRTCStatsEnabled(this.getState());
     }
 
     /**
@@ -120,9 +120,7 @@ export default class JitsiMeetLogStorage {
             conference.sendApplicationLog(logMessage);
         } catch (error) {
             // NOTE console is intentional here
-            console.error(
-                `Failed to store the logs, msg length: ${logMessage.length}`
-                    + `error: ${JSON.stringify(error)}`);
+            console.error(`Failed to store the logs, msg length: ${logMessage.length} error:`, error);
         }
     }
 }

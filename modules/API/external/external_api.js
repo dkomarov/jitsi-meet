@@ -54,6 +54,7 @@ const commands = {
     removeBreakoutRoom: 'remove-breakout-room',
     resizeFilmStrip: 'resize-film-strip',
     resizeLargeVideo: 'resize-large-video',
+    sendCameraFacingMode: 'send-camera-facing-mode-message',
     sendChatMessage: 'send-chat-message',
     sendEndpointTextMessage: 'send-endpoint-text-message',
     sendParticipantToRoom: 'send-participant-to-room',
@@ -106,11 +107,13 @@ const events = {
     'browser-support': 'browserSupport',
     'camera-error': 'cameraError',
     'chat-updated': 'chatUpdated',
+    'compute-pressure-changed': 'computePressureChanged',
     'content-sharing-participants-changed': 'contentSharingParticipantsChanged',
     'data-channel-closed': 'dataChannelClosed',
     'data-channel-opened': 'dataChannelOpened',
     'device-list-changed': 'deviceListChanged',
     'display-name-change': 'displayNameChange',
+    'dominant-speaker-changed': 'dominantSpeakerChanged',
     'email-change': 'emailChange',
     'error-occurred': 'errorOccurred',
     'endpoint-text-message-received': 'endpointTextMessageReceived',
@@ -152,7 +155,6 @@ const events = {
     'video-mute-status-changed': 'videoMuteStatusChanged',
     'video-quality-changed': 'videoQualityChanged',
     'screen-sharing-status-changed': 'screenSharingStatusChanged',
-    'dominant-speaker-changed': 'dominantSpeakerChanged',
     'subject-change': 'subjectChange',
     'suspend-detected': 'suspendDetected',
     'tile-view-changed': 'tileViewChanged',
@@ -303,6 +305,9 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
      * configuration options defined in config.js to be overridden.
      * @param {Object} [options.interfaceConfigOverwrite] - Object containing
      * configuration options defined in interface_config.js to be overridden.
+     * @param {IIceServers} [options.iceServers] - Object with rules that will be used to modify/remove the existing
+     * ice server configuration.
+     * NOTE: This property is currently experimental and may be removed in the future!
      * @param {string} [options.jwt] - The JWT token if needed by jitsi-meet for
      * authentication.
      * @param {string} [options.lang] - The meeting's default language.
@@ -332,6 +337,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             lang = undefined,
             onload = undefined,
             invitees,
+            iceServers,
             devices,
             userInfo,
             e2eeKey,
@@ -343,6 +349,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
         this._parentNode = parentNode;
         this._url = generateURL(domain, {
             configOverwrite,
+            iceServers,
             interfaceConfigOverwrite,
             jwt,
             lang,
@@ -1187,6 +1194,24 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
      */
     getNumberOfParticipants() {
         return this._numberOfParticipants;
+    }
+
+    /**
+     * Returns array of commands supported by executeCommand().
+     *
+     * @returns {Array<string>} Array of commands.
+     */
+    getSupportedCommands() {
+        return Object.keys(commands);
+    }
+
+    /**
+     * Returns array of events supported by addEventListener().
+     *
+     * @returns {Array<string>} Array of events.
+     */
+    getSupportedEvents() {
+        return Object.values(events);
     }
 
     /**

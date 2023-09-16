@@ -14,6 +14,11 @@ import { connect } from 'react-redux';
 import { IReduxState, IStore } from '../../app/types';
 import { openDialog } from '../../base/dialog/actions';
 // import { translate } from '../../base/i18n/functions';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { IReduxState } from '../../app/types';
+import { openDialog } from '../../base/dialog/actions';
 import { IconPerformance } from '../../base/icons/svg';
 import Label from '../../base/label/components/web/Label';
 import { COLORS } from '../../base/label/constants';
@@ -58,6 +63,8 @@ interface IProps extends AbstractProps {
     dispatch: IStore['dispatch'];
 }
 
+import VideoQualityDialog from './VideoQualityDialog.web';
+
 /**
  * A map of video resolution (number) to translation key.
  *
@@ -85,6 +92,8 @@ const RESOLUTIONS = Object.keys(RESOLUTION_TO_TRANSLATION_KEY)
  * Will display when the conference is in audio only mode. {@code HDVideoLabel}
  * Will display if not in audio only mode and a high-definition large video is
  * being displayed.
+ *
+ * @returns {JSX}
  */
 export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
     /**
@@ -125,8 +134,18 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
             labelContent = t(_labelKey);
             tooltipKey = _tooltipKey;
         }
+const VideoQualityLabel = () => {
+    const _audioOnly = useSelector((state: IReduxState) => state['features/base/audio-only'].enabled);
+    const _visible = useSelector((state: IReduxState) => !(shouldDisplayTileView(state)
+        || interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED));
+    const dispatch = useDispatch();
+    const { t } = useTranslation();
 
-        const onClick = () => dispatch(openDialog(VideoQualityDialog));
+    if (!_visible) {
+        return null;
+    }
+
+    let className, icon, labelContent, tooltipKey;
 
         return (
             <Tooltip content={t(tooltipKey)} position={'bottom'}>
@@ -285,3 +304,34 @@ function _mapStateToProps(state: IReduxState) {
 
 // @ts-ignore
 export default translate(connect(_mapStateToProps)(VideoQualityLabel));
+    if (_audioOnly) {
+        className = 'audio-only';
+        labelContent = t('videoStatus.audioOnly');
+        tooltipKey = 'videoStatus.labelTooltipAudioOnly';
+    } else {
+        className = 'current-video-quality';
+        icon = IconPerformance;
+        tooltipKey = 'videoStatus.performanceSettings';
+    }
+
+    const onClick = () => dispatch(openDialog(VideoQualityDialog));
+
+    return (
+        <Tooltip
+            content = { t(tooltipKey) }
+            position = { 'bottom' }>
+            <Label
+                accessibilityText = { t(tooltipKey) }
+                className = { className }
+                color = { COLORS.white }
+                icon = { icon }
+                iconColor = '#fff'
+                id = 'videoResolutionLabel'
+                // eslint-disable-next-line react/jsx-no-bind
+                onClick = { onClick }
+                text = { labelContent } />
+        </Tooltip>
+    );
+};
+
+export default VideoQualityLabel;

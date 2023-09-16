@@ -50,8 +50,8 @@ import {
 } from '../../react/features/base/participants/functions';
 import { updateSettings } from '../../react/features/base/settings/actions';
 import { getDisplayName } from '../../react/features/base/settings/functions.web';
-import { toggleCamera } from '../../react/features/base/tracks/actions.any';
-import { isToggleCameraEnabled } from '../../react/features/base/tracks/functions';
+import { setCameraFacingMode } from '../../react/features/base/tracks/actions.web';
+import { CAMERA_FACING_MODE_MESSAGE } from '../../react/features/base/tracks/constants';
 import {
     autoAssignToBreakoutRooms,
     closeBreakoutRoom,
@@ -395,12 +395,8 @@ function initCommands() {
             sendAnalytics(createApiEvent('film.strip.resize'));
             APP.store.dispatch(resizeFilmStrip(options.width));
         },
-        'toggle-camera': () => {
-            if (!isToggleCameraEnabled(APP.store.getState())) {
-                return;
-            }
-
-            APP.store.dispatch(toggleCamera());
+        'toggle-camera': facingMode => {
+            APP.store.dispatch(setCameraFacingMode(facingMode));
         },
         'toggle-camera-mirror': () => {
             const state = APP.store.getState();
@@ -528,6 +524,18 @@ function initCommands() {
             } catch (err) {
                 logger.error('Failed sending endpoint text message', err);
             }
+        },
+        'send-camera-facing-mode-message': (to, facingMode) => {
+            if (!to) {
+                logger.warn('Participant id not set');
+
+                return;
+            }
+
+            APP.conference.sendEndpointMessage(to, {
+                name: CAMERA_FACING_MODE_MESSAGE,
+                facingMode
+            });
         },
         'overwrite-names': participantList => {
             logger.debug('Overwrite names command received');
@@ -1133,7 +1141,11 @@ class API {
      */
     _sendEvent(event = {}) {
         if (this._enabled) {
-            transport.sendEvent(event);
+            try {
+                transport.sendEvent(event);
+            } catch (error) {
+                logger.error('Failed to send and IFrame API event', error);
+            }
         }
     }
 
@@ -1467,11 +1479,43 @@ class API {
      * @param {Array<string>} args - Array of strings composing the log message.
      * @returns {void}
      */
-    notifyLog(logLevel, args) {
+    notifyLog(logLevel, args = []) {
+        if (!Array.isArray(args)) {
+            logger.error('notifyLog received wrong argument types!');
+
+            return;
+        }
+
+        // Trying to convert arguments to strings. Otherwise in order to send the event the arguments will be formatted
+        // with JSON.stringify which can throw an error because of circular objects and we will lose the whole log.
+        const formattedArguments = [];
+
+        args.forEach(arg => {
+            let formattedArgument = '';
+
+            if (arg instanceof Error) {
+                formattedArgument += `${arg.toString()}: ${arg.stack}`;
+            } else if (typeof arg === 'object') {
+                // NOTE: The non-enumerable properties of the objects wouldn't be included in the string after
+                // JSON.strigify. For example Map instance will be translated to '{}'. So I think we have to eventually
+                // do something better for parsing the arguments. But since this option for strigify is part of the
+                // public interface and I think it could be useful in some cases I will it for now.
+                try {
+                    formattedArgument += JSON.stringify(arg);
+                } catch (error) {
+                    formattedArgument += arg;
+                }
+            } else {
+                formattedArgument += arg;
+            }
+
+            formattedArguments.push(formattedArgument);
+        });
+
         this._sendEvent({
             name: 'log',
             logLevel,
-            args
+            args: formattedArguments
         });
     }
 
@@ -2002,14 +2046,16 @@ class API {
      * Notify external application ( if API is enabled) that a participant menu button was clicked.
      *
      * @param {string} key - The key of the participant menu button.
-     * @param {string} participantId - The ID of the participant for with the participant menu button was clicked.
+     * @param {string} participantId - The ID of the participant for whom the participant menu button was clicked.
+     * @param {boolean} preventExecution - Whether execution of the button click was prevented or not.
      * @returns {void}
      */
-    notifyParticipantMenuButtonClicked(key, participantId) {
+    notifyParticipantMenuButtonClicked(key, participantId, preventExecution) {
         this._sendEvent({
             name: 'participant-menu-button-clicked',
             key,
-            participantId
+            participantId,
+            preventExecution
         });
     }
 
@@ -2054,6 +2100,19 @@ class API {
         this._sendEvent({
             name: 'p2p-status-changed',
             isP2p
+        });
+    }
+
+    /**
+     * Notify the external application (if API is enabled) when the compute pressure changed.
+     *
+     * @param {Array} records - The new pressure records.
+     * @returns {void}
+     */
+    notifyComputePressureChanged(records) {
+        this._sendEvent({
+            name: 'compute-pressure-changed',
+            records
         });
     }
 

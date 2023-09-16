@@ -20,6 +20,8 @@ declare global {
         interfaceConfig?: any;
         JitsiMeetJS?: any;
         JitsiMeetElectron?: any;
+        PressureObserver?: any;
+        PressureRecord?: any;
         // selenium tests handler
         _sharedVideoPlayer: any;
         alwaysOnTop: { api: any };

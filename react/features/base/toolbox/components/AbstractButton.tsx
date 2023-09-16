@@ -16,6 +16,11 @@ export interface IProps extends WithTranslation {
     afterClick?: Function;
 
     /**
+     * The button's background color.
+     */
+    backgroundColor?: string;
+
+    /**
      * The button's key.
      */
     buttonKey?: string;
@@ -109,6 +114,13 @@ export default class AbstractButton<
         tooltipPosition: 'top',
         visible: true
     };
+
+    /**
+     * The button's background color.
+     *
+     * @abstract
+     */
+    backgroundColor?: string;
 
     /**
      * A succinct description of what the button does. Used by accessibility
@@ -347,8 +359,8 @@ export default class AbstractButton<
      * @private
      * @returns {void}
      */
-    _onClick(e?: React.MouseEvent<HTMLElement> | GestureResponderEvent) {
-        const { afterClick, handleClick, notifyMode, buttonKey } = this.props;
+    _onClick(e?: React.MouseEvent | GestureResponderEvent) {
+        const { afterClick, buttonKey, handleClick, notifyMode } = this.props;
 
         if (typeof APP !== 'undefined' && notifyMode) {
             APP.API.notifyToolbarButtonClicked(

@@ -66,10 +66,6 @@ body, input, textarea, keygen, select, button {
     font-family: $baseFontFamily !important;
 }
 
-#nowebrtc {
-    display:none;
-}
-
 button, input, select, textarea {
     margin: 0;
     vertical-align: baseline;
@@ -148,21 +144,6 @@ form {
     z-index: 100;
 }
 
-.connected {
-    color: #21B9FC;
-    font-size: 12px;
-}
-
-.lastN, .disconnected {
-    color: #a3a3a3;
-    font-size: 12px;
-}
-
-#inviteLinkRef {
-    -webkit-user-select: text;
-    user-select: text;
-}
-
 /**
  * Re-style default OS scrollbar.
  */
@@ -185,11 +166,24 @@ form {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, .5);
+    background: #3D3D3D;
     border-radius: 4px;
 }
 
 /* Necessary for the new icons to work properly. */
 .jitsi-icon svg path {
     fill: inherit !important;
+}
+
+.sr-only {
+    border: 0 !important;
+    clip: rect(1px, 1px, 1px, 1px) !important;
+    clip-path: inset(50%) !important;
+    height: 1px !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: absolute !important;
+    width: 1px !important;
+    white-space: nowrap !important;
 }

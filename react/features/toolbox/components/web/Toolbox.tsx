@@ -4,8 +4,10 @@ import { connect } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
 
 import { IReduxState, IStore } from '../../../app/types';
+import { NotifyClickButton } from '../../../base/config/configType';
 import { VISITORS_MODE_BUTTONS } from '../../../base/config/constants';
 import {
+    getButtonNotifyMode,
     getButtonsWithNotifyClick,
     getToolbarButtons,
     isToolbarButtonEnabled
@@ -22,7 +24,7 @@ import {
     setToolbarHovered,
     showToolbox
 } from '../../actions.web';
-import { NOTIFY_CLICK_MODE, NOT_APPLICABLE, THRESHOLDS } from '../../constants';
+import { NOT_APPLICABLE, THRESHOLDS } from '../../constants';
 import {
     getAllToolboxButtons,
     getJwtDisabledButtons,
@@ -46,10 +48,7 @@ interface IProps extends WithTranslation {
     /**
      * Toolbar buttons which have their click exposed through the API.
      */
-    _buttonsWithNotifyClick?: Array<string | {
-        key: string;
-        preventExecution: boolean;
-    }>;
+    _buttonsWithNotifyClick?: NotifyClickButton[];
 
     /**
      * Whether or not the chat feature is currently displayed.
@@ -64,7 +63,7 @@ interface IProps extends WithTranslation {
     /**
      * Custom Toolbar buttons.
      */
-    _customToolbarButtons?: Array<{ icon: string; id: string; text: string; }>;
+    _customToolbarButtons?: Array<{ backgroundColor?: string; icon: string; id: string; text: string; }>;
 
     /**
      * Whether or not a dialog is displayed.
@@ -263,26 +262,6 @@ const Toolbox = ({
     }, [ _hangupMenuVisible, _overflowMenuVisible ]);
 
     /**
-     * Returns the notify mode of the given toolbox button.
-     *
-     * @param {string} btnName - The toolbar button's name.
-     * @returns {string|undefined} - The button's notify mode.
-     */
-    function getButtonNotifyMode(btnName: string) {
-        const notify = _buttonsWithNotifyClick?.find(
-            btn =>
-                (typeof btn === 'string' && btn === btnName)
-                || (typeof btn === 'object' && btn.key === btnName)
-        );
-
-        if (notify) {
-            return typeof notify === 'string' || notify.preventExecution
-                ? NOTIFY_CLICK_MODE.PREVENT_AND_NOTIFY
-                : NOTIFY_CLICK_MODE.ONLY_NOTIFY;
-        }
-    }
-
-    /**
      * Sets the notify click mode for the buttons.
      *
      * @param {Object} buttons - The list of toolbar buttons.
@@ -295,7 +274,7 @@ const Toolbox = ({
 
         Object.values(buttons).forEach((button: any) => {
             if (typeof button === 'object') {
-                button.notifyMode = getButtonNotifyMode(button.key);
+                button.notifyMode = getButtonNotifyMode(button.key, _buttonsWithNotifyClick);
             }
         });
     }
@@ -311,7 +290,7 @@ const Toolbox = ({
 
         setButtonsNotifyClickMode(buttons);
         const isHangupVisible = isToolbarButtonEnabled('hangup', _toolbarButtons);
-        let { order } = THRESHOLDS.find(({ width }) => _clientWidth > width)
+        const { order } = THRESHOLDS.find(({ width }) => _clientWidth > width)
             || THRESHOLDS[THRESHOLDS.length - 1];
 
         const keys = Object.keys(buttons);
@@ -323,11 +302,8 @@ const Toolbox = ({
             !_jwtDisabledButtons.includes(key)
             && (isToolbarButtonEnabled(key, _toolbarButtons) || isToolbarButtonEnabled(alias, _toolbarButtons))
         );
-        const filteredKeys = filtered.map(button => button.key);
 
-        order = order.filter(key => filteredKeys.includes(buttons[key as keyof typeof buttons].key));
-
-        let sliceIndex = order.length + 2;
+        let sliceIndex = _overflowDrawer || _reactionsButtonEnabled ? order.length + 2 : order.length + 1;
 
         if (isHangupVisible) {
             sliceIndex -= 1;
@@ -452,7 +428,7 @@ const Toolbox = ({
                                     ariaControls = 'hangup-menu'
                                     isOpen = { _hangupMenuVisible }
                                     key = 'hangup-menu'
-                                    notifyMode = { getButtonNotifyMode('hangup-menu') }
+                                    notifyMode = { getButtonNotifyMode('hangup-menu', _buttonsWithNotifyClick) }
                                     onVisibilityChange = { onSetHangupVisible }>
                                     <ContextMenu
                                         accessibilityLabel = { t(toolbarAccLabel) }
@@ -462,17 +438,20 @@ const Toolbox = ({
                                         onKeyDown = { onEscKey }>
                                         <EndConferenceButton
                                             buttonKey = 'end-meeting'
-                                            notifyMode = { getButtonNotifyMode('end-meeting') } />
+                                            notifyMode = { getButtonNotifyMode(
+                                                'end-meeting',
+                                                _buttonsWithNotifyClick
+                                            ) } />
                                         <LeaveConferenceButton
                                             buttonKey = 'hangup'
-                                            notifyMode = { getButtonNotifyMode('hangup') } />
+                                            notifyMode = { getButtonNotifyMode('hangup', _buttonsWithNotifyClick) } />
                                     </ContextMenu>
                                 </HangupMenuButton>
                                 : <HangupButton
                                     buttonKey = 'hangup'
                                     customClass = 'hangup-button'
                                     key = 'hangup-button'
-                                    notifyMode = { getButtonNotifyMode('hangup') }
+                                    notifyMode = { getButtonNotifyMode('hangup', _buttonsWithNotifyClick) }
                                     visible = { isToolbarButtonEnabled('hangup', _toolbarButtons) } />
                         )}
                     </div>

@@ -139,6 +139,7 @@ export interface IProps {
     onClose?: () => void;
     size?: 'large' | 'medium';
     submit?: () => void;
+    testId?: string;
     title?: string;
     titleKey?: string;
 }
@@ -152,6 +153,7 @@ const BaseDialog = ({
     onClose,
     size = 'medium',
     submit,
+    testId,
     title,
     titleKey
 }: IProps) => {
@@ -170,16 +172,18 @@ const BaseDialog = ({
         if (e.key === 'Enter' && !disableEnter) {
             submit?.();
         }
-    }, []);
+    }, [ disableEnter, onClose, submit ]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
 
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
+    }, [ handleKeyDown ]);
 
     return (
-        <div className = { cx(classes.container, isUnmounting && 'unmount') }>
+        <div
+            className = { cx(classes.container, isUnmounting && 'unmount') }
+            data-testid = { testId }>
             <div className = { classes.backdrop } />
             <FocusOn
                 className = { classes.focusLock }

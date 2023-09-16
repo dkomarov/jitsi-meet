@@ -1,5 +1,7 @@
 import '../analytics/middleware';
+import '../authentication/middleware';
 import '../av-moderation/middleware';
+import '../base/app/middleware';
 import '../base/conference/middleware';
 import '../base/config/middleware';
 import '../base/jwt/middleware';
@@ -25,6 +27,7 @@ import '../connection-indicator/middleware';
 import '../deep-linking/middleware';
 import '../device-selection/middleware';
 import '../display-name/middleware';
+import '../dynamic-branding/middleware';
 import '../etherpad/middleware';
 import '../filmstrip/middleware';
 import '../follow-me/middleware';

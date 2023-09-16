@@ -1,6 +1,7 @@
 /* global APP, interfaceConfig */
 
 /* eslint-disable no-unused-vars */
+import Logger from '@jitsi/logger';
 import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -22,6 +23,8 @@ export const VIDEO_CONTAINER_TYPE = 'camera';
 
 // Corresponds to animation duration from the animatedFadeIn and animatedFadeOut CSS classes.
 const FADE_DURATION_MS = 300;
+
+const logger = Logger.getLogger(__filename);
 
 /**
  * Returns an array of the video dimensions, so that it keeps it's aspect
@@ -489,7 +492,9 @@ export class VideoContainer extends LargeContainer {
         }
 
         if (this.video) {
-            stream.attach(this.video);
+            stream.attach(this.video).catch(error => {
+                logger.error(`Attaching the remote track ${stream} has failed with `, error);
+            });
 
             // Ensure large video gets play() called on it when a new stream is attached to it. This is necessary in the
             // case of Safari as autoplay doesn't kick-in automatically on Safari 15 and newer versions.
@@ -508,7 +513,7 @@ export class VideoContainer extends LargeContainer {
      */
     setLocalFlipX(val) {
         this.localFlipX = val;
-        if (!this.video || !this.stream || !this.stream.isLocal()) {
+        if (!this.video || !this.stream || !this.stream.isLocal() || this.isScreenSharing()) {
             return;
         }
         this.video.style.transform = this.localFlipX ? 'scaleX(-1)' : 'none';
