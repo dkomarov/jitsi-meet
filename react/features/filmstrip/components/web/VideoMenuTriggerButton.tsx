@@ -4,7 +4,6 @@ import LocalVideoMenuTriggerButton from '../../../video-menu/components/web/Loca
 import RemoteVideoMenuTriggerButton from '../../../video-menu/components/web/RemoteVideoMenuTriggerButton';
 
 interface IProps {
-
     /**
      * Hide popover callback.
      */
@@ -50,26 +49,29 @@ const VideoMenuTriggerButton = ({
     showPopover,
     thumbnailType,
     visible
-}: IProps) => local
-    ? (
-        <span id = 'localvideomenu'>
+}: IProps) =>
+    local ? (
+        <span id="localvideomenu">
+            {/* @ts-ignore  @ts-expect-error */}
             <LocalVideoMenuTriggerButton
-                buttonVisible = { visible }
-                hidePopover = { hidePopover }
-                popoverVisible = { popoverVisible }
-                showPopover = { showPopover }
-                thumbnailType = { thumbnailType } />
+                buttonVisible={visible}
+                hidePopover={hidePopover}
+                popoverVisible={popoverVisible}
+                showPopover={showPopover}
+                thumbnailType={thumbnailType}
+            />
         </span>
-    )
-    : (
-        <span id = 'remotevideomenu'>
+    ) : (
+        <span id="remotevideomenu">
+            {/* @ts-ignore  @ts-expect-error */}
             <RemoteVideoMenuTriggerButton
-                buttonVisible = { visible }
-                hidePopover = { hidePopover }
-                participantID = { participantId }
-                popoverVisible = { popoverVisible }
-                showPopover = { showPopover }
-                thumbnailType = { thumbnailType } />
+                buttonVisible={visible}
+                hidePopover={hidePopover}
+                participantID={participantId}
+                popoverVisible={popoverVisible}
+                showPopover={showPopover}
+                thumbnailType={thumbnailType}
+            />
         </span>
     );
 

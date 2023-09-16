@@ -97,6 +97,10 @@ import { default as IconVideoOff } from './video-off.svg';
 import { default as IconVideo } from './video.svg';
 import { default as IconAudioOnlyOff } from './visibility-off.svg';
 import { default as IconAudioOnly } from './visibility.svg';
+import { default as IconVideoQualityAudioOnly } from './AUD.svg';
+import { default as IconVideoQualityHD } from './HD.svg';
+import { default as IconVideoQualityLD } from './LD.svg';
+import { default as IconVideoQualitySD } from './SD.svg';
 import { default as IconVolumeOff } from './volume-off.svg';
 import { default as IconVolumeUp } from './volume-up.svg';
 import { default as IconWarningCircle } from './warning-circle.svg';
@@ -210,6 +214,10 @@ export const DEFAULT_ICON: Record<string, any> = {
     IconUsers,
     IconUser,
     IconVideo,
+    IconVideoQualityAudioOnly,
+    IconVideoQualityHD,
+    IconVideoQualityLD,
+    IconVideoQualitySD,
     IconVideoOff,
     IconVolumeOff,
     IconVolumeUp,

@@ -4,9 +4,6 @@ import { connect } from 'react-redux';
 import { translate } from '../../../base/i18n/functions';
 import Dialog from '../../../base/ui/components/web/Dialog';
 import Input from '../../../base/ui/components/web/Input';
-import AbstractDisplayNamePrompt, {
-    IProps
-} from '../AbstractDisplayNamePrompt';
 import { onSetDisplayName } from '../../functions';
 import { IProps } from '../../types';
 

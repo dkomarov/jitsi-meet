@@ -17,8 +17,6 @@ import { openDialog } from '../../base/dialog/actions';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { IReduxState } from '../../app/types';
-import { openDialog } from '../../base/dialog/actions';
 import { IconPerformance } from '../../base/icons/svg';
 import Label from '../../base/label/components/web/Label';
 import { COLORS } from '../../base/label/constants';
@@ -29,7 +27,6 @@ import AbstractVideoQualityLabel, {
     // type Props as AbstractProps,
     _abstractMapStateToProps
 } from './AbstractVideoQualityLabel';
-import VideoQualityDialog from './VideoQualityDialog.web';
 
 // declare var interfaceConfig: Object;
 
@@ -134,18 +131,21 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
             labelContent = t(_labelKey);
             tooltipKey = _tooltipKey;
         }
-const VideoQualityLabel = () => {
-    const _audioOnly = useSelector((state: IReduxState) => state['features/base/audio-only'].enabled);
-    const _visible = useSelector((state: IReduxState) => !(shouldDisplayTileView(state)
-        || interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED));
-    const dispatch = useDispatch();
-    const { t } = useTranslation();
 
-    if (!_visible) {
-        return null;
-    }
+        // const VideoQualityLabel = () => {
+        //     const _audioOnly = useSelector((state: IReduxState) => state['features/base/audio-only'].enabled);
+        //     const _visible = useSelector((state: IReduxState) => !(shouldDisplayTileView(state)
+        //         || interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED));
+        //     const dispatch = useDispatch();
+        //     const { t } = useTranslation();
 
-    let className, icon, labelContent, tooltipKey;
+        //     if (!_visible) {
+        //         return null;
+        //     }
+
+        // let className, icon, labelContent, tooltipKey;
+
+        const onClick = () => dispatch(openDialog(VideoQualityDialog));
 
         return (
             <Tooltip content={t(tooltipKey)} position={'bottom'}>
@@ -201,49 +201,6 @@ function _mapResolutionToTranslationsKeys(resolution) {
     };
 }
 
-/**
- * Maps (parts of) the Redux state to the associated {@code VideoQualityLabel}'s
- * props.
- *
- * @param {Object} state - The Redux state.
- * @private
- * @returns {{
- *     _labelKey: string,
- *     _tooltipKey: string,
- *     _videoTrack: Object
- * }}
- */
-function _mapStateToProps(state: IReduxState) {
-    const { enabled: audioOnly } = state['features/base/audio-only'];
-    const { resolution, participantId } = state['features/large-video'];
-    const videoTrackOnLargeVideo = getTrackByMediaTypeAndParticipant(
-        state['features/base/tracks'],
-        MEDIA_TYPE.VIDEO,
-        participantId
-    );
-
-    const translationKeys = audioOnly
-        ? {}
-        : _mapResolutionToTranslationsKeys(resolution);
-
-    return {
-        ..._abstractMapStateToProps(state),
-        // @ts-ignore
-        _labelKey: translationKeys.labelKey,
-        // @ts-ignore
-        _tooltipKey: translationKeys.tooltipKey,
-        _videoTrack: videoTrackOnLargeVideo,
-        _visible: !(
-            // ts-ignore
-            (
-                shouldDisplayTileView(state) ||
-                // ts-ignore // ts-expect-error
-                interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
-            )
-        )
-    };
-}
-
 // /**
 //  * Maps (parts of) the Redux state to the associated {@code VideoQualityLabel}'s
 //  * props.
@@ -265,73 +222,77 @@ function _mapStateToProps(state: IReduxState) {
 //     };
 // }
 
-// /**
-//  * Maps (parts of) the Redux state to the associated {@code VideoQualityLabel}'s
-//  * props.
-//  *
-//  * @param {Object} state - The Redux state.
-//  * @private
-//  * @returns {{
-//  *     _labelKey: string,
-//  *     _tooltipKey: string,
-//  *     _videoTrack: Object
-//  * }}
-//  */
-// function _mapStateToProps(state) {
-//     const { enabled: audioOnly } = state['features/base/audio-only'];
-//     const { resolution, participantId } = state['features/large-video'];
-//     const videoTrackOnLargeVideo = getTrackByMediaTypeAndParticipant(
-//         state['features/base/tracks'],
-//         MEDIA_TYPE.VIDEO,
-//         participantId
-//     );
+/**
+ * Maps (parts of) the Redux state to the associated {@code VideoQualityLabel}'s
+ * props.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {{
+ *     _labelKey: string,
+ *     _tooltipKey: string,
+ *     _videoTrack: Object
+ * }}
+ */
+function _mapStateToProps(state) {
+    const { enabled: audioOnly } = state['features/base/audio-only'];
+    const { resolution, participantId } = state['features/large-video'];
+    const videoTrackOnLargeVideo = getTrackByMediaTypeAndParticipant(
+        state['features/base/tracks'],
+        MEDIA_TYPE.VIDEO,
+        participantId
+    );
 
-//     const translationKeys = audioOnly
-//         ? {}
-//         : _mapResolutionToTranslationsKeys(resolution);
+    const translationKeys = audioOnly
+        ? {}
+        : _mapResolutionToTranslationsKeys(resolution);
 
-//     return {
-//         ..._abstractMapStateToProps(state),
-//         _labelKey: translationKeys.labelKey,
-//         _tooltipKey: translationKeys.tooltipKey,
-//         _videoTrack: videoTrackOnLargeVideo,
-//         _visible: !(
-//             shouldDisplayTileView(state) ||
-//             interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
-//         )
-//     };
-// }
+    return {
+        ..._abstractMapStateToProps(state),
+        // @ts-ignore  @ts-expect-error
+        _labelKey: translationKeys.labelKey,
+        // @ts-ignore  @ts-expect-error
+        _tooltipKey: translationKeys.tooltipKey,
+        _videoTrack: videoTrackOnLargeVideo,
+        _visible: !(
+            shouldDisplayTileView(state) ||
+            // @ts-ignore  @ts-expect-error
+            interfaceConfig.VIDEO_QUALITY_LABEL_DISABLED
+        )
+    };
+}
 
 // @ts-ignore
 export default translate(connect(_mapStateToProps)(VideoQualityLabel));
-    if (_audioOnly) {
-        className = 'audio-only';
-        labelContent = t('videoStatus.audioOnly');
-        tooltipKey = 'videoStatus.labelTooltipAudioOnly';
-    } else {
-        className = 'current-video-quality';
-        icon = IconPerformance;
-        tooltipKey = 'videoStatus.performanceSettings';
-    }
 
-    const onClick = () => dispatch(openDialog(VideoQualityDialog));
+//     if (_audioOnly) {
+//         className = 'audio-only';
+//         labelContent = t('videoStatus.audioOnly');
+//         tooltipKey = 'videoStatus.labelTooltipAudioOnly';
+//     } else {
+//         className = 'current-video-quality';
+//         icon = IconPerformance;
+//         tooltipKey = 'videoStatus.performanceSettings';
+//     }
 
-    return (
-        <Tooltip
-            content = { t(tooltipKey) }
-            position = { 'bottom' }>
-            <Label
-                accessibilityText = { t(tooltipKey) }
-                className = { className }
-                color = { COLORS.white }
-                icon = { icon }
-                iconColor = '#fff'
-                id = 'videoResolutionLabel'
-                // eslint-disable-next-line react/jsx-no-bind
-                onClick = { onClick }
-                text = { labelContent } />
-        </Tooltip>
-    );
-};
+//     const onClick = () => dispatch(openDialog(VideoQualityDialog));
 
-export default VideoQualityLabel;
+//     return (
+//         <Tooltip
+//             content = { t(tooltipKey) }
+//             position = { 'bottom' }>
+//             <Label
+//                 accessibilityText = { t(tooltipKey) }
+//                 className = { className }
+//                 color = { COLORS.white }
+//                 icon = { icon }
+//                 iconColor = '#fff'
+//                 id = 'videoResolutionLabel'
+//                 // eslint-disable-next-line react/jsx-no-bind
+//                 onClick = { onClick }
+//                 text = { labelContent } />
+//         </Tooltip>
+//     );
+// };
+
+// export default VideoQualityLabel;
