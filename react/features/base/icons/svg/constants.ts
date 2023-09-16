@@ -39,7 +39,7 @@ import { default as IconExclamationSolid } from './exclamation-solid.svg';
 import { default as IconExclamationTriangle } from './exclamation-triangle.svg';
 import { default as IconExitFullscreen } from './exit-full-screen.svg'; // './exit-fullscreen.svg';
 import { default as IconFaceSmile } from './face-smile.svg';
-import { default as IconFavoriteSolid } from './favorite-solxid.svg';
+import { default as IconFavoriteSolid } from './favorite-solid.svg';
 import { default as IconFavorite } from './favorite.svg';
 import { default as IconFeedback } from './feedback.svg';
 import { default as IconGear } from './gear.svg';
