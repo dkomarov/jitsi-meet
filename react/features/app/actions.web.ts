@@ -123,7 +123,6 @@ export function maybeRedirectToWelcomePage(
 
             let path = 'close.html';
 
-            // @ts-expect-error
             if (interfaceConfig.SHOW_PROMOTIONAL_CLOSE_PAGE) {
                 if (Number(API_ID) === API_ID) {
                     hashParam = `#jitsi_meet_external_api_id=${API_ID}`;
