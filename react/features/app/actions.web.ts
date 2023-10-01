@@ -12,6 +12,7 @@ import { NOTIFICATION_TIMEOUT_TYPE } from '../notifications/constants';
 import { isWelcomePageEnabled } from '../welcome/functions';
 
 import {
+    maybeRedirectToTokenAuthUrl,
     redirectToStaticPage,
     redirectWithStoredParams,
     reloadWithStoredParams
@@ -122,6 +123,7 @@ export function maybeRedirectToWelcomePage(
 
             let path = 'close.html';
 
+            // @ts-expect-error
             if (interfaceConfig.SHOW_PROMOTIONAL_CLOSE_PAGE) {
                 if (Number(API_ID) === API_ID) {
                     hashParam = `#jitsi_meet_external_api_id=${API_ID}`;
@@ -173,8 +175,16 @@ export function reloadNow() {
         const state = getState();
         const { locationURL } = state['features/base/connection'];
 
-        console.log(`Reloading the conference using URL: ${locationURL}`);
+        const reloadAction = () => {
+            logger.info(`Reloading the conference using URL: ${locationURL}`);
 
-        dispatch(reloadWithStoredParams());
+            dispatch(reloadWithStoredParams());
+        };
+
+        if (maybeRedirectToTokenAuthUrl(dispatch, getState, reloadAction)) {
+            return;
+        }
+
+        reloadAction();
     };
 }
