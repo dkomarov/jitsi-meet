@@ -189,6 +189,12 @@
         };
         window.addEventListener(
             'error', loadErrHandler, true /* capture phase type of listener */);
+
+        // var latestJitsiVersion = 8960;
+
+        console.log("Jitsi Meet version: 8960 (Sept. 2023)");
+
+        window.parent.postMessage("Jitsi Meet version: 8960 (Sept. 2023)", '*')
     </script>
     <script><!--#include virtual="/config.js" --></script><!-- adapt to your needs, i.e. set hosts and bosh path -->
     <script><!--#include virtual="/interface_config.js" --></script>
