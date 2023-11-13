@@ -157,6 +157,13 @@ export interface INoiseSuppressionConfig {
     };
 }
 
+export interface IWhiteboardConfig {
+    collabServerBaseUrl?: string;
+    enabled?: boolean;
+    limitUrl?: string;
+    userLimit?: number;
+}
+
 export interface IWatchRTCConfiguration {
     allowBrowserLogCollection?: boolean;
     collectionInterval?: number;
@@ -246,6 +253,7 @@ export interface IConfig {
     callStatsID?: string;
     callStatsSecret?: string;
     callUUID?: string;
+    cameraFacingMode?: string;
     channelLastN?: number;
     chromeExtensionBanner?: {
         chromeExtensionsInfo?: Array<{ id: string; path: string; }>;
@@ -513,6 +521,7 @@ export interface IConfig {
     pcStatsInterval?: number;
     peopleSearchQueryTypes?: string[];
     peopleSearchUrl?: string;
+    preferBosh?: boolean;
     preferredTranscribeLanguage?: string;
     prejoinConfig?: {
         enabled?: boolean;
@@ -630,8 +639,5 @@ export interface IConfig {
         customUrl?: string;
         disabled?: boolean;
     };
-    whiteboard?: {
-        collabServerBaseUrl?: string;
-        enabled?: boolean;
-    };
+    whiteboard?: IWhiteboardConfig;
 }

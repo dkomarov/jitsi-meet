@@ -74,6 +74,7 @@ export default [
      */
     'callUUID',
 
+    'cameraFacingMode',
     'conferenceInfo',
     'channelLastN',
     'connectionIndicators',
@@ -158,7 +159,6 @@ export default [
     'filmstrip',
     'firefox_fake_device',
     'flags',
-    'forceJVB121Ratio',
     'forceTurnRelay',
     'gatherStats',
     'giphy',
@@ -197,6 +197,7 @@ export default [
     'participantMenuButtonsWithNotifyClick',
     'participantsPane',
     'pcStatsInterval',
+    'preferBosh',
     'prejoinConfig',
     'prejoinPageEnabled',
     'recordingService',

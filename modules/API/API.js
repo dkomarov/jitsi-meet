@@ -993,7 +993,13 @@ function initCommands() {
             callback(isP2pActive(APP.store.getState()));
             break;
         }
+        case '_new_electron_screensharing_supported': {
+            callback(true);
+            break;
+        }
         default:
+            callback({ error: new Error('UnknownRequestError') });
+
             return false;
         }
 
@@ -1101,7 +1107,11 @@ class API {
         this._enabled = true;
 
         initCommands();
+
         this.notifyBrowserSupport(isSupportedBrowser());
+
+        // Let the embedder know we are ready.
+        this._sendEvent({ name: 'ready' });
     }
 
     /**
@@ -1276,6 +1286,19 @@ class API {
             description,
             name: 'notification-triggered',
             title
+        });
+    }
+
+    /**
+     * Notify request desktop sources.
+     *
+     * @param {Object} options - Object with the options for desktop sources.
+     * @returns {void}
+     */
+    requestDesktopSources(options) {
+        return transport.sendRequest({
+            name: '_request-desktop-sources',
+            options
         });
     }
 
@@ -1961,6 +1984,20 @@ class API {
             name: 'toolbar-button-clicked',
             key,
             preventExecution
+        });
+    }
+
+    /**
+     * Notify external application (if API is enabled) that the user received
+     * a transcription chunk.
+     *
+     * @param {Object} data - The event data.
+     * @returns {void}
+     */
+    notifyTranscriptionChunkReceived(data) {
+        this._sendEvent({
+            name: 'transcription-chunk-received',
+            data
         });
     }
 

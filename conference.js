@@ -636,7 +636,7 @@ export default {
         // so that the user can try unmute later on and add audio/video
         // to the conference
         if (!tracks.find(t => t.isAudioTrack())) {
-            this.setAudioMuteStatus(true);
+            this.updateAudioIconEnabled();
         }
 
         if (!tracks.find(t => t.isVideoTrack())) {
@@ -845,7 +845,7 @@ export default {
             // This will only modify base/media.audio.muted which is then synced
             // up with the track at the end of local tracks initialization.
             muteLocalAudio(mute);
-            this.setAudioMuteStatus(mute);
+            this.updateAudioIconEnabled();
 
             return;
         } else if (this.isLocalAudioMuted() === mute) {
@@ -1059,13 +1059,6 @@ export default {
      */
     getSpeakerStats() {
         return room.getSpeakerStats();
-    },
-
-    /**
-     * Returns the connection times stored in the library.
-     */
-    getConnectionTimes() {
-        return room.getConnectionTimes();
     },
 
     // used by torture currently
@@ -1394,7 +1387,7 @@ export default {
                 APP.store.dispatch(
                 replaceLocalTrack(oldTrack, newTrack, room))
                     .then(() => {
-                        this.setAudioMuteStatus(this.isLocalAudioMuted());
+                        this.updateAudioIconEnabled();
                     })
                     .then(resolve)
                     .catch(reject)
@@ -2445,7 +2438,7 @@ export default {
      * @param {string} [hangupReason] the reason for leaving the meeting
      * requested
      */
-    async hangup(requestFeedback = false, hangupReason) {
+    hangup(requestFeedback = false, hangupReason) {
         APP.store.dispatch(disableReceiver());
 
         this._stopProxyConnection();
@@ -2462,33 +2455,42 @@ export default {
 
         APP.UI.removeAllListeners();
 
-        let feedbackResult = {};
+        let feedbackResultPromise = Promise.resolve({});
 
         if (requestFeedback) {
-            try {
-                feedbackResult = await APP.store.dispatch(maybeOpenFeedbackDialog(room, hangupReason));
-            } catch (err) { // eslint-disable-line no-empty
+            const feedbackDialogClosed = (feedbackResult = {}) => {
+                if (!feedbackResult.wasDialogShown && hangupReason) {
+                    return APP.store.dispatch(
+                        openLeaveReasonDialog(hangupReason)).then(() => feedbackResult);
+                }
+
+                return Promise.resolve(feedbackResult);
+            };
+
+            feedbackResultPromise
+                = APP.store.dispatch(maybeOpenFeedbackDialog(room, hangupReason))
+                    .then(feedbackDialogClosed, feedbackDialogClosed);
+        }
+
+        const leavePromise = this.leaveRoom().catch(() => Promise.resolve());
+
+        Promise.allSettled([ feedbackResultPromise, leavePromise ]).then(([ feedback, _ ]) => {
+            this._room = undefined;
+            room = undefined;
+
+            /**
+             * Don't call {@code notifyReadyToClose} if the promotional page flag is set
+             * and let the page take care of sending the message, since there will be
+             * a redirect to the page anyway.
+             */
+            if (!interfaceConfig.SHOW_PROMOTIONAL_CLOSE_PAGE) {
+                APP.API.notifyReadyToClose();
             }
-        }
 
-        if (!feedbackResult.wasDialogShown && hangupReason) {
-            await APP.store.dispatch(openLeaveReasonDialog(hangupReason));
-        }
+            APP.store.dispatch(maybeRedirectToWelcomePage(feedback.value ?? {}));
+        });
 
-        await this.leaveRoom();
 
-        this._room = undefined;
-        room = undefined;
-
-        /**
-         * Don't call {@code notifyReadyToClose} if the promotional page flag is set
-         * and let the page take care of sending the message, since there will be
-         * a redirect to the page anyway.
-         */
-        if (!interfaceConfig.SHOW_PROMOTIONAL_CLOSE_PAGE) {
-            APP.API.notifyReadyToClose();
-        }
-        APP.store.dispatch(maybeRedirectToWelcomePage(feedbackResult));
     },
 
     /**
@@ -2498,7 +2500,7 @@ export default {
      * @param {string} reason - reason for leaving the room.
      * @returns {Promise}
      */
-    async leaveRoom(doDisconnect = true, reason = '') {
+    leaveRoom(doDisconnect = true, reason = '') {
         APP.store.dispatch(conferenceWillLeave(room));
 
         const maybeDisconnect = () => {
@@ -2673,15 +2675,6 @@ export default {
      */
     setVideoMuteStatus() {
         APP.UI.setVideoMuted(this.getMyUserId());
-    },
-
-    /**
-     * Sets the audio muted status.
-     *
-     * @param {boolean} muted - New muted status.
-     */
-    setAudioMuteStatus(muted) {
-        APP.UI.setAudioMuted(this.getMyUserId(), muted);
     },
 
     /**

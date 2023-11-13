@@ -7,19 +7,11 @@ import { hideDialog } from '../../base/dialog/actions';
 import { translate } from '../../base/i18n/functions';
 import Dialog from '../../base/ui/components/web/Dialog';
 import Tabs from '../../base/ui/components/web/Tabs';
+import { THUMBNAIL_SIZE } from '../constants';
 import { obtainDesktopSources } from '../functions';
+import logger from '../logger';
 
 import DesktopPickerPane from './DesktopPickerPane';
-
-/**
- * The size of the requested thumbnails.
- *
- * @type {Object}
- */
-const THUMBNAIL_SIZE = {
-    height: 300,
-    width: 300
-};
 
 /**
  * The sources polling interval in ms.
@@ -336,14 +328,14 @@ class DesktopPicker extends PureComponent<IProps, IState> {
     _onTabSelected(id: string) {
         const { sources } = this.state;
 
-        this._selectedTabType = id;
-
         // When we change tabs also reset the screenShareAudio state so we don't
         // use the option from one tab when sharing from another.
         this.setState({
             screenShareAudio: false,
             selectedSource: this._getSelectedSource(sources),
-            selectedTab: id
+
+            // select type `window` or `screen` from id
+            selectedTab: id.split('-')[0]
         });
     }
 
@@ -420,24 +412,22 @@ class DesktopPicker extends PureComponent<IProps, IState> {
      */
     _updateSources() {
         const { types } = this.state;
+        const options = {
+            types,
+            thumbnailSize: THUMBNAIL_SIZE
+        };
 
         if (types.length > 0) {
-            obtainDesktopSources(this.state.types, {
-                thumbnailSize: THUMBNAIL_SIZE
-            })
+            obtainDesktopSources(options)
                 .then((sources: any) => {
                     const selectedSource = this._getSelectedSource(sources);
 
-                    // TODO: Maybe check if we have stopped the timer and unmounted
-                    // the component.
                     this.setState({
                         sources,
                         selectedSource
                     });
                 })
-                .catch(() => {
-                    /* ignore */
-                });
+                .catch((error: any) => logger.log(error));
         }
     }
 }

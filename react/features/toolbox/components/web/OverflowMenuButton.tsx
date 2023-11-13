@@ -73,7 +73,7 @@ const useStyles = makeStyles<{ overflowDrawer: boolean; reactionsMenuHeight: num
     return {
         overflowMenuDrawer: {
             overflow: 'hidden',
-            height: `calc(${DRAWER_MAX_HEIGHT} - ${reactionsMenuHeight}px - 16px)`
+            height: `calc(${DRAWER_MAX_HEIGHT})`
         },
         contextMenu: {
             position: 'relative' as const,
@@ -238,6 +238,7 @@ const OverflowMenuButton = ({
                 trigger = 'click'
                 visible = { isOpen }>
                 <OverflowToggleButton
+                    isMenuButton = { true }
                     isOpen = { isOpen }
                     onKeyDown = { onEscClick } />
             </Popover>

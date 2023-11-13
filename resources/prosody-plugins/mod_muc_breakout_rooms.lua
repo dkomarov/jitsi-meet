@@ -342,12 +342,11 @@ end
 function on_breakout_room_pre_create(event)
     local breakout_room = event.room;
     local main_room, main_room_jid = get_main_room(breakout_room.jid);
-    local name = main_room._data.breakout_rooms[breakout_room.jid];
 
     -- Only allow existent breakout rooms to be started.
     -- Authorisation of breakout rooms is done by their random uuid name
-    if main_room and main_room._data.breakout_rooms and name then
-        breakout_room:set_subject(breakout_room.jid, name);
+    if main_room and main_room._data.breakout_rooms and main_room._data.breakout_rooms[breakout_room.jid] then
+        breakout_room:set_subject(breakout_room.jid, main_room._data.breakout_rooms[breakout_room.jid]);
     else
         module:log('debug', 'Invalid breakout room %s will not be created.', breakout_room.jid);
         breakout_room:destroy(main_room_jid, 'Breakout room is invalid.');
@@ -362,11 +361,11 @@ function on_occupant_joined(event)
         return;
     end
 
-    local main_room = get_main_room(room.jid);
+    local main_room, main_room_jid = get_main_room(room.jid);
 
     if main_room and main_room._data.breakout_rooms_active then
         if jid_node(event.occupant.jid) ~= 'focus' then
-            broadcast_breakout_rooms(room.jid);
+            broadcast_breakout_rooms(main_room_jid);
         end
 
         -- Prevent closing all rooms if a participant has joined (see on_occupant_left).
@@ -411,14 +410,14 @@ function on_occupant_left(event)
         return;
     end
 
-    local main_room = get_main_room(room_jid);
+    local main_room, main_room_jid = get_main_room(room_jid);
 
     if not main_room then
         return;
     end
 
     if main_room._data.breakout_rooms_active and jid_node(event.occupant.jid) ~= 'focus' then
-        broadcast_breakout_rooms(room_jid);
+        broadcast_breakout_rooms(main_room_jid);
     end
 
     -- Close the conference if all left for good.
