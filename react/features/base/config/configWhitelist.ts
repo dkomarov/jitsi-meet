@@ -23,6 +23,7 @@ export default [
     'avgRtpStatsN',
     'backgroundAlpha',
     'breakoutRooms',
+    'bridgeChannel',
     'buttonsWithNotifyClick',
 
     /**
@@ -54,10 +55,6 @@ export default [
      * @type string
      */
     'callHandle',
-    'callStatsConfIDNamespace',
-    'callStatsConfigParams',
-    'callStatsID',
-    'callStatsSecret',
 
     /**
      * The UUID of the CallKit call representing the conference/meeting

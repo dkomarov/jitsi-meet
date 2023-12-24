@@ -96,7 +96,16 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
      * @returns {boolean}
      */
     isStartRecordingDisabled() {
-        const { isTokenValid, selectedRecordingService } = this.state;
+        const {
+            isTokenValid,
+            selectedRecordingService,
+            shouldRecordAudioAndVideo,
+            shouldRecordTranscription
+        } = this.state;
+
+        if (!shouldRecordAudioAndVideo && !shouldRecordTranscription) {
+            return true;
+        }
 
         // Start button is disabled if recording service is only shown;
         // When validating dropbox token, if that is not enabled, we either always
@@ -122,6 +131,8 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
             isValidating,
             selectedRecordingService,
             sharingEnabled,
+            shouldRecordAudioAndVideo,
+            shouldRecordTranscription,
             spaceLeft,
             userName
         } = this.state;
@@ -142,9 +153,15 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
                     isTokenValid={isTokenValid}
                     isValidating={isValidating}
                     onChange={this._onSelectedRecordingServiceChanged}
+                    onRecordAudioAndVideoChange={
+                        this._onRecordAudioAndVideoChange
+                    }
                     onSharingSettingChanged={this._onSharingSettingChanged}
+                    onTranscriptionChange={this._onTranscriptionChange}
                     selectedRecordingService={selectedRecordingService}
                     sharingSetting={sharingEnabled}
+                    shouldRecordAudioAndVideo={shouldRecordAudioAndVideo}
+                    shouldRecordTranscription={shouldRecordTranscription}
                     spaceLeft={spaceLeft}
                     userName={userName}
                 />

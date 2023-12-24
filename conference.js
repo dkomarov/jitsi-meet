@@ -154,7 +154,7 @@ import {
 import { isModerationNotificationDisplayed } from './react/features/notifications/functions';
 import { mediaPermissionPromptVisibilityChanged } from './react/features/overlay/actions';
 import { suspendDetected } from './react/features/power-monitor/actions';
-import { initPrejoin, makePrecallTest } from './react/features/prejoin/actions';
+import { initPrejoin } from './react/features/prejoin/actions';
 import { isPrejoinPageVisible } from './react/features/prejoin/functions';
 import { disableReceiver, stopReceiver } from './react/features/remote-control/actions';
 import { setScreenAudioShareState } from './react/features/screen-share/actions.web';
@@ -718,8 +718,6 @@ export default {
         };
 
         if (isPrejoinPageVisible(state)) {
-            APP.store.dispatch(makePrecallTest(this._getConferenceOptions()));
-
             const { tryCreateLocalTracks, errors } = this.createInitialLocalTracks(initialOptions);
             const localTracks = await tryCreateLocalTracks;
 
@@ -1037,17 +1035,6 @@ export default {
     get membersCount() {
         return room.getParticipants()
             .filter(p => !p.isHidden() || !(config.iAmRecorder && p.isHiddenFromRecorder())).length + 1;
-    },
-
-    /**
-     * Returns true if the callstats integration is enabled, otherwise returns
-     * false.
-     *
-     * @returns true if the callstats integration is enabled, otherwise returns
-     * false.
-     */
-    isCallstatsEnabled() {
-        return room && room.isCallstatsEnabled();
     },
 
     /**
@@ -2042,10 +2029,6 @@ export default {
 
                     return this.useVideoStream(stream);
                 })
-                .then(() => {
-                    logger.info(`Switched local video device to ${cameraDeviceId}.`);
-                    this._updateVideoDeviceId();
-                })
                 .catch(error => {
                     logger.error(`Failed to switch to selected camera:${cameraDeviceId}, error:${error}`);
 
@@ -2100,8 +2083,6 @@ export default {
                         // above mentioned chrome bug.
                         localAudio._realDeviceId = localAudio.deviceId = 'default';
                     }
-                    logger.info(`switched local audio input device to: ${selectedDeviceId}`);
-                    this._updateAudioDeviceId();
                 })
                 .catch(err => {
                     logger.error(`Failed to switch to selected audio input device ${selectedDeviceId}, error=${err}`);
@@ -2186,48 +2167,11 @@ export default {
 
             return dispatch(getAvailableDevices())
                 .then(devices => {
-                    // Ugly way to synchronize real device IDs with local
-                    // storage and settings menu. This is a workaround until
-                    // getConstraints() method will be implemented in browsers.
-                    this._updateAudioDeviceId();
-
-                    this._updateVideoDeviceId();
-
                     APP.UI.onAvailableDevicesChanged(devices);
                 });
         }
 
         return Promise.resolve();
-    },
-
-    /**
-     * Updates the settings for the currently used video device, extracting
-     * the device id from the used track.
-     * @private
-     */
-    _updateVideoDeviceId() {
-        const localVideo = getLocalJitsiVideoTrack(APP.store.getState());
-
-        if (localVideo && localVideo.videoType === 'camera') {
-            APP.store.dispatch(updateSettings({
-                cameraDeviceId: localVideo.getDeviceId()
-            }));
-        }
-    },
-
-    /**
-     * Updates the settings for the currently used audio device, extracting
-     * the device id from the used track.
-     * @private
-     */
-    _updateAudioDeviceId() {
-        const localAudio = getLocalJitsiAudioTrack(APP.store.getState());
-
-        if (localAudio) {
-            APP.store.dispatch(updateSettings({
-                micDeviceId: localAudio.getDeviceId()
-            }));
-        }
     },
 
     /**
@@ -2378,14 +2322,10 @@ export default {
                         this.useAudioStream(track)
                             .then(() => {
                                 hasDefaultMicChanged && (track._realDeviceId = track.deviceId = 'default');
-                                this._updateAudioDeviceId();
                             }));
                 } else {
                     promises.push(
-                        this.useVideoStream(track)
-                            .then(() => {
-                                this._updateVideoDeviceId();
-                            }));
+                        this.useVideoStream(track));
                 }
             }
         }

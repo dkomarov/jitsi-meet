@@ -97,11 +97,6 @@ var config = {
         // Disables the auto-play behavior of *all* newly created video element.
         // This is useful when the client runs on a host with limited resources.
         // noAutoPlayVideo: false,
-
-        // Enable callstats only for a percentage of users.
-        // This takes a value between 0 and 100 which determines the probability for
-        // the callstats to be enabled.
-        // callStatsThreshold: 5, // enable callstats for 5% of the users.
     },
 
     // Disables moderator indicators.
@@ -294,12 +289,19 @@ var config = {
     //     max: 5,
     // },
 
-    // This option has been deprecated since it is no longer supported as per the w3c spec.
-    // https://w3c.github.io/mediacapture-screen-share/#dom-mediadevices-getdisplaymedia. If the user has not
-    // interacted with the webpage before the getDisplayMedia call, the promise will be rejected by the browser. This
-    // has already been implemented in Firefox and Safari and will be implemented in Chrome soon.
-    // https://bugs.chromium.org/p/chromium/issues/detail?id=1198918
-    // startScreenSharing: false,
+    // Optional screenshare settings that give more control over screen capture in the browser.
+    // screenShareSettings: {
+    //      // Show users the current tab is the preferred capture source, default: false.
+    //      desktopPreferCurrentTab: false,
+    //      // Allow users to select system audio, default: include.
+    //      desktopSystemAudio: 'include',
+    //      // Allow users to seamlessly switch which tab they are sharing without having to select the tab again.
+    //      desktopSurfaceSwitching: 'include',
+    //      // Allow a user to be shown a preference for what screen is to be captured, default: unset.
+    //      desktopDisplaySurface: undefined,
+    //      // Allow users to select the current tab as a capture source, default: exclude.
+    //      desktopSelfBrowserSurface: 'exclude'
+    // },
 
     // Recording
 
@@ -376,7 +378,7 @@ var config = {
     // DEPRECATED. Use transcription.preferredLanguage instead.
     // preferredTranscribeLanguage: 'en-US',
 
-    // DEPRECATED. Use transcription.autoCaptionOnRecord instead.
+    // DEPRECATED. Use transcription.autoTranscribeOnRecord instead.
     // autoCaptionOnRecord: false,
 
     // Transcription options.
@@ -408,8 +410,8 @@ var config = {
     //     // Disable start transcription for all participants.
     //     disableStartForAll: false,
 
-    //     // Enables automatic turning on captions when recording is started
-    //     autoCaptionOnRecord: false,
+    //     // Enables automatic turning on transcribing when recording is started
+    //     autoTranscribeOnRecord: false,
     // },
 
     // Misc
@@ -437,6 +439,49 @@ var config = {
     //    // Provides a way to set the codec preference on desktop based endpoints.
     //    codecPreferenceOrder: [ 'VP9', 'VP8', 'H264' ],
     //
+    //    // Codec specific settings for scalability modes and max bitrates.
+    //    av1: {
+    //      maxBitratesVideo: {
+    //          low: 100000,
+    //          standard: 300000,
+    //          high: 1000000,
+    //          ssHigh: 2500000
+    //      },
+    //      scalabilityModeEnabled: true,
+    //      useSimulcast: false,
+    //      useKSVC: true
+    //    },
+    //    h264: {
+    //      maxBitratesVideo: {
+    //          low: 200000,
+    //          standard: 500000,
+    //          high: 1500000,
+    //          ssHigh: 2500000
+    //      },
+    //      scalabilityModeEnabled: true
+    //    },
+    //    vp8: {
+    //      maxBitratesVideo: {
+    //          low: 200000,
+    //          standard: 500000,
+    //          high: 1500000,
+    //          ssHigh: 2500000
+    //      },
+    //      scalabilityModeEnabled: false
+    //    },
+    //    vp9: {
+    //      maxBitratesVideo: {
+    //          low: 100000,
+    //          standard: 300000,
+    //          high: 1200000,
+    //          ssHigh: 2500000
+    //      },
+    //      scalabilityModeEnabled: true,
+    //      useSimulcast: false,
+    //      useKSVC: true
+    //    }
+    //
+    //    DEPRECATED! Use `codec specific settings` instead.
     //    // Provides a way to configure the maximum bitrates that will be enforced on the simulcast streams for
     //    // video tracks. The keys in the object represent the type of the stream (LD, SD or HD) and the values
     //    // are the max.bitrates to be set on that particular type of stream. The actual send may vary based on
@@ -893,38 +938,10 @@ var config = {
     // The interval at which PeerConnection.getStats() is called. Defaults to 10000
     // pcStatsInterval: 10000,
 
-    // To enable sending statistics to callstats.io you must provide the
-    // Application ID and Secret.
-    // callStatsID: '',
-    // callStatsSecret: '',
-    // callStatsApplicationLogsDisabled: false,
-
-    // The callstats initialize config params as described in the API:
-    // https://docs.callstats.io/docs/javascript#callstatsinitialize-with-app-secret
-    // callStatsConfigParams: {
-    //     disableBeforeUnloadHandler: true, // disables callstats.js's window.onbeforeunload parameter.
-    //     applicationVersion: "app_version", // Application version specified by the developer.
-    //     disablePrecalltest: true, // disables the pre-call test, it is enabled by default.
-    //     siteID: "siteID", // The name/ID of the site/campus from where the call/pre-call test is made.
-    //     additionalIDs: { // additionalIDs object, contains application related IDs.
-    //         customerID: "Customer Identifier. Example, walmart.",
-    //         tenantID: "Tenant Identifier. Example, monster.",
-    //         productName: "Product Name. Example, Jitsi.",
-    //         meetingsName: "Meeting Name. Example, Jitsi loves callstats.",
-    //         serverName: "Server/MiddleBox Name. Example, jvb-prod-us-east-mlkncws12.",
-    //         pbxID: "PBX Identifier. Example, walmart.",
-    //         pbxExtensionID: "PBX Extension Identifier. Example, 5625.",
-    //         fqExtensionID: "Fully qualified Extension Identifier. Example, +71 (US) +5625.",
-    //         sessionID: "Session Identifier. Example, session-12-34",
-    //     },
-    //     collectLegacyStats: true, //enables the collection of legacy stats in chrome browser
-    //     collectIP: true, //enables the collection localIP address
-    // },
-
-    // Enables sending participants' display names to callstats
+    // Enables sending participants' display names to stats
     // enableDisplayNameInStats: false,
 
-    // Enables sending participants' emails (if available) to callstats and other analytics
+    // Enables sending participants' emails (if available) to stats and other analytics
     // enableEmailInStats: false,
 
     // faceLandmarks: {
@@ -947,7 +964,7 @@ var config = {
     //     captureInterval: 1000,
     // },
 
-    // Controls the percentage of automatic feedback shown to participants when callstats is enabled.
+    // Controls the percentage of automatic feedback shown to participants.
     // The default value is 100%. If set to 0, no automatic feedback will be requested
     // feedbackPercentage: 100,
 
@@ -955,7 +972,7 @@ var config = {
     //
 
     // If third party requests are disabled, no other server will be contacted.
-    // This means avatars will be locally generated and callstats integration
+    // This means avatars will be locally generated and external stats integration
     // will not function.
     // disableThirdPartyRequests: false,
 
@@ -1506,8 +1523,6 @@ var config = {
      _peerConnStatusOutOfLastNTimeout
      _peerConnStatusRtcMuteTimeout
      avgRtpStatsN
-     callStatsConfIDNamespace
-     callStatsCustomScriptUrl
      desktopSharingSources
      disableAEC
      disableAGC
@@ -1681,13 +1696,12 @@ var config = {
     // logging: {
     //      // Default log level for the app and lib-jitsi-meet.
     //      defaultLogLevel: 'trace',
-    //      // Option to disable LogCollector (which stores the logs on CallStats).
+    //      // Option to disable LogCollector.
     //      //disableLogCollector: true,
     //      // Individual loggers are customizable.
     //      loggers: {
     //      // The following are too verbose in their logging with the default level.
     //      'modules/RTC/TraceablePeerConnection.js': 'info',
-    //      'modules/statistics/CallStats.js': 'info',
     //      'modules/xmpp/strophe.util.js': 'log',
     // },
 

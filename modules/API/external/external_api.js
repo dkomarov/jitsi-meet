@@ -420,7 +420,8 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             'display-capture',
             'hid',
             'microphone',
-            'screen-wake-lock'
+            'screen-wake-lock',
+            'speaker-selection'
         ].join('; ');
         this._frame.name = frameName;
         this._frame.id = frameName;
@@ -1431,6 +1432,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
      * @param { string } options.rtmpBroadcastID - The RTMP broadcast ID.
      * @param { string } options.youtubeStreamKey - The youtube stream key.
      * @param { string } options.youtubeBroadcastID - The youtube broadcast ID.
+     * @param {Object } options.extraMetadata - Any extra metadata params for file recording.
      * @returns {void}
      */
     startRecording(options) {
