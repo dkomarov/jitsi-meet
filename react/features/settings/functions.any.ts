@@ -7,6 +7,7 @@ import i18next, { DEFAULT_LANGUAGE, LANGUAGES } from '../base/i18n/i18next';
 import { getLocalParticipant } from '../base/participants/functions';
 import { toState } from '../base/redux/functions';
 import { getHideSelfView } from '../base/settings/functions.any';
+import { getLocalVideoTrack } from '../base/tracks/functions.any';
 import { parseStandardURIString } from '../base/util/uri';
 import { isStageFilmstripEnabled } from '../filmstrip/functions.web';
 import { isFollowMeActive } from '../follow-me/functions';
