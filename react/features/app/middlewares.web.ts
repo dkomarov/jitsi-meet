@@ -1,6 +1,5 @@
 import '../base/app/middleware';
 import '../base/connection/middleware';
-import '../base/i18n/middleware';
 import '../base/devices/middleware';
 import '../base/media/middleware';
 import '../dynamic-branding/middleware';
@@ -22,7 +21,6 @@ import '../talk-while-muted/middleware';
 import '../toolbox/middleware';
 import '../face-landmarks/middleware';
 import '../gifs/middleware';
-import '../whiteboard/middleware';
-// import '../base/dialog/middleware';
+import '../whiteboard/middleware.web';
 
 import './middlewares.any';

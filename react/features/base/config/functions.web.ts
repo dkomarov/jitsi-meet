@@ -5,12 +5,10 @@ import { NOTIFY_CLICK_MODE } from '../../toolbox/constants';
 import {
     IConfig,
     IDeeplinkingConfig,
+    IDeeplinkingDesktopConfig,
     IDeeplinkingMobileConfig,
-    IDeeplinkingPlatformConfig,
-    NotifyClickButton,
-    ToolbarButton
+    NotifyClickButton
 } from './configType';
-import { TOOLBAR_BUTTONS } from './constants';
 
 export * from './functions.any';
 
@@ -35,25 +33,6 @@ export function getReplaceParticipant(state: IReduxState): string | undefined {
 }
 
 /**
- * Returns the list of enabled toolbar buttons.
- *
- * @param {Object} state - The redux state.
- * @returns {Array<string>} - The list of enabled toolbar buttons.
- */
-export function getToolbarButtons(state: IReduxState): Array<string> {
-    const { toolbarButtons, customToolbarButtons } = state['features/base/config'];
-    const customButtons = customToolbarButtons?.map(({ id }) => id);
-
-    const buttons = Array.isArray(toolbarButtons) ? toolbarButtons : TOOLBAR_BUTTONS;
-
-    if (customButtons) {
-        buttons.push(...customButtons as ToolbarButton[]);
-    }
-
-    return buttons;
-}
-
-/**
  * Returns the configuration value of web-hid feature.
  *
  * @param {Object} state - The state of the app.
@@ -61,20 +40,6 @@ export function getToolbarButtons(state: IReduxState): Array<string> {
  */
 export function getWebHIDFeatureConfig(state: IReduxState): boolean {
     return state['features/base/config'].enableWebHIDFeature || false;
-}
-
-/**
- * Checks if the specified button is enabled.
- *
- * @param {string} buttonName - The name of the button.
- * {@link interfaceConfig}.
- * @param {Object|Array<string>} state - The redux state or the array with the enabled buttons.
- * @returns {boolean} - True if the button is enabled and false otherwise.
- */
-export function isToolbarButtonEnabled(buttonName: string, state: IReduxState | Array<string>) {
-    const buttons = Array.isArray(state) ? state : getToolbarButtons(state);
-
-    return buttons.includes(buttonName);
 }
 
 /**
@@ -94,13 +59,21 @@ export function areAudioLevelsEnabled(state: IReduxState): boolean {
  * @returns {void}
  */
 export function _setDeeplinkingDefaults(deeplinking: IDeeplinkingConfig) {
-    const {
-        desktop = {} as IDeeplinkingPlatformConfig,
-        android = {} as IDeeplinkingMobileConfig,
-        ios = {} as IDeeplinkingMobileConfig
-    } = deeplinking;
+    deeplinking.desktop = deeplinking.desktop || {} as IDeeplinkingDesktopConfig;
+    deeplinking.android = deeplinking.android || {} as IDeeplinkingMobileConfig;
+    deeplinking.ios = deeplinking.ios || {} as IDeeplinkingMobileConfig;
+
+    const { android, desktop, ios } = deeplinking;
 
     desktop.appName = desktop.appName || 'Jitsi Meet';
+    desktop.appScheme = desktop.appScheme || 'jitsi-meet';
+    desktop.download = desktop.download || {};
+    desktop.download.windows = desktop.download.windows
+        || 'https://github.com/jitsi/jitsi-meet-electron/releases/latest/download/jitsi-meet.exe';
+    desktop.download.macos = desktop.download.macos
+        || 'https://github.com/jitsi/jitsi-meet-electron/releases/latest/download/jitsi-meet.dmg';
+    desktop.download.linux = desktop.download.linux
+        || 'https://github.com/jitsi/jitsi-meet-electron/releases/latest/download/jitsi-meet-x86_64.AppImage';
 
     ios.appName = ios.appName || 'Jitsi Meet';
     ios.appScheme = ios.appScheme || 'org.jitsi.meet';

@@ -1,9 +1,9 @@
 import { Theme } from '@mui/material';
-import { withStyles } from '@mui/styles';
 import clsx from 'clsx';
 import React, { Component } from 'react';
 import { WithTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import { withStyles } from 'tss-react/mui';
 
 import { createToolbarEvent } from '../../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../../analytics/functions';
@@ -63,7 +63,7 @@ interface IProps extends WithTranslation {
     /**
      * An object containing the CSS classes.
      */
-    classes: any;
+    classes?: Partial<Record<keyof ReturnType<typeof styles>, string>>;
 
     /**
      * Invoked to request toggling of audio only mode.
@@ -174,7 +174,8 @@ class VideoQualitySlider extends Component<IProps> {
      * @returns {ReactElement}
      */
     render() {
-        const { classes, t } = this.props;
+        const { t } = this.props;
+        const classes = withStyles.getClasses(this.props);
         const activeSliderOption = this._mapCurrentQualityToSliderValue();
 
         return (
@@ -384,6 +385,5 @@ function _mapStateToProps(state: IReduxState) {
 }
 
 export default translate(
-    // @ts-ignore
-    connect(_mapStateToProps)(withStyles(styles)(VideoQualitySlider))
+    connect(_mapStateToProps)(withStyles(VideoQualitySlider, styles))
 );

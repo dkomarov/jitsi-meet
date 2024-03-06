@@ -16,7 +16,8 @@ import {
     CONNECTION_ESTABLISHED,
     CONNECTION_FAILED,
     CONNECTION_WILL_CONNECT,
-    SET_LOCATION_URL
+    SET_LOCATION_URL,
+    SET_PREFER_VISITOR
 } from './actionTypes';
 import { JITSI_CONNECTION_URL_KEY } from './constants';
 import logger from './logger';
@@ -181,6 +182,22 @@ export function setLocationURL(locationURL?: URL) {
 }
 
 /**
+ * To change prefer visitor in the store. Used later to decide what to request from jicofo on connection.
+ *
+ * @param {boolean} preferVisitor - The value to set.
+ * @returns {{
+ *     type: SET_PREFER_VISITOR,
+ *     preferVisitor: boolean
+ * }}
+ */
+export function setPreferVisitor(preferVisitor: boolean) {
+    return {
+        type: SET_PREFER_VISITOR,
+        preferVisitor
+    };
+}
+
+/**
  * Opens new connection.
  *
  * @param {string} [id] - The XMPP user's ID (e.g. {@code user@server.com}).
@@ -329,9 +346,11 @@ function _connectionWillConnect(connection: Object) {
 /**
  * Closes connection.
  *
+ * @param {boolean} isRedirect - Indicates if the action has been dispatched as part of visitor promotion.
+ *
  * @returns {Function}
  */
-export function disconnect() {
+export function disconnect(isRedirect?: boolean) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']): Promise<void> => {
         const state = getState();
 
@@ -348,7 +367,7 @@ export function disconnect() {
             // (and the respective Redux action) which is fired after the
             // conference has been left, notify the application about the
             // intention to leave the conference.
-            dispatch(conferenceWillLeave(conference_));
+            dispatch(conferenceWillLeave(conference_, isRedirect));
 
             promise
                 = conference_.leave()

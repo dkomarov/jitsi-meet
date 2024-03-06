@@ -11,6 +11,7 @@ import { getLocalVideoTrack } from '../base/tracks/functions.any';
 import { parseStandardURIString } from '../base/util/uri';
 import { isStageFilmstripEnabled } from '../filmstrip/functions.web';
 import { isFollowMeActive } from '../follow-me/functions';
+import { isPrejoinEnabledInConfig } from '../prejoin/functions';
 import { isReactionsEnabled } from '../reactions/functions.any';
 import { iAmVisitor } from '../visitors/functions';
 import { SS_DEFAULT_FRAME_RATE, SS_SUPPORTED_FRAMERATES } from './constants';
@@ -132,9 +133,7 @@ export function getMoreTabProps(stateful: IStateful) {
         showLanguageSettings: configuredTabs.includes('language'),
         showPrejoinPage:
             !state['features/base/settings'].userSelectedSkipPrejoin,
-        showPrejoinSettings:
-            state['features/base/config'].prejoinConfig?.enabled,
-
+        showPrejoinSettings: isPrejoinEnabledInConfig(state),
         stageFilmstripEnabled
     };
 }
@@ -230,6 +229,7 @@ export function getNotificationsTabProps(
         soundsTalkWhileMuted,
         soundsReactions
     } = state['features/base/settings'];
+
     const enableReactions = isReactionsEnabled(state);
     const moderatorMutedSoundsReactions =
         state['features/base/conference'].startReactionsMuted ?? false;

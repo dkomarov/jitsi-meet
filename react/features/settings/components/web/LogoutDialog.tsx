@@ -19,7 +19,7 @@ interface IProps extends WithTranslation {
  * Implements the Logout dialog.
  *
  * @param {Object} props - The props of the component.
- * @returns {React$Element}.
+ * @returns {React$Element}
  */
 function LogoutDialog({ onLogout, t }: IProps) {
     return (

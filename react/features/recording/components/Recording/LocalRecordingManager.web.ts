@@ -38,12 +38,7 @@ interface ILocalRecordingManager {
 }
 
 const getMimeType = (): string => {
-    const possibleTypes = [
-        'video/mp4;codecs=h264',
-        'video/webm;codecs=h264',
-        'video/webm;codecs=vp9',
-        'video/webm;codecs=vp8'
-    ];
+    const possibleTypes = ['video/webm;codecs=vp8'];
 
     for (const type of possibleTypes) {
         if (MediaRecorder.isTypeSupported(type)) {
@@ -178,11 +173,11 @@ const LocalRecordingManager: ILocalRecordingManager = {
             this.audioContext = undefined;
             this.audioDestination = undefined;
             this.totalSize = MAX_SIZE;
-            setTimeout(
-                () =>
-                    this.saveRecording(this.recordingData, this.getFilename()),
-                1000
-            );
+            setTimeout(() => {
+                if (this.recordingData.length > 0) {
+                    this.saveRecording(this.recordingData, this.getFilename());
+                }
+            }, 1000);
         }
     },
 
