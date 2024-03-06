@@ -1,30 +1,30 @@
 /* eslint-disable lines-around-comment */
-import Modal, { ModalFooter } from "@atlaskit/modal-dialog";
-import { Theme } from "@mui/material";
-import { withStyles } from "@mui/styles";
-import React, { Component, ReactElement } from "react";
-import { WithTranslation } from "react-i18next";
+// import Modal, { ModalFooter } from "@atlaskit/modal-dialog";
+import { Theme } from '@mui/material';
+// import { withStyles } from "@mui/styles";
+import React, { Component, ReactElement } from 'react';
+import { WithTranslation } from 'react-i18next';
 
 import { translate } from '../../../i18n/functions';
 import Button from '../../../ui/components/web/Button';
 import { BUTTON_TYPES } from '../../../ui/constants.web';
 import type { DialogProps } from '../../constants';
 
-import ModalHeader from "./ModalHeader";
+import ModalHeader from './ModalHeader';
 
 /**
  * The ID to be used for the cancel button if enabled.
  *
  * @type {string}
  */
-const CANCEL_BUTTON_ID = "modal-dialog-cancel-button";
+const CANCEL_BUTTON_ID = 'modal-dialog-cancel-button';
 
 /**
  * The ID to be used for the ok button if enabled.
  *
  * @type {string}
  */
-const OK_BUTTON_ID = "modal-dialog-ok-button";
+const OK_BUTTON_ID = 'modal-dialog-ok-button';
 
 /**
  * The type of the React {@code Component} props of {@link StatelessDialog}.
@@ -32,7 +32,6 @@ const OK_BUTTON_ID = "modal-dialog-ok-button";
  * @static
  */
 interface IProps extends DialogProps, WithTranslation {
-
     /**
      * An object containing the CSS classes.
      */
@@ -111,16 +110,16 @@ interface IProps extends DialogProps, WithTranslation {
 const styles = (theme: Theme) => {
     return {
         footer: {
-            boxShadow: "none",
+            boxShadow: 'none'
         },
 
         buttonContainer: {
-            display: "flex",
+            display: 'flex',
 
-            "& > button:first-child": {
-                marginRight: theme.spacing(2),
-            },
-        },
+            '& > button:first-child': {
+                marginRight: theme.spacing(2)
+            }
+        }
     };
 };
 
@@ -129,7 +128,7 @@ const styles = (theme: Theme) => {
  */
 class StatelessDialog extends Component<IProps> {
     static defaultProps = {
-        hideCloseIconButton: false,
+        hideCloseIconButton: false
     };
 
     /**
@@ -164,10 +163,11 @@ class StatelessDialog extends Component<IProps> {
             t,
             titleString,
             titleKey,
-            width,
+            width
         } = this.props;
 
         return (
+            // @ts-ignore
             <Modal
                 autoFocus={true}
                 components={{
@@ -178,17 +178,17 @@ class StatelessDialog extends Component<IProps> {
                               // @ts-ignore
                               <ModalHeader
                                   {...props}
-                                  heading={titleString || t(titleKey ?? "")}
+                                  heading={titleString || t(titleKey ?? '')}
                                   hideCloseIconButton={hideCloseIconButton}
                               />
-                          ),
+                          )
                 }}
                 footer={this._renderFooter}
                 i18n={this.props.i18n}
                 onClose={this._onDialogDismissed}
                 onDialogDismissed={this._onDialogDismissed}
                 shouldCloseOnEscapePress={true}
-                width={width || "medium"}
+                width={width || 'medium'}
             >
                 <div onKeyPress={this._onKeyPress} ref={this._onDialogRef}>
                     <form
@@ -216,7 +216,7 @@ class StatelessDialog extends Component<IProps> {
         // if passed in anything but buttons with valid type props.
         const buttons = [
             this._renderCancelButton(),
-            this._renderOKButton(),
+            this._renderOKButton()
         ].filter(Boolean);
 
         if (this.props.disableFooter) {
@@ -296,10 +296,10 @@ class StatelessDialog extends Component<IProps> {
 
         return (
             <Button
-                accessibilityLabel={t(this.props.cancelKey || "dialog.Cancel")}
+                accessibilityLabel={t(this.props.cancelKey || 'dialog.Cancel')}
                 id={CANCEL_BUTTON_ID}
                 key={CANCEL_BUTTON_ID}
-                label={t(this.props.cancelKey || "dialog.Cancel")}
+                label={t(this.props.cancelKey || 'dialog.Cancel')}
                 onClick={onDecline || this._onCancel}
                 size="small"
                 type={BUTTON_TYPES.TERTIARY}
@@ -322,11 +322,11 @@ class StatelessDialog extends Component<IProps> {
 
         return (
             <Button
-                accessibilityLabel={t(this.props.okKey || "dialog.Ok")}
+                accessibilityLabel={t(this.props.okKey || 'dialog.Ok')}
                 disabled={this.props.okDisabled}
                 id={OK_BUTTON_ID}
                 key={OK_BUTTON_ID}
-                label={t(this.props.okKey || "dialog.Ok")}
+                label={t(this.props.okKey || 'dialog.Ok')}
                 onClick={this._onSubmit}
                 size="small"
             />
@@ -360,7 +360,7 @@ class StatelessDialog extends Component<IProps> {
             return;
         }
 
-        if (event.key === "Enter" && !this.props.disableEnter) {
+        if (event.key === 'Enter' && !this.props.disableEnter) {
             event.preventDefault();
             event.stopPropagation();
 

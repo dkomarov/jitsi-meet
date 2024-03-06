@@ -1,7 +1,7 @@
 /* eslint-disable lines-around-comment */
 /* eslint-disable react/no-multi-comp */
-import ErrorIcon from '@atlaskit/icon/glyph/error';
-import WarningIcon from '@atlaskit/icon/glyph/warning';
+// import ErrorIcon from '@atlaskit/icon/glyph/error';
+// import WarningIcon from '@atlaskit/icon/glyph/warning';
 import {
     Header,
     Title,
@@ -10,7 +10,7 @@ import {
     // @ts-ignore
 } from '@atlaskit/modal-dialog/dist/es2019/styled/Content';
 import { Theme } from '@mui/material';
-import { withStyles } from '@mui/styles';
+// import { withStyles } from '@mui/styles';
 import React from 'react';
 import { WithTranslation } from 'react-i18next';
 
@@ -20,7 +20,7 @@ import { withPixelLineHeight } from '../../../styles/functions.web';
 import Button from '../../../ui/components/web/Button';
 import { BUTTON_TYPES } from '../../../ui/constants.web';
 
-const TitleIcon = ({ appearance }: { appearance?: 'danger' | 'warning'; }) => {
+const TitleIcon = ({ appearance }: { appearance?: 'danger' | 'warning' }) => {
     if (!appearance) {
         return null;
     }
@@ -28,8 +28,9 @@ const TitleIcon = ({ appearance }: { appearance?: 'danger' | 'warning'; }) => {
     const IconSymbol = appearance === 'danger' ? ErrorIcon : WarningIcon;
 
     return (
-        <span css = { titleIconWrapperStyles(appearance) }>
-            <IconSymbol label = { `${appearance} icon` } />
+        //@ts-ignore
+        <span css={titleIconWrapperStyles(appearance)}>
+            <IconSymbol label={`${appearance} icon`} />
         </span>
     );
 };
@@ -78,7 +79,6 @@ const styles = (theme: Theme) => {
         }
     };
 };
-
 
 /**
  * A default header for modal-dialog components.
@@ -142,26 +142,28 @@ class ModalHeader extends React.Component<IProps> {
         }
 
         return (
-            <Header showKeyline = { showKeyline }>
+            <Header showKeyline={showKeyline}>
                 <Title>
-                    <TitleIcon appearance = { appearance } />
+                    <TitleIcon appearance={appearance} />
                     <TitleText
-                        data-testid = { testId && `${testId}-heading` }
-                        id = { id }
-                        isHeadingMultiline = { isHeadingMultiline }>
+                        data-testid={testId && `${testId}-heading`}
+                        id={id}
+                        isHeadingMultiline={isHeadingMultiline}
+                    >
                         {heading}
                     </TitleText>
                 </Title>
 
-                {
-                    !hideCloseIconButton && <Button
-                        accessibilityLabel = { t('dialog.close') }
-                        icon = { IconCloseLarge }
-                        id = 'modal-header-close-button'
-                        onClick = { onClose }
-                        size = 'large'
-                        type = { BUTTON_TYPES.TERTIARY } />
-                }
+                {!hideCloseIconButton && (
+                    <Button
+                        accessibilityLabel={t('dialog.close')}
+                        icon={IconCloseLarge}
+                        id="modal-header-close-button"
+                        onClick={onClose}
+                        size="large"
+                        type={BUTTON_TYPES.TERTIARY}
+                    />
+                )}
             </Header>
         );
     }

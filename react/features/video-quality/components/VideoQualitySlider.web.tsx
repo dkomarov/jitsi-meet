@@ -384,6 +384,11 @@ function _mapStateToProps(state: IReduxState) {
     };
 }
 
+// export default translate(
+//     connect(_mapStateToProps)(withStyles(VideoQualitySlider, styles))
+// );
+
 export default translate(
-    connect(_mapStateToProps)(withStyles(VideoQualitySlider, styles))
+    // @ts-ignore
+    connect(_mapStateToProps)(withStyles(styles)(VideoQualitySlider))
 );
