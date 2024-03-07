@@ -1,7 +1,7 @@
 /* eslint-disable lines-around-comment */
-// import Modal, { ModalFooter } from "@atlaskit/modal-dialog";
+import Modal, { ModalFooter } from '@atlaskit/modal-dialog';
 import { Theme } from '@mui/material';
-// import { withStyles } from "@mui/styles";
+import { withStyles } from '@mui/styles';
 import React, { Component, ReactElement } from 'react';
 import { WithTranslation } from 'react-i18next';
 

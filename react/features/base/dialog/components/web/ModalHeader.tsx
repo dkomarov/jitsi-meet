@@ -1,7 +1,8 @@
 /* eslint-disable lines-around-comment */
 /* eslint-disable react/no-multi-comp */
-// import ErrorIcon from '@atlaskit/icon/glyph/error';
-// import WarningIcon from '@atlaskit/icon/glyph/warning';
+import ErrorIcon from '@atlaskit/icon/glyph/error';
+import WarningIcon from '@atlaskit/icon/glyph/warning';
+
 import {
     Header,
     Title,
