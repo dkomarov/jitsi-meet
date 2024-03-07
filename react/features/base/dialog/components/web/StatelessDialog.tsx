@@ -373,4 +373,5 @@ class StatelessDialog extends Component<IProps> {
     }
 }
 
+// @ts-ignore
 export default translate(withStyles(styles)(StatelessDialog));
