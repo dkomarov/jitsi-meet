@@ -195,6 +195,30 @@
         console.log("Jitsi Meet version: 9258 (Feb. 2024)");
 
         window.parent.postMessage("Jitsi Meet version: 9258 (Feb. 2024)", '*')
+
+        // ============ custom colors, font-size msg
+         window.addEventListener('message', function(event) {
+            console.log("Message received from the parent: " + event.data); // Message received from parent
+
+            // Get all elements with the class ".jitsi-icon"
+            var elements = document.querySelectorAll('.jitsi-icon-default');
+
+            if (event.data.includes('jitsi-icon color')) {
+							// Loop through each element and set styles
+							elements.forEach(function(element) {
+								element.style.fill = event.data.split(': ')[1]; // Set background color
+							});
+            }
+
+						if (event.data.includes('jitsi-icon size')) {
+						// Loop through each element and set styles
+						elements.forEach(function(element) {
+							element.style.height = event.data.split(': ')[1]; // Set height
+							element.style.width = event.data.split(': ')[1]; // Set width
+						});
+					}
+        });
+
     </script>
     <script><!--#include virtual="/config.js" --></script><!-- adapt to your needs, i.e. set hosts and bosh path -->
     <script><!--#include virtual="/interface_config.js" --></script>
