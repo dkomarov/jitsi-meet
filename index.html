@@ -203,14 +203,14 @@
             // Get all elements with the class ".jitsi-icon"
             var elements = document.querySelectorAll('.jitsi-icon-default');
 
-            if (event.data.includes('jitsi-icon color')) {
+            if (event.data.includes('Selected jitsi-icon color: ')) {
 							// Loop through each element and set styles
 							elements.forEach(function(element) {
 								element.style.fill = event.data.split(': ')[1]; // Set background color
 							});
             }
 
-						if (event.data.includes('jitsi-icon size')) {
+						if (event.data.includes('Selected jitsi-icon size: ')) {
 						// Loop through each element and set styles
 						elements.forEach(function(element) {
 							element.style.height = event.data.split(': ')[1]; // Set height
