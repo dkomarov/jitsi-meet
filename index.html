@@ -203,14 +203,14 @@
             // Get all elements with the class ".jitsi-icon"
             var elements = document.querySelectorAll('.jitsi-icon-default svg:not(.settings-button-small-icon svg)');
 
-            if (event.data.includes('Selected jitsi-icon color: ')) {
+            if (typeof event.data === "string" && event.data.includes('Selected jitsi-icon color: ')) {
 							// Loop through each element and set styles
 							elements.forEach(function(element) {
 								element.style.fill = event.data.split(': ')[1]; // Set background color
 							});
             }
 
-						if (event.data.includes('Selected jitsi-icon size: ')) {
+						if (typeof event.data === "string" && event.data.includes('Selected jitsi-icon size: ')) {
 
 						// Loop through each element and set styles
 						elements.forEach(function(element) {
