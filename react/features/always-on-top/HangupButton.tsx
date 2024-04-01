@@ -15,7 +15,6 @@ type Props = Partial<IProps>;
  * Stateless hangup button for the Always-on-Top windows.
  */
 export default class HangupButton extends Component<Props> {
-
     accessibilityLabel = 'Hangup';
     icon = DEFAULT_ICON.IconHangup;
 
@@ -39,7 +38,11 @@ export default class HangupButton extends Component<Props> {
      * @returns {void}
      */
     _onClick() {
-        api.executeCommand('hangup');
+        window.parent.postMessage('HangupBtn pressed!!', '*');
+
+        console.log('HangupBtn pressed!!');
+
+        // api.executeCommand('hangup');
     }
 
     /**
@@ -51,10 +54,11 @@ export default class HangupButton extends Component<Props> {
     render() {
         return (
             <ToolbarButton
-                accessibilityLabel = { this.accessibilityLabel }
-                customClass = 'hangup-button'
-                icon = { this.icon }
-                onClick = { this._onClick } />
+                accessibilityLabel={this.accessibilityLabel}
+                customClass="hangup-button"
+                icon={this.icon}
+                onClick={this._onClick}
+            />
         );
     }
 }
