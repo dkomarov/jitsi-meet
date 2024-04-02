@@ -196,6 +196,20 @@
 
         window.parent.postMessage("Jitsi Meet version: 9258 (Feb. 2024)", '*')
 
+				try {
+					const hangupBtn = document.querySelector('.hangup-menu-button');
+
+					hangupBtn.addEventListener('click', function() {
+						window.parent.postMessage('HangupBtn pressed!!', '*');
+
+        		console.log('HangupBtn pressed!!');
+					})
+				} catch (err) {
+					console.log('No hangup btn found:', err);
+				}
+       
+
+
         // ============ custom colors, font-size msg
          window.addEventListener('message', function(event) {
             console.log("Message received from the parent: " + event.data); // Message received from parent
@@ -235,6 +249,8 @@
 						});
 					}
         });
+
+
 
     </script>
     <script><!--#include virtual="/config.js" --></script><!-- adapt to your needs, i.e. set hosts and bosh path -->
