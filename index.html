@@ -215,7 +215,7 @@
             console.log("Message received from the parent: " + event.data); // Message received from parent
 
             // Get all elements with the class ".jitsi-icon"
-            var elements = document.querySelectorAll('.jitsi-icon-default svg:not(.settings-button-small-icon svg)');
+            var elements = document.querySelectorAll('.jitsi-icon-default svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg)');
 
             if (typeof event.data === "string" && event.data.includes('Selected jitsi-icon color: ')) {
 							// Loop through each element and set styles
