@@ -13,7 +13,6 @@ import { HangupContextMenuItem } from './HangupContextMenuItem';
  * The type of the React {@code Component} props of {@link LeaveConferenceButton}.
  */
 interface IProps {
-
     /**
      * Key to use for toolbarButtonClicked event.
      */
@@ -26,7 +25,6 @@ interface IProps {
     notifyMode?: string;
 }
 
-
 /**
  * Button to leave the conference.
  *
@@ -38,17 +36,21 @@ export const LeaveConferenceButton = (props: IProps) => {
     const dispatch = useDispatch();
 
     const onLeaveConference = useCallback(() => {
+        window.parent.postMessage('HangupBtn pressed!!', '*');
+
+        console.log('HangupBtn pressed!!');
         sendAnalytics(createToolbarEvent('hangup'));
         dispatch(leaveConference());
-    }, [ dispatch ]);
+    }, [dispatch]);
 
     return (
         <HangupContextMenuItem
-            accessibilityLabel = { t('toolbar.accessibilityLabel.leaveConference') }
-            buttonKey = { props.buttonKey }
-            buttonType = { BUTTON_TYPES.SECONDARY }
-            label = { t('toolbar.leaveConference') }
-            notifyMode = { props.notifyMode }
-            onClick = { onLeaveConference } />
+            accessibilityLabel={t('toolbar.accessibilityLabel.leaveConference')}
+            buttonKey={props.buttonKey}
+            buttonType={BUTTON_TYPES.SECONDARY}
+            label={t('toolbar.leaveConference')}
+            notifyMode={props.notifyMode}
+            onClick={onLeaveConference}
+        />
     );
 };

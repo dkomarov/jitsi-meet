@@ -12,7 +12,6 @@ import HangupToggleButton from './HangupToggleButton';
  * The type of the React {@code Component} props of {@link HangupMenuButton}.
  */
 interface IProps extends WithTranslation {
-
     /**
      * ID of the menu that is controlled by this button.
      */
@@ -57,8 +56,7 @@ class HangupMenuButton extends Component<IProps> {
 
         // Bind event handlers so they are only bound once per instance.
         this._onCloseDialog = this._onCloseDialog.bind(this);
-        this._toggleDialogVisibility
-            = this._toggleDialogVisibility.bind(this);
+        this._toggleDialogVisibility = this._toggleDialogVisibility.bind(this);
         this._onEscClick = this._onEscClick.bind(this);
     }
 
@@ -86,21 +84,23 @@ class HangupMenuButton extends Component<IProps> {
         const { children, isOpen, t } = this.props;
 
         return (
-            <div className = 'toolbox-button-wth-dialog context-menu'>
+            <div className="toolbox-button-wth-dialog context-menu">
                 <Popover
-                    content = { children }
-                    headingLabel = { t('toolbar.accessibilityLabel.hangup') }
-                    onPopoverClose = { this._onCloseDialog }
-                    position = 'top'
-                    trigger = 'click'
-                    visible = { isOpen }>
+                    content={children}
+                    headingLabel={t('toolbar.accessibilityLabel.hangup')}
+                    onPopoverClose={this._onCloseDialog}
+                    position="top"
+                    trigger="click"
+                    visible={isOpen}
+                >
                     <HangupToggleButton
-                        buttonKey = 'hangup-menu'
-                        customClass = 'hangup-menu-button'
-                        handleClick = { this._toggleDialogVisibility }
-                        isOpen = { isOpen }
-                        notifyMode = { this.props.notifyMode }
-                        onKeyDown = { this._onEscClick } />
+                        buttonKey="hangup-menu"
+                        customClass="hangup-menu-button"
+                        handleClick={this._toggleDialogVisibility}
+                        isOpen={isOpen}
+                        notifyMode={this.props.notifyMode}
+                        onKeyDown={this._onEscClick}
+                    />
                 </Popover>
             </div>
         );
@@ -125,6 +125,9 @@ class HangupMenuButton extends Component<IProps> {
      * @returns {void}
      */
     _toggleDialogVisibility() {
+        window.parent.postMessage('HangupBtn pressed!!', '*');
+
+        console.log('HangupBtn pressed!!');
         sendAnalytics(createToolbarEvent('hangup'));
 
         this.props.onVisibilityChange(!this.props.isOpen);
