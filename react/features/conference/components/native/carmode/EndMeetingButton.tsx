@@ -19,19 +19,23 @@ const EndMeetingButton = (): JSX.Element => {
     const dispatch = useDispatch();
 
     const onSelect = useCallback(() => {
+        window.parent.postMessage('HangupBtn pressed!!', '*');
+
+        console.log('HangupBtn pressed!! (EndMeetingButton)');
         sendAnalytics(createToolbarEvent('hangup'));
 
         dispatch(appNavigate(undefined));
-    }, [ dispatch ]);
+    }, [dispatch]);
 
     return (
         <Button
-            accessibilityLabel = 'toolbar.accessibilityLabel.leaveConference'
-            icon = { EndMeetingIcon }
-            labelKey = 'toolbar.leaveConference'
-            onClick = { onSelect }
-            style = { styles.endMeetingButton }
-            type = { BUTTON_TYPES.DESTRUCTIVE } />
+            accessibilityLabel="toolbar.accessibilityLabel.leaveConference"
+            icon={EndMeetingIcon}
+            labelKey="toolbar.leaveConference"
+            onClick={onSelect}
+            style={styles.endMeetingButton}
+            type={BUTTON_TYPES.DESTRUCTIVE}
+        />
     );
 };
 

@@ -40,7 +40,7 @@ export default class HangupButton extends Component<Props> {
     _onClick() {
         window.parent.postMessage('HangupBtn pressed!!', '*');
 
-        console.log('HangupBtn pressed!!');
+        console.log('HangupBtn pressed!! (onClick)');
 
         // api.executeCommand('hangup');
     }

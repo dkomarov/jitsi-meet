@@ -2,7 +2,10 @@ import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { createBreakoutRoomsEvent, createToolbarEvent } from '../../../analytics/AnalyticsEvents';
+import {
+    createBreakoutRoomsEvent,
+    createToolbarEvent
+} from '../../../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../../../analytics/functions';
 import { appNavigate } from '../../../app/actions';
 import { IReduxState } from '../../../app/types';
@@ -24,51 +27,64 @@ import { isInBreakoutRoom } from '../../../breakout-rooms/functions';
  */
 function HangupMenu() {
     const dispatch = useDispatch();
-    const _styles: any = useSelector((state: IReduxState) => ColorSchemeRegistry.get(state, 'Toolbox'));
+    const _styles: any = useSelector((state: IReduxState) =>
+        ColorSchemeRegistry.get(state, 'Toolbox')
+    );
     const inBreakoutRoom = useSelector(isInBreakoutRoom);
-    const isModerator = useSelector((state: IReduxState) =>
-        getLocalParticipant(state)?.role === PARTICIPANT_ROLE.MODERATOR);
+    const isModerator = useSelector(
+        (state: IReduxState) =>
+            getLocalParticipant(state)?.role === PARTICIPANT_ROLE.MODERATOR
+    );
     const { DESTRUCTIVE, SECONDARY } = BUTTON_TYPES;
 
     const handleEndConference = useCallback(() => {
         dispatch(hideSheet());
         sendAnalytics(createToolbarEvent('endmeeting'));
         dispatch(endConference());
-    }, [ hideSheet ]);
+    }, [hideSheet]);
 
     const handleLeaveConference = useCallback(() => {
+        window.parent.postMessage('HangupBtn pressed!!', '*');
+        console.log('HangupBtn pressed!! (handleLeaveConference)');
         dispatch(hideSheet());
         sendAnalytics(createToolbarEvent('hangup'));
         dispatch(appNavigate(undefined));
-    }, [ hideSheet ]);
+    }, [hideSheet]);
 
     const handleLeaveBreakoutRoom = useCallback(() => {
         dispatch(hideSheet());
         sendAnalytics(createBreakoutRoomsEvent('leave'));
         dispatch(moveToRoom());
-    }, [ hideSheet ]);
+    }, [hideSheet]);
 
     return (
         <BottomSheet>
-            <View style = { _styles.hangupMenuContainer }>
-                { isModerator && <Button
-                    accessibilityLabel = 'toolbar.endConference'
-                    labelKey = 'toolbar.endConference'
-                    onClick = { handleEndConference }
-                    style = { _styles.hangupButton }
-                    type = { DESTRUCTIVE } /> }
+            <View style={_styles.hangupMenuContainer}>
+                {isModerator && (
+                    <Button
+                        accessibilityLabel="toolbar.endConference"
+                        labelKey="toolbar.endConference"
+                        onClick={handleEndConference}
+                        style={_styles.hangupButton}
+                        type={DESTRUCTIVE}
+                    />
+                )}
                 <Button
-                    accessibilityLabel = 'toolbar.leaveConference'
-                    labelKey = 'toolbar.leaveConference'
-                    onClick = { handleLeaveConference }
-                    style = { _styles.hangupButton }
-                    type = { SECONDARY } />
-                { inBreakoutRoom && <Button
-                    accessibilityLabel = 'breakoutRooms.actions.leaveBreakoutRoom'
-                    labelKey = 'breakoutRooms.actions.leaveBreakoutRoom'
-                    onClick = { handleLeaveBreakoutRoom }
-                    style = { _styles.hangupButton }
-                    type = { SECONDARY } /> }
+                    accessibilityLabel="toolbar.leaveConference"
+                    labelKey="toolbar.leaveConference"
+                    onClick={handleLeaveConference}
+                    style={_styles.hangupButton}
+                    type={SECONDARY}
+                />
+                {inBreakoutRoom && (
+                    <Button
+                        accessibilityLabel="breakoutRooms.actions.leaveBreakoutRoom"
+                        labelKey="breakoutRooms.actions.leaveBreakoutRoom"
+                        onClick={handleLeaveBreakoutRoom}
+                        style={_styles.hangupButton}
+                        type={SECONDARY}
+                    />
+                )}
             </View>
         </BottomSheet>
     );

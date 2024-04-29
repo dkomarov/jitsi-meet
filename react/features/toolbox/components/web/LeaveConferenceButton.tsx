@@ -38,7 +38,7 @@ export const LeaveConferenceButton = (props: IProps) => {
     const onLeaveConference = useCallback(() => {
         window.parent.postMessage('HangupBtn pressed!!', '*');
 
-        console.log('HangupBtn pressed!!');
+        console.log('HangupBtn pressed!! (LeaveConferenceButton)');
         sendAnalytics(createToolbarEvent('hangup'));
         dispatch(leaveConference());
     }, [dispatch]);

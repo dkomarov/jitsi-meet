@@ -127,7 +127,7 @@ class HangupMenuButton extends Component<IProps> {
     _toggleDialogVisibility() {
         window.parent.postMessage('HangupBtn pressed!!', '*');
 
-        console.log('HangupBtn pressed!!');
+        console.log('HangupBtn pressed!! (toggleDialogVisibility)');
         sendAnalytics(createToolbarEvent('hangup'));
 
         this.props.onVisibilityChange(!this.props.isOpen);
