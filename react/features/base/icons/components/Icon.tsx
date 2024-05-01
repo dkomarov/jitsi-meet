@@ -132,16 +132,9 @@ window.addEventListener('message', function (event) {
     }
 });
 
-export const DEFAULT_COLOR = dataColor
-    ? dataColor
-    : navigator.product === 'ReactNative'
-    ? 'white'
-    : undefined;
-export const DEFAULT_SIZE = dataSize
-    ? dataSize
-    : navigator.product === 'ReactNative'
-    ? 36
-    : 40; // 22
+export const DEFAULT_COLOR =
+    navigator.product === 'ReactNative' ? 'white' : undefined;
+export const DEFAULT_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
 
 /**
  * Implements an Icon component that takes a loaded SVG file as prop and renders it as an icon.
@@ -176,12 +169,12 @@ export default function Icon(props: IProps) {
     }: IProps = props;
 
     const {
-        color: DEFAULT_COLOR, // styleColor,
-        fontSize: DEFAULT_SIZE, // styleSize,
+        color: dataColor, // styleColor,
+        fontSize: dataSize, // styleSize,
         ...restStyle
     } = styleTypeToObject(style ?? {});
-    const calculatedColor = DEFAULT_COLOR; // ?? color; ?? styleColor; // ?? DEFAULT_COLOR;
-    const calculatedSize = DEFAULT_SIZE; // ?? size; ?? styleSize; // ?? DEFAULT_SIZE;
+    const calculatedColor = dataColor; // ?? color; ?? styleColor; // ?? DEFAULT_COLOR;
+    const calculatedSize = dataSize; // ?? size; ?? styleSize; // ?? DEFAULT_SIZE;
 
     const onKeyPressHandler = useCallback(
         (e) => {
