@@ -180,8 +180,8 @@ export default function Icon(props: IProps) {
         fontSize: styleSize,
         ...restStyle
     } = styleTypeToObject(style ?? {});
-    const calculatedColor = color ?? styleColor ?? DEFAULT_COLOR;
-    const calculatedSize = size ?? styleSize ?? DEFAULT_SIZE;
+    const calculatedColor = DEFAULT_COLOR ?? color ?? styleColor; // ?? DEFAULT_COLOR;
+    const calculatedSize = DEFAULT_SIZE ?? size ?? styleSize; // ?? DEFAULT_SIZE;
 
     const onKeyPressHandler = useCallback(
         (e) => {
