@@ -46,6 +46,7 @@ function HangupMenu() {
     const handleLeaveConference = useCallback(() => {
         window.parent.postMessage('HangupBtn pressed!!', '*');
         console.log('HangupBtn pressed!! (handleLeaveConference)');
+
         dispatch(hideSheet());
         sendAnalytics(createToolbarEvent('hangup'));
         dispatch(appNavigate(undefined));

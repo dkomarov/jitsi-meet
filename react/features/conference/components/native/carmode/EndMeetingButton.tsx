@@ -20,10 +20,9 @@ const EndMeetingButton = (): JSX.Element => {
 
     const onSelect = useCallback(() => {
         window.parent.postMessage('HangupBtn pressed!!', '*');
-
         console.log('HangupBtn pressed!! (EndMeetingButton)');
-        sendAnalytics(createToolbarEvent('hangup'));
 
+        sendAnalytics(createToolbarEvent('hangup'));
         dispatch(appNavigate(undefined));
     }, [dispatch]);
 
