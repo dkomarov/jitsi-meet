@@ -120,7 +120,7 @@ window.addEventListener('message', function (event) {
         event.data.includes('Selected jitsi-icon color: ')
     ) {
         console.log('Message received from the parent: ' + event.data); // Message received from parent
-        dataColor = event.data.split(': ')[1];
+        dataColor = event.data.split(': ')[1].toString().trim();
     }
 
     if (
@@ -128,7 +128,7 @@ window.addEventListener('message', function (event) {
         event.data.includes('Selected jitsi-icon size: ')
     ) {
         console.log('Message received from the parent: ' + event.data); // Message received from parent
-        dataSize = event.data.split(': ')[1];
+        dataSize = parseInt(event.data.split(': ')[1].toString().trim());
     }
 });
 
@@ -176,12 +176,12 @@ export default function Icon(props: IProps) {
     }: IProps = props;
 
     const {
-        color: styleColor,
-        fontSize: styleSize,
+        color: DEFAULT_COLOR, // styleColor,
+        fontSize: DEFAULT_SIZE, // styleSize,
         ...restStyle
     } = styleTypeToObject(style ?? {});
-    const calculatedColor = DEFAULT_COLOR ?? color ?? styleColor; // ?? DEFAULT_COLOR;
-    const calculatedSize = DEFAULT_SIZE ?? size ?? styleSize; // ?? DEFAULT_SIZE;
+    const calculatedColor = DEFAULT_COLOR; // ?? color; ?? styleColor; // ?? DEFAULT_COLOR;
+    const calculatedSize = DEFAULT_SIZE; // ?? size; ?? styleSize; // ?? DEFAULT_SIZE;
 
     const onKeyPressHandler = useCallback(
         (e) => {
