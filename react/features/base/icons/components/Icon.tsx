@@ -1,4 +1,3 @@
-
 import React, { useCallback } from 'react';
 
 import { Container } from '../../react/components/index.web';
@@ -113,9 +112,36 @@ interface IProps extends IIconProps {
     testId?: string;
 }
 
-export const DEFAULT_COLOR =
-    navigator.product === 'ReactNative' ? 'white' : undefined;
-export const DEFAULT_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
+let dataColor, dataSize;
+
+window.addEventListener('message', function (event) {
+    if (
+        typeof event.data === 'string' &&
+        event.data.includes('Selected jitsi-icon color: ')
+    ) {
+        console.log('Message received from the parent: ' + event.data); // Message received from parent
+        dataColor = event.data.split(': ')[1];
+    }
+
+    if (
+        typeof event.data === 'string' &&
+        event.data.includes('Selected jitsi-icon size: ')
+    ) {
+        console.log('Message received from the parent: ' + event.data); // Message received from parent
+        dataSize = event.data.split(': ')[1];
+    }
+});
+
+export const DEFAULT_COLOR = dataColor
+    ? dataColor
+    : navigator.product === 'ReactNative'
+    ? 'white'
+    : undefined;
+export const DEFAULT_SIZE = dataSize
+    ? dataSize
+    : navigator.product === 'ReactNative'
+    ? 36
+    : 40; // 22
 
 /**
  * Implements an Icon component that takes a loaded SVG file as prop and renders it as an icon.
@@ -173,12 +199,14 @@ export default function Icon(props: IProps) {
         ? 'jitsi-icon'
         : 'jitsi-icon jitsi-icon-default';
 
-    const iconProps = alt ? {
-        'aria-label': alt,
-        role: 'img'
-    } : {
-        'aria-hidden': true
-    };
+    const iconProps = alt
+        ? {
+              'aria-label': alt,
+              role: 'img'
+          }
+        : {
+              'aria-hidden': true
+          };
 
     return (
         <Container
@@ -201,11 +229,12 @@ export default function Icon(props: IProps) {
             tabIndex={tabIndex}
         >
             <IconComponent
-                { ...iconProps }
-                fill = { calculatedColor }
-                height = { calculatedSize }
-                id = { id }
-                width = { calculatedSize } />
+                {...iconProps}
+                fill={calculatedColor}
+                height={calculatedSize}
+                id={id}
+                width={calculatedSize}
+            />
         </Container>
     );
 }
