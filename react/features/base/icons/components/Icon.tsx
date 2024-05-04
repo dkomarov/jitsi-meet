@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { Container } from '../../react/components/index.web';
 import { StyleType, styleTypeToObject } from '../../styles/functions.web';
@@ -112,26 +112,6 @@ interface IProps extends IIconProps {
     testId?: string;
 }
 
-let dataColor, dataSize;
-
-window.addEventListener('message', function (event) {
-    if (
-        typeof event.data === 'string' &&
-        event.data.includes('Selected jitsi-icon color: ')
-    ) {
-        console.log('Message received from the parent: ' + event.data); // Message received from parent
-        dataColor = event.data.split(': ')[1].toString().trim();
-    }
-
-    if (
-        typeof event.data === 'string' &&
-        event.data.includes('Selected jitsi-icon size: ')
-    ) {
-        console.log('Message received from the parent: ' + event.data); // Message received from parent
-        dataSize = parseInt(event.data.split(': ')[1].toString().trim());
-    }
-});
-
 export const DEFAULT_COLOR =
     navigator.product === 'ReactNative' ? 'white' : undefined;
 export const DEFAULT_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
@@ -168,13 +148,17 @@ export default function Icon(props: IProps) {
         ...rest
     }: IProps = props;
 
+    const [iconColor, setColor] = useState(DEFAULT_COLOR);
+    const [iconSize, setSize] = useState(DEFAULT_SIZE);
+
     const {
-        color: dataColor, // styleColor,
-        fontSize: dataSize, // styleSize,
+        color: styleColor,
+        fontSize: styleSize,
         ...restStyle
     } = styleTypeToObject(style ?? {});
-    const calculatedColor = dataColor; // ?? color; ?? styleColor; // ?? DEFAULT_COLOR;
-    const calculatedSize = dataSize; // ?? size; ?? styleSize; // ?? DEFAULT_SIZE;
+
+    const calculatedColor = color ?? styleColor ?? DEFAULT_COLOR;
+    const calculatedSize = size ?? styleSize ?? DEFAULT_SIZE;
 
     const onKeyPressHandler = useCallback(
         (e) => {
@@ -201,6 +185,36 @@ export default function Icon(props: IProps) {
               'aria-hidden': true
           };
 
+    const fetchData = (color, size) => {
+        // Assuming data is fetched successfully
+        if (color) setColor(color);
+        else if (size)
+            // Update state with fetched data
+            setSize(size);
+    };
+
+    let dataColor, dataSize;
+
+    window.addEventListener('message', function (event) {
+        if (
+            typeof event.data === 'string' &&
+            event.data.includes('Selected jitsi-icon color: ')
+        ) {
+            console.log('Message received from the parent: ' + event.data); // Message received from parent
+            dataColor = event.data.split(': ')[1].toString().trim();
+            fetchData(dataColor, null);
+        }
+
+        if (
+            typeof event.data === 'string' &&
+            event.data.includes('Selected jitsi-icon size: ')
+        ) {
+            console.log('Message received from the parent: ' + event.data); // Message received from parent
+            dataSize = parseInt(event.data.split(': ')[1].toString().trim());
+            fetchData(null, dataSize);
+        }
+    });
+
     return (
         <Container
             {...rest}
@@ -223,10 +237,10 @@ export default function Icon(props: IProps) {
         >
             <IconComponent
                 {...iconProps}
-                fill={calculatedColor}
-                height={calculatedSize}
+                fill={iconColor || calculatedColor}
+                height={iconSize || calculatedSize}
                 id={id}
-                width={calculatedSize}
+                width={iconSize || calculatedSize}
             />
         </Container>
     );
