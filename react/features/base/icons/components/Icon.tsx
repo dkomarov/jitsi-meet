@@ -185,7 +185,7 @@ export default function Icon(props: IProps) {
               'aria-hidden': true
           };
 
-    const fetchData = (color, size) => {
+    const fetchData = (color: string | null, size: number | null) => {
         // Assuming data is fetched successfully
         if (color) setColor(color);
         else if (size)
