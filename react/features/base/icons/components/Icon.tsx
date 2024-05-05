@@ -150,6 +150,7 @@ export default function Icon(props: IProps) {
 
     const [iconColor, setColor] = useState(DEFAULT_COLOR);
     const [iconSize, setSize] = useState(DEFAULT_SIZE);
+    const [hasColorChanged, setHasColorChanged] = useState(false);
 
     const {
         color: styleColor,
@@ -187,8 +188,10 @@ export default function Icon(props: IProps) {
 
     const fetchData = (color: string | null, size: number | null) => {
         // Assuming data is fetched successfully
-        if (color) setColor(`${color} !important`); // Set background color);
-        else if (size)
+        if (color) {
+            setColor(color); // Set background color);
+            setHasColorChanged(true);
+        } else if (size)
             // Update state with fetched data
             setSize(size);
     };
@@ -225,7 +228,9 @@ export default function Icon(props: IProps) {
             aria-haspopup={ariaHasPopup}
             aria-label={ariaLabel}
             aria-pressed={ariaPressed}
-            className={`${jitsiIconClassName} ${className || ''}`}
+            className={`${!hasColorChanged} ? ${jitsiIconClassName} ${
+                className || ''
+            } : ${className || ''}`}
             data-testid={testId}
             id={containerId}
             onClick={onClick}
