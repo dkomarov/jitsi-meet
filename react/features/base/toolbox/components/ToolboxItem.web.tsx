@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 
 import Icon from '../../icons/components/Icon';
 import Tooltip from '../../tooltip/components/Tooltip';
@@ -95,6 +95,30 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             role: 'button'
         };
 
+        const [iconColor, setColor] = useState(backgroundColor);
+        const [hasColorChanged, setHasColorChanged] = useState(false);
+
+        const fetchData = (color: string | null) => {
+            // Assuming data is fetched successfully
+            if (color) {
+                setColor(color); // Set background color);
+                setHasColorChanged(true);
+            }
+        };
+
+        let dataColor;
+
+        window.addEventListener('message', function (event) {
+            if (
+                typeof event.data === 'string' &&
+                event.data.includes('Selected jitsi-icon color: ')
+            ) {
+                console.log('Message received from the parent: ' + event.data); // Message received from parent
+                dataColor = event.data.split(': ')[1].toString().trim();
+                fetchData(dataColor);
+            }
+        });
+
         const elementType = showLabel ? 'li' : 'div';
         const useTooltip = this.tooltip && this.tooltip.length > 0;
 
@@ -102,7 +126,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             return (
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
-                    backgroundColor={backgroundColor}
+                    backgroundColor={iconColor || backgroundColor}
                     disabled={disabled}
                     icon={icon}
                     onClick={onClick}
@@ -141,6 +165,47 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
      * @returns {ReactElement}
      */
     _renderIcon() {
+        const [iconSize, setSize] = useState(36);
+
+        const [iconColor, setColor] = useState('white');
+        const [hasColorChanged, setHasColorChanged] = useState(false);
+
+        const fetchData = (color: string | null, size: number | null) => {
+            // Assuming data is fetched successfully
+            if (color) {
+                setColor(color); // Set background color);
+                setHasColorChanged(true);
+            }
+            // Assuming data is fetched successfully
+            else if (size)
+                // Update state with fetched data
+                setSize(size);
+        };
+
+        let dataColor, dataSize;
+
+        window.addEventListener('message', function (event) {
+            if (
+                typeof event.data === 'string' &&
+                event.data.includes('Selected jitsi-icon color: ')
+            ) {
+                console.log('Message received from the parent: ' + event.data); // Message received from parent
+                dataColor = event.data.split(': ')[1].toString().trim();
+                fetchData(dataColor, null);
+            }
+
+            if (
+                typeof event.data === 'string' &&
+                event.data.includes('Selected jitsi-icon size: ')
+            ) {
+                console.log('Message received from the parent: ' + event.data); // Message received from parent
+                dataSize = parseInt(
+                    event.data.split(': ')[1].toString().trim()
+                );
+                fetchData(null, dataSize);
+            }
+        });
+
         const {
             backgroundColor,
             customClass,
@@ -150,7 +215,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             toggled
         } = this.props;
         const iconComponent = (
-            <Icon size={showLabel ? undefined : 36} src={icon} /> // 24
+            <Icon size={iconSize || showLabel ? undefined : 36} src={icon} /> // 24
         );
         const elementType = showLabel ? 'span' : 'div';
         const className = `${
@@ -158,7 +223,10 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         } ${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''} ${
             customClass ?? ''
         }`;
-        const style = backgroundColor && !showLabel ? { backgroundColor } : {};
+        const style =
+            { iconColor } || (backgroundColor && !showLabel)
+                ? { backgroundColor }
+                : {};
 
         return React.createElement(
             elementType,
