@@ -228,9 +228,11 @@ export default function Icon(props: IProps) {
             aria-haspopup={ariaHasPopup}
             aria-label={ariaLabel}
             aria-pressed={ariaPressed}
-            className={`${!hasColorChanged} ? ${jitsiIconClassName} ${
-                className || ''
-            } : ${className || ''}`}
+            className={
+                !hasColorChanged
+                    ? `${jitsiIconClassName} ${className} || ''`
+                    : `${className} || ''`
+            }
             data-testid={testId}
             id={containerId}
             onClick={onClick}
