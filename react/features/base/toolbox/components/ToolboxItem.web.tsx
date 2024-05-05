@@ -95,29 +95,26 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             role: 'button'
         };
 
-        const [iconColor, setColor] = useState(backgroundColor);
-        const [hasColorChanged, setHasColorChanged] = useState(false);
+        // const [iconColor, setColor] = useState('white');
 
-        const fetchData = (color: string | null) => {
-            // Assuming data is fetched successfully
-            if (color) {
-                setColor(color); // Set background color);
-                setHasColorChanged(true);
-            }
-        };
+        // const fetchData = (color: string | null) => {
+        //     // Assuming data is fetched successfully
+        //     if (color)
+        //         setColor(color); // Set background color);
+        // };
 
-        let dataColor;
+        // let dataColor;
 
-        window.addEventListener('message', function (event) {
-            if (
-                typeof event.data === 'string' &&
-                event.data.includes('Selected jitsi-icon color: ')
-            ) {
-                console.log('Message received from the parent: ' + event.data); // Message received from parent
-                dataColor = event.data.split(': ')[1].toString().trim();
-                fetchData(dataColor);
-            }
-        });
+        // window.addEventListener('message', function (event) {
+        //     if (
+        //         typeof event.data === 'string' &&
+        //         event.data.includes('Selected jitsi-icon color: ')
+        //     ) {
+        //         console.log('Message received from the parent: ' + event.data); // Message received from parent
+        //         dataColor = event.data.split(': ')[1].toString().trim();
+        //         fetchData(dataColor);
+        //     }
+        // });
 
         const elementType = showLabel ? 'li' : 'div';
         const useTooltip = this.tooltip && this.tooltip.length > 0;
@@ -126,7 +123,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             return (
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
-                    backgroundColor={iconColor || backgroundColor}
+                    backgroundColor={backgroundColor} //  iconColor ||
                     disabled={disabled}
                     icon={icon}
                     onClick={onClick}
@@ -168,16 +165,12 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         const [iconSize, setSize] = useState(36);
 
         const [iconColor, setColor] = useState('white');
-        const [hasColorChanged, setHasColorChanged] = useState(false);
 
         const fetchData = (color: string | null, size: number | null) => {
             // Assuming data is fetched successfully
-            if (color) {
-                setColor(color); // Set background color);
-                setHasColorChanged(true);
-            }
+            if (color) setColor(color); // Set background color);
             // Assuming data is fetched successfully
-            else if (size)
+            if (size)
                 // Update state with fetched data
                 setSize(size);
         };
