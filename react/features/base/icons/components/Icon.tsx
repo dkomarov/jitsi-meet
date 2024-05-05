@@ -187,7 +187,7 @@ export default function Icon(props: IProps) {
 
     const fetchData = (color: string | null, size: number | null) => {
         // Assuming data is fetched successfully
-        if (color) setColor(color + ' !important'); // Set background color);
+        if (color) setColor(`${color} !important`); // Set background color);
         else if (size)
             // Update state with fetched data
             setSize(size);
