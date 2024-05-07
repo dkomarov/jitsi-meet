@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react'; // Component
 
 import Icon from '../../icons/components/Icon';
 import Tooltip from '../../tooltip/components/Tooltip';
@@ -95,26 +95,31 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             role: 'button'
         };
 
-        const [iconColor, setColor] = useState('white');
+        // const [iconColor, setColor] = useState('white');
 
-        const fetchData = (color: string | null) => {
-            // Assuming data is fetched successfully
-            if (color) setColor(color); // Set background color);
-            // Assuming data is fetched successfully
-        };
+        // const fetchData = (color: string | null) => {
+        //     // Assuming data is fetched successfully
+        //     if (color) setColor(color); // Set background color);
+        //     // Assuming data is fetched successfully
+        // };
+        // let dataColor;
 
-        let dataColor;
+        // handleColorChange = (dataColor) => {
+        //     // Update state with a new color
+        //     this.setState({ backgroundColor: dataColor });
+        // };
 
-        window.addEventListener('message', function (event) {
-            if (
-                typeof event.data === 'string' &&
-                event.data.includes('Selected jitsi-icon color: ')
-            ) {
-                console.log('Message received from the parent: ' + event.data); // Message received from parent
-                dataColor = event.data.split(': ')[1].toString().trim();
-                fetchData(dataColor);
-            }
-        });
+        // window.addEventListener('message', function (event) {
+        //     if (
+        //         typeof event.data === 'string' &&
+        //         event.data.includes('Selected jitsi-icon color: ')
+        //     ) {
+        //         console.log('Message received from the parent: ' + event.data); // Message received from parent
+        //         dataColor = event.data.split(': ')[1].toString().trim();
+        //         this.handleColorChange(dataColor);
+        //         // fetchData(dataColor);
+        //     }
+        // });
 
         const elementType = showLabel ? 'li' : 'div';
         const useTooltip = this.tooltip && this.tooltip.length > 0;
@@ -123,7 +128,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             return (
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
-                    backgroundColor={iconColor || backgroundColor}
+                    backgroundColor={backgroundColor} // dataColor ||
                     disabled={disabled}
                     icon={icon}
                     onClick={onClick}
@@ -162,41 +167,41 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
      * @returns {ReactElement}
      */
     _renderIcon() {
-        const [iconSize, setSize] = useState(36);
-        const [iconColor, setColor] = useState('white');
+        // const [iconSize, setSize] = useState(36);
+        // const [iconColor, setColor] = useState('white');
 
-        const fetchData = (color: string | null, size: number | null) => {
-            // Assuming data is fetched successfully
-            if (color) setColor(color); // Set background color);
-            // Assuming data is fetched successfully
-            if (size)
-                // Update state with fetched data
-                setSize(size);
-        };
+        // const fetchData = (color: string | null, size: number | null) => {
+        //     // Assuming data is fetched successfully
+        //     if (color) setColor(color); // Set background color);
+        //     // Assuming data is fetched successfully
+        //     if (size)
+        //         // Update state with fetched data
+        //         setSize(size);
+        // };
 
-        let dataColor, dataSize;
+        // let dataColor, dataSize;
 
-        window.addEventListener('message', function (event) {
-            if (
-                typeof event.data === 'string' &&
-                event.data.includes('Selected jitsi-icon color: ')
-            ) {
-                console.log('Message received from the parent: ' + event.data); // Message received from parent
-                dataColor = event.data.split(': ')[1].toString().trim();
-                fetchData(dataColor, null);
-            }
+        // window.addEventListener('message', function (event) {
+        //     if (
+        //         typeof event.data === 'string' &&
+        //         event.data.includes('Selected jitsi-icon color: ')
+        //     ) {
+        //         console.log('Message received from the parent: ' + event.data); // Message received from parent
+        //         dataColor = event.data.split(': ')[1].toString().trim();
+        //         fetchData(dataColor, null);
+        //     }
 
-            if (
-                typeof event.data === 'string' &&
-                event.data.includes('Selected jitsi-icon size: ')
-            ) {
-                console.log('Message received from the parent: ' + event.data); // Message received from parent
-                dataSize = parseInt(
-                    event.data.split(': ')[1].toString().trim()
-                );
-                fetchData(null, dataSize);
-            }
-        });
+        //     if (
+        //         typeof event.data === 'string' &&
+        //         event.data.includes('Selected jitsi-icon size: ')
+        //     ) {
+        //         console.log('Message received from the parent: ' + event.data); // Message received from parent
+        //         dataSize = parseInt(
+        //             event.data.split(': ')[1].toString().trim()
+        //         );
+        //         fetchData(null, dataSize);
+        //     }
+        // });
 
         const {
             backgroundColor,
@@ -207,7 +212,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             toggled
         } = this.props;
         const iconComponent = (
-            <Icon size={iconSize || showLabel ? undefined : 36} src={icon} /> // 24
+            <Icon size={showLabel ? undefined : 36} src={icon} /> // 24 // iconSize ||
         );
         const elementType = showLabel ? 'span' : 'div';
         const className = `${
@@ -215,10 +220,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         } ${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''} ${
             customClass ?? ''
         }`;
-        const style =
-            iconColor || (backgroundColor && !showLabel)
-                ? { backgroundColor }
-                : {};
+        const style = backgroundColor && !showLabel ? { backgroundColor } : {}; //   iconColor ||
 
         return React.createElement(
             elementType,
