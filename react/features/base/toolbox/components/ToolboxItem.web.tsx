@@ -95,26 +95,17 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             role: 'button'
         };
 
-        // const [iconColor, setColor] = useState('white');
+        let dataColor;
 
-        // const fetchData = (color: string | null) => {
-        //     // Assuming data is fetched successfully
-        //     if (color)
-        //         setColor(color); // Set background color);
-        // };
-
-        // let dataColor;
-
-        // window.addEventListener('message', function (event) {
-        //     if (
-        //         typeof event.data === 'string' &&
-        //         event.data.includes('Selected jitsi-icon color: ')
-        //     ) {
-        //         console.log('Message received from the parent: ' + event.data); // Message received from parent
-        //         dataColor = event.data.split(': ')[1].toString().trim();
-        //         fetchData(dataColor);
-        //     }
-        // });
+        window.addEventListener('message', function (event) {
+            if (
+                typeof event.data === 'string' &&
+                event.data.includes('Selected jitsi-icon color: ')
+            ) {
+                console.log('Message received from the parent: ' + event.data); // Message received from parent
+                dataColor = event.data.split(': ')[1].toString().trim();
+            }
+        });
 
         const elementType = showLabel ? 'li' : 'div';
         const useTooltip = this.tooltip && this.tooltip.length > 0;
