@@ -95,6 +95,14 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             role: 'button'
         };
 
+        const [iconColor, setColor] = useState('white');
+
+        const fetchData = (color: string | null) => {
+            // Assuming data is fetched successfully
+            if (color) setColor(color); // Set background color);
+            // Assuming data is fetched successfully
+        };
+
         let dataColor;
 
         window.addEventListener('message', function (event) {
@@ -104,6 +112,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             ) {
                 console.log('Message received from the parent: ' + event.data); // Message received from parent
                 dataColor = event.data.split(': ')[1].toString().trim();
+                fetchData(dataColor);
             }
         });
 
@@ -114,7 +123,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             return (
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
-                    backgroundColor={backgroundColor} //  iconColor ||
+                    backgroundColor={iconColor || backgroundColor}
                     disabled={disabled}
                     icon={icon}
                     onClick={onClick}
@@ -154,7 +163,6 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
      */
     _renderIcon() {
         const [iconSize, setSize] = useState(36);
-
         const [iconColor, setColor] = useState('white');
 
         const fetchData = (color: string | null, size: number | null) => {
@@ -208,7 +216,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             customClass ?? ''
         }`;
         const style =
-            { iconColor } || (backgroundColor && !showLabel)
+            iconColor || (backgroundColor && !showLabel)
                 ? { backgroundColor }
                 : {};
 
