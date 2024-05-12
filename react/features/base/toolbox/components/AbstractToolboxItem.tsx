@@ -6,7 +6,6 @@ import type { StyleType } from '../../styles/functions.any';
 import { TOOLTIP_POSITION } from '../../ui/constants.any';
 
 export type Styles = {
-
     /**
      * Style for the item's icon.
      */
@@ -29,7 +28,6 @@ export type Styles = {
 };
 
 export interface IProps extends WithTranslation {
-
     /**
      * A succinct description of what the item does. Used by accessibility
      * tools and torture tests.
@@ -69,7 +67,9 @@ export interface IProps extends WithTranslation {
     /**
      * On click handler.
      */
-    onClick: (e?: React.MouseEvent<HTMLElement> | GestureResponderEvent) => void;
+    onClick: (
+        e?: React.MouseEvent<HTMLElement> | GestureResponderEvent
+    ) => void;
 
     /**
      * Whether to show the label or not.
@@ -109,7 +109,9 @@ export interface IProps extends WithTranslation {
  *
  * @abstract
  */
-export default class AbstractToolboxItem<P extends IProps> extends Component<P> {
+export default class AbstractToolboxItem<
+    P extends IProps
+> extends Component<P> {
     /**
      * Default values for {@code AbstractToolboxItem} component's properties.
      *
@@ -146,7 +148,10 @@ export default class AbstractToolboxItem<P extends IProps> extends Component<P> 
      * @returns {?string}
      */
     get label(): string | undefined {
-        return this._maybeTranslateAttribute(this.props.label, this.props.labelProps);
+        return this._maybeTranslateAttribute(
+            this.props.label,
+            this.props.labelProps
+        );
     }
 
     /**
@@ -184,8 +189,9 @@ export default class AbstractToolboxItem<P extends IProps> extends Component<P> 
         const { t } = this.props;
 
         if (textProps) {
-
-            return typeof t === 'function' ? t(text, textProps) : `${text} ${textProps}`;
+            return typeof t === 'function'
+                ? t(text, textProps)
+                : `${text} ${textProps}`;
         }
 
         return typeof t === 'function' ? t(text) : text;
@@ -225,5 +231,43 @@ export default class AbstractToolboxItem<P extends IProps> extends Component<P> 
      */
     render() {
         return this.props.visible ? this._renderItem() : null;
+    }
+
+    handleColorChange(event) {
+        if (
+            typeof event.data === 'string' &&
+            event.data.includes('Selected jitsi-icon color: ')
+        ) {
+            console.log('Message received from the parent: ' + event.data); // Message received from parent
+            let dataColor = event.data.split(': ')[1].toString().trim();
+            this.setState({
+                backgroundColor: dataColor
+            });
+        }
+    }
+
+    handleSizeChange(event) {
+        if (
+            typeof event.data === 'string' &&
+            event.data.includes('Selected jitsi-icon size: ')
+        ) {
+            console.log('Message received from the parent: ' + event.data); // Message received from parent
+            let dataSize = parseInt(
+                event.data.split(': ')[1].toString().trim()
+            );
+            this.setState({
+                size: dataSize
+            });
+        }
+    }
+
+    componentDidMount() {
+        window.addEventListener('message', this.handleColorChange);
+        window.addEventListener('message', this.handleSizeChange);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('message', this.handleColorChange);
+        window.removeEventListener('message', this.handleSizeChange);
     }
 }
