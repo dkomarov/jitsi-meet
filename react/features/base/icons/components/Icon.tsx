@@ -173,9 +173,9 @@ export default function Icon(props: IProps) {
         [onClick, onKeyPress]
     );
 
-    const jitsiIconClassName = calculatedColor
-        ? 'jitsi-icon'
-        : 'jitsi-icon jitsi-icon-default';
+    // const jitsiIconClassName = calculatedColor
+    //     ? 'jitsi-icon'
+    //     : 'jitsi-icon jitsi-icon-default';
 
     const iconProps = alt
         ? {
@@ -229,8 +229,9 @@ export default function Icon(props: IProps) {
             aria-label={ariaLabel}
             aria-pressed={ariaPressed}
             className={
+                ''
                 // !hasColorChanged ?
-                `${jitsiIconClassName} ${className || ''}`
+                // `${jitsiIconClassName} ${className || ''}`
                 // : `${className} || ''`
             }
             data-testid={testId}
