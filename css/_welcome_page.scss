@@ -58,7 +58,6 @@ body.welcome-page {
             line-height: 26px;
             margin: 16px 0 32px 0;
             text-align: $welcomePageHeaderTextAlign;
-
         }
 
         .not-allow-title-character-div {
@@ -73,21 +72,19 @@ body.welcome-page {
             .not-allow-title-character-text {
                 float: right;
                 line-height: 1.9;
-            };
+            }
             .jitsi-icon {
                 margin-right: 9px;
                 float: left;
 
-
                 svg {
-                    fill:#f03e3e;
+                    fill: #f03e3e;
 
                     & > *:first-child {
-                        fill: none !important;
+                        fill: none;
                     }
                 }
             }
-
         }
 
         .insecure-room-name-warning {
@@ -107,7 +104,7 @@ body.welcome-page {
                     fill: rgb(215, 121, 118);
 
                     & > *:first-child {
-                        fill: none !important;
+                        fill: none;
                     }
                 }
             }
@@ -155,7 +152,6 @@ body.welcome-page {
                     }
                 }
             }
-
         }
 
         #moderated-meetings {
@@ -178,7 +174,7 @@ body.welcome-page {
         display: $welcomePageTabContainerDisplay;
         flex-direction: column;
 
-        .tab-content{
+        .tab-content {
             display: $welcomePageTabContentDisplay;
             height: 250px;
             margin: 5px 0px;
@@ -190,13 +186,13 @@ body.welcome-page {
         .tab-buttons {
             background-color: #c7ddff;
             border-radius: 6px;
-            color: #0163FF;
+            color: #0163ff;
             font-size: 14px;
             line-height: 18px;
             margin: 4px;
             display: $welcomePageTabButtonsDisplay;
 
-            [role="tab"] {
+            [role='tab'] {
                 background-color: #c7ddff;
                 border-radius: 7px;
                 cursor: pointer;
@@ -208,20 +204,19 @@ body.welcome-page {
                 color: inherit;
                 border: 0;
 
-                &[aria-selected="true"] {
-                    background-color: #FFF;
+                &[aria-selected='true'] {
+                    background-color: #fff;
                 }
             }
-
         }
     }
 
     .welcome-page-button {
         border: 0;
         font-size: 14px;
-        background: #0074E0;
+        background: #0074e0;
         border-radius: 3px;
-        color: #FFFFFF;
+        color: #ffffff;
         cursor: pointer;
         padding: 16px 20px;
 
@@ -274,7 +269,7 @@ body.welcome-page {
     }
 
     .welcome-cards-container {
-        color:#131519;
+        color: #131519;
         padding-top: 40px;
     }
 
@@ -305,11 +300,11 @@ body.welcome-page {
         }
 
         &--blue {
-            background: #D5E5FF;
+            background: #d5e5ff;
         }
 
         &--grey {
-            background: #F2F3F4;
+            background: #f2f3f4;
         }
     }
 
