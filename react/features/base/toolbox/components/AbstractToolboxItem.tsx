@@ -233,7 +233,7 @@ export default class AbstractToolboxItem<
         return this.props.visible ? this._renderItem() : null;
     }
 
-    handleColorChange(event) {
+    handleColorChange(event: MessageEvent) {
         if (
             typeof event.data === 'string' &&
             event.data.includes('Selected jitsi-icon color: ')
@@ -246,7 +246,7 @@ export default class AbstractToolboxItem<
         }
     }
 
-    handleSizeChange(event) {
+    handleSizeChange(event: MessageEvent) {
         if (
             typeof event.data === 'string' &&
             event.data.includes('Selected jitsi-icon size: ')
