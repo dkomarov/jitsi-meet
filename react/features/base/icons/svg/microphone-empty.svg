@@ -37,10 +37,10 @@
      clip-rule="evenodd"
      d="m 25.318914,5.7776804 c 0,-2.925274 -2.361539,-5.29667483 -5.27453,-5.29667483 -2.913043,0 -5.27453,2.37140083 -5.27453,5.29667483 v 7.9450126 c 0,2.471694 1.685911,4.547989 3.965919,5.132345 -0.0067,0.0539 -0.01,0.108718 -0.01,0.16433 V 21.5578 c -3.741933,-0.630306 -6.5932,-3.898353 -6.5932,-7.835107 0,-0.731338 -0.590377,-1.324168 -1.318632,-1.324168 -0.728254,0 -1.3186326,0.59283 -1.3186326,1.324168 0,5.402079 4.0266956,9.859761 9.2304286,10.511383 v 1.406136 c 0,0.731338 0.590351,1.324168 1.318632,1.324168 0.728281,0 1.318632,-0.59283 1.318632,-1.324168 v -1.406136 c 5.20372,-0.651622 9.230429,-5.109304 9.230429,-10.511383 0,-0.731338 -0.590352,-1.324168 -1.318634,-1.324168 -0.72828,0 -1.318631,0.59283 -1.318631,1.324168 0,3.936754 -2.85128,7.204801 -6.593164,7.835107 v -2.538432 c 0,-0.05562 -0.0035,-0.110438 -0.01,-0.16433 2.280009,-0.584356 3.965879,-2.660651 3.965879,-5.132345 z m -5.27453,-2.6483375 c -1.456562,0 -2.637266,1.1857005 -2.637266,2.6483375 v 7.9450126 c 0,1.462677 1.180704,2.648336 2.637266,2.648336 1.456562,0 2.637266,-1.185659 2.637266,-2.648336 V 5.7776804 c 0,-1.462637 -1.180704,-2.6483375 -2.637266,-2.6483375 z"
      id="path8592"
-     style="stroke-width:1.3214;fill:#ffffff" />
+     style="stroke-width:1.3214;" />
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:10.6667px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none"
+     style="font-style:normal;font-weight:normal;font-size:10.6667px;line-height:1.25;font-family:sans-serif;;fill-opacity:1;stroke:none"
      x="7.9166288"
      y="39.604649"
      id="text9988"><tspan
@@ -48,5 +48,5 @@
        id="tspan9986"
        x="7.9166288"
        y="39.604649"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">MIC</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';">MIC</tspan></text>
 </svg>
