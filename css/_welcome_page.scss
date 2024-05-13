@@ -81,7 +81,7 @@ body.welcome-page {
                     fill: #f03e3e;
 
                     & > *:first-child {
-                        fill: none;
+                        fill: inherit;
                     }
                 }
             }
