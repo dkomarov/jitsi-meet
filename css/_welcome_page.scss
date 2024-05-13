@@ -104,7 +104,7 @@ body.welcome-page {
                     fill: rgb(215, 121, 118);
 
                     & > *:first-child {
-                        fill: none;
+                        fill: inherit;
                     }
                 }
             }

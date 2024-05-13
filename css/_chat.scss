@@ -66,9 +66,9 @@
     margin: auto 0;
     padding: 0 16px;
 
-    label[for="nickinput"] {
+    label[for='nickinput'] {
         > div > span {
-            color: #B8C7E0;
+            color: #b8c7e0;
         }
     }
     input {
@@ -134,7 +134,7 @@
 .smileys-panel {
     bottom: 100%;
     box-sizing: border-box;
-    background-color: rgba(0, 0, 0, .6) !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
     height: auto;
     display: flex;
     overflow: hidden;
@@ -153,7 +153,7 @@
 
     #smileysContainer {
         background-color: $chatBackgroundColor;
-        border-top: 1px solid #A4B8D1;
+        border-top: 1px solid #a4b8d1;
     }
 }
 
@@ -214,6 +214,7 @@
 
         .jitsi-icon {
             cursor: pointer;
+            fill: inherit;
         }
     }
 
@@ -221,7 +222,6 @@
         width: 100%;
     }
 }
-
 
 /**
  * Make header close button more easily tappable on mobile.
@@ -231,6 +231,6 @@
     place-items: center;
     height: 88px; /* 48px; */
     width: 88px; /* 48px; */
-    background: #36383C;
+    background: #36383c;
     border-radius: 3px;
 }

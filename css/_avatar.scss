@@ -1,5 +1,5 @@
 .avatar {
-    background-color: #AAA;
+    background-color: #aaa;
     border-radius: 50%;
     color: rgba(255, 255, 255, 1);
     font-weight: 100;
@@ -17,6 +17,7 @@
 
     .jitsi-icon {
         transform: translateY(50%);
+        fill: inherit;
     }
 }
 
