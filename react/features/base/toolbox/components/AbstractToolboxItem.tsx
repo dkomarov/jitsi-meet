@@ -236,20 +236,21 @@ export default class AbstractToolboxItem<
         return this.props.visible ? this._renderItem() : null;
     }
 
-    handleColorChange(event: MessageEvent) {
+    handleColorChange = (event: MessageEvent) => {
         if (
             typeof event.data === 'string' &&
             event.data.includes('Selected jitsi-icon color: ')
         ) {
             console.log('Message received from the parent: ' + event.data); // Message received from parent
             let dataColor = event.data.split(': ')[1].toString().trim();
+            console.log('in handleColorChange, this is:', this);
             this.setState({
                 backgroundColor: dataColor
             });
         }
-    }
+    };
 
-    handleSizeChange(event: MessageEvent) {
+    handleSizeChange = (event: MessageEvent) => {
         if (
             typeof event.data === 'string' &&
             event.data.includes('Selected jitsi-icon size: ')
@@ -258,11 +259,13 @@ export default class AbstractToolboxItem<
             let dataSize = parseInt(
                 event.data.split(': ')[1].toString().trim()
             );
+            console.log('in handleSizeChange, this is:', this);
+
             this.setState({
                 size: dataSize
             });
         }
-    }
+    };
 
     componentDidMount() {
         window.addEventListener('message', this.handleColorChange);
