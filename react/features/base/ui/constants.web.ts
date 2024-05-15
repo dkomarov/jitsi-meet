@@ -66,7 +66,7 @@ export const commonStyles = (theme: Theme) => {
                 },
 
                 '& svg': {
-                    fill: theme.palette.text03
+                    fill: 'inherit' // theme.palette.text03
                 }
             },
 
@@ -100,7 +100,7 @@ export const commonStyles = (theme: Theme) => {
             },
 
             '& svg': {
-                fill: theme.palette.text01,
+                fill: `inherit !important`, // theme.palette.text01,
                 height: 36, // 20,
                 width: 36 // 20
             }
@@ -245,7 +245,7 @@ export const commonStyles = (theme: Theme) => {
                 backgroundColor: `${theme.palette.disabled01} !important`,
 
                 '& svg': {
-                    fill: `${theme.palette.text03} !important`
+                    fill: `inherit !important` // `${theme.palette.text03} !important`
                 }
             }
         },
@@ -266,7 +266,8 @@ export const commonStyles = (theme: Theme) => {
             textAlign: 'center' as const,
             pointerEvents: 'all' as const,
             display: 'flex',
-            boxShadow: '0px 2px 8px 4px rgba(0, 0, 0, 0.25), 0px 0px 0px 1px rgba(0, 0, 0, 0.15)',
+            boxShadow:
+                '0px 2px 8px 4px rgba(0, 0, 0, 0.25), 0px 0px 0px 1px rgba(0, 0, 0, 0.15)',
 
             '& > div': {
                 marginRight: theme.spacing(2),

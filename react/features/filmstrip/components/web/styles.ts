@@ -45,7 +45,7 @@ export const styles = (theme: Theme) => {
             '-webkit-appearance': 'none',
 
             '& svg': {
-                fill: theme.palette.icon01
+                fill: `inherit !important` // theme.palette.icon01
             }
         },
 
@@ -66,7 +66,8 @@ export const styles = (theme: Theme) => {
         },
 
         filmstrip: {
-            transition: 'background .2s ease-in-out, right 1s, bottom 1s, top 1s, height .3s ease-in',
+            transition:
+                'background .2s ease-in-out, right 1s, bottom 1s, top 1s, height .3s ease-in',
             right: 0,
             bottom: 0,
 

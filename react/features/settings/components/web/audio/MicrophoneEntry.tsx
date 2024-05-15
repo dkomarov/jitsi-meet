@@ -12,7 +12,6 @@ import Meter from './Meter';
 const JitsiTrackEvents = JitsiMeetJS.events.track;
 
 interface IProps {
-
     /**
      * The text for this component.
      */
@@ -53,10 +52,9 @@ interface IProps {
      */
     length: number;
 
-
     /**
-    * Used to decide whether to listen to audio level changes.
-    */
+     * Used to decide whether to listen to audio level changes.
+     */
     measureAudioLevels: boolean;
 
     /**
@@ -65,7 +63,7 @@ interface IProps {
     onClick: Function;
 }
 
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()((theme) => {
     return {
         container: {
             position: 'relative'
@@ -90,7 +88,7 @@ const useStyles = makeStyles()(theme => {
             marginLeft: '6px',
 
             '& svg': {
-                fill: theme.palette.iconError
+                fill: `inherit !important` // theme.palette.iconError
             }
         },
 
@@ -113,7 +111,7 @@ const MicrophoneEntry = ({
     measureAudioLevels,
     onClick: propsClick
 }: IProps) => {
-    const [ level, setLevel ] = useState(-1);
+    const [level, setLevel] = useState(-1);
     const activeTrackRef = useRef(jitsiTrack);
     const { classes, cx } = useStyles();
 
@@ -124,7 +122,7 @@ const MicrophoneEntry = ({
      */
     const onClick = useCallback(() => {
         propsClick(deviceId);
-    }, [ propsClick, deviceId ]);
+    }, [propsClick, deviceId]);
 
     /**
      * Key pressed handler for the entry.
@@ -134,12 +132,15 @@ const MicrophoneEntry = ({
      *
      * @returns {void}
      */
-    const onKeyPress = useCallback((e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            propsClick(deviceId);
-        }
-    }, [ propsClick, deviceId ]);
+    const onKeyPress = useCallback(
+        (e: React.KeyboardEvent) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                propsClick(deviceId);
+            }
+        },
+        [propsClick, deviceId]
+    );
 
     /**
      * Updates the level of the meter.
@@ -157,9 +158,12 @@ const MicrophoneEntry = ({
      * @returns {void}
      */
     const startListening = () => {
-        jitsiTrack && measureAudioLevels && jitsiTrack.on(
-            JitsiTrackEvents.TRACK_AUDIO_LEVEL_CHANGED,
-            updateLevel);
+        jitsiTrack &&
+            measureAudioLevels &&
+            jitsiTrack.on(
+                JitsiTrackEvents.TRACK_AUDIO_LEVEL_CHANGED,
+                updateLevel
+            );
     };
 
     /**
@@ -185,37 +189,46 @@ const MicrophoneEntry = ({
         stopListening(activeTrackRef.current);
         startListening();
         activeTrackRef.current = jitsiTrack;
-    }, [ jitsiTrack ]);
+    }, [jitsiTrack]);
 
     return (
         <li
-            aria-checked = { isSelected }
-            aria-posinset = { index }
-            aria-setsize = { length }
-            className = { classes.container }
-            onClick = { onClick }
-            onKeyPress = { onKeyPress }
-            role = 'radio'
-            tabIndex = { 0 }>
+            aria-checked={isSelected}
+            aria-posinset={index}
+            aria-setsize={length}
+            className={classes.container}
+            onClick={onClick}
+            onKeyPress={onKeyPress}
+            role="radio"
+            tabIndex={0}
+        >
             <ContextMenuItem
-                accessibilityLabel = { children }
-                icon = { isSelected ? IconCheck : undefined }
-                overflowType = { TEXT_OVERFLOW_TYPES.SCROLL_ON_HOVER }
-                selected = { isSelected }
-                text = { children }
-                textClassName = { cx(classes.entryText,
+                accessibilityLabel={children}
+                icon={isSelected ? IconCheck : undefined}
+                overflowType={TEXT_OVERFLOW_TYPES.SCROLL_ON_HOVER}
+                selected={isSelected}
+                text={children}
+                textClassName={cx(
+                    classes.entryText,
                     measureAudioLevels && 'withMeter',
-                    !isSelected && 'left-margin') }>
-                {hasError && <Icon
-                    className = { classes.icon }
-                    size = { 16 }
-                    src = { IconExclamationSolid } />}
+                    !isSelected && 'left-margin'
+                )}
+            >
+                {hasError && (
+                    <Icon
+                        className={classes.icon}
+                        size={16}
+                        src={IconExclamationSolid}
+                    />
+                )}
             </ContextMenuItem>
-            {Boolean(jitsiTrack) && measureAudioLevels && <Meter
-                className = { classes.meter }
-                isDisabled = { hasError }
-                level = { level } />
-            }
+            {Boolean(jitsiTrack) && measureAudioLevels && (
+                <Meter
+                    className={classes.meter}
+                    isDisabled={hasError}
+                    level={level}
+                />
+            )}
         </li>
     );
 };
