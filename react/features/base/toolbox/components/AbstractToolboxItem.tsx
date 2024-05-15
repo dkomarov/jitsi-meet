@@ -118,9 +118,12 @@ export default class AbstractToolboxItem<
      * @static
      */
     static defaultProps = {
+        backgroundColor: 'black',
         disabled: false,
         label: '',
+        labelProps: '',
         showLabel: false,
+        size: '36px',
         t: undefined,
         tooltip: '',
         tooltipPosition: 'top',
