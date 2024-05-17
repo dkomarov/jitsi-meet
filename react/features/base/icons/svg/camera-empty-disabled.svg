@@ -37,10 +37,10 @@
      clip-rule="evenodd"
      d="m 13.699152,5.7060401 h -0.03511 L 8.510805,0.87097042 C 7.9581323,0.35240472 7.0622029,0.35227652 6.5097123,0.87067122 5.9572068,1.3890517 5.9573432,2.2296676 6.5100311,2.748219 L 9.6624649,5.7060401 H 8.8793447 c -1.5375255,0 -2.7839243,1.1694478 -2.7839243,2.6120343 V 18.766256 c 0,1.442557 1.2463988,2.61199 2.7839243,2.61199 H 24.190855 c 0.613472,0 1.18048,-0.186072 1.640584,-0.501511 l 5.687689,5.336681 c 0.552734,0.518465 1.448647,0.518609 2.00123,2.84e-4 0.55243,-0.518465 0.552278,-1.359066 -4.57e-4,-1.877675 l -6.545184,-6.141094 v -0.03292 l -2.783862,-2.611989 v 0.03292 L 16.447953,8.3180744 h 0.03511 z M 24.190855,11.795501 V 10.930123 8.3180744 h -3.7062 L 17.700714,5.7060401 h 6.490141 c 1.537479,0 2.783862,1.1694478 2.783862,2.6120343 v 1.1194537 l 4.877267,-2.614927 c 0.667532,-0.3578683 1.517738,-0.1402804 1.899186,0.485982 0.120119,0.1973277 0.183434,0.4206855 0.183434,0.6479613 V 19.127714 c 0,0.490114 -0.287755,0.917253 -0.713392,1.140653 l -5.67235,-5.32229 3.601727,1.931248 v -6.670276 l -4.175872,2.238878 v 1.961594 z M 8.8793447,8.3180744 H 12.44639 L 23.582088,18.766256 H 8.8793447 Z"
      id="path11535"
-     style="stroke-width:1.47088;" />
+     style="stroke-width:1.47088;fill:#ffffff" />
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:10.6667px;line-height:1.25;font-family:sans-serif;;fill-opacity:1;stroke:none"
+     style="font-style:normal;font-weight:normal;font-size:10.6667px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none"
      x="7.161418"
      y="39.557976"
      id="text5788"><tspan
@@ -48,5 +48,5 @@
        id="tspan5786"
        x="7.161418"
        y="39.557976"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';">CAM</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">CAM</tspan></text>
 </svg>

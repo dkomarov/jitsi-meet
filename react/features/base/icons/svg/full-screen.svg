@@ -38,10 +38,10 @@
      clip-rule="evenodd"
      d="M 14.915983,1.0333676 H 6.4426255 c -0.93594,0 -1.6946791,0.6823312 -1.6946791,1.5240188 V 10.177447 H 8.1372856 V 4.0813885 H 14.915983 Z M 25.084018,4.0813885 V 1.0333676 h 8.473302 c 0.936013,0 1.694734,0.6823312 1.694734,1.5240188 V 10.177447 H 31.86277 V 4.0813885 Z m 0,21.3362465 h 6.778752 v -6.096108 h 3.389284 v 7.620011 c 0,0.841754 -0.758721,1.524068 -1.694734,1.524068 H 25.084018 Z M 8.1372856,19.321527 v 6.096108 h 6.7786974 v 3.047971 H 6.4426255 c -0.93594,0 -1.6946791,-0.682314 -1.6946791,-1.524068 v -7.620011 z"
      id="path1498"
-     style=";stroke-width:1.75318" />
+     style="fill:#ffffff;stroke-width:1.75318" />
   <text
      xml:space="preserve"
-     style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;"
+     style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;fill:#ffffff"
      x="6.2968316"
      y="39.728954"
      id="text2010"><tspan
@@ -49,5 +49,5 @@
        id="tspan2008"
        x="6.2968316"
        y="39.728954"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';">MAX</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">MAX</tspan></text>
 </svg>

@@ -80,7 +80,7 @@
   </defs>
   <text
      xml:space="preserve"
-     style="font-size:9.33333px;line-height:1.25;font-family:sans-serif;"
+     style="font-size:9.33333px;line-height:1.25;font-family:sans-serif;fill:#ffffff"
      x="-0.20533973"
      y="39.219715"
      id="text12840"><tspan
@@ -88,5 +88,5 @@
        id="tspan12838"
        x="-0.20533973"
        y="39.219715"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9.33333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';">SECURE</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9.33333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">SECURE</tspan></text>
 </svg>

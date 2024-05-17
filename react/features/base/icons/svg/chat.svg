@@ -38,10 +38,10 @@
      clip-rule="evenodd"
      d="m 26.923003,25.9258 c 0.766147,0 1.3873,-0.57149 1.3873,-1.276211 v -6.42156 h 4.162204 c 0.766298,0 1.387451,-0.571349 1.387451,-1.27607 V 1.6379727 c 0,-0.70480422 -0.621153,-1.27616788 -1.387451,-1.27616788 H 7.4993489 c -0.7662386,0 -1.3874059,0.57136366 -1.3874059,1.27616788 V 16.951959 c 0,0.704721 0.6211673,1.27607 1.3874059,1.27607 H 19.369436 l 6.483049,7.233339 c 0.263504,0.294028 0.656112,0.464432 1.070518,0.464432 z M 8.8867551,2.9141406 H 31.085206 V 15.67575 H 25.53555 v 5.419608 L 20.678034,15.67575 H 8.8867551 Z"
      id="path36867"
-     style=";stroke-width:1.45159" />
+     style="fill:#ffffff;stroke-width:1.45159" />
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:10.6667px;line-height:1.25;font-family:sans-serif;;fill-opacity:1;stroke:none"
+     style="font-style:normal;font-weight:normal;font-size:10.6667px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none"
      x="4.2932229"
      y="39.484913"
      id="text38435"><tspan
@@ -49,5 +49,5 @@
        id="tspan38433"
        x="4.2932229"
        y="39.484913"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';">CHAT</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">CHAT</tspan></text>
 </svg>

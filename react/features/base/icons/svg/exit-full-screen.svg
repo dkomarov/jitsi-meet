@@ -38,28 +38,28 @@
      clip-rule="evenodd"
      d="m 35.486415,8.66299 v 3.84679 H 24.38507 c -1.226324,0 -2.220366,-0.861106 -2.220366,-1.923374 V 0.96934696 h 4.440732 V 8.66299 Z"
      id="path5972"
-     style=";stroke-width:2.25439" />
+     style="fill:#ffffff;stroke-width:2.25439" />
   <path
      fill-rule="evenodd"
      clip-rule="evenodd"
      d="m 4.4026718,8.66299 v 3.84679 H 15.504114 c 1.226228,0 2.220342,-0.861106 2.220342,-1.923374 V 0.96934696 H 13.283821 V 8.66299 Z"
      id="path5974"
-     style=";stroke-width:2.25439" />
+     style="fill:#ffffff;stroke-width:2.25439" />
   <path
      fill-rule="evenodd"
      clip-rule="evenodd"
      d="M 35.486415,20.203487 V 16.356738 H 24.38507 c -1.226324,0 -2.220366,0.861128 -2.220366,1.923479 v 9.616976 h 4.440732 v -7.693706 z"
      id="path5976"
-     style=";stroke-width:2.25439" />
+     style="fill:#ffffff;stroke-width:2.25439" />
   <path
      fill-rule="evenodd"
      clip-rule="evenodd"
      d="M 4.4026718,20.203487 V 16.356738 H 15.504114 c 1.226228,0 2.220342,0.861128 2.220342,1.923479 v 9.616976 h -4.440635 v -7.693706 z"
      id="path5978"
-     style=";stroke-width:2.25439" />
+     style="fill:#ffffff;stroke-width:2.25439" />
   <text
      xml:space="preserve"
-     style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;"
+     style="font-size:10.6667px;line-height:1.25;font-family:sans-serif;fill:#ffffff"
      x="7.5155859"
      y="39.211498"
      id="text6490"><tspan
@@ -67,5 +67,5 @@
        id="tspan6488"
        x="7.5155859"
        y="39.211498"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';">MIN</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">MIN</tspan></text>
 </svg>
