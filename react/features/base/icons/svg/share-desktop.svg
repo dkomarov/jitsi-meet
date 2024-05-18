@@ -3,7 +3,6 @@
    width="40"
    height="40"
    viewBox="0 0 40 40"
-   fill="none"
    version="1.1"
    id="svg34385"
    sodipodi:docname="share-desktop.svg"
@@ -38,10 +37,10 @@
      clip-rule="evenodd"
      d="M 9.1002644,0.33058186 H 31.106017 c 1.519147,0 2.750664,1.28179644 2.750664,2.86297174 V 20.371368 c 0,1.581301 -1.231517,2.863079 -2.750664,2.863079 h -4.126071 c 0.759496,0 1.375258,0.640892 1.375258,1.431387 0,0.790647 -0.615762,1.431539 -1.375258,1.431539 H 13.226337 c -0.759588,0 -1.375363,-0.640892 -1.375363,-1.431539 0,-0.790495 0.615775,-1.431387 1.375363,-1.431387 H 9.1002644 c -1.5191745,0 -2.7507243,-1.281778 -2.7507243,-2.863079 V 3.1935536 c 0,-1.5811753 1.2315498,-2.86297174 2.7507243,-2.86297174 z m 0,2.86297174 V 20.371368 H 31.106017 V 3.1935536 Z M 21.478467,8.9195124 c -5.626448,0 -8.25213,2.5051096 -8.25213,10.0204716 3.000778,-6.083931 8.25213,-5.726006 8.25213,-5.726006 v 1.98951 c 0,0.656037 0.730239,1.019582 1.221016,0.607939 l 4.931032,-4.136741 c 0.372696,-0.312591 0.372696,-0.903369 0,-1.215912 L 22.699483,6.3220636 c -0.490777,-0.411691 -1.221016,-0.048114 -1.221016,0.6079245 z"
      id="path34383"
-     style="fill:#ffffff;stroke-width:1.53069" />
+     style="stroke-width:1.53069" />
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
+     style="font-style:normal;font-weight:normal;font-size:10.6667px;line-height:1.25;font-family:sans-serif;word-spacing:0px;fill-opacity:1;stroke:none"
      x="-0.23705769"
      y="39.674969"
      id="text34565"><tspan
@@ -49,5 +48,5 @@
        id="tspan34563"
        x="-0.23705769"
        y="39.674969"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff">SHARE</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';">SHARE</tspan></text>
 </svg>
