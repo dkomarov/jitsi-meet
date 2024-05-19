@@ -13,6 +13,7 @@ interface IProps extends AbstractToolboxItemProps {
      */
     backgroundColor?: string;
 
+    customClassName?: string;
     /**
      * Whether or not the item is displayed in a context menu.
      */
@@ -70,6 +71,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
     _renderItem() {
         const {
             backgroundColor,
+            customClassName,
             contextMenu,
             isMenuButton,
             disabled,
@@ -102,24 +104,59 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         //     if (color) setColor(color); // Set background color);
         //     // Assuming data is fetched successfully
         // };
-        // let dataColor;
+        let dataColor, dataSize, sizeClassName;
 
-        // handleColorChange = (dataColor) => {
-        //     // Update state with a new color
-        //     this.setState({ backgroundColor: dataColor });
-        // };
+        type SizeClass = {
+            [key: number]: string;
+        };
 
-        // window.addEventListener('message', function (event) {
-        //     if (
-        //         typeof event.data === 'string' &&
-        //         event.data.includes('Selected jitsi-icon color: ')
-        //     ) {
-        //         console.log('Message received from the parent: ' + event.data); // Message received from parent
-        //         dataColor = event.data.split(': ')[1].toString().trim();
-        //         this.handleColorChange(dataColor);
-        //         // fetchData(dataColor);
-        //     }
-        // });
+        let size_class: SizeClass = {
+            36: 'size-small',
+            48: 'size-medium',
+            60: 'size-large'
+        };
+
+        function handleColorChange(dataColor) {
+            // Update state with a new color
+            this.setState({ backgroundColor: dataColor });
+        }
+
+        // function handleSizeChange(dataSize) {
+        //     // Update state with a new size
+        //     this.setState({ width: dataSize });
+        //     this.setState({ height: dataSize });
+        // }
+
+        window.addEventListener('message', function (event) {
+            if (
+                typeof event.data === 'string' &&
+                event.data.includes('Selected jitsi-icon color: ')
+            ) {
+                console.log('Message received from the parent: ' + event.data); // Message received from parent
+                dataColor = event.data.split(': ')[1].toString().trim();
+                handleColorChange(dataColor);
+                // fetchData(dataColor);
+            }
+        });
+
+        window.addEventListener('message', function (event) {
+            if (
+                typeof event.data === 'string' &&
+                event.data.includes('Selected jitsi-icon size: ')
+            ) {
+                console.log('Message received from the parent: ' + event.data); // Message received from parent
+                dataSize = parseInt(
+                    event.data.split(': ')[1].toString().trim()
+                );
+                for (let key in size_class) {
+                    let x: number = parseInt(key);
+                    if (x === parseInt(dataSize))
+                        sizeClassName = size_class[x].toString();
+                }
+                // handleSizeChange(dataSize);
+                // fetchData(null, dataSize);
+            }
+        });
 
         const elementType = showLabel ? 'li' : 'div';
         const useTooltip = this.tooltip && this.tooltip.length > 0;
@@ -129,6 +166,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
                     backgroundColor={backgroundColor} // dataColor ||
+                    customClassName={`${dataColor} ${sizeClassName}`}
                     disabled={disabled}
                     icon={icon}
                     onClick={onClick}
@@ -191,16 +229,16 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         //         fetchData(dataColor, null);
         //     }
 
-        //     if (
-        //         typeof event.data === 'string' &&
-        //         event.data.includes('Selected jitsi-icon size: ')
-        //     ) {
-        //         console.log('Message received from the parent: ' + event.data); // Message received from parent
-        //         dataSize = parseInt(
-        //             event.data.split(': ')[1].toString().trim()
-        //         );
-        //         fetchData(null, dataSize);
-        //     }
+        // if (
+        //     typeof event.data === 'string' &&
+        //     event.data.includes('Selected jitsi-icon size: ')
+        // ) {
+        //     console.log('Message received from the parent: ' + event.data); // Message received from parent
+        //     dataSize = parseInt(
+        //         event.data.split(': ')[1].toString().trim()
+        //     );
+        //     fetchData(null, dataSize);
+        // }
         // });
 
         const {
