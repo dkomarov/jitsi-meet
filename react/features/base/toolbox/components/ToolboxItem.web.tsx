@@ -15,7 +15,6 @@ interface IProps extends AbstractToolboxItemProps {
      */
     backgroundColor?: string;
 
-    customClassName?: string;
     /**
      * Whether or not the item is displayed in a context menu.
      */
@@ -73,7 +72,6 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
     _renderItem() {
         const {
             backgroundColor,
-            customClassName,
             contextMenu,
             isMenuButton,
             disabled,
@@ -98,6 +96,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             tabIndex: 0,
             role: 'button'
         };
+        this.handleColorChange = this.handleColorChange.bind(this);
 
         // const [iconColor, setColor] = useState('white');
 
@@ -106,7 +105,9 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         //     if (color) setColor(color); // Set background color);
         //     // Assuming data is fetched successfully
         // };
-        let dataColor, dataSize, sizeClassName;
+        let dataColor, dataSize, sizeClassName: String;
+        dataColor = '';
+        sizeClassName = '';
 
         type SizeClass = {
             [key: number]: string;
@@ -168,7 +169,9 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
                     backgroundColor={backgroundColor} // dataColor ||
-                    customClassName={`${dataColor} ${sizeClassName}`}
+                    className={`${sizeClassName != ''} ? ${sizeClassName}:${
+                        dataColor != ''
+                    } ?${dataColor} : ''`}
                     disabled={disabled}
                     icon={icon}
                     onClick={onClick}
