@@ -201,9 +201,9 @@ export default function Icon(props: IProps) {
     let dataColor, dataSize, sizeClassName;
 
     let size_class = {
-        '36': 'size_small',
-        '48': 'size_medium',
-        '60': 'size_large'
+        '36': 'size-small',
+        '48': 'size-medium',
+        '60': 'size-large'
     };
 
     window.addEventListener('message', function (event) {
