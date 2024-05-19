@@ -1,0 +1,40 @@
+/* custom color classes */
+.white {
+    color: white;
+}
+
+.gold {
+    color: gold;
+}
+
+.silver {
+    color: silver;
+}
+
+.cyan {
+    color: cyan;
+}
+
+.lime {
+    color: lime;
+}
+
+.magenta {
+    color: magenta;
+}
+
+/* custom size classes */
+.size-small {
+    width: 36px;
+    height: 36px;
+}
+
+.size-medium {
+    width: 48px;
+    height: 48px;
+}
+
+.size-large {
+    width: 60px;
+    height: 60px;
+}

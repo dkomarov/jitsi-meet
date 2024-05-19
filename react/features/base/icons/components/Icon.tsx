@@ -5,6 +5,8 @@ import { StyleType, styleTypeToObject } from '../../styles/functions.web';
 
 import { IIconProps } from './types.web';
 
+import '../../../../../css/custom-icon.mods.css';
+
 interface IProps extends IIconProps {
     /**
      * Optional label for screen reader users.
@@ -196,7 +198,13 @@ export default function Icon(props: IProps) {
             setSize(size);
     };
 
-    let dataColor, dataSize;
+    let dataColor, dataSize, sizeClassName;
+
+    let size_class = {
+        '36': 'size_small',
+        '48': 'size_medium',
+        '60': 'size_large'
+    };
 
     window.addEventListener('message', function (event) {
         if (
@@ -214,6 +222,10 @@ export default function Icon(props: IProps) {
         ) {
             console.log('Message received from the parent: ' + event.data); // Message received from parent
             dataSize = parseInt(event.data.split(': ')[1].toString().trim());
+            for (let x in size_class) {
+                if (parseInt(x) === parseInt(dataSize))
+                    sizeClassName = size_class[x].toString();
+            }
             fetchData(null, dataSize);
         }
     });
@@ -244,6 +256,7 @@ export default function Icon(props: IProps) {
         >
             <IconComponent
                 {...iconProps}
+                className={`.${iconColor} .${sizeClassName}`}
                 fill={iconColor || calculatedColor}
                 height={iconSize || calculatedSize}
                 id={id}
