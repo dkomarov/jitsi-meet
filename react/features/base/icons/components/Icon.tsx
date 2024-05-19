@@ -200,6 +200,7 @@ export default function Icon(props: IProps) {
 
     let dataColor, dataSize, sizeClassName;
 
+    // @ts-ignore
     let size_class = {
         36: 'size-small',
         48: 'size-medium',
@@ -224,6 +225,7 @@ export default function Icon(props: IProps) {
             dataSize = parseInt(event.data.split(': ')[1].toString().trim());
             for (let x in size_class) {
                 if (parseInt(x) === parseInt(dataSize))
+                    // @ts-ignore
                     sizeClassName = size_class[x].toString();
             }
             fetchData(null, dataSize);
