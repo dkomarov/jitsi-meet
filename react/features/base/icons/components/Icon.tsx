@@ -198,10 +198,13 @@ export default function Icon(props: IProps) {
             setSize(size);
     };
 
+    type SizeClass = {
+        [key: number]: string;
+    };
+
     let dataColor, dataSize, sizeClassName;
 
-    // @ts-ignore
-    let size_class = {
+    let size_class: SizeClass = {
         36: 'size-small',
         48: 'size-medium',
         60: 'size-large'
@@ -223,9 +226,9 @@ export default function Icon(props: IProps) {
         ) {
             console.log('Message received from the parent: ' + event.data); // Message received from parent
             dataSize = parseInt(event.data.split(': ')[1].toString().trim());
-            for (let x in size_class) {
-                if (parseInt(x) === parseInt(dataSize))
-                    // @ts-ignore
+            for (let key in size_class) {
+                let x: number = parseInt(key);
+                if (x === parseInt(dataSize))
                     sizeClassName = size_class[x].toString();
             }
             fetchData(null, dataSize);
