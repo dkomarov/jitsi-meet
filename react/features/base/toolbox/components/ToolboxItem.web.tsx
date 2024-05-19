@@ -118,7 +118,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             60: 'size-large'
         };
 
-        function handleColorChange(dataColor) {
+        function handleColorChange(dataColor: String) {
             // Update state with a new color
             this.setState({ backgroundColor: dataColor });
         }
@@ -129,7 +129,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         //     this.setState({ height: dataSize });
         // }
 
-        window.addEventListener('message', function (event) {
+        window.addEventListener('message', function (event: MessageEvent) {
             if (
                 typeof event.data === 'string' &&
                 event.data.includes('Selected jitsi-icon color: ')
@@ -141,7 +141,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             }
         });
 
-        window.addEventListener('message', function (event) {
+        window.addEventListener('message', function (event: MessageEvent) {
             if (
                 typeof event.data === 'string' &&
                 event.data.includes('Selected jitsi-icon size: ')
