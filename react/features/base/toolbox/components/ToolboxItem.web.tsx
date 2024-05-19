@@ -15,6 +15,8 @@ interface IProps extends AbstractToolboxItemProps {
      */
     backgroundColor?: string;
 
+    customIconColorClass?: string;
+    customIconSizeClass?: string;
     /**
      * Whether or not the item is displayed in a context menu.
      */
@@ -72,6 +74,8 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
     _renderItem() {
         const {
             backgroundColor,
+            customIconColorClass,
+            customIconSizeClass,
             contextMenu,
             isMenuButton,
             disabled,
@@ -97,6 +101,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             role: 'button'
         };
         this.handleColorChange = this.handleColorChange.bind(this);
+        this.handleSizeChange = this.handleSizeChange.bind(this);
 
         // const [iconColor, setColor] = useState('white');
 
@@ -105,7 +110,9 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         //     if (color) setColor(color); // Set background color);
         //     // Assuming data is fetched successfully
         // };
-        let dataColor, dataSize, sizeClassName: String;
+
+        let dataSize: Number;
+        let dataColor, sizeClassName: String;
         dataColor = '';
         sizeClassName = '';
 
@@ -121,14 +128,13 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
 
         function handleColorChange(dataColor: String) {
             // Update state with a new color
-            this.setState({ backgroundColor: dataColor });
+            this.setState({ customIconColorClass: dataColor });
         }
 
-        // function handleSizeChange(dataSize) {
-        //     // Update state with a new size
-        //     this.setState({ width: dataSize });
-        //     this.setState({ height: dataSize });
-        // }
+        function handleSizeChange(sizeClassName) {
+            // Update state with a new size
+            this.setState({ customIconSizeClass: sizeClassName });
+        }
 
         window.addEventListener('message', function (event: MessageEvent) {
             if (
@@ -153,10 +159,10 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
                 );
                 for (let key in size_class) {
                     let x: number = parseInt(key);
-                    if (x === parseInt(dataSize))
+                    if (x === dataSize)
                         sizeClassName = size_class[x].toString();
                 }
-                // handleSizeChange(dataSize);
+                handleSizeChange(sizeClassName);
                 // fetchData(null, dataSize);
             }
         });
@@ -169,9 +175,11 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
                     backgroundColor={backgroundColor} // dataColor ||
-                    className={`${sizeClassName != ''} ? ${sizeClassName}:${
+                    className={`${
+                        sizeClassName != ''
+                    } ? ${customIconSizeClass}:${
                         dataColor != ''
-                    } ?${dataColor} : ''`}
+                    } ?${customIconColorClass} : ''`}
                     disabled={disabled}
                     icon={icon}
                     onClick={onClick}
