@@ -256,7 +256,7 @@ export default function Icon(props: IProps) {
         >
             <IconComponent
                 {...iconProps}
-                className={`.${iconColor} .${sizeClassName}`}
+                className={`${iconColor} ${sizeClassName}`}
                 fill={iconColor || calculatedColor}
                 height={iconSize || calculatedSize}
                 id={id}
