@@ -218,41 +218,65 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
      * @returns {ReactElement}
      */
     _renderIcon() {
-        // const [iconSize, setSize] = useState(36);
-        // const [iconColor, setColor] = useState('white');
+        this.handleColorChange = this.handleColorChange.bind(this);
+        this.handleSizeChange = this.handleSizeChange.bind(this);
 
-        // const fetchData = (color: string | null, size: number | null) => {
-        //     // Assuming data is fetched successfully
-        //     if (color) setColor(color); // Set background color);
-        //     // Assuming data is fetched successfully
-        //     if (size)
-        //         // Update state with fetched data
-        //         setSize(size);
-        // };
+        let dataSize: Number;
+        let dataColor, sizeClassName: String;
+        dataSize = 0;
+        dataColor = '';
+        sizeClassName = '';
 
-        // let dataColor, dataSize;
+        type SizeClass = {
+            [key: number]: string;
+        };
 
-        // window.addEventListener('message', function (event) {
-        //     if (
-        //         typeof event.data === 'string' &&
-        //         event.data.includes('Selected jitsi-icon color: ')
-        //     ) {
-        //         console.log('Message received from the parent: ' + event.data); // Message received from parent
-        //         dataColor = event.data.split(': ')[1].toString().trim();
-        //         fetchData(dataColor, null);
-        //     }
+        let size_class: SizeClass = {
+            36: 'size-small',
+            48: 'size-medium',
+            60: 'size-large'
+        };
 
-        // if (
-        //     typeof event.data === 'string' &&
-        //     event.data.includes('Selected jitsi-icon size: ')
-        // ) {
-        //     console.log('Message received from the parent: ' + event.data); // Message received from parent
-        //     dataSize = parseInt(
-        //         event.data.split(': ')[1].toString().trim()
-        //     );
-        //     fetchData(null, dataSize);
-        // }
-        // });
+        function handleColorChange(dataColor: String) {
+            // Update state with a new color
+            this.setState({ customIconColorClass: dataColor });
+        }
+
+        function handleSizeChange(sizeClassName) {
+            // Update state with a new size
+            this.setState({ customIconSizeClass: sizeClassName });
+        }
+
+        window.addEventListener('message', function (event: MessageEvent) {
+            if (
+                typeof event.data === 'string' &&
+                event.data.includes('Selected jitsi-icon color: ')
+            ) {
+                console.log('Message received from the parent: ' + event.data); // Message received from parent
+                dataColor = event.data.split(': ')[1].toString().trim();
+                handleColorChange(dataColor);
+                // fetchData(dataColor);
+            }
+        });
+
+        window.addEventListener('message', function (event: MessageEvent) {
+            if (
+                typeof event.data === 'string' &&
+                event.data.includes('Selected jitsi-icon size: ')
+            ) {
+                console.log('Message received from the parent: ' + event.data); // Message received from parent
+                dataSize = parseInt(
+                    event.data.split(': ')[1].toString().trim()
+                );
+                for (let key in size_class) {
+                    let x: number = parseInt(key);
+                    if (x === dataSize)
+                        sizeClassName = size_class[x].toString();
+                }
+                handleSizeChange(sizeClassName);
+                // fetchData(null, dataSize);
+            }
+        });
 
         const {
             backgroundColor,
@@ -262,16 +286,27 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             showLabel,
             toggled
         } = this.props;
+
         const iconComponent = (
-            <Icon size={showLabel ? undefined : 36} src={icon} /> // 24 // iconSize ||
+            <Icon
+                size={dataSize != 0 ? dataSize : showLabel ? undefined : 36}
+                src={icon}
+            />
         );
+
         const elementType = showLabel ? 'span' : 'div';
         const className = `${
             showLabel ? 'overflow-menu-item-icon' : 'toolbox-icon'
         } ${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''} ${
-            customClass ?? ''
+            customClass ?? `${dataColor} ${sizeClassName}`
         }`;
-        const style = backgroundColor && !showLabel ? { backgroundColor } : {}; //   iconColor ||
+
+        // const style = backgroundColor && !showLabel ? { backgroundColor } : {} ; //   iconColor ||
+        const style = {
+            ...(dataColor ? { color: dataColor } : ''),
+            ...(dataSize ? { width: dataSize, height: dataSize } : ''),
+            ...(backgroundColor && !showLabel ? { backgroundColor } : {})
+        }; //   iconColor ||
 
         return React.createElement(
             elementType,
