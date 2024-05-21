@@ -188,21 +188,22 @@ export default function Icon(props: IProps) {
               'aria-hidden': true
           };
 
-    const fetchData = (color: string | null, size: number | null) => {
-        // Assuming data is fetched successfully
-        if (color) {
-            setColor(color); // Set background color
-            setHasColorChanged(true);
-        } else if (size)
-            // Update state with fetched data
-            setSize(size);
-    };
+    // const fetchData = (color: String | null, size: number | null) => {
+    //     // Assuming data is fetched successfully
+    //     if (color) {
+    //         setColor(color); // Set background color
+    //         setHasColorChanged(true);
+    //     } else if (size)
+    //         // Update state with fetched data
+    //         setSize(size);
+    // };
 
     type SizeClass = {
         [key: number]: string;
     };
 
-    let dataColor, dataSize, sizeClassName;
+    let dataSize: number;
+    let dataColor, sizeClassName: String;
 
     let size_class: SizeClass = {
         36: 'size-small',
@@ -217,7 +218,7 @@ export default function Icon(props: IProps) {
         ) {
             console.log('Message received from the parent: ' + event.data); // Message received from parent
             dataColor = event.data.split(': ')[1].toString().trim();
-            fetchData(dataColor, null);
+            setColor(dataColor);
         }
 
         if (
@@ -228,10 +229,9 @@ export default function Icon(props: IProps) {
             dataSize = parseInt(event.data.split(': ')[1].toString().trim());
             for (let key in size_class) {
                 let x: number = parseInt(key);
-                if (x === parseInt(dataSize))
-                    sizeClassName = size_class[x].toString();
+                if (x === dataSize) sizeClassName = size_class[x].toString();
             }
-            fetchData(null, dataSize);
+            setSize(dataSize);
         }
     });
 
