@@ -7,12 +7,16 @@ import ContextMenuItem from '../../ui/components/web/ContextMenuItem';
 import AbstractToolboxItem from './AbstractToolboxItem';
 import type { IProps as AbstractToolboxItemProps } from './AbstractToolboxItem';
 
+import '../../../../../css/custom-icon.mods.css';
+
 interface IProps extends AbstractToolboxItemProps {
     /**
      * The button's background color.
      */
     backgroundColor?: string;
 
+    customIconColorClass?: string;
+    customIconSizeClass?: string;
     /**
      * Whether or not the item is displayed in a context menu.
      */
@@ -42,6 +46,24 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         super(props);
 
         this._onKeyPress = this._onKeyPress.bind(this);
+
+        this.state = {
+            customIconColorClass: '',
+            customIconSizeClass: ''
+        };
+
+        this.handleColorChange = this.handleColorChange.bind(this);
+        this.handleSizeChange = this.handleSizeChange.bind(this);
+    }
+
+    componentDidMount() {
+        // Adding the event listener when the component mounts
+        window.addEventListener('message', this.handleColorChange);
+    }
+
+    componentWillUnmount() {
+        // Removing the event listener when the component unmounts to prevent memory leaks
+        window.removeEventListener('message', this.handleSizeChange);
     }
 
     /**
@@ -58,6 +80,45 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         }
     }
 
+    _handleColorChange(event: MessageEvent, dataColor: String) {
+        if (
+            typeof event.data === 'string' &&
+            event.data.includes('Selected jitsi-icon color: ')
+        ) {
+            console.log('Message received from the parent: ' + event.data); // Message received from parent
+            dataColor = event.data.split(': ')[1].toString().trim();
+            this.setState({ customIconColorClass: dataColor });
+            // fetchData(dataColor);
+        }
+    }
+
+    _handleSizeChange(event: MessageEvent, sizeClassName: String) {
+        let dataSize: Number;
+        type SizeClass = {
+            [key: number]: string;
+        };
+
+        let size_class: SizeClass = {
+            36: 'size-small',
+            48: 'size-medium',
+            60: 'size-large'
+        };
+
+        if (
+            typeof event.data === 'string' &&
+            event.data.includes('Selected jitsi-icon size: ')
+        ) {
+            console.log('Message received from the parent: ' + event.data); // Message received from parent
+            dataSize = parseInt(event.data.split(': ')[1].toString().trim());
+            for (let key in size_class) {
+                let x: number = parseInt(key);
+                if (x === dataSize) sizeClassName = size_class[x].toString();
+            }
+            // Update state with a new size
+            this.setState({ customIconSizeClass: sizeClassName });
+        }
+    }
+
     /**
      * Handles rendering of the actual item. If the label is being shown, which
      * is controlled with the `showLabel` prop, the item is rendered for its
@@ -70,6 +131,8 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
     _renderItem() {
         const {
             backgroundColor,
+            customIconColorClass,
+            customIconSizeClass,
             contextMenu,
             isMenuButton,
             disabled,
@@ -102,7 +165,12 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             return (
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
-                    backgroundColor={backgroundColor}
+                    backgroundColor={backgroundColor} // dataColor ||
+                    className={`${
+                        customIconSizeClass != ''
+                    } ? ${customIconSizeClass}:${
+                        customIconColorClass != ''
+                    } ?${customIconColorClass} : ''`}
                     disabled={disabled}
                     icon={icon}
                     onClick={onClick}
@@ -141,6 +209,76 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
      * @returns {ReactElement}
      */
     _renderIcon() {
+        // let dataSize: Number;
+        // let dataColor, sizeClassName: String;
+        // dataSize = 0;
+        // dataColor = '';
+        // sizeClassName = '';
+
+        // type SizeClass = {
+        //     [key: number]: string;
+        // };
+
+        // let size_class: SizeClass = {
+        //     36: 'size-small',
+        //     48: 'size-medium',
+        //     60: 'size-large'
+        // };
+
+        // handleColorChange(dataColor: String) {
+        //     // Update state with a new color
+        //     this.setState({ customIconColorClass: dataColor });
+        // }
+
+        // handleSizeChange(sizeClassName: String) {
+        //     // Update state with a new size
+        //     this.setState({ customIconSizeClass: sizeClassName });
+        // }
+
+        // window.addEventListener('message', function (event: MessageEvent) {
+        //     if (
+        //         typeof event.data === 'string' &&
+        //         event.data.includes('Selected jitsi-icon color: ')
+        //     ) {
+        //         console.log('Message received from the parent: ' + event.data); // Message received from parent
+        //         dataColor = event.data.split(': ')[1].toString().trim();
+        //         this.handleColorChange(dataColor);
+        //         // fetchData(dataColor);
+        //     }
+        // });
+
+        // type SizeClass = {
+        //     [key: number]: string;
+        // };
+
+        // let size_class: SizeClass = {
+        //     36: 'size-small',
+        //     48: 'size-medium',
+        //     60: 'size-large'
+        // };
+
+        let dataSize: number;
+        dataSize = 0;
+
+        window.addEventListener('message', function (event: MessageEvent) {
+            if (
+                typeof event.data === 'string' &&
+                event.data.includes('Selected jitsi-icon size: ')
+            ) {
+                console.log('Message received from the parent: ' + event.data); // Message received from parent
+                dataSize = parseInt(
+                    event.data.split(': ')[1].toString().trim()
+                );
+                // for (let key in size_class) {
+                //     let x: number = parseInt(key);
+                //     if (x === dataSize)
+                //         sizeClassName = size_class[x].toString();
+                // }
+                // this.handleSizeChange(sizeClassName);
+                // fetchData(null, dataSize);
+            }
+        });
+
         const {
             backgroundColor,
             customClass,
@@ -149,16 +287,29 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             showLabel,
             toggled
         } = this.props;
+
         const iconComponent = (
-            <Icon size={showLabel ? undefined : 36} src={icon} /> // 24
+            <Icon size={showLabel ? undefined : 36} src={icon} />
         );
+
         const elementType = showLabel ? 'span' : 'div';
         const className = `${
             showLabel ? 'overflow-menu-item-icon' : 'toolbox-icon'
         } ${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''} ${
-            customClass ?? ''
+            (customClass ?? this.props.customIconColorClass,
+            this.props.customIconSizeClass)
         }`;
-        const style = backgroundColor && !showLabel ? { backgroundColor } : {};
+
+        // const style = backgroundColor && !showLabel ? { backgroundColor } : {}; //   iconColor ||
+        const style = {
+            ...(this.props.customIconColorClass
+                ? { color: this.props.customIconColorClass }
+                : ''),
+            ...(this.props.customIconSizeClass
+                ? { width: dataSize, height: dataSize }
+                : ''),
+            ...(backgroundColor && !showLabel ? { backgroundColor } : {})
+        }; //   iconColor ||
 
         return React.createElement(
             elementType,

@@ -6,7 +6,6 @@ import { IconArrowDown } from '../../../icons/svg';
 import { withPixelLineHeight } from '../../../styles/functions.web';
 
 interface IProps {
-
     /**
      * Icon to display in the options section.
      */
@@ -47,7 +46,6 @@ interface IProps {
      */
     hasOptions?: boolean;
 
-
     /**
      * OnClick button handler.
      */
@@ -79,7 +77,7 @@ interface IProps {
     type: string;
 }
 
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()((theme) => {
     return {
         actionButton: {
             ...withPixelLineHeight(theme.typography.bodyLongBold),
@@ -128,11 +126,10 @@ const useStyles = makeStyles()(theme => {
 
                 '.icon': {
                     '& > svg': {
-                        fill: '#AFB6BC'
+                        fill: `inherit !important` // '#AFB6BC'
                     }
                 }
             },
-
 
             [theme.breakpoints.down(400)]: {
                 fontSize: 16,
@@ -185,20 +182,30 @@ function ActionButton({
 }: IProps) {
     const { classes, cx } = useStyles();
 
-    const onKeyPressHandler = useCallback(e => {
-        if (onClick && !disabled && (e.key === ' ' || e.key === 'Enter')) {
-            e.preventDefault();
-            onClick(e);
-        }
-    }, [ onClick, disabled ]);
+    const onKeyPressHandler = useCallback(
+        (e) => {
+            if (onClick && !disabled && (e.key === ' ' || e.key === 'Enter')) {
+                e.preventDefault();
+                onClick(e);
+            }
+        },
+        [onClick, disabled]
+    );
 
-    const onOptionsKeyPressHandler = useCallback(e => {
-        if (onOptionsClick && !disabled && (e.key === ' ' || e.key === 'Enter')) {
-            e.preventDefault();
-            e.stopPropagation();
-            onOptionsClick(e);
-        }
-    }, [ onOptionsClick, disabled ]);
+    const onOptionsKeyPressHandler = useCallback(
+        (e) => {
+            if (
+                onOptionsClick &&
+                !disabled &&
+                (e.key === ' ' || e.key === 'Enter')
+            ) {
+                e.preventDefault();
+                e.stopPropagation();
+                onOptionsClick(e);
+            }
+        },
+        [onOptionsClick, disabled]
+    );
 
     const containerClasses = cx(
         classes.actionButton,
@@ -209,33 +216,32 @@ function ActionButton({
 
     return (
         <div
-            aria-disabled = { disabled }
-            aria-label = { ariaLabel }
-            className = { containerClasses }
-            data-testid = { testId ? testId : undefined }
-            onClick = { disabled ? undefined : onClick }
-            onKeyPress = { onKeyPressHandler }
-            role = 'button'
-            tabIndex = { 0 } >
+            aria-disabled={disabled}
+            aria-label={ariaLabel}
+            className={containerClasses}
+            data-testid={testId ? testId : undefined}
+            onClick={disabled ? undefined : onClick}
+            onKeyPress={onKeyPressHandler}
+            role="button"
+            tabIndex={0}
+        >
             {children}
-            { hasOptions
-                && <div
-                    aria-disabled = { disabled }
-                    aria-haspopup = 'true'
-                    aria-label = { ariaDropDownLabel }
-                    aria-pressed = { ariaPressed }
-                    className = { classes.options }
-                    data-testid = 'prejoin.joinOptions'
-                    onClick = { disabled ? undefined : onOptionsClick }
-                    onKeyPress = { onOptionsKeyPressHandler }
-                    role = { role }
-                    tabIndex = { tabIndex }>
-                    <Icon
-                        className = 'icon'
-                        size = { 24 }
-                        src = { OptionsIcon } />
+            {hasOptions && (
+                <div
+                    aria-disabled={disabled}
+                    aria-haspopup="true"
+                    aria-label={ariaDropDownLabel}
+                    aria-pressed={ariaPressed}
+                    className={classes.options}
+                    data-testid="prejoin.joinOptions"
+                    onClick={disabled ? undefined : onOptionsClick}
+                    onKeyPress={onOptionsKeyPressHandler}
+                    role={role}
+                    tabIndex={tabIndex}
+                >
+                    <Icon className="icon" size={24} src={OptionsIcon} />
                 </div>
-            }
+            )}
         </div>
     );
 }

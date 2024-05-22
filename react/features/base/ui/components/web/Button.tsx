@@ -8,7 +8,6 @@ import { BUTTON_TYPES } from '../../constants.web';
 import { IButtonProps } from '../types';
 
 interface IProps extends IButtonProps {
-
     /**
      * Class name used for additional styles.
      */
@@ -46,7 +45,7 @@ interface IProps extends IButtonProps {
     testId?: string;
 }
 
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()((theme) => {
     return {
         button: {
             backgroundColor: theme.palette.action01,
@@ -75,7 +74,7 @@ const useStyles = makeStyles()(theme => {
             },
 
             '& div > svg': {
-                fill: theme.palette.icon01
+                fill: `inherit !important` // theme.palette.icon01
             }
         },
 
@@ -94,7 +93,7 @@ const useStyles = makeStyles()(theme => {
             },
 
             '& div > svg': {
-                fill: theme.palette.icon04
+                fill: `inherit !important` // theme.palette.icon04
             }
         },
 
@@ -137,7 +136,7 @@ const useStyles = makeStyles()(theme => {
             },
 
             '& div > svg': {
-                fill: theme.palette.icon03
+                fill: `inherit !important` // theme.palette.icon03
             }
         },
 
@@ -175,50 +174,63 @@ const useStyles = makeStyles()(theme => {
     };
 });
 
-const Button = React.forwardRef<any, any>(({
-    accessibilityLabel,
-    autoFocus = false,
-    className,
-    disabled,
-    fullWidth,
-    icon,
-    id,
-    isSubmit,
-    label,
-    labelKey,
-    onClick = () => null,
-    onKeyPress = () => null,
-    size = 'medium',
-    testId,
-    type = BUTTON_TYPES.PRIMARY
-}: IProps, ref) => {
-    const { classes: styles, cx } = useStyles();
-    const { t } = useTranslation();
+const Button = React.forwardRef<any, any>(
+    (
+        {
+            accessibilityLabel,
+            autoFocus = false,
+            className,
+            disabled,
+            fullWidth,
+            icon,
+            id,
+            isSubmit,
+            label,
+            labelKey,
+            onClick = () => null,
+            onKeyPress = () => null,
+            size = 'medium',
+            testId,
+            type = BUTTON_TYPES.PRIMARY
+        }: IProps,
+        ref
+    ) => {
+        const { classes: styles, cx } = useStyles();
+        const { t } = useTranslation();
 
-    return (
-        <button
-            aria-label = { accessibilityLabel }
-            autoFocus = { autoFocus }
-            className = { cx(styles.button, styles[type],
-                disabled && styles.disabled,
-                icon && !(labelKey || label) && `${styles.iconButton} iconButton`,
-                styles[size], fullWidth && styles.fullWidth, className) }
-            data-testid = { testId }
-            disabled = { disabled }
-            { ...(id ? { id } : {}) }
-            onClick = { onClick }
-            onKeyPress = { onKeyPress }
-            ref = { ref }
-            title = { accessibilityLabel }
-            type = { isSubmit ? 'submit' : 'button' }>
-            {icon && <Icon
-                size = { 24 }
-                src = { icon } />}
-            {(labelKey || label) && <span className = { icon ? styles.textWithIcon : '' }>
-                {labelKey ? t(labelKey) : label}
-            </span>}
-        </button>
-    );
-});
+        return (
+            <button
+                aria-label={accessibilityLabel}
+                autoFocus={autoFocus}
+                className={cx(
+                    styles.button,
+                    styles[type],
+                    disabled && styles.disabled,
+                    icon &&
+                        !(labelKey || label) &&
+                        `${styles.iconButton} iconButton`,
+                    styles[size],
+                    fullWidth && styles.fullWidth,
+                    className
+                )}
+                data-testid={testId}
+                disabled={disabled}
+                {...(id ? { id } : {})}
+                onClick={onClick}
+                onKeyPress={onKeyPress}
+                ref={ref}
+                title={accessibilityLabel}
+                type={isSubmit ? 'submit' : 'button'}
+            >
+                {icon && <Icon size={24} src={icon} />}
+                {(labelKey || label) && (
+                    <span className={icon ? styles.textWithIcon : ''}>
+                        {labelKey ? t(labelKey) : label}
+                    </span>
+                )}
+            </button>
+        );
+    }
+);
 
 export default Button;

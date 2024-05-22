@@ -1,10 +1,11 @@
-
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { Container } from '../../react/components/index.web';
 import { StyleType, styleTypeToObject } from '../../styles/functions.web';
 
 import { IIconProps } from './types.web';
+
+import '../../../../../css/custom-icon.mods.css';
 
 interface IProps extends IIconProps {
     /**
@@ -149,11 +150,17 @@ export default function Icon(props: IProps) {
         ...rest
     }: IProps = props;
 
+    const [iconColor, setColor] = useState(DEFAULT_COLOR);
+    const [hasColorChanged, setHasColorChanged] = useState(false);
+    const [iconSize, setSize] = useState(DEFAULT_SIZE);
+    const [sizeClassName, setHasSizeChanged] = useState('');
+
     const {
         color: styleColor,
         fontSize: styleSize,
         ...restStyle
     } = styleTypeToObject(style ?? {});
+
     const calculatedColor = color ?? styleColor ?? DEFAULT_COLOR;
     const calculatedSize = size ?? styleSize ?? DEFAULT_SIZE;
 
@@ -173,12 +180,64 @@ export default function Icon(props: IProps) {
         ? 'jitsi-icon'
         : 'jitsi-icon jitsi-icon-default';
 
-    const iconProps = alt ? {
-        'aria-label': alt,
-        role: 'img'
-    } : {
-        'aria-hidden': true
+    const iconProps = alt
+        ? {
+              'aria-label': alt,
+              role: 'img'
+          }
+        : {
+              'aria-hidden': true
+          };
+
+    // const fetchData = (color: String | null, size: number | null) => {
+    //     // Assuming data is fetched successfully
+    //     if (color) {
+    //         setColor(color); // Set background color
+    //         setHasColorChanged(true);
+    //     } else if (size)
+    //         // Update state with fetched data
+    //         setSize(size);
+    // };
+
+    type SizeClass = {
+        [key: number]: string;
     };
+
+    let dataSize: number;
+    let dataColor: string;
+
+    let size_class: SizeClass = {
+        36: 'size-small',
+        48: 'size-medium',
+        60: 'size-large'
+    };
+
+    window.addEventListener('message', function (event) {
+        if (
+            typeof event.data === 'string' &&
+            event.data.includes('Selected jitsi-icon color: ')
+        ) {
+            console.log('Message received from the parent: ' + event.data); // Message received from parent
+            dataColor = event.data.split(': ')[1].toString().trim();
+            setColor(dataColor);
+            setHasColorChanged(true);
+        }
+
+        if (
+            typeof event.data === 'string' &&
+            event.data.includes('Selected jitsi-icon size: ')
+        ) {
+            console.log('Message received from the parent: ' + event.data); // Message received from parent
+            dataSize = parseInt(event.data.split(': ')[1].toString().trim());
+            for (let key in size_class) {
+                let x: number = parseInt(key);
+                if (x === dataSize) {
+                    setHasSizeChanged(size_class[x].toString());
+                }
+            }
+            setSize(dataSize);
+        }
+    });
 
     return (
         <Container
@@ -190,7 +249,13 @@ export default function Icon(props: IProps) {
             aria-haspopup={ariaHasPopup}
             aria-label={ariaLabel}
             aria-pressed={ariaPressed}
-            className={`${jitsiIconClassName} ${className || ''}`}
+            className={
+                !hasColorChanged
+                    ? `${jitsiIconClassName} ${className || ''}`
+                    : `${className || ''} ${iconColor || ''} ${
+                          sizeClassName || ''
+                      }`
+            }
             data-testid={testId}
             id={containerId}
             onClick={onClick}
@@ -201,11 +266,13 @@ export default function Icon(props: IProps) {
             tabIndex={tabIndex}
         >
             <IconComponent
-                { ...iconProps }
-                fill = { calculatedColor }
-                height = { calculatedSize }
-                id = { id }
-                width = { calculatedSize } />
+                {...iconProps}
+                className={`${iconColor} ${sizeClassName}`}
+                fill={iconColor || calculatedColor}
+                height={iconSize || calculatedSize}
+                id={id}
+                width={iconSize || calculatedSize}
+            />
         </Container>
     );
 }
