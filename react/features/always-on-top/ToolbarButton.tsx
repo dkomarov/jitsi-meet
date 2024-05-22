@@ -124,7 +124,7 @@ const ToolbarButton = ({
     } ${ 
         sizeClassName ? sizeClassName : ''
     }`} // customClass ??
-                <Icon src={icon} />
+                /><Icon src={icon} />
             </div>
         </div>
     );
