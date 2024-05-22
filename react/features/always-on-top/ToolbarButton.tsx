@@ -71,7 +71,6 @@ const ToolbarButton = ({
     let dataSize: number;
     let dataColor: string;
     dataColor = '';
-    sizeClassName = '';
 
     let size_class: SizeClass = {
         36: 'size-small',
