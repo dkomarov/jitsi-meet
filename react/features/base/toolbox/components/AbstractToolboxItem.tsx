@@ -5,6 +5,8 @@ import { GestureResponderEvent } from 'react-native';
 import type { StyleType } from '../../styles/functions.any';
 import { TOOLTIP_POSITION } from '../../ui/constants.any';
 
+import '../../../../../css/custom-icon.mods.css';
+
 export type Styles = {
     /**
      * Style for the item's icon.

@@ -1,48 +1,40 @@
-.toolbox-icon svg {
-    background-color: red;
-}
-
-.toolbox-button svg {
-    background-color: red;
-}
-
 /* custom color classes */
-svg.white {
-    color: white;
+.toolbox-button .white svg {
+    fill: white;
 }
 
-svg.gold {
-    color: gold;
+.toolbox-button .gold svg {
+    fill: gold;
 }
 
-svg.silver {
-    color: silver;
+.toolbox-button .silver svg {
+    fill: silver;
 }
 
-svg.cyan {
-    color: cyan;
+.toolbox-button .cyan svg {
+    fill: cyan;
 }
 
-svg.lime {
-    color: lime;
+.toolbox-button .lime svg {
+    fill: lime;
 }
 
-svg.magenta {
-    color: magenta;
+.toolbox-button .magenta svg {
+    fill: magenta;
 }
 
 /* custom size classes */
-svg.size-small {
+.toolbox-button .size-small svg {
     width: 36px;
     height: 36px;
 }
 
-svg.size-medium {
+.toolbox-button .size-medium svg {
     width: 48px;
     height: 48px;
 }
 
-svg.size-large {
+.toolbox-button .size-large svg {
     width: 60px;
     height: 60px;
 }
