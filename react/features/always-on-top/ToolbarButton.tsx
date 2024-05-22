@@ -117,9 +117,9 @@ const ToolbarButton = ({
             tabIndex={0}
         >
             <div
-                className={`toolbox-icon ${disabled ? 'disabled' : ''} ${
-                    customClass ?? iconColor
-                }`}
+                className={`toolbox-icon ${
+                    disabled ? 'disabled' : ''
+                }` iconColor ? `${iconColor}`:'' sizeClassName ? `${sizeClassName}`: ''} // customClass ??
             >
                 <Icon src={icon} />
             </div>
