@@ -252,7 +252,9 @@ export default function Icon(props: IProps) {
             className={
                 !hasColorChanged
                     ? `${jitsiIconClassName} ${className || ''}`
-                    : `${className || ''}`
+                    : `${className || ''} ${iconColor || ''} ${
+                          sizeClassName || ''
+                      }`
             }
             data-testid={testId}
             id={containerId}
