@@ -123,7 +123,7 @@ const ToolbarButton = ({
         iconColor ? iconColor : ''
     } ${ 
         sizeClassName ? sizeClassName : ''
-    }` // customClass ??
+    }`} // customClass ??
                 <Icon src={icon} />
             </div>
         </div>
