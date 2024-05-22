@@ -1,40 +1,103 @@
 /* custom color classes */
-.toolbox-button .white svg {
+.toolbox-button
+    .white
+    svg:not(
+        .settings-button-small-icon svg,
+        #participant-connection-indicator svg,
+        #mic-disabled,
+        #toggleFilmstripButton svg
+    ) {
     fill: white;
 }
 
-.toolbox-button .gold svg {
+.toolbox-button
+    .gold
+    svg:not(
+        .settings-button-small-icon svg,
+        #participant-connection-indicator svg,
+        #mic-disabled,
+        #toggleFilmstripButton svg
+    ) {
     fill: gold;
 }
 
-.toolbox-button .silver svg {
+.toolbox-button
+    .silver
+    svg:not(
+        .settings-button-small-icon svg,
+        #participant-connection-indicator svg,
+        #mic-disabled,
+        #toggleFilmstripButton svg
+    ) {
     fill: silver;
 }
 
-.toolbox-button .cyan svg {
+.toolbox-button
+    .cyan
+    svg:not(
+        .settings-button-small-icon svg,
+        #participant-connection-indicator svg,
+        #mic-disabled,
+        #toggleFilmstripButton svg
+    ) {
     fill: cyan;
 }
 
-.toolbox-button .lime svg {
+.toolbox-button
+    .lime
+    svg:not(
+        .settings-button-small-icon svg,
+        #participant-connection-indicator svg,
+        #mic-disabled,
+        #toggleFilmstripButton svg
+    ) {
     fill: lime;
 }
 
-.toolbox-button .magenta svg {
+.toolbox-button
+    .magenta
+    svg:not(
+        .settings-button-small-icon svg,
+        #participant-connection-indicator svg,
+        #mic-disabled,
+        #toggleFilmstripButton svg
+    ) {
     fill: magenta;
 }
 
 /* custom size classes */
-.toolbox-button .size-small svg {
+.toolbox-button
+    .size-small
+    svg:not(
+        .settings-button-small-icon svg,
+        #participant-connection-indicator svg,
+        #mic-disabled,
+        #toggleFilmstripButton svg
+    ) {
     width: 36px;
     height: 36px;
 }
 
-.toolbox-button .size-medium svg {
+.toolbox-button
+    .size-medium
+    svg:not(
+        .settings-button-small-icon svg,
+        #participant-connection-indicator svg,
+        #mic-disabled,
+        #toggleFilmstripButton svg
+    ) {
     width: 48px;
     height: 48px;
 }
 
-.toolbox-button .size-large svg {
+.toolbox-button
+    .size-large
+    svg:not(
+        .settings-button-small-icon svg,
+        #participant-connection-indicator svg,
+        #mic-disabled,
+        #toggleFilmstripButton svg
+    ) {
     width: 60px;
     height: 60px;
 }
