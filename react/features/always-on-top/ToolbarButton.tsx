@@ -119,7 +119,7 @@ const ToolbarButton = ({
         >
             <div
                 className={`toolbox-icon ${disabled ? 'disabled' : ''} ${
-                    customClass ?? dataColor
+                    customClass ?? iconColor
                 }`}
             >
                 <Icon src={icon} />
