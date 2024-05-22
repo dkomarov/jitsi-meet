@@ -163,7 +163,6 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
 
         if (contextMenu) {
             return (
-                // @ts-expect-error
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
                     backgroundColor={backgroundColor} // dataColor ||
@@ -182,7 +181,6 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             );
         }
         let children = (
-            // @ts-expect-error
             <Fragment>
                 {this._renderIcon()}
                 {showLabel && <span>{this.label}</span>}
@@ -192,7 +190,6 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
 
         if (useTooltip) {
             children = (
-                // @ts-expect-error
                 <Tooltip
                     content={this.tooltip ?? ''}
                     position={tooltipPosition}
@@ -292,7 +289,6 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         } = this.props;
 
         const iconComponent = (
-            // @ts-expect-error
             <Icon size={showLabel ? undefined : 36} src={icon} />
         );
 
