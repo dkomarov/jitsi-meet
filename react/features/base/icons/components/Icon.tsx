@@ -151,8 +151,9 @@ export default function Icon(props: IProps) {
     }: IProps = props;
 
     const [iconColor, setColor] = useState(DEFAULT_COLOR);
-    const [iconSize, setSize] = useState(DEFAULT_SIZE);
     const [hasColorChanged, setHasColorChanged] = useState(false);
+    const [iconSize, setSize] = useState(DEFAULT_SIZE);
+    const [sizeClassName, setHasSizeChanged] = useState('');
 
     const {
         color: styleColor,
@@ -203,7 +204,7 @@ export default function Icon(props: IProps) {
     };
 
     let dataSize: number;
-    let dataColor, sizeClassName: String;
+    let dataColor: string;
 
     let size_class: SizeClass = {
         36: 'size-small',
@@ -219,6 +220,7 @@ export default function Icon(props: IProps) {
             console.log('Message received from the parent: ' + event.data); // Message received from parent
             dataColor = event.data.split(': ')[1].toString().trim();
             setColor(dataColor);
+            setHasColorChanged(true);
         }
 
         if (
@@ -229,7 +231,9 @@ export default function Icon(props: IProps) {
             dataSize = parseInt(event.data.split(': ')[1].toString().trim());
             for (let key in size_class) {
                 let x: number = parseInt(key);
-                if (x === dataSize) sizeClassName = size_class[x].toString();
+                if (x === dataSize) {
+                    setHasSizeChanged(size_class[x].toString());
+                }
             }
             setSize(dataSize);
         }
