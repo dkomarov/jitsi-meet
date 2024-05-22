@@ -70,6 +70,8 @@ const ToolbarButton = ({
 
     let dataSize: number;
     let dataColor: string;
+    dataColor = '';
+    sizeClassName = '';
 
     let size_class: SizeClass = {
         36: 'size-small',
@@ -117,7 +119,7 @@ const ToolbarButton = ({
         >
             <div
                 className={`toolbox-icon ${disabled ? 'disabled' : ''} ${
-                    (customClass ?? dataColor, sizeClassName)
+                    (customClass ?? dataColor sizeClassName)
                 }`}
             >
                 <Icon src={icon} />
