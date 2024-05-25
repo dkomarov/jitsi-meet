@@ -155,10 +155,14 @@ export default function Icon(props: IProps) {
     const [iconSize, setSize] = useState(DEFAULT_SIZE);
     const [sizeClassName, setSizeClassName] = useState('size-medium');
 
+    const elements = document.querySelectorAll(
+        '.jitsi-icon-default svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg, #mic-disabled, #toggleFilmstripButton svg)'
+    );
+
     useEffect(() => {
         const applyStyles = () => {
             try {
-                document.querySelectorAll('.toolbar-icon').forEach((icon) => {
+                elements.forEach((icon) => {
                     if (
                         iconColor != null &&
                         iconColor != '' &&
