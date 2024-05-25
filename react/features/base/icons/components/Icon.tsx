@@ -189,13 +189,15 @@ export default function Icon(props: IProps) {
         applyStyles();
 
         return () => {
-            window.removeEventListener('resize', applyStyles);
+            // window.removeEventListener('resize', applyStyles);
         };
     }, [iconColor, iconSize]);
 
     useEffect(() => {
         try {
-            const iconData = window.localStorage.getItem('icon_color_class');
+            let iconData;
+            if (window.localStorage.getItem('icon_color_class'))
+                iconData = window.localStorage.getItem('icon_color_class');
             if (iconData != null && iconData != '' && iconData != undefined)
                 setColor(JSON.parse(iconData));
         } catch (err) {
@@ -206,9 +208,10 @@ export default function Icon(props: IProps) {
         }
 
         try {
-            const sizeData = window.localStorage.getItem('icon_size_class');
-            if (sizeData != null && sizeData != '' && sizeData != undefined)
-                setSizeClassName(JSON.parse(sizeData));
+            let sizeData;
+            if (window.localStorage.getItem('icon_size_class'))
+                if (sizeData != null && sizeData != '' && sizeData != undefined)
+                    setSizeClassName(JSON.parse(sizeData));
         } catch (err) {
             console.log(
                 'error getting/parsing sizeData in local storage:',
