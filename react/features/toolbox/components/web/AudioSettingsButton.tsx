@@ -17,7 +17,6 @@ import { isAudioSettingsButtonDisabled } from '../../functions';
 import AudioMuteButton from './AudioMuteButton';
 
 interface IProps extends WithTranslation {
-
     /**
      * The button's key.
      */
@@ -119,34 +118,49 @@ class AudioSettingsButton extends Component<IProps> {
      * @inheritdoc
      */
     render() {
-        const { gumPending, hasPermissions, isDisabled, visible, isOpen, buttonKey, notifyMode, t } = this.props;
-        const settingsDisabled = !hasPermissions
-            || isDisabled
-            || !JitsiMeetJS.mediaDevices.isMultipleAudioInputSupported();
+        const {
+            gumPending,
+            hasPermissions,
+            isDisabled,
+            visible,
+            isOpen,
+            buttonKey,
+            notifyMode,
+            t
+        } = this.props;
+        const settingsDisabled =
+            !hasPermissions ||
+            isDisabled ||
+            !JitsiMeetJS.mediaDevices.isMultipleAudioInputSupported();
 
         return visible ? (
             <AudioSettingsPopup>
+                // @ts-ignore
                 <ToolboxButtonWithIcon
-                    ariaControls = 'audio-settings-dialog'
-                    ariaExpanded = { isOpen }
-                    ariaHasPopup = { true }
-                    ariaLabel = { t('toolbar.audioSettings') }
-                    buttonKey = { buttonKey }
-                    icon = { IconArrowUp }
-                    iconDisabled = { settingsDisabled || gumPending !== IGUMPendingState.NONE }
-                    iconId = 'audio-settings-button'
-                    iconTooltip = { t('toolbar.audioSettings') }
-                    notifyMode = { notifyMode }
-                    onIconClick = { this._onClick }
-                    onIconKeyDown = { this._onEscClick }>
+                    ariaControls="audio-settings-dialog"
+                    ariaExpanded={isOpen}
+                    ariaHasPopup={true}
+                    ariaLabel={t('toolbar.audioSettings')}
+                    buttonKey={buttonKey}
+                    icon={IconArrowUp}
+                    iconDisabled={
+                        settingsDisabled || gumPending !== IGUMPendingState.NONE
+                    }
+                    iconId="audio-settings-button"
+                    iconTooltip={t('toolbar.audioSettings')}
+                    notifyMode={notifyMode}
+                    onIconClick={this._onClick}
+                    onIconKeyDown={this._onEscClick}
+                >
                     <AudioMuteButton
-                        buttonKey = { buttonKey }
-                        notifyMode = { notifyMode } />
+                        buttonKey={buttonKey}
+                        notifyMode={notifyMode}
+                    />
                 </ToolboxButtonWithIcon>
             </AudioSettingsPopup>
-        ) : <AudioMuteButton
-            buttonKey = { buttonKey }
-            notifyMode = { notifyMode } />;
+        ) : (
+            <AudioMuteButton buttonKey={buttonKey} notifyMode={notifyMode} />
+        );
     }
 }
 
@@ -174,7 +188,6 @@ const mapDispatchToProps = {
     onAudioOptionsClick: toggleAudioSettings
 };
 
-export default translate(connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(AudioSettingsButton));
+export default translate(
+    connect(mapStateToProps, mapDispatchToProps)(AudioSettingsButton)
+);
