@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 
 import { Container } from '../../react/components/index.web';
 import { StyleType, styleTypeToObject } from '../../styles/functions.web';
@@ -153,7 +153,21 @@ export default function Icon(props: IProps) {
     const [iconColor, setColor] = useState(DEFAULT_COLOR);
     const [hasColorChanged, setHasColorChanged] = useState(false);
     const [iconSize, setSize] = useState(DEFAULT_SIZE);
-    const [sizeClassName, setHasSizeChanged] = useState('');
+    const [sizeClassName, setSizeClassName] = useState('size-medium');
+
+    useEffect(() => {
+        const iconData = window.localStorage.getItem('icon_color_class');
+        if (iconData !== null) setColor(JSON.parse(iconData));
+
+        const sizeData = window.localStorage.getItem('icon_size_class');
+        if (sizeData !== null) setSizeClassName(JSON.parse(sizeData));
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
+
+        localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
+    }, [iconColor, sizeClassName]);
 
     const {
         color: styleColor,
@@ -232,7 +246,7 @@ export default function Icon(props: IProps) {
             for (let key in size_class) {
                 let x: number = parseInt(key);
                 if (x === dataSize) {
-                    setHasSizeChanged(size_class[x].toString());
+                    setSizeClassName(size_class[x].toString());
                 }
             }
             setSize(dataSize);
