@@ -157,10 +157,12 @@ export default function Icon(props: IProps) {
 
     useEffect(() => {
         const iconData = window.localStorage.getItem('icon_color_class');
-        if (iconData !== null) setColor(JSON.parse(iconData));
+        if (iconData != null && iconData != '' && iconData != undefined)
+            setColor(JSON.parse(iconData));
 
         const sizeData = window.localStorage.getItem('icon_size_class');
-        if (sizeData !== null) setSizeClassName(JSON.parse(sizeData));
+        if (sizeData != null && sizeData != '' && sizeData != undefined)
+            setSizeClassName(JSON.parse(sizeData));
     }, []);
 
     useEffect(() => {
