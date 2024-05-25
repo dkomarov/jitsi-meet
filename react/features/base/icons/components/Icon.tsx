@@ -156,6 +156,40 @@ export default function Icon(props: IProps) {
     const [sizeClassName, setSizeClassName] = useState('size-medium');
 
     useEffect(() => {
+        const applyStyles = () => {
+            try {
+                document.querySelectorAll('.toolbar-icon').forEach((icon) => {
+                    if (
+                        iconColor != null &&
+                        iconColor != '' &&
+                        iconColor != undefined
+                    )
+                        if (icon instanceof HTMLElement) {
+                            icon.style.fill = iconColor;
+                            icon.style.width = `${iconSize}px`;
+                            icon.style.height = `${iconSize}px`;
+                        } else if (icon instanceof SVGElement) {
+                            icon.setAttribute('fill', iconColor);
+                            icon.style.width = `${iconSize}px`;
+                            icon.style.height = `${iconSize}px`;
+                        }
+                });
+            } catch (err) {
+                console.log('Error re-applying styles:', err);
+            }
+        };
+
+        window.addEventListener('resize', applyStyles);
+
+        // Apply styles initially
+        applyStyles();
+
+        return () => {
+            window.removeEventListener('resize', applyStyles);
+        };
+    }, [iconColor, iconSize]);
+
+    useEffect(() => {
         try {
             const iconData = window.localStorage.getItem('icon_color_class');
             if (iconData != null && iconData != '' && iconData != undefined)
@@ -181,8 +215,16 @@ export default function Icon(props: IProps) {
 
     useEffect(() => {
         localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
+        console.log(
+            "localStorage.getItem('icon_color_class') is now:",
+            localStorage.getItem('icon_color_class')
+        );
 
         localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
+        console.log(
+            "localStorage.getItem('icon_size_class') is now:",
+            localStorage.getItem('icon_size_class')
+        );
     }, [iconColor, sizeClassName]);
 
     const {
