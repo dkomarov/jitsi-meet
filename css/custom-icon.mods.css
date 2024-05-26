@@ -7,7 +7,7 @@
         #mic-disabled,
         #toggleFilmstripButton svg
     ) {
-    fill: white;
+    fill: white !important;
 }
 
 .toolbox-button
@@ -18,7 +18,7 @@
         #mic-disabled,
         #toggleFilmstripButton svg
     ) {
-    fill: gold;
+    fill: gold !important;
 }
 
 .toolbox-button
@@ -29,7 +29,7 @@
         #mic-disabled,
         #toggleFilmstripButton svg
     ) {
-    fill: silver;
+    fill: silver !important;
 }
 
 .toolbox-button
@@ -40,7 +40,7 @@
         #mic-disabled,
         #toggleFilmstripButton svg
     ) {
-    fill: cyan;
+    fill: cyan !important;
 }
 
 .toolbox-button
@@ -51,7 +51,7 @@
         #mic-disabled,
         #toggleFilmstripButton svg
     ) {
-    fill: lime;
+    fill: lime !important;
 }
 
 .toolbox-button
@@ -62,7 +62,7 @@
         #mic-disabled,
         #toggleFilmstripButton svg
     ) {
-    fill: magenta;
+    fill: magenta !important;
 }
 
 /* custom size classes */
@@ -74,8 +74,8 @@
         #mic-disabled,
         #toggleFilmstripButton svg
     ) {
-    width: 36px;
-    height: 36px;
+    width: 36px !important;
+    height: 36px !important;
 }
 
 .toolbox-button
@@ -86,8 +86,8 @@
         #mic-disabled,
         #toggleFilmstripButton svg
     ) {
-    width: 48px;
-    height: 48px;
+    width: 48px !important;
+    height: 48px !important;
 }
 
 .toolbox-button
@@ -98,6 +98,6 @@
         #mic-disabled,
         #toggleFilmstripButton svg
     ) {
-    width: 60px;
-    height: 60px;
+    width: 60px !important;
+    height: 60px !important;
 }
