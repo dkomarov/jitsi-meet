@@ -43,12 +43,6 @@ body {
     outline: none;
 }
 
-.jitsi-icon {
-    &-default svg {
-        fill: white;
-    }
-}
-
 .disabled .jitsi-icon svg {
     fill: #929292;
 }
@@ -183,11 +177,6 @@ form {
     background: #3d3d3d;
     border-radius: 4px;
 }
-
-/* Necessary for the new icons to work properly. */
-// .jitsi-icon svg path {
-//     fill: white;
-// }
 
 .sr-only {
     border: 0 !important;
