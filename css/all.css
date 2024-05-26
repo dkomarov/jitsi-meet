@@ -1549,9 +1549,9 @@ body {
     outline: 0;
 }
 
-.jitsi-icon-default svg {
-    /* fill: #fff */
-}
+/* .jitsi-icon-default svg {
+    fill: #fff;
+} */
 
 .disabled .jitsi-icon svg {
     fill: #929292;
@@ -1665,9 +1665,9 @@ form {
     background: #3d3d3d;
     border-radius: 4px;
 }
-.jitsi-icon svg path {
-    /* fill: inherit !important; */
-}
+/* .jitsi-icon svg path {
+   fill: inherit !important;
+} */
 .sr-only {
     border: 0 !important;
     clip: rect(1px, 1px, 1px, 1px) !important;
