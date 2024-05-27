@@ -360,10 +360,10 @@ export default function Icon(props: IProps) {
             <IconComponent
                 {...iconProps}
                 className={`${iconColor} ${sizeClassName}`}
-                fill={iconColor || calculatedColor}
-                height={iconSize || calculatedSize}
+                fill={calculatedColor} // iconColor ||
+                height={calculatedSize} // iconSize ||
                 id={id}
-                width={iconSize || calculatedSize}
+                width={calculatedSize} // iconSize ||
             />
         </Container>
     );
