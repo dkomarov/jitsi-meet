@@ -167,16 +167,27 @@ export default function Icon(props: IProps) {
                         iconColor != null &&
                         iconColor != '' &&
                         iconColor != undefined
-                    )
-                        if (icon instanceof HTMLElement) {
-                            icon.style.fill = iconColor;
-                            icon.style.width = `${iconSize}px`;
-                            icon.style.height = `${iconSize}px`;
-                        } else if (icon instanceof SVGElement) {
-                            icon.setAttribute('fill', iconColor);
-                            icon.style.width = `${iconSize}px`;
-                            icon.style.height = `${iconSize}px`;
-                        }
+                    ) {
+                        icon.classList.add(iconColor);
+                    }
+
+                    if (
+                        sizeClassName != null &&
+                        sizeClassName != '' &&
+                        sizeClassName != undefined
+                    ) {
+                        icon.classList.add(sizeClassName);
+                    }
+                    // if (icon instanceof HTMLElement) {
+
+                    //     icon.style.fill = iconColor;
+                    //     icon.style.width = `${iconSize}px`;
+                    //     icon.style.height = `${iconSize}px`;
+                    // } else if (icon instanceof SVGElement) {
+                    //     icon.setAttribute('fill', iconColor);
+                    //     icon.style.width = `${iconSize}px`;
+                    //     icon.style.height = `${iconSize}px`;
+                    // }
                 });
             } catch (err) {
                 console.log('Error re-applying styles:', err);
