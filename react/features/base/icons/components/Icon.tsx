@@ -168,7 +168,8 @@ export default function Icon(props: IProps) {
                         iconColor != '' &&
                         iconColor != undefined
                     ) {
-                        icon.classList.add(iconColor);
+                        // @ts-ignore
+                        icon.parentElement.classList.add(iconColor);
                     }
 
                     if (
@@ -176,7 +177,8 @@ export default function Icon(props: IProps) {
                         sizeClassName != '' &&
                         sizeClassName != undefined
                     ) {
-                        icon.classList.add(sizeClassName);
+                        // @ts-ignore
+                        icon.parentElement.classList.add(sizeClassName);
                     }
                     // if (icon instanceof HTMLElement) {
 
