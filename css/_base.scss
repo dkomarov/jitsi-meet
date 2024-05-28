@@ -52,6 +52,11 @@ body {
     cursor: pointer;
 }
 
+#participant-connection-indicator,
+#local-video-menu-trigger {
+    fill: white;
+}
+
 p {
     margin: 0;
 }
