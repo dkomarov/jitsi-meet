@@ -296,8 +296,8 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         const className = `${
             showLabel ? 'overflow-menu-item-icon' : 'toolbox-icon'
         } ${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''} ${
-            (customClass ?? this.props.customIconColorClass,
-            this.props.customIconSizeClass)
+            customClass ?? ''
+        }
         }`;
 
         // const style = backgroundColor && !showLabel ? { backgroundColor } : {}; //   iconColor ||
