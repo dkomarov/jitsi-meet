@@ -122,7 +122,7 @@ div.hangup-button {
 }
 
 div.hangup-menu-button {
-    background-color: #cb2233;
+    background-color: #cb2233 !important;
 
     @media (hover: hover) and (pointer: fine) {
         &:hover {
