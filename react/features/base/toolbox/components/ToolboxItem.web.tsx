@@ -297,17 +297,16 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             showLabel ? 'overflow-menu-item-icon' : 'toolbox-icon'
         } ${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''} ${
             customClass ?? ''
-        }
         }`;
 
         // const style = backgroundColor && !showLabel ? { backgroundColor } : {}; //   iconColor ||
         const style = {
-            ...(this.props.customIconColorClass
-                ? { color: this.props.customIconColorClass }
-                : ''),
-            ...(this.props.customIconSizeClass
-                ? { width: dataSize, height: dataSize }
-                : ''),
+            // ...(this.props.customIconColorClass
+            //     ? { color: this.props.customIconColorClass }
+            //     : ''),
+            // ...(this.props.customIconSizeClass
+            //     ? { width: dataSize, height: dataSize }
+            //     : ''),
             ...(backgroundColor && !showLabel ? { backgroundColor } : {})
         }; //   iconColor ||
 
