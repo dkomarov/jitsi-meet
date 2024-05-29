@@ -39,7 +39,7 @@ import ShareDesktopButton from './components/web/ShareDesktopButton';
 import ToggleCameraButton from './components/web/ToggleCameraButton';
 import VideoSettingsButton from './components/web/VideoSettingsButton';
 import { TOOLBAR_TIMEOUT } from './constants';
-import { IToolboxButton } from './types';
+import { IToolboxButton, NOTIFY_CLICK_MODE } from './types';
 
 export * from './functions.any';
 
@@ -271,7 +271,7 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         group: 2
     };
 
-    const videoQuality = {
+    const videoquality = {
         key: 'videoquality',
         Content: VideoQualityButton,
         group: 2
@@ -285,12 +285,11 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
 
     const security = {
         key: 'security',
-        alias: 'info',
         Content: SecurityDialogButton,
         group: 2
     };
 
-    const cc = {
+    const closedcaptions = {
         key: 'closedcaptions',
         Content: ClosedCaptionButton,
         group: 2
@@ -308,25 +307,25 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         group: 2
     };
 
-    const linkToSalesforce = {
+    const linktosalesforce = {
         key: 'linktosalesforce',
         Content: LinkToSalesforceButton,
         group: 2
     };
 
-    const shareVideo = {
+    const sharedvideo = {
         key: 'sharedvideo',
         Content: SharedVideoButton,
         group: 3
     };
 
-    const shareAudio = {
+    const shareaudio = {
         key: 'shareaudio',
         Content: ShareAudioButton,
         group: 3
     };
 
-    const noiseSuppression = {
+    const noisesuppression = {
         key: 'noisesuppression',
         Content: NoiseSuppressionButton,
         group: 3
@@ -351,7 +350,7 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         group: 3
     };
 
-    const speakerStats = {
+    const stats = {
         key: 'stats',
         Content: SpeakerStatsButton,
         group: 3
@@ -369,7 +368,7 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         group: 4
     };
 
-    const embed = {
+    const embedmeeting = {
         key: 'embedmeeting',
         Content: EmbedMeetingButton,
         group: 4
@@ -415,30 +414,40 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         chat,
         raisehand,
         reactions,
-        participants,
+        'participants-pane': participants,
         invite,
         tileview,
-        toggleCamera,
-        videoQuality,
+        'toggle-camera': toggleCamera,
+        videoquality,
         fullscreen,
         security,
-        cc,
+        closedcaptions,
         recording,
         livestreaming,
-        linkToSalesforce,
-        shareVideo,
-        shareAudio,
-        noiseSuppression,
+        linktosalesforce,
+        sharedvideo,
+        shareaudio,
+        noisesuppression,
         whiteboard,
         etherpad,
-        virtualBackground,
-        speakerStats,
+        'select-background': virtualBackground,
+        stats,
         settings,
         shortcuts,
-        embed,
+        embedmeeting,
         feedback,
         download,
         help,
         ...customButtons
     };
+}
+
+/**
+ * Returns the list of participant menu buttons that have that notify the api when clicked.
+ *
+ * @param {Object} state - The redux state.
+ * @returns {Map<string, NOTIFY_CLICK_MODE>} - The list of participant menu buttons.
+ */
+export function getParticipantMenuButtonsWithNotifyClick(state: IReduxState): Map<string, NOTIFY_CLICK_MODE> {
+    return state['features/toolbox'].participantMenuButtonsWithNotifyClick;
 }

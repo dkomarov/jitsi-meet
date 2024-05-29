@@ -12,13 +12,14 @@
 --      breakout_rooms_component = "breakout.jitmeet.example.com"
 
 local jid_node = require 'util.jid'.node;
-local json = require 'util.json';
+local json = require 'cjson.safe';
 local st = require 'util.stanza';
 
 local util = module:require 'util';
 local is_healthcheck_room = util.is_healthcheck_room;
 local get_room_from_jid = util.get_room_from_jid;
 local room_jid_match_rewrite = util.room_jid_match_rewrite;
+local internal_room_jid_match_rewrite = util.internal_room_jid_match_rewrite;
 local process_host_module = util.process_host_module;
 
 local COMPONENT_IDENTITY_TYPE = 'room_metadata';
@@ -39,10 +40,16 @@ module:log("info", "Starting room metadata for %s", muc_component_host);
 -- Utility functions
 
 function getMetadataJSON(room)
-    return json.encode({
+    local res, error = json.encode({
         type = COMPONENT_IDENTITY_TYPE,
         metadata = room.jitsiMetadata or {}
     });
+
+    if not res then
+        module:log('error', 'Error encoding data room:%s', room.jid, error);
+    end
+
+    return res;
 end
 
 -- Putting the information on the config form / disco-info allows us to save
@@ -60,7 +67,7 @@ function broadcastMetadata(room)
     local json_msg = getMetadataJSON(room);
 
     for _, occupant in room:each_occupant() do
-        send_json_msg(occupant.jid, room.jid, json_msg)
+        send_json_msg(occupant.jid, internal_room_jid_match_rewrite(room.jid), json_msg)
     end
 end
 
@@ -124,9 +131,9 @@ function on_message(event)
         return false;
     end
 
-    local jsonData = json.decode(messageText);
+    local jsonData, error = json.decode(messageText);
     if jsonData == nil then -- invalid JSON
-        module:log("error", "Invalid JSON message: %s", messageText);
+        module:log("error", "Invalid JSON message: %s error:%s", messageText, error);
         return false;
     end
 

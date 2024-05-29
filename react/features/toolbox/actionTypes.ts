@@ -19,6 +19,26 @@ export const CLEAR_TOOLBOX_TIMEOUT = 'CLEAR_TOOLBOX_TIMEOUT';
 export const FULL_SCREEN_CHANGED = 'FULL_SCREEN_CHANGED';
 
 /**
+ * The type of (redux) action which sets the buttonsWithNotifyClick redux property.
+ *
+ * {
+ *     type: SET_BUTTONS_WITH_NOTIFY_CLICK,
+ *     buttonsWithNotifyClick: Map<string, NOTIFY_CLICK_MODE>
+ * }
+ */
+export const SET_BUTTONS_WITH_NOTIFY_CLICK = 'SET_BUTTONS_WITH_NOTIFY_CLICK';
+
+/**
+ * The type of (redux) action which sets the participantMenuButtonsWithNotifyClick redux property.
+ *
+ * {
+ *     type: SET_BUTTONS_WITH_NOTIFY_CLICK,
+ *     participantMenuButtonsWithNotifyClick: Map<string, NOTIFY_CLICK_MODE>
+ * }
+ */
+export const SET_PARTICIPANT_MENU_BUTTONS_WITH_NOTIFY_CLICK = 'SET_PARTICIPANT_MENU_BUTTONS_WITH_NOTIFY_CLICK';
+
+/**
  * The type of (redux) action which requests full screen mode be entered or
  * exited.
  *
@@ -38,6 +58,16 @@ export const SET_FULL_SCREEN = 'SET_FULL_SCREEN';
  * }
  */
 export const SET_HANGUP_MENU_VISIBLE = 'SET_HANGUP_MENU_VISIBLE';
+
+/**
+ * The type of the (redux) action which sets the main toolbar thresholds.
+ *
+ * {
+ *     type: SET_MAIN_TOOLBAR_BUTTONS_THRESHOLDS,
+ *     mainToolbarButtonsThresholds: IMainToolbarButtonThresholds
+ * }
+ */
+export const SET_MAIN_TOOLBAR_BUTTONS_THRESHOLDS = 'SET_MAIN_TOOLBAR_BUTTONS_THRESHOLDS';
 
 /**
  * The type of the redux action that toggles whether the overflow menu(s) should be shown as drawers.

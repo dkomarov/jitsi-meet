@@ -17,6 +17,11 @@ interface IProps extends WithTranslation {
     _alternativeCancelText?: boolean;
 
     /**
+     * Whether to hide the login button.
+     */
+    _hideLoginButton?: boolean;
+
+    /**
      * Redux store dispatch method.
      */
     dispatch: IStore['dispatch'];
@@ -75,18 +80,22 @@ class WaitForOwnerDialog extends PureComponent<IProps> {
             // @ts-ignore  @ts-expect-error
             <Dialog
                 cancel={{
-                    translationKey: this.props._alternativeCancelText
-                        ? 'dialog.WaitingForHostButton'
-                        : 'dialog.Cancel'
+                    translationKey: this.props._alternativeCancelText ? 'dialog.WaitingForHostButton' : 'dialog.Cancel'
                 }}
                 disableBackdropClose={true}
                 hideCloseButton={true}
-                ok={{ translationKey: 'dialog.IamHost' }}
+                ok={
+                    this.props._hideLoginButton
+                        ? { hidden: true, disabled: true }
+                        : { translationKey: 'dialog.IamHost' }
+                }
                 onCancel={this._onCancelWaitForOwner}
                 onSubmit={this._onIAmHost}
                 titleKey={t('dialog.WaitingForHostTitle')}
             >
-                <span>{t('dialog.WaitForHostMsg')}</span>
+                <span>
+                    {this.props._hideLoginButton ? t('dialog.WaitForHostNoAuthMsg') : t('dialog.WaitForHostMsg')}
+                </span>
             </Dialog>
         );
     }
@@ -101,11 +110,12 @@ class WaitForOwnerDialog extends PureComponent<IProps> {
  * @returns {IProps}
  */
 function mapStateToProps(state: IReduxState) {
-    const { membersOnly, lobbyWaitingForHost } =
-        state['features/base/conference'];
+    const { membersOnly, lobbyWaitingForHost } = state['features/base/conference'];
+    const { hideLoginButton } = state['features/base/config'];
 
     return {
-        _alternativeCancelText: membersOnly && lobbyWaitingForHost
+        _alternativeCancelText: membersOnly && lobbyWaitingForHost,
+        _hideLoginButton: hideLoginButton
     };
 }
 

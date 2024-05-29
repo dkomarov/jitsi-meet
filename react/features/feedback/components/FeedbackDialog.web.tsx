@@ -76,13 +76,7 @@ const useStyles = makeStyles()((theme) => {
  * The scores to display for selecting. The score is the index in the array and
  * the value of the index is a translation key used for display in the dialog.
  */
-const SCORES = [
-    'feedback.veryBad',
-    'feedback.bad',
-    'feedback.average',
-    'feedback.good',
-    'feedback.veryGood'
-];
+const SCORES = ['feedback.veryBad', 'feedback.bad', 'feedback.average', 'feedback.good', 'feedback.veryGood'];
 
 const ICON_SIZE = 32;
 
@@ -120,12 +114,8 @@ const FeedbackDialog = ({ conference, onClose, title }: IProps) => {
     const { classes } = useStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    const _message = useSelector(
-        (state: IReduxState) => state['features/feedback'].message
-    );
-    const _score = useSelector(
-        (state: IReduxState) => state['features/feedback'].score
-    );
+    const _message = useSelector((state: IReduxState) => state['features/feedback'].message);
+    const _score = useSelector((state: IReduxState) => state['features/feedback'].score);
 
     /**
      * The currently entered feedback message.
@@ -254,8 +244,7 @@ const FeedbackDialog = ({ conference, onClose, title }: IProps) => {
         return true;
     }, [score, message, conference]);
 
-    const scoreToDisplayAsSelected =
-        mousedOverScore > -1 ? mousedOverScore : score;
+    const scoreToDisplayAsSelected = mousedOverScore > -1 ? mousedOverScore : score;
 
     const scoreIcons = scoreClickConfigurations.current.map((config, index) => {
         const isFilled = index <= scoreToDisplayAsSelected;
@@ -288,6 +277,7 @@ const FeedbackDialog = ({ conference, onClose, title }: IProps) => {
 
     return (
         <Dialog
+            disableEnter={true}
             ok={{
                 translationKey: 'dialog.Submit'
             }}
@@ -299,10 +289,7 @@ const FeedbackDialog = ({ conference, onClose, title }: IProps) => {
             <div className={classes.dialog}>
                 {title ? <div className={classes.title}>{t(title)}</div> : null}
                 <div className={classes.rating}>
-                    <div
-                        className={classes.stars}
-                        onMouseLeave={onScoreContainerMouseLeave}
-                    >
+                    <div className={classes.stars} onMouseLeave={onScoreContainerMouseLeave}>
                         {scoreIcons}
                     </div>
                     <div className={classes.ratingLabel}>

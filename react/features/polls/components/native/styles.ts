@@ -195,7 +195,8 @@ export const chatStyles = createStyleSheet({
 
     pollCreateButton: {
         marginHorizontal: BaseTheme.spacing[1],
-        width: 160
+        maxWidth: 160,
+        flex: 1
     },
 
     toggleText: {
@@ -208,7 +209,8 @@ export const chatStyles = createStyleSheet({
     },
 
     createPollButtonAndroid: {
-        marginHorizontal: 20
+        marginHorizontal: 20,
+        marginVertical: BaseTheme.spacing[5]
     },
 
     pollPane: {
