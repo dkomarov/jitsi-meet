@@ -17,9 +17,6 @@ export const InviteButton = () => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const notifyMode = useSelector((state: IReduxState) =>
-        getButtonNotifyMode(INVITE_BUTTON_KEY, getButtonsWithNotifyClick(state))
-    );
-    const notifyMode = useSelector((state: IReduxState) =>
         state['features/toolbox'].buttonsWithNotifyClick?.get(INVITE_BUTTON_KEY)
     );
 
