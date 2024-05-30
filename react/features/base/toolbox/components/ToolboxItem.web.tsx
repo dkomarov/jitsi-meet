@@ -307,14 +307,14 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             // ...(this.props.customIconSizeClass
             //     ? { width: dataSize, height: dataSize }
             //     : ''),
-            ...(backgroundColor && !showLabel ? { backgroundColor } : {})
+            // ...(backgroundColor && !showLabel ? { backgroundColor } : {})
         }; //   iconColor ||
 
         return React.createElement(
             elementType,
             {
-                className,
-                style
+                className
+                // style
             },
             iconComponent
         );
