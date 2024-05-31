@@ -146,7 +146,7 @@ const useStyles = makeStyles()((theme) => {
 
         contextMenuItemIconDisabled: {
             '& svg': {
-                fill: `inherit !important` // `${theme.palette.text03} !important`
+                fill: `${theme.palette.text03} !important`
             }
         },
 
@@ -158,7 +158,7 @@ const useStyles = makeStyles()((theme) => {
             },
 
             '& svg': {
-                fill: `inherit !important` // theme.palette.text03
+                fill: theme.palette.text03
             }
         },
 
@@ -168,7 +168,7 @@ const useStyles = makeStyles()((theme) => {
 
         contextMenuItemIcon: {
             '& svg': {
-                fill: `inherit !important` // theme.palette.icon01
+                fill: theme.palette.icon01
             }
         },
 

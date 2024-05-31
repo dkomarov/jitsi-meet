@@ -169,7 +169,7 @@ const useStyles = makeStyles()((theme) => {
                 ...withPixelLineHeight(theme.typography.bodyShortRegularLarge),
 
                 '& svg': {
-                    fill: `inherit !important` // theme.palette.icon01
+                    fill: theme.palette.icon01
                 }
             }
         }
