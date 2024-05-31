@@ -88,7 +88,7 @@ const useStyles = makeStyles()((theme) => {
             marginLeft: '6px',
 
             '& svg': {
-                fill: `inherit` // theme.palette.iconError
+                fill: `inherit !important` // theme.palette.iconError
             }
         },
 
