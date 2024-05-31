@@ -45,7 +45,7 @@ export const styles = (theme: Theme) => {
             '-webkit-appearance': 'none',
 
             '& svg': {
-                fill: `inherit !important` // theme.palette.icon01
+                fill: theme.palette.icon01
             }
         },
 

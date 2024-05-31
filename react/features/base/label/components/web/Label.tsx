@@ -75,7 +75,7 @@ const useStyles = makeStyles()((theme) => {
             color: theme.palette.text04,
 
             '& svg': {
-                fill: `inherit !important` //theme.palette.icon04,
+                fill: theme.palette.icon04
             }
         },
         [COLORS.green]: {

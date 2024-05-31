@@ -165,7 +165,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             return (
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
-                    backgroundColor={backgroundColor} // dataColor ||
+                    // backgroundColor={backgroundColor} // dataColor ||
                     className={`${
                         customIconSizeClass != ''
                     } ? ${customIconSizeClass}:${
@@ -307,14 +307,14 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             // ...(this.props.customIconSizeClass
             //     ? { width: dataSize, height: dataSize }
             //     : ''),
-            ...(backgroundColor && !showLabel ? { backgroundColor } : {})
+            // ...(backgroundColor && !showLabel ? { backgroundColor } : {})
         }; //   iconColor ||
 
         return React.createElement(
             elementType,
             {
-                className,
-                style
+                className
+                // style
             },
             iconComponent
         );
