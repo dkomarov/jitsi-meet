@@ -126,7 +126,7 @@ const useStyles = makeStyles()((theme) => {
 
                 '.icon': {
                     '& > svg': {
-                        fill: `inherit !important` // '#AFB6BC'
+                        fill: `inherit` // '#AFB6BC'
                     }
                 }
             },

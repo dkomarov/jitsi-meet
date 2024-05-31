@@ -74,7 +74,7 @@ const useStyles = makeStyles()((theme) => {
             },
 
             '& div > svg': {
-                fill: `inherit !important` // theme.palette.icon01
+                fill: `inherit` // theme.palette.icon01
             }
         },
 
@@ -93,7 +93,7 @@ const useStyles = makeStyles()((theme) => {
             },
 
             '& div > svg': {
-                fill: `inherit !important` // theme.palette.icon04
+                fill: `inherit` // theme.palette.icon04
             }
         },
 
@@ -136,7 +136,7 @@ const useStyles = makeStyles()((theme) => {
             },
 
             '& div > svg': {
-                fill: `inherit !important` // theme.palette.icon03
+                fill: `inherit` // theme.palette.icon03
             }
         },
 

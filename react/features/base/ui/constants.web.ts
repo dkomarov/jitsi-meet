@@ -100,7 +100,7 @@ export const commonStyles = (theme: Theme) => {
             },
 
             '& svg': {
-                fill: `inherit !important`, // theme.palette.text01,
+                fill: `inherit`, // theme.palette.text01,
                 height: 36, // 20,
                 width: 36 // 20
             }
@@ -246,7 +246,7 @@ export const commonStyles = (theme: Theme) => {
                 backgroundColor: `${theme.palette.disabled01} !important`,
 
                 '& svg': {
-                    fill: `inherit !important` // `${theme.palette.text03} !important`
+                    fill: `inherit` // `${theme.palette.text03} !important`
                 }
             }
         },
