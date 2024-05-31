@@ -191,79 +191,79 @@
         window.addEventListener(
             'error', loadErrHandler, true /* capture phase type of listener */);
 
-        // var latestJitsiVersion = 9258; // *** UPDATE in MVP project!! ***
+        // var latestJitsiVersion = 9457; // *** UPDATE in MVP project!! ***
 
-        console.log("Jitsi Meet version: 9258 (Feb. 2024)");
+        console.log("Jitsi Meet version: 9457 (Apr. 2024)");
 
-        window.parent.postMessage("Jitsi Meet version: 9258 (Feb. 2024)", '*')
+        window.parent.postMessage("Jitsi Meet version: 9457 (Apr. 2024)", '*')
        
 
-        // ============ custom colors, font-size msg
-          window.addEventListener('message', function(event) {
+        // // ============ custom colors, font-size msg
+        //   window.addEventListener('message', function(event) {
 
-            if (typeof event.data === "string" && event.data.includes('Selected jitsi-icon color: ')) {
+        //     if (typeof event.data === "string" && event.data.includes('Selected jitsi-icon color: ')) {
 
-						console.log("Message received from the parent: " + event.data); // Message received from parent
-
-
-            // Get all elements with the class ".jitsi-icon"
-            var elements = document.querySelectorAll('.jitsi-icon-default svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg, #mic-disabled, #toggleFilmstripButton svg)');  // aria-label=Moderator
-
-							// Loop through each element and set styles
-							elements.forEach(function(element) {
-								// element.style.fill = event.data.split(': ')[1]; // Set background color                         
-                                element.classList.add(event.data.split(': ')[1]);
-							});
-
-						// Get all elements with the class ".jitsi-icon"
-            var textElements = document.querySelectorAll('.jitsi-icon-default svg tspan:not(.settings-button-small-icon svg)');
-
-											// Loop through each element and set styles
-							textElements.forEach(function(element) {
-								// element.style.fill = event.data.split(': ')[1] + ' !important'; // Set background color                                      
-                                element.classList.add(event.data.split(': ')[1]);
-
-							});
-            }
-
-			if (typeof event.data === "string" && event.data.includes('Selected jitsi-icon size: ')) {
+		// 				console.log("Message received from the parent: " + event.data); // Message received from parent
 
 
-            // Get all elements with the class ".jitsi-icon"
-            var elements = document.querySelectorAll('.jitsi-icon-default svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg, #mic-disabled, #toggleFilmstripButton svg)');  // aria-label=Moderator
-						   let size_class = {
-                                36: 'size-small',
-                                48: 'size-medium',
-                                60: 'size-large'
-                            };
+        //     // Get all elements with the class ".jitsi-icon"
+        //     var elements = document.querySelectorAll('.jitsi-icon-default svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg, #mic-disabled, #toggleFilmstripButton svg)');  // aria-label=Moderator
 
-						// Loop through each element and set styles
-						elements.forEach(function(element) {
-							// element.style.height = event.data.split(': ')[1]; // Set height
-							// element.style.width = event.data.split(': ')[1]; // Set width
-                            for (let x in size_class) {
-                                if (x ===  event.data.split(': ')[1]) {
-                                    element.classList.add(size_class[x]);
-                                }
-                            }
-						});
+		// 					// Loop through each element and set styles
+		// 					elements.forEach(function(element) {
+		// 						// element.style.fill = event.data.split(': ')[1]; // Set background color                         
+        //                         element.classList.add(event.data.split(': ')[1]);
+		// 					});
 
-						// var sizeElements = document.querySelectorAll('.toolbox-icon svg:not(#participant-connection-indicator svg)'); //  > div > span > div
+		// 				// Get all elements with the class ".jitsi-icon"
+        //     var textElements = document.querySelectorAll('.jitsi-icon-default svg tspan:not(.settings-button-small-icon svg)');
 
-								// Loop through each element and set styles
-					elements.forEach(function(element) {
-							// if (element.id != '#participant-connection-indicator')
-							// element.style.height = event.data.split(': ')[1]; // Set height
-							// element.style.width = event.data.split(': ')[1]; // Set width
-                            for (let x in size_class) {
-                                if (x ===  event.data.split(': ')[1]) {
-                                    element.classList.add(size_class[x]);
-                                }
-                            }
-						});
-					}
+		// 									// Loop through each element and set styles
+		// 					textElements.forEach(function(element) {
+		// 						// element.style.fill = event.data.split(': ')[1] + ' !important'; // Set background color                                      
+        //                         element.classList.add(event.data.split(': ')[1]);
+
+		// 					});
+        //     }
+
+		// 	if (typeof event.data === "string" && event.data.includes('Selected jitsi-icon size: ')) {
+
+
+        //     // Get all elements with the class ".jitsi-icon"
+        //     var elements = document.querySelectorAll('.jitsi-icon-default svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg, #mic-disabled, #toggleFilmstripButton svg)');  // aria-label=Moderator
+		// 				   let size_class = {
+        //                         36: 'size-small',
+        //                         48: 'size-medium',
+        //                         60: 'size-large'
+        //                     };
+
+		// 				// Loop through each element and set styles
+		// 				elements.forEach(function(element) {
+		// 					// element.style.height = event.data.split(': ')[1]; // Set height
+		// 					// element.style.width = event.data.split(': ')[1]; // Set width
+        //                     for (let x in size_class) {
+        //                         if (x ===  event.data.split(': ')[1]) {
+        //                             element.classList.add(size_class[x]);
+        //                         }
+        //                     }
+		// 				});
+
+		// 				// var sizeElements = document.querySelectorAll('.toolbox-icon svg:not(#participant-connection-indicator svg)'); //  > div > span > div
+
+		// 						// Loop through each element and set styles
+		// 			elements.forEach(function(element) {
+		// 					// if (element.id != '#participant-connection-indicator')
+		// 					// element.style.height = event.data.split(': ')[1]; // Set height
+		// 					// element.style.width = event.data.split(': ')[1]; // Set width
+        //                     for (let x in size_class) {
+        //                         if (x ===  event.data.split(': ')[1]) {
+        //                             element.classList.add(size_class[x]);
+        //                         }
+        //                     }
+		// 				});
+		// 			}
                 
-        });
+        // });
     
 
 
