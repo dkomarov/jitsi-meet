@@ -114,8 +114,7 @@ interface IProps extends IIconProps {
     testId?: string;
 }
 
-export const DEFAULT_COLOR =
-    navigator.product === 'ReactNative' ? 'white' : undefined;
+export const DEFAULT_COLOR = navigator.product === 'ReactNative' ? 'white' : undefined;
 export const DEFAULT_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
 
 /**
@@ -163,20 +162,12 @@ export default function Icon(props: IProps) {
         const applyStyles = () => {
             try {
                 elements.forEach((icon) => {
-                    if (
-                        iconColor != null &&
-                        iconColor != '' &&
-                        iconColor != undefined
-                    ) {
+                    if (iconColor != null && iconColor != '' && iconColor != undefined) {
                         // @ts-ignore
                         icon.parentElement.classList.add(iconColor);
                     }
 
-                    if (
-                        sizeClassName != null &&
-                        sizeClassName != '' &&
-                        sizeClassName != undefined
-                    ) {
+                    if (sizeClassName != null && sizeClassName != '' && sizeClassName != undefined) {
                         // @ts-ignore
                         icon.parentElement.classList.add(sizeClassName);
                     }
@@ -211,47 +202,30 @@ export default function Icon(props: IProps) {
             let iconData;
             if (window.localStorage.getItem('icon_color_class'))
                 iconData = window.localStorage.getItem('icon_color_class');
-            if (iconData != null && iconData != '' && iconData != undefined)
-                setColor(JSON.parse(iconData));
+            if (iconData != null && iconData != '' && iconData != undefined) setColor(JSON.parse(iconData));
         } catch (err) {
-            console.log(
-                'error getting/parsing iconData in local storage:',
-                err
-            );
+            console.log('error getting/parsing iconData in local storage:', err);
         }
 
         try {
             let sizeData;
             if (window.localStorage.getItem('icon_size_class'))
-                if (sizeData != null && sizeData != '' && sizeData != undefined)
-                    setSizeClassName(JSON.parse(sizeData));
+                sizeData = window.localStorage.getItem('icon_size_class');
+            if (sizeData != null && sizeData != '' && sizeData != undefined) setSizeClassName(JSON.parse(sizeData));
         } catch (err) {
-            console.log(
-                'error getting/parsing sizeData in local storage:',
-                err
-            );
+            console.log('error getting/parsing sizeData in local storage:', err);
         }
     }, []);
 
     useEffect(() => {
         localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
-        console.log(
-            "localStorage.getItem('icon_color_class') is now:",
-            localStorage.getItem('icon_color_class')
-        );
+        console.log("localStorage.getItem('icon_color_class') is now:", localStorage.getItem('icon_color_class'));
 
         localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
-        console.log(
-            "localStorage.getItem('icon_size_class') is now:",
-            localStorage.getItem('icon_size_class')
-        );
+        console.log("localStorage.getItem('icon_size_class') is now:", localStorage.getItem('icon_size_class'));
     }, [iconColor, sizeClassName]);
 
-    const {
-        color: styleColor,
-        fontSize: styleSize,
-        ...restStyle
-    } = styleTypeToObject(style ?? {});
+    const { color: styleColor, fontSize: styleSize, ...restStyle } = styleTypeToObject(style ?? {});
 
     const calculatedColor = color ?? styleColor ?? DEFAULT_COLOR;
     const calculatedSize = size ?? styleSize ?? DEFAULT_SIZE;
@@ -268,9 +242,7 @@ export default function Icon(props: IProps) {
         [onClick, onKeyPress]
     );
 
-    const jitsiIconClassName = calculatedColor
-        ? 'jitsi-icon'
-        : 'jitsi-icon jitsi-icon-default';
+    const jitsiIconClassName = calculatedColor ? 'jitsi-icon' : 'jitsi-icon jitsi-icon-default';
 
     const iconProps = alt
         ? {
@@ -305,20 +277,14 @@ export default function Icon(props: IProps) {
     };
 
     window.addEventListener('message', function (event) {
-        if (
-            typeof event.data === 'string' &&
-            event.data.includes('Selected jitsi-icon color: ')
-        ) {
+        if (typeof event.data === 'string' && event.data.includes('Selected jitsi-icon color: ')) {
             console.log('Message received from the parent: ' + event.data); // Message received from parent
             dataColor = event.data.split(': ')[1].toString().trim();
             setColor(dataColor);
             setHasColorChanged(true);
         }
 
-        if (
-            typeof event.data === 'string' &&
-            event.data.includes('Selected jitsi-icon size: ')
-        ) {
+        if (typeof event.data === 'string' && event.data.includes('Selected jitsi-icon size: ')) {
             console.log('Message received from the parent: ' + event.data); // Message received from parent
             dataSize = parseInt(event.data.split(': ')[1].toString().trim());
             for (let key in size_class) {
@@ -344,9 +310,7 @@ export default function Icon(props: IProps) {
             className={
                 !hasColorChanged
                     ? `${jitsiIconClassName} ${className || ''}`
-                    : `${className || ''} ${iconColor || ''} ${
-                          sizeClassName || ''
-                      }`
+                    : `${className || ''} ${iconColor || ''} ${sizeClassName || ''}`
             }
             data-testid={testId}
             id={containerId}
