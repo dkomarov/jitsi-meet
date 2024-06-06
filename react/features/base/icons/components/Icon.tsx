@@ -207,18 +207,16 @@ export default function Icon(props: IProps) {
 
     useEffect(() => {
         try {
-            let iconData;
-            if (window.localStorage.getItem('icon_color_class'))
-                iconData = window.localStorage.getItem('icon_color_class');
+            let iconData = window.localStorage.getItem('icon_color_class');
+
             if (iconData != null && iconData != '' && iconData != undefined) setColor(iconData);
         } catch (err) {
             console.log('error getting/parsing iconData in local storage:', err);
         }
 
         try {
-            let sizeData;
-            if (window.localStorage.getItem('icon_size_class'))
-                sizeData = window.localStorage.getItem('icon_size_class');
+            let sizeData = window.localStorage.getItem('icon_size_class');
+
             if (sizeData != null && sizeData != '' && sizeData != undefined) setSizeClassName(sizeData);
         } catch (err) {
             console.log('error getting/parsing sizeData in local storage:', err);
