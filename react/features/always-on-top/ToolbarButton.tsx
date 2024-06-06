@@ -48,7 +48,7 @@ const ToolbarButton = ({
     icon,
     toggled = false
 }: IProps) => {
-    const [iconColor, setColor] = useState('gold');
+    const [iconColor, setColor] = useState('white');
     const [hasColorChanged, setHasColorChanged] = useState(false);
     const [iconSize, setSize] = useState(36);
     const [sizeClassName, setSizeClassName] = useState('size-medium');

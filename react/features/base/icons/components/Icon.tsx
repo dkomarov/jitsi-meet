@@ -149,7 +149,7 @@ export default function Icon(props: IProps) {
         ...rest
     }: IProps = props;
 
-    const [iconColor, setColor] = useState('gold');
+    const [iconColor, setColor] = useState('white');
     const [hasColorChanged, setHasColorChanged] = useState(false);
     const [iconSize, setSize] = useState(36);
     const [sizeClassName, setSizeClassName] = useState('size-medium');
