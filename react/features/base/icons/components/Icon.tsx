@@ -149,9 +149,9 @@ export default function Icon(props: IProps) {
         ...rest
     }: IProps = props;
 
-    const [iconColor, setColor] = useState(DEFAULT_COLOR);
+    const [iconColor, setColor] = useState('white');
     const [hasColorChanged, setHasColorChanged] = useState(false);
-    const [iconSize, setSize] = useState(DEFAULT_SIZE);
+    const [iconSize, setSize] = useState(36);
     const [sizeClassName, setSizeClassName] = useState('size-medium');
 
     const elements = document.querySelectorAll(
@@ -198,6 +198,14 @@ export default function Icon(props: IProps) {
     }, [iconColor, iconSize]);
 
     useEffect(() => {
+        localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
+        console.log("localStorage.getItem('icon_color_class') is now:", localStorage.getItem('icon_color_class'));
+
+        localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
+        console.log("localStorage.getItem('icon_size_class') is now:", localStorage.getItem('icon_size_class'));
+    }, [iconColor, sizeClassName]);
+
+    useEffect(() => {
         try {
             let iconData;
             if (window.localStorage.getItem('icon_color_class'))
@@ -215,14 +223,6 @@ export default function Icon(props: IProps) {
         } catch (err) {
             console.log('error getting/parsing sizeData in local storage:', err);
         }
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
-        console.log("localStorage.getItem('icon_color_class') is now:", localStorage.getItem('icon_color_class'));
-
-        localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
-        console.log("localStorage.getItem('icon_size_class') is now:", localStorage.getItem('icon_size_class'));
     }, [iconColor, sizeClassName]);
 
     const { color: styleColor, fontSize: styleSize, ...restStyle } = styleTypeToObject(style ?? {});
@@ -293,6 +293,7 @@ export default function Icon(props: IProps) {
                     setSizeClassName(size_class[x].toString());
                 }
             }
+
             setSize(dataSize);
         }
     });
