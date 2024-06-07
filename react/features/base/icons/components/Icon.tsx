@@ -210,7 +210,8 @@ export default function Icon(props: IProps) {
         try {
             let sizeData;
             if (window.localStorage.getItem('icon_size_class'))
-                if (sizeData != null && sizeData != '' && sizeData != undefined) setSizeClassName(JSON.parse(sizeData));
+                sizeData = window.localStorage.getItem('icon_size_class');
+            if (sizeData != null && sizeData != '' && sizeData != undefined) setSizeClassName(JSON.parse(sizeData));
         } catch (err) {
             console.log('error getting/parsing sizeData in local storage:', err);
         }
