@@ -37,8 +37,7 @@ interface IProps {
     toggled?: boolean;
 }
 
-export const DEFAULT_COLOR =
-    navigator.product === 'ReactNative' ? 'white' : undefined;
+export const DEFAULT_COLOR = navigator.product === 'ReactNative' ? 'white' : undefined;
 export const DEFAULT_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
 
 const ToolbarButton = ({
@@ -49,10 +48,10 @@ const ToolbarButton = ({
     icon,
     toggled = false
 }: IProps) => {
-    const [iconColor, setColor] = useState(DEFAULT_COLOR);
-    const [hasColorChanged, setHasColorChanged] = useState(false);
-    const [iconSize, setSize] = useState(DEFAULT_SIZE);
-    const [sizeClassName, setHasSizeChanged] = useState('');
+    // const [iconColor, setColor] = useState(DEFAULT_COLOR);
+    // const [hasColorChanged, setHasColorChanged] = useState(false);
+    // const [iconSize, setSize] = useState(DEFAULT_SIZE);
+    // const [sizeClassName, setHasSizeChanged] = useState('');
 
     const onKeyPress = useCallback(
         (event) => {
@@ -64,46 +63,46 @@ const ToolbarButton = ({
         [onClick]
     );
 
-    type SizeClass = {
-        [key: number]: string;
-    };
+    // type SizeClass = {
+    //     [key: number]: string;
+    // };
 
-    let dataSize: number;
-    let dataColor: string;
-    dataColor = '';
+    // let dataSize: number;
+    // let dataColor: string;
+    // dataColor = '';
 
-    let size_class: SizeClass = {
-        36: 'size-small',
-        48: 'size-medium',
-        60: 'size-large'
-    };
+    // let size_class: SizeClass = {
+    //     36: 'size-small',
+    //     48: 'size-medium',
+    //     60: 'size-large'
+    // };
 
-    window.addEventListener('message', function (event) {
-        if (
-            typeof event.data === 'string' &&
-            event.data.includes('Selected jitsi-icon color: ')
-        ) {
-            console.log('Message received from the parent: ' + event.data); // Message received from parent
-            dataColor = event.data.split(': ')[1].toString().trim();
-            setColor(dataColor);
-            setHasColorChanged(true);
-        }
+    // window.addEventListener('message', function (event) {
+    //     if (
+    //         typeof event.data === 'string' &&
+    //         event.data.includes('Selected jitsi-icon color: ')
+    //     ) {
+    //         console.log('Message received from the parent: ' + event.data); // Message received from parent
+    //         dataColor = event.data.split(': ')[1].toString().trim();
+    //         setColor(dataColor);
+    //         setHasColorChanged(true);
+    //     }
 
-        if (
-            typeof event.data === 'string' &&
-            event.data.includes('Selected jitsi-icon size: ')
-        ) {
-            console.log('Message received from the parent: ' + event.data); // Message received from parent
-            dataSize = parseInt(event.data.split(': ')[1].toString().trim());
-            for (let key in size_class) {
-                let x: number = parseInt(key);
-                if (x === dataSize) {
-                    setHasSizeChanged(size_class[x].toString());
-                }
-            }
-            setSize(dataSize);
-        }
-    });
+    //     if (
+    //         typeof event.data === 'string' &&
+    //         event.data.includes('Selected jitsi-icon size: ')
+    //     ) {
+    //         console.log('Message received from the parent: ' + event.data); // Message received from parent
+    //         dataSize = parseInt(event.data.split(': ')[1].toString().trim());
+    //         for (let key in size_class) {
+    //             let x: number = parseInt(key);
+    //             if (x === dataSize) {
+    //                 setHasSizeChanged(size_class[x].toString());
+    //             }
+    //         }
+    //         setSize(dataSize);
+    //     }
+    // });
 
     return (
         <div
@@ -116,11 +115,7 @@ const ToolbarButton = ({
             role="button"
             tabIndex={0}
         >
-            <div
-                className={`toolbox-icon ${disabled ? 'disabled' : ''} ${
-                    customClass ?? ''
-                }`}
-            >
+            <div className={`toolbox-icon ${disabled ? 'disabled' : ''} ${customClass ?? ''}`}>
                 <Icon src={icon} />
             </div>
         </div>

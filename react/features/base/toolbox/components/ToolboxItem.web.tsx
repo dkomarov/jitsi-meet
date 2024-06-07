@@ -15,8 +15,8 @@ interface IProps extends AbstractToolboxItemProps {
      */
     backgroundColor?: string;
 
-    customIconColorClass?: string;
-    customIconSizeClass?: string;
+    // customIconColorClass?: string;
+    // customIconSizeClass?: string;
     /**
      * Whether or not the item is displayed in a context menu.
      */
@@ -47,24 +47,24 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
 
         this._onKeyPress = this._onKeyPress.bind(this);
 
-        this.state = {
-            customIconColorClass: '',
-            customIconSizeClass: ''
-        };
+        // this.state = {
+        //     customIconColorClass: '',
+        //     customIconSizeClass: ''
+        // };
 
-        this.handleColorChange = this.handleColorChange.bind(this);
-        this.handleSizeChange = this.handleSizeChange.bind(this);
+        // this.handleColorChange = this.handleColorChange.bind(this);
+        // this.handleSizeChange = this.handleSizeChange.bind(this);
     }
 
-    componentDidMount() {
-        // Adding the event listener when the component mounts
-        window.addEventListener('message', this.handleColorChange);
-    }
+    // componentDidMount() {
+    //     // Adding the event listener when the component mounts
+    //     window.addEventListener('message', this.handleColorChange);
+    // }
 
-    componentWillUnmount() {
-        // Removing the event listener when the component unmounts to prevent memory leaks
-        window.removeEventListener('message', this.handleSizeChange);
-    }
+    // componentWillUnmount() {
+    //     // Removing the event listener when the component unmounts to prevent memory leaks
+    //     window.removeEventListener('message', this.handleSizeChange);
+    // }
 
     /**
      * Handles 'Enter' and Space key on the button to trigger onClick for accessibility.
@@ -80,44 +80,44 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         }
     }
 
-    _handleColorChange(event: MessageEvent, dataColor: String) {
-        if (
-            typeof event.data === 'string' &&
-            event.data.includes('Selected jitsi-icon color: ')
-        ) {
-            console.log('Message received from the parent: ' + event.data); // Message received from parent
-            dataColor = event.data.split(': ')[1].toString().trim();
-            this.setState({ customIconColorClass: dataColor });
-            // fetchData(dataColor);
-        }
-    }
+    // _handleColorChange(event: MessageEvent, dataColor: String) {
+    //     if (
+    //         typeof event.data === 'string' &&
+    //         event.data.includes('Selected jitsi-icon color: ')
+    //     ) {
+    //         console.log('Message received from the parent: ' + event.data); // Message received from parent
+    //         dataColor = event.data.split(': ')[1].toString().trim();
+    //         this.setState({ customIconColorClass: dataColor });
+    //         // fetchData(dataColor);
+    //     }
+    // }
 
-    _handleSizeChange(event: MessageEvent, sizeClassName: String) {
-        let dataSize: Number;
-        type SizeClass = {
-            [key: number]: string;
-        };
+    // _handleSizeChange(event: MessageEvent, sizeClassName: String) {
+    //     let dataSize: Number;
+    //     type SizeClass = {
+    //         [key: number]: string;
+    //     };
 
-        let size_class: SizeClass = {
-            36: 'size-small',
-            48: 'size-medium',
-            60: 'size-large'
-        };
+    //     let size_class: SizeClass = {
+    //         36: 'size-small',
+    //         48: 'size-medium',
+    //         60: 'size-large'
+    //     };
 
-        if (
-            typeof event.data === 'string' &&
-            event.data.includes('Selected jitsi-icon size: ')
-        ) {
-            console.log('Message received from the parent: ' + event.data); // Message received from parent
-            dataSize = parseInt(event.data.split(': ')[1].toString().trim());
-            for (let key in size_class) {
-                let x: number = parseInt(key);
-                if (x === dataSize) sizeClassName = size_class[x].toString();
-            }
-            // Update state with a new size
-            this.setState({ customIconSizeClass: sizeClassName });
-        }
-    }
+    //     if (
+    //         typeof event.data === 'string' &&
+    //         event.data.includes('Selected jitsi-icon size: ')
+    //     ) {
+    //         console.log('Message received from the parent: ' + event.data); // Message received from parent
+    //         dataSize = parseInt(event.data.split(': ')[1].toString().trim());
+    //         for (let key in size_class) {
+    //             let x: number = parseInt(key);
+    //             if (x === dataSize) sizeClassName = size_class[x].toString();
+    //         }
+    //         // Update state with a new size
+    //         this.setState({ customIconSizeClass: sizeClassName });
+    //     }
+    // }
 
     /**
      * Handles rendering of the actual item. If the label is being shown, which
@@ -166,9 +166,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
                     // backgroundColor={backgroundColor} // dataColor ||
-                    className={`${
-                        customIconSizeClass != ''
-                    } ? ${customIconSizeClass}:${
+                    className={`${customIconSizeClass != ''} ? ${customIconSizeClass}:${
                         customIconColorClass != ''
                     } ?${customIconColorClass} : ''`}
                     disabled={disabled}
@@ -190,10 +188,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
 
         if (useTooltip) {
             children = (
-                <Tooltip
-                    content={this.tooltip ?? ''}
-                    position={tooltipPosition}
-                >
+                <Tooltip content={this.tooltip ?? ''} position={tooltipPosition}>
                     {children}
                 </Tooltip>
             );
@@ -261,14 +256,9 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         dataSize = 0;
 
         window.addEventListener('message', function (event: MessageEvent) {
-            if (
-                typeof event.data === 'string' &&
-                event.data.includes('Selected jitsi-icon size: ')
-            ) {
+            if (typeof event.data === 'string' && event.data.includes('Selected jitsi-icon size: ')) {
                 console.log('Message received from the parent: ' + event.data); // Message received from parent
-                dataSize = parseInt(
-                    event.data.split(': ')[1].toString().trim()
-                );
+                dataSize = parseInt(event.data.split(': ')[1].toString().trim());
                 // for (let key in size_class) {
                 //     let x: number = parseInt(key);
                 //     if (x === dataSize)
@@ -279,25 +269,14 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
             }
         });
 
-        const {
-            backgroundColor,
-            customClass,
-            disabled,
-            icon,
-            showLabel,
-            toggled
-        } = this.props;
+        const { backgroundColor, customClass, disabled, icon, showLabel, toggled } = this.props;
 
-        const iconComponent = (
-            <Icon size={showLabel ? undefined : 36} src={icon} />
-        );
+        const iconComponent = <Icon size={showLabel ? undefined : 36} src={icon} />;
 
         const elementType = showLabel ? 'span' : 'div';
-        const className = `${
-            showLabel ? 'overflow-menu-item-icon' : 'toolbox-icon'
-        } ${toggled ? 'toggled' : ''} ${disabled ? 'disabled' : ''} ${
-            customClass ?? ''
-        }`;
+        const className = `${showLabel ? 'overflow-menu-item-icon' : 'toolbox-icon'} ${toggled ? 'toggled' : ''} ${
+            disabled ? 'disabled' : ''
+        } ${customClass ?? ''}`;
 
         // const style = backgroundColor && !showLabel ? { backgroundColor } : {}; //   iconColor ||
         const style = {
