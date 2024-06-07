@@ -131,8 +131,8 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
     _renderItem() {
         const {
             backgroundColor,
-            customIconColorClass,
-            customIconSizeClass,
+            // customIconColorClass,
+            // customIconSizeClass,
             contextMenu,
             isMenuButton,
             disabled,
