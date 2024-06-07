@@ -166,9 +166,10 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
                 <ContextMenuItem
                     accessibilityLabel={this.accessibilityLabel}
                     // backgroundColor={backgroundColor} // dataColor ||
-                    className={`${customIconSizeClass != ''} ? ${customIconSizeClass}:${
-                        customIconColorClass != ''
-                    } ?${customIconColorClass} : ''`}
+                    className={className}
+                    // className={`${customIconSizeClass != ''} ? ${customIconSizeClass}:${
+                    //     customIconColorClass != ''
+                    // } ?${customIconColorClass} : ''`}
                     disabled={disabled}
                     icon={icon}
                     onClick={onClick}

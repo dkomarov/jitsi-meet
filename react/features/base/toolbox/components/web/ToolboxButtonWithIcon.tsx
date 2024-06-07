@@ -5,7 +5,6 @@ import Icon from '../../../icons/components/Icon';
 import Tooltip from '../../../tooltip/components/Tooltip';
 
 interface IProps {
-
     /**
      * The id of the element this button icon controls.
      */
@@ -114,15 +113,12 @@ export default function ToolboxButtonWithIcon(props: IProps) {
     let className = '';
 
     if (iconDisabled) {
-        className
-            = 'settings-button-small-icon settings-button-small-icon--disabled';
+        className = 'settings-button-small-icon settings-button-small-icon--disabled';
     } else {
         className = 'settings-button-small-icon';
         iconProps.onClick = (e?: React.MouseEvent) => {
             if (typeof APP !== 'undefined' && notifyMode) {
-                APP.API.notifyToolbarButtonClicked(
-                    buttonKey, notifyMode === NOTIFY_CLICK_MODE.PREVENT_AND_NOTIFY
-                );
+                APP.API.notifyToolbarButtonClicked(buttonKey, notifyMode === NOTIFY_CLICK_MODE.PREVENT_AND_NOTIFY);
             }
 
             if (notifyMode !== NOTIFY_CLICK_MODE.PREVENT_AND_NOTIFY) {
@@ -137,24 +133,13 @@ export default function ToolboxButtonWithIcon(props: IProps) {
         iconProps.containerId = iconId;
     }
 
-
     return (
-        <div
-            className = 'settings-button-container'
-            style = { styles }>
+        <div className="settings-button-container" style={styles}>
             {children}
 
             <div>
-                <Tooltip
-                    containerClassName = { className }
-                    content = { iconTooltip }
-                    position = 'top'>
-                    <Icon
-                        { ...iconProps }
-                        ariaHasPopup = { ariaHasPopup }
-                        ariaLabel = { ariaLabel }
-                        size = { 16 }
-                        src = { icon } />
+                <Tooltip containerClassName={className} content={iconTooltip} position="top">
+                    <Icon {...iconProps} ariaHasPopup={ariaHasPopup} ariaLabel={ariaLabel} size={16} src={icon} />
                 </Tooltip>
             </div>
         </div>
