@@ -195,7 +195,19 @@ export default function Icon(props: IProps) {
         return () => {
             // window.removeEventListener('resize', applyStyles);
         };
-    }, [iconColor, iconSize]);
+    }, [iconColor, sizeClassName]);
+
+    useEffect(() => {
+        if (iconColor) {
+            localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
+            console.log("localStorage.getItem('icon_color_class') is now:", localStorage.getItem('icon_color_class'));
+        }
+
+        if (sizeClassName) {
+            localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
+            console.log("localStorage.getItem('icon_size_class') is now:", localStorage.getItem('icon_size_class'));
+        }
+    }, [iconColor, sizeClassName]);
 
     useEffect(() => {
         try {
@@ -216,18 +228,6 @@ export default function Icon(props: IProps) {
             console.log('error getting/parsing sizeData in local storage:', err);
         }
     }, []);
-
-    useEffect(() => {
-        if (iconColor) {
-            localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
-            console.log("localStorage.getItem('icon_color_class') is now:", localStorage.getItem('icon_color_class'));
-        }
-
-        if (sizeClassName) {
-            localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
-            console.log("localStorage.getItem('icon_size_class') is now:", localStorage.getItem('icon_size_class'));
-        }
-    }, [iconColor, sizeClassName]);
 
     const { color: styleColor, fontSize: styleSize, ...restStyle } = styleTypeToObject(style ?? {});
 
