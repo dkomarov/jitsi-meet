@@ -284,8 +284,10 @@ export default function Icon(props: IProps) {
         if (typeof event.data === 'string' && event.data.includes('Selected jitsi-icon color: ')) {
             console.log('Message received from the parent: ' + event.data); // Message received from parent
             dataColor = event.data.split(': ')[1].toString().trim();
-            setColor(dataColor);
-            setHasColorChanged(true);
+            if (dataColor) {
+                setColor(dataColor);
+                setHasColorChanged(true);
+            }
         }
 
         if (typeof event.data === 'string' && event.data.includes('Selected jitsi-icon size: ')) {
@@ -297,7 +299,7 @@ export default function Icon(props: IProps) {
                     setSizeClassName(size_class[x].toString());
                 }
             }
-            setSize(dataSize);
+            if (dataSize) setSize(dataSize);
         }
     });
 
