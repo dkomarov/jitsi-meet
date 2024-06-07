@@ -218,11 +218,15 @@ export default function Icon(props: IProps) {
     }, []);
 
     useEffect(() => {
-        localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
-        console.log("localStorage.getItem('icon_color_class') is now:", localStorage.getItem('icon_color_class'));
+        if (iconColor) {
+            localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
+            console.log("localStorage.getItem('icon_color_class') is now:", localStorage.getItem('icon_color_class'));
+        }
 
-        localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
-        console.log("localStorage.getItem('icon_size_class') is now:", localStorage.getItem('icon_size_class'));
+        if (sizeClassName) {
+            localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
+            console.log("localStorage.getItem('icon_size_class') is now:", localStorage.getItem('icon_size_class'));
+        }
     }, [iconColor, sizeClassName]);
 
     const { color: styleColor, fontSize: styleSize, ...restStyle } = styleTypeToObject(style ?? {});
