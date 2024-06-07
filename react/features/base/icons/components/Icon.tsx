@@ -5,7 +5,7 @@ import { StyleType, styleTypeToObject } from '../../styles/functions.web';
 
 import { IIconProps } from './types.web';
 
-import '../../../../../css/custom-icon.mods.css';
+// import '../../../../../css/custom-icon.mods.css';
 
 interface IProps extends IIconProps {
     /**

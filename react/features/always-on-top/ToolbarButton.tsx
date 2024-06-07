@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 
 import Icon from '../base/icons/components/Icon';
 
-import '../../../css/custom-icon.mods.css';
+// import '../../../css/custom-icon.mods.css';
 
 interface IProps {
     /**

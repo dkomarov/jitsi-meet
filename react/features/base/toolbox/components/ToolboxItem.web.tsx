@@ -7,7 +7,7 @@ import ContextMenuItem from '../../ui/components/web/ContextMenuItem';
 import AbstractToolboxItem from './AbstractToolboxItem';
 import type { IProps as AbstractToolboxItemProps } from './AbstractToolboxItem';
 
-import '../../../../../css/custom-icon.mods.css';
+// import '../../../../../css/custom-icon.mods.css';
 
 interface IProps extends AbstractToolboxItemProps {
     /**
