@@ -201,12 +201,12 @@ export default function Icon(props: IProps) {
     }, [iconColor, sizeClassName]);
 
     useEffect(() => {
-        if (iconColor) {
+        if (iconColor != null && iconColor != '' && iconColor != undefined) {
             localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
             console.log("localStorage.getItem('icon_color_class') is now:", localStorage.getItem('icon_color_class'));
         }
 
-        if (sizeClassName) {
+        if (sizeClassName != null && sizeClassName != '' && sizeClassName != undefined) {
             localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
             console.log("localStorage.getItem('icon_size_class') is now:", localStorage.getItem('icon_size_class'));
         }
