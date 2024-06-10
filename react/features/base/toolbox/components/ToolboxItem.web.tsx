@@ -253,22 +253,22 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         //     60: 'size-large'
         // };
 
-        let dataSize: number;
-        dataSize = 0;
+        // let dataSize: number;
+        // dataSize = 0;
 
-        window.addEventListener('message', function (event: MessageEvent) {
-            if (typeof event.data === 'string' && event.data.includes('Selected jitsi-icon size: ')) {
-                console.log('Message received from the parent: ' + event.data); // Message received from parent
-                dataSize = parseInt(event.data.split(': ')[1].toString().trim());
-                // for (let key in size_class) {
-                //     let x: number = parseInt(key);
-                //     if (x === dataSize)
-                //         sizeClassName = size_class[x].toString();
-                // }
-                // this.handleSizeChange(sizeClassName);
-                // fetchData(null, dataSize);
-            }
-        });
+        // window.addEventListener('message', function (event: MessageEvent) {
+        //     if (typeof event.data === 'string' && event.data.includes('Selected jitsi-icon size: ')) {
+        //         console.log('Message received from the parent: ' + event.data); // Message received from parent
+        //         dataSize = parseInt(event.data.split(': ')[1].toString().trim());
+        //         // for (let key in size_class) {
+        //         //     let x: number = parseInt(key);
+        //         //     if (x === dataSize)
+        //         //         sizeClassName = size_class[x].toString();
+        //         // }
+        //         // this.handleSizeChange(sizeClassName);
+        //         // fetchData(null, dataSize);
+        //     }
+        // });
 
         const { backgroundColor, customClass, disabled, icon, showLabel, toggled } = this.props;
 
