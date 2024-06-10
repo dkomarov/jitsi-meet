@@ -155,7 +155,7 @@ export default function Icon(props: IProps) {
     const [sizeClassName, setSizeClassName] = useState('size-medium');
 
     const elements = document.querySelectorAll(
-        '.jitsi-icon-default svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg, #mic-disabled, #toggleFilmstripButton svg)'
+        '.jitsi-icon svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg, #mic-disabled, #toggleFilmstripButton svg)'
     );
 
     useEffect(() => {
@@ -164,12 +164,12 @@ export default function Icon(props: IProps) {
                 elements.forEach((icon) => {
                     if (iconColor != null && iconColor != '' && iconColor != undefined) {
                         // @ts-ignore
-                        icon.closest('jitsi-icon').classList.add(iconColor);
+                        icon.parentElement.classList.add(iconColor);
                     }
 
                     if (sizeClassName != null && sizeClassName != '' && sizeClassName != undefined) {
                         // @ts-ignore
-                        icon.closest('jitsi-icon').classList.add(sizeClassName);
+                        icon.parentElement.classList.add(sizeClassName);
                     }
                     // if (icon instanceof HTMLElement) {
 
