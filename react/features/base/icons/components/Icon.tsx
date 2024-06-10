@@ -159,7 +159,7 @@ export default function Icon(props: IProps) {
     );
 
     useEffect(() => {
-        const applyStyles = () => {
+        const applyStyles = (iconColor: string, sizeClassName: string) => {
             try {
                 elements.forEach((icon) => {
                     if (iconColor != null && iconColor != '' && iconColor != undefined) {
@@ -187,10 +187,12 @@ export default function Icon(props: IProps) {
             }
         };
 
-        window.addEventListener('resize', applyStyles);
+        // @ts-ignore
+        window.addEventListener('resize', applyStyles(iconColor, sizeClassName));
 
         // Apply styles initially
-        applyStyles();
+        // @ts-ignore
+        applyStyles(iconColor, sizeClassName);
 
         return () => {
             // window.removeEventListener('resize', applyStyles);
