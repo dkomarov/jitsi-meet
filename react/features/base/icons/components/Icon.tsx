@@ -160,6 +160,37 @@ export default function Icon(props: IProps) {
 
     useEffect(() => {
         const applyStyles = (iconColor: string, sizeClassName: string) => {
+            if (iconColor) {
+                localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
+                console.log(
+                    "localStorage.getItem('icon_color_class') is now:",
+                    localStorage.getItem('icon_color_class')
+                );
+            }
+
+            if (sizeClassName) {
+                localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
+                console.log("localStorage.getItem('icon_size_class') is now:", localStorage.getItem('icon_size_class'));
+            }
+
+            try {
+                let iconData;
+                if (window.localStorage.getItem('icon_color_class'))
+                    iconData = window.localStorage.getItem('icon_color_class');
+                if (iconData != null && iconData != '' && iconData != undefined) setColor(JSON.parse(iconData));
+            } catch (err) {
+                console.log('error getting/parsing iconData in local storage:', err);
+            }
+
+            try {
+                let sizeData;
+                if (window.localStorage.getItem('icon_size_class'))
+                    sizeData = window.localStorage.getItem('icon_size_class');
+                if (sizeData != null && sizeData != '' && sizeData != undefined) setSizeClassName(JSON.parse(sizeData));
+            } catch (err) {
+                console.log('error getting/parsing sizeData in local storage:', err);
+            }
+
             try {
                 elements.forEach((icon) => {
                     if (iconColor != null && iconColor != '' && iconColor != undefined) {
@@ -199,37 +230,27 @@ export default function Icon(props: IProps) {
         };
     }, [iconColor, sizeClassName]);
 
-    useEffect(() => {
-        if (iconColor) {
-            localStorage.setItem('icon_color_class', JSON.stringify(iconColor));
-            console.log("localStorage.getItem('icon_color_class') is now:", localStorage.getItem('icon_color_class'));
-        }
+    // useEffect(() => {}, [iconColor, sizeClassName]);
 
-        if (sizeClassName) {
-            localStorage.setItem('icon_size_class', JSON.stringify(sizeClassName));
-            console.log("localStorage.getItem('icon_size_class') is now:", localStorage.getItem('icon_size_class'));
-        }
-    }, [iconColor, sizeClassName]);
+    // useEffect(() => {
+    //     try {
+    //         let iconData;
+    //         if (window.localStorage.getItem('icon_color_class'))
+    //             iconData = window.localStorage.getItem('icon_color_class');
+    //         if (iconData != null && iconData != '' && iconData != undefined) setColor(JSON.parse(iconData));
+    //     } catch (err) {
+    //         console.log('error getting/parsing iconData in local storage:', err);
+    //     }
 
-    useEffect(() => {
-        try {
-            let iconData;
-            if (window.localStorage.getItem('icon_color_class'))
-                iconData = window.localStorage.getItem('icon_color_class');
-            if (iconData != null && iconData != '' && iconData != undefined) setColor(JSON.parse(iconData));
-        } catch (err) {
-            console.log('error getting/parsing iconData in local storage:', err);
-        }
-
-        try {
-            let sizeData;
-            if (window.localStorage.getItem('icon_size_class'))
-                sizeData = window.localStorage.getItem('icon_size_class');
-            if (sizeData != null && sizeData != '' && sizeData != undefined) setSizeClassName(JSON.parse(sizeData));
-        } catch (err) {
-            console.log('error getting/parsing sizeData in local storage:', err);
-        }
-    }, []);
+    //     try {
+    //         let sizeData;
+    //         if (window.localStorage.getItem('icon_size_class'))
+    //             sizeData = window.localStorage.getItem('icon_size_class');
+    //         if (sizeData != null && sizeData != '' && sizeData != undefined) setSizeClassName(JSON.parse(sizeData));
+    //     } catch (err) {
+    //         console.log('error getting/parsing sizeData in local storage:', err);
+    //     }
+    // }, []);
 
     const { color: styleColor, fontSize: styleSize, ...restStyle } = styleTypeToObject(style ?? {});
 
