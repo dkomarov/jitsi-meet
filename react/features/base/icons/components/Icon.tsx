@@ -116,6 +116,7 @@ interface IProps extends IIconProps {
 
 export const DEFAULT_COLOR = navigator.product === 'ReactNative' ? 'white' : undefined;
 export const DEFAULT_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
+export const DEFAULT_SIZE_CLASS = navigator.product === 'ReactNative' ? 'size-small' : undefined;
 
 /**
  * Implements an Icon component that takes a loaded SVG file as prop and renders it as an icon.
@@ -152,7 +153,7 @@ export default function Icon(props: IProps) {
     const [iconColor, setColor] = useState(DEFAULT_COLOR);
     const [hasColorChanged, setHasColorChanged] = useState(false);
     const [iconSize, setSize] = useState(DEFAULT_SIZE);
-    const [sizeClassName, setSizeClassName] = useState();
+    const [sizeClassName, setSizeClassName] = useState(DEFAULT_SIZE_CLASS);
 
     const elements = document.querySelectorAll(
         '.jitsi-icon svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg, #mic-disabled, #toggleFilmstripButton svg)'
