@@ -114,9 +114,9 @@ interface IProps extends IIconProps {
     testId?: string;
 }
 
-export const DEFAULT_COLOR = navigator.product === 'ReactNative' ? 'white' : undefined;
-export const DEFAULT_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
-export const DEFAULT_SIZE_CLASS = navigator.product === 'ReactNative' ? 'size-small' : undefined;
+export const DEFAULT_ICON_COLOR = navigator.product === 'ReactNative' ? 'white' : undefined;
+export const DEFAULT_ICON_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
+export const DEFAULT_ICON_SIZE_CLASS = navigator.product === 'ReactNative' ? 'size-small' : undefined;
 
 /**
  * Implements an Icon component that takes a loaded SVG file as prop and renders it as an icon.
@@ -150,10 +150,10 @@ export default function Icon(props: IProps) {
         ...rest
     }: IProps = props;
 
-    const [iconColor, setColor] = useState(DEFAULT_COLOR);
+    const [iconColor, setColor] = useState(DEFAULT_ICON_COLOR);
     const [hasColorChanged, setHasColorChanged] = useState(false);
-    const [iconSize, setSize] = useState(DEFAULT_SIZE);
-    const [sizeClassName, setSizeClassName] = useState(DEFAULT_SIZE_CLASS);
+    const [iconSize, setSize] = useState(DEFAULT_ICON_SIZE);
+    const [sizeClassName, setSizeClassName] = useState(DEFAULT_ICON_SIZE_CLASS);
 
     const elements = document.querySelectorAll(
         '.jitsi-icon svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg, #mic-disabled, #toggleFilmstripButton svg)'
@@ -232,10 +232,11 @@ export default function Icon(props: IProps) {
         }
     }, []);
 
+    // @ts-ignore
     const { color: styleColor, fontSize: styleSize, ...restStyle } = styleTypeToObject(style ?? {});
 
-    const calculatedColor = color ?? styleColor ?? DEFAULT_COLOR;
-    const calculatedSize = size ?? styleSize ?? DEFAULT_SIZE;
+    const calculatedColor = color ?? styleColor ?? DEFAULT_ICON_COLOR;
+    const calculatedSize = size ?? styleSize ?? DEFAULT_ICON_SIZE;
 
     const onKeyPressHandler = useCallback(
         (e) => {

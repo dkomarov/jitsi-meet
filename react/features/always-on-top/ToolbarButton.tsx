@@ -37,8 +37,8 @@ interface IProps {
     toggled?: boolean;
 }
 
-export const DEFAULT_COLOR = navigator.product === 'ReactNative' ? 'white' : undefined;
-export const DEFAULT_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
+// export const DEFAULT_COLOR = navigator.product === 'ReactNative' ? 'white' : undefined;
+// export const DEFAULT_SIZE = navigator.product === 'ReactNative' ? 36 : 40; // 22
 
 const ToolbarButton = ({
     accessibilityLabel,
