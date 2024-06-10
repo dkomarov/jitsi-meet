@@ -158,44 +158,44 @@ export default function Icon(props: IProps) {
         '.jitsi-icon-default svg:not(.settings-button-small-icon svg, #participant-connection-indicator svg, #mic-disabled, #toggleFilmstripButton svg)'
     );
 
-    useEffect(() => {
-        const applyStyles = () => {
-            try {
-                elements.forEach((icon) => {
-                    if (iconColor != null && iconColor != '' && iconColor != undefined) {
-                        // @ts-ignore
-                        icon.parentElement.classList.add(iconColor);
-                    }
+    // useEffect(() => {
+    //     const applyStyles = () => {
+    //         try {
+    //             elements.forEach((icon) => {
+    //                 if (iconColor != null && iconColor != '' && iconColor != undefined) {
+    //                     // @ts-ignore
+    //                     icon.parentElement.classList.add(iconColor);
+    //                 }
 
-                    if (sizeClassName != null && sizeClassName != '' && sizeClassName != undefined) {
-                        // @ts-ignore
-                        icon.parentElement.classList.add(sizeClassName);
-                    }
-                    // if (icon instanceof HTMLElement) {
+    //                 if (sizeClassName != null && sizeClassName != '' && sizeClassName != undefined) {
+    //                     // @ts-ignore
+    //                     icon.parentElement.classList.add(sizeClassName);
+    //                 }
+    //                 // if (icon instanceof HTMLElement) {
 
-                    //     icon.style.fill = iconColor;
-                    //     icon.style.width = `${iconSize}px`;
-                    //     icon.style.height = `${iconSize}px`;
-                    // } else if (icon instanceof SVGElement) {
-                    //     icon.setAttribute('fill', iconColor);
-                    //     icon.style.width = `${iconSize}px`;
-                    //     icon.style.height = `${iconSize}px`;
-                    // }
-                });
-            } catch (err) {
-                console.log('Error re-applying styles:', err);
-            }
-        };
+    //                 //     icon.style.fill = iconColor;
+    //                 //     icon.style.width = `${iconSize}px`;
+    //                 //     icon.style.height = `${iconSize}px`;
+    //                 // } else if (icon instanceof SVGElement) {
+    //                 //     icon.setAttribute('fill', iconColor);
+    //                 //     icon.style.width = `${iconSize}px`;
+    //                 //     icon.style.height = `${iconSize}px`;
+    //                 // }
+    //             });
+    //         } catch (err) {
+    //             console.log('Error re-applying styles:', err);
+    //         }
+    //     };
 
-        window.addEventListener('resize', applyStyles);
+    //     window.addEventListener('resize', applyStyles);
 
-        // Apply styles initially
-        applyStyles();
+    //     // Apply styles initially
+    //     applyStyles();
 
-        return () => {
-            // window.removeEventListener('resize', applyStyles);
-        };
-    }, [iconColor, sizeClassName]);
+    //     return () => {
+    //         // window.removeEventListener('resize', applyStyles);
+    //     };
+    // }, [iconColor, sizeClassName]);
 
     useEffect(() => {
         if (iconColor) {
