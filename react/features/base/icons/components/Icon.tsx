@@ -217,7 +217,8 @@ export default function Icon(props: IProps) {
             let iconData;
             if (window.localStorage.getItem('icon_color_class'))
                 iconData = window.localStorage.getItem('icon_color_class');
-            if (iconData != null && iconData != '' && iconData != undefined) setColor(JSON.parse(iconData));
+            if (iconData != null && iconData != '' && iconData != undefined && iconData != 'undefined')
+                setColor(JSON.parse(iconData));
         } catch (err) {
             console.log('error getting/parsing iconData in local storage:', err);
         }
@@ -226,7 +227,8 @@ export default function Icon(props: IProps) {
             let sizeData;
             if (window.localStorage.getItem('icon_size_class'))
                 sizeData = window.localStorage.getItem('icon_size_class');
-            if (sizeData != null && sizeData != '' && sizeData != undefined) setSizeClassName(JSON.parse(sizeData));
+            if (sizeData != null && sizeData != '' && sizeData != undefined && sizeData != 'undefined')
+                setSizeClassName(JSON.parse(sizeData));
         } catch (err) {
             console.log('error getting/parsing sizeData in local storage:', err);
         }
