@@ -62,11 +62,11 @@ export const commonStyles = (theme: Theme) => {
                 color: theme.palette.text03,
 
                 '&:hover': {
-                    background: 'none'
+                    background: 'transparent'
                 },
 
                 '& svg': {
-                    fill: 'inherit' // theme.palette.text03
+                    fill: theme.palette.text03
                 }
             },
 
@@ -107,9 +107,7 @@ export const commonStyles = (theme: Theme) => {
         },
 
         '.participant-avatar': {
-            margin: `${theme.spacing(2)} ${theme.spacing(3)} ${theme.spacing(
-                2
-            )} 0`
+            margin: `${theme.spacing(2)} ${theme.spacing(3)} ${theme.spacing(2)} 0`
         },
         '.prejoin-dialog': {
             backgroundColor: theme.palette.uiBackground,
@@ -267,8 +265,7 @@ export const commonStyles = (theme: Theme) => {
             textAlign: 'center' as const,
             pointerEvents: 'all' as const,
             display: 'flex',
-            boxShadow:
-                '0px 2px 8px 4px rgba(0, 0, 0, 0.25), 0px 0px 0px 1px rgba(0, 0, 0, 0.15)',
+            boxShadow: '0px 2px 8px 4px rgba(0, 0, 0, 0.25), 0px 0px 0px 1px rgba(0, 0, 0, 0.15)',
 
             '& > div': {
                 marginRight: theme.spacing(2),
