@@ -75,7 +75,7 @@ export const commonStyles = (theme: Theme) => {
                     background: theme.palette.action02Hover
                 },
                 '&.unclickable:hover': {
-                    background: 'inherit'
+                    background: 'transparent'
                 }
             }
         },
@@ -90,7 +90,7 @@ export const commonStyles = (theme: Theme) => {
 
             '@media (hover: hover) and (pointer: fine)': {
                 '&i:hover': {
-                    backgroundColor: 'initial'
+                    backgroundColor: 'transparent'
                 }
             },
 
