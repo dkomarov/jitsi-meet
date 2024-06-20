@@ -11,7 +11,7 @@ export const colors = {
     primary03: '#003486',
     primary04: '#0045B3',
     primary05: '#0056E0',
-    primary06: '#246FE5',
+    primary06: '#246FE5 !important',
     primary07: '#4687ED',
     primary08: '#99BBF3',
     primary09: '#CCDDF9',
@@ -159,7 +159,6 @@ export const colorMap = {
     support09: 'support09'
 };
 
-
 export const font = {
     weightRegular: '400',
     weightSemiBold: '600'
@@ -171,8 +170,7 @@ export const shape = {
     boxShadow: 'inset 0px -1px 0px rgba(255, 255, 255, 0.15)'
 };
 
-export const spacing
-    = [ 0, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128 ];
+export const spacing = [0, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128];
 
 export const typography = {
     labelRegular: {
