@@ -61,7 +61,7 @@ p {
     margin: 0;
 }
 
-svg {
+svg:not(#notifications-container svg) {
     fill: white;
 }
 
