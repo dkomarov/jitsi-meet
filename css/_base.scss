@@ -61,12 +61,17 @@ p {
     margin: 0;
 }
 
-.toolbox-content svg {
+.toolbox-content svg,
+#mic-disabled {
     fill: white;
 }
 
 #close-notification {
     fill: black;
+}
+
+.overflow-menu-item:hover {
+    background-color: #929292;
 }
 
 body,
