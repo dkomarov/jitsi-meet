@@ -61,24 +61,8 @@ p {
     margin: 0;
 }
 
-svg:not(#notifications-container&nbspsvg) {
+.toolbox-content svg {
     fill: white;
-}
-
-#notifications-container div[class*='ribbon.normal'] svg {
-    fill: #246fe5;
-}
-
-#notifications-container div[class*='ribbon.error'] svg {
-    fill: #d83848;
-}
-
-#notifications-container div[class*='ribbon.success'] svg {
-    fill: #1ec26a;
-}
-
-#notifications-container div[class*='ribbon.warning'] svg {
-    fill: #ffd600;
 }
 
 #close-notification {
