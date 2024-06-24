@@ -25,7 +25,6 @@ import ToggleTopPanelLabel from './ToggleTopPanelLabel';
  * The type of the React {@code Component} props of {@link Subject}.
  */
 interface IProps {
-
     /**
      * The conference info labels to be shown in the conference header.
      */
@@ -50,6 +49,14 @@ const COMPONENTS: Array<{
     id: string;
 }> = [
     {
+        Component: () => (
+            <>
+                <button>COPY</button>
+            </>
+        ),
+        id: 'copy-btn-for-conf'
+    },
+    {
         Component: HighlightButton,
         id: 'highlight-moment'
     },
@@ -72,8 +79,8 @@ const COMPONENTS: Array<{
     {
         Component: () => (
             <>
-                <RecordingLabel mode = { JitsiRecordingConstants.mode.FILE } />
-                <RecordingLabel mode = { JitsiRecordingConstants.mode.STREAM } />
+                <RecordingLabel mode={JitsiRecordingConstants.mode.FILE} />
+                <RecordingLabel mode={JitsiRecordingConstants.mode.STREAM} />
             </>
         ),
         id: 'recording'
@@ -146,16 +153,10 @@ class ConferenceInfo extends Component<IProps> {
         }
 
         return (
-            <ConferenceInfoContainer
-                id = 'autoHide'
-                visible = { this.props._visible }>
-                {
-                    COMPONENTS
-                        .filter(comp => autoHide.includes(comp.id))
-                        .map(c =>
-                            <c.Component key = { c.id } />
-                        )
-                }
+            <ConferenceInfoContainer id="autoHide" visible={this.props._visible}>
+                {COMPONENTS.filter((comp) => autoHide.includes(comp.id)).map((c) => (
+                    <c.Component key={c.id} />
+                ))}
             </ConferenceInfoContainer>
         );
     }
@@ -173,16 +174,10 @@ class ConferenceInfo extends Component<IProps> {
         }
 
         return (
-            <ConferenceInfoContainer
-                id = 'alwaysVisible'
-                visible = { true } >
-                {
-                    COMPONENTS
-                        .filter(comp => alwaysVisible.includes(comp.id))
-                        .map(c =>
-                            <c.Component key = { c.id } />
-                        )
-                }
+            <ConferenceInfoContainer id="alwaysVisible" visible={true}>
+                {COMPONENTS.filter((comp) => alwaysVisible.includes(comp.id)).map((c) => (
+                    <c.Component key={c.id} />
+                ))}
             </ConferenceInfoContainer>
         );
     }
@@ -195,11 +190,9 @@ class ConferenceInfo extends Component<IProps> {
      */
     render() {
         return (
-            <div
-                className = 'details-container'
-                onFocus = { this._onTabIn }>
-                { this._renderAlwaysVisible() }
-                { this._renderAutoHide() }
+            <div className="details-container" onFocus={this._onTabIn}>
+                {this._renderAlwaysVisible()}
+                {this._renderAutoHide()}
             </div>
         );
     }
