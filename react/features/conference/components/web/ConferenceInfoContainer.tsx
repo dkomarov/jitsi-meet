@@ -3,7 +3,6 @@ import React from 'react';
 import { isAlwaysOnTitleBarEmpty } from '../functions.web';
 
 interface IProps {
-
     /**
      * The children components.
      */
@@ -15,16 +14,15 @@ interface IProps {
     id?: string;
 
     /**
-    * Whether this conference info container should be visible or not.
-    */
+     * Whether this conference info container should be visible or not.
+     */
     visible: boolean;
 }
 
 export default ({ visible, children, id }: IProps) => (
-    <div
-        className = { `subject${isAlwaysOnTitleBarEmpty() ? '' : ' with-always-on'}${visible ? ' visible' : ''}` }
-        id = { id }>
-        <div className = { 'subject-info-container' }>
+    <div className={`subject${isAlwaysOnTitleBarEmpty() ? '' : ' with-always-on'}${visible ? ' visible' : ''}`} id={id}>
+        <div className={'subject-info-container'}>
+            <button>COPY</button>
             {children}
         </div>
     </div>
