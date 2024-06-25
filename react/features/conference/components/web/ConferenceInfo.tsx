@@ -15,6 +15,7 @@ import ConferenceTimer from '../ConferenceTimer';
 import { getConferenceInfo } from '../functions.web';
 
 import ConferenceInfoContainer from './ConferenceInfoContainer';
+import CopyConfNameBtn from './CopyConfNameBtn';
 import InsecureRoomNameLabel from './InsecureRoomNameLabel';
 import RaisedHandsCountLabel from './RaisedHandsCountLabel';
 import SpeakerStatsLabel from './SpeakerStatsLabel';
@@ -49,12 +50,8 @@ const COMPONENTS: Array<{
     id: string;
 }> = [
     {
-        Component: () => (
-            <>
-                <button>COPY</button>
-            </>
-        ),
-        id: 'copy-btn-for-conf'
+        Component: CopyConfNameBtn,
+        id: 'copy-confName-btn'
     },
     {
         Component: HighlightButton,
