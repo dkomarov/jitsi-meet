@@ -2,7 +2,15 @@ import React from 'react';
 
 const CopyConfNameBtn = () => {
     const handleCopy = () => {
-        console.log('COPY BUTTON!!!');
+        // console.log('COPY BUTTON!!!');
+        let confName;
+        try {
+            // @ts-expect-error
+            confName = document.querySelector('[class*="subject-text--content"]').innerText;
+            console.log('confName is:', confName);
+        } catch (err) {
+            console.log('Error accessing conference name:', err);
+        }
     };
 
     return <button onClick={handleCopy}>COPY</button>;
