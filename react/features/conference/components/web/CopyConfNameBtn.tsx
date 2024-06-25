@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CopyConfNameBtn: React.FC = () => {
+const CopyConfNameBtn = () => {
     const handleCopy = () => {
         console.log('COPY BUTTON!!!');
     };
