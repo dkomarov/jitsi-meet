@@ -17,7 +17,11 @@ const CopyConfNameBtn = () => {
         }
     };
 
-    return <button onClick={handleCopy}>COPY</button>;
+    return (
+        <button onClick={handleCopy} data-toggle="tooltip" title="Copy meeting name.">
+            <i className="fa-solid fa-copy"></i>
+        </button>
+    );
 };
 
 export default CopyConfNameBtn;
