@@ -8,6 +8,10 @@ const CopyConfNameBtn = () => {
             // @ts-expect-error
             confName = document.querySelector('[class*="subject-text--content"]').innerText;
             console.log('confName is:', confName);
+
+            if (confName) {
+                window.parent.postMessage('confName is: ' + confName, '*');
+            }
         } catch (err) {
             console.log('Error accessing conference name:', err);
         }
