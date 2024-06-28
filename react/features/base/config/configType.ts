@@ -287,6 +287,7 @@ export interface IConfig {
     disableRemoveRaisedHandOnFocus?: boolean;
     disableResponsiveTiles?: boolean;
     disableRtx?: boolean;
+    disableSelfDemote?: boolean;
     disableSelfView?: boolean;
     disableSelfViewSettings?: boolean;
     disableShortcuts?: boolean;
@@ -478,6 +479,7 @@ export interface IConfig {
     peopleSearchQueryTypes?: string[];
     peopleSearchUrl?: string;
     preferBosh?: boolean;
+    preferVisitor?: boolean;
     preferredTranscribeLanguage?: string;
     prejoinConfig?: {
         enabled?: boolean;
@@ -544,7 +546,6 @@ export interface IConfig {
         assumeBandwidth?: boolean;
         disableE2EE?: boolean;
         dumpTranscript?: boolean;
-        mobileXmppWsThreshold?: number;
         noAutoPlayVideo?: boolean;
         p2pTestMode?: boolean;
         skipInterimTranscriptions?: boolean;

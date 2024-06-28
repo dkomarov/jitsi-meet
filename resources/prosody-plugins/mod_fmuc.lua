@@ -16,6 +16,7 @@ local new_id = require 'util.id'.medium;
 local filters = require 'util.filters';
 
 local util = module:require 'util';
+local ends_with = util.ends_with;
 local is_vpaas = util.is_vpaas;
 local room_jid_match_rewrite = util.room_jid_match_rewrite;
 local get_room_from_jid = util.get_room_from_jid;
@@ -246,9 +247,12 @@ module:hook('muc-broadcast-presence', function (event)
             if identity and identity.id then
                 user_id = session.jitsi_meet_context_user.id;
 
-                -- non-vpass and having a token in correct tenant is considered a moderator
-                if session.jitsi_meet_str_tenant
-                    and session.jitsi_web_query_prefix == string.lower(session.jitsi_meet_str_tenant) then
+                if room._data.moderator_id then
+                    if room._data.moderator_id == user_id then
+                        is_moderator = true;
+                    end
+                elseif session.auth_token then
+                    -- non-vpass and having a token is considered a moderator
                     is_moderator = true;
                 end
             end
@@ -359,8 +363,19 @@ function process_host_module(name, callback)
         process_host(name);
     end
 end
+-- if the message received ends with the main domain, these are system messages
+-- for visitors, let's correct the room name there
+local function message_handler(event)
+    local origin, stanza = event.origin, event.stanza;
+
+    if ends_with(stanza.attr.from, main_domain) then
+        stanza.attr.from = stanza.attr.from:sub(1, -(main_domain:len() + 1))..local_domain;
+    end
+end
+
 process_host_module(local_domain, function(host_module, host)
     host_module:hook('iq/host', stanza_handler, 10);
+    host_module:hook('message/full', message_handler);
 end);
 
 -- only live chat is supported for visitors
@@ -528,6 +543,7 @@ local function iq_from_main_handler(event)
     -- if this is update it will either set or remove the password
     room:set_password(node.attr.password);
     room._data.meetingId = node.attr.meetingId;
+    room._data.moderator_id = node.attr.moderatorId;
     local createdTimestamp = node.attr.createdTimestamp;
     room.created_timestamp = createdTimestamp and tonumber(createdTimestamp) or nil;
 

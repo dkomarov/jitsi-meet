@@ -88,11 +88,8 @@ var config = {
         // issues related to insertable streams.
         // disableE2EE: false,
 
-        // Enables supports for AV1 codec.
-        // enableAv1Support: false,
-
-        // Enables XMPP WebSocket (as opposed to BOSH) for the given amount of users.
-        // mobileXmppWsThreshold: 10, // enable XMPP WebSockets on mobile for 10% of the users
+        // Enables the use of the codec selection API supported by the browsers .
+        // enableCodecSelectionAPI: false,
 
         // P2P test mode disables automatic switching to P2P when there are 2
         // participants in the conference.
@@ -123,6 +120,9 @@ var config = {
 
     // Disables polls feature.
     // disablePolls: false,
+
+    // Disables demote button from self-view
+    // disableSelfDemote: false,
 
     // Disables self-view tile. (hides it from tile view and from filmstrip)
     // disableSelfView: false,
@@ -460,6 +460,10 @@ var config = {
     //
     //    // Provides a way to set the codec preference on desktop based endpoints.
     //    codecPreferenceOrder: [ 'VP9', 'VP8', 'H264' ],
+    //
+    //    // Provides a way to set the codec for screenshare.
+    //    screenshareCodec: 'AV1',
+    //    mobileScreenshareCodec: 'VP8',
     //
     //    // Codec specific settings for scalability modes and max bitrates.
     //    av1: {
@@ -1049,6 +1053,10 @@ var config = {
         //
         // Provides a way to set the codec preference on desktop based endpoints.
         // codecPreferenceOrder: [ 'VP9', 'VP8', 'H264 ],
+
+        // Provides a way to set the codec for screenshare.
+        // screenshareCodec: 'AV1',
+        // mobileScreenshareCodec: 'VP8',
 
         // How long we're going to wait, before going back to P2P after the 3rd
         // participant has left the conference (to filter out page reload).
@@ -1770,7 +1778,7 @@ var config = {
     //     // to control the performance.
     //     userLimit: 25,
     //     // The url for more info about the whiteboard and its usage limitations.
-    //     limitUrl: 'https://example.com/blog/whiteboard-limits,
+    //     limitUrl: 'https://example.com/blog/whiteboard-limits',
     // },
 
     // The watchRTC initialize config params as described :

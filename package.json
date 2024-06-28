@@ -44,6 +44,7 @@
     "@react-navigation/material-top-tabs": "6.6.3",
     "@react-navigation/native": "6.1.7",
     "@react-navigation/stack": "6.3.17",
+    "@stomp/stompjs": "7.0.0",
     "@svgr/webpack": "6.3.1",
     "@tensorflow/tfjs-backend-wasm": "3.13.0",
     "@tensorflow/tfjs-core": "3.13.0",
@@ -69,7 +70,7 @@
     "js-md5": "0.6.1",
     "js-sha512": "0.8.0",
     "jwt-decode": "2.2.0",
-    "lib-jitsi-meet": "https://github.com/jitsi/lib-jitsi-meet/releases/download/v1830.0.0+5a14bd43/lib-jitsi-meet.tgz",
+    "lib-jitsi-meet": "https://github.com/jitsi/lib-jitsi-meet/releases/download/v1839.0.0+ea523fc6/lib-jitsi-meet.tgz",
     "lodash": "4.17.21",
     "moment": "2.29.4",
     "moment-duration-format": "2.2.2",
@@ -108,7 +109,7 @@
     "react-native-url-polyfill": "2.0.0",
     "react-native-video": "6.0.0-alpha.11",
     "react-native-watch-connectivity": "1.1.0",
-    "react-native-webrtc": "118.0.7",
+    "react-native-webrtc": "124.0.1",
     "react-native-webview": "13.8.7",
     "react-native-youtube-iframe": "2.3.0",
     "react-redux": "7.2.9",
@@ -184,7 +185,7 @@
     "webpack": "5.76.0",
     "webpack-bundle-analyzer": "4.4.2",
     "webpack-cli": "4.9.0",
-    "webpack-dev-server": "4.7.3"
+    "webpack-dev-server": "4.15.2"
   },
   "overrides": {
     "@xmldom/xmldom": "0.8.7"
