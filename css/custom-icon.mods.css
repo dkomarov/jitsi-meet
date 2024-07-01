@@ -1,7 +1,8 @@
 /* custom color classes */
 .toolbox-button
     .white
-    svg:not(
+    svg
+    path:not(
         .settings-button-small-icon svg,
         #participant-connection-indicator svg,
         #mic-disabled,
@@ -10,9 +11,14 @@
     fill: white !important;
 }
 
+div.white svg text {
+    fill: white !important;
+}
+
 .toolbox-button
     .gold
-    svg:not(
+    svg
+    path:not(
         .settings-button-small-icon svg,
         #participant-connection-indicator svg,
         #mic-disabled,
@@ -21,9 +27,14 @@
     fill: gold !important;
 }
 
+div.gold svg text {
+    fill: gold !important;
+}
+
 .toolbox-button
     .silver
-    svg:not(
+    svg
+    path:not(
         .settings-button-small-icon svg,
         #participant-connection-indicator svg,
         #mic-disabled,
@@ -32,9 +43,14 @@
     fill: silver !important;
 }
 
+div.silver svg text {
+    fill: silver !important;
+}
+
 .toolbox-button
     .cyan
-    svg:not(
+    svg
+    path:not(
         .settings-button-small-icon svg,
         #participant-connection-indicator svg,
         #mic-disabled,
@@ -43,9 +59,14 @@
     fill: cyan !important;
 }
 
+div.cyan svg text {
+    fill: cyan !important;
+}
+
 .toolbox-button
     .lime
-    svg:not(
+    svg
+    path:not(
         .settings-button-small-icon svg,
         #participant-connection-indicator svg,
         #mic-disabled,
@@ -54,14 +75,23 @@
     fill: lime !important;
 }
 
+div.lime svg text {
+    fill: lime !important;
+}
+
 .toolbox-button
     .magenta
-    svg:not(
+    svg
+    path:not(
         .settings-button-small-icon svg,
         #participant-connection-indicator svg,
         #mic-disabled,
         #toggleFilmstripButton svg
     ) {
+    fill: magenta !important;
+}
+
+div.magenta svg text {
     fill: magenta !important;
 }
 

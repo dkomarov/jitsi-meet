@@ -61,6 +61,10 @@ p {
     margin: 0;
 }
 
+svg path {
+    fill: white;
+}
+
 .toolbox-content svg,
 #mic-disabled {
     fill: white;
