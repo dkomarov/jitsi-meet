@@ -156,15 +156,7 @@ class StatelessDialog extends Component<IProps> {
      * @returns {ReactElement}
      */
     render() {
-        const {
-            customHeader,
-            children,
-            hideCloseIconButton,
-            t,
-            titleString,
-            titleKey,
-            width
-        } = this.props;
+        const { customHeader, children, hideCloseIconButton, t, titleString, titleKey, width } = this.props;
 
         return (
             // @ts-ignore
@@ -191,11 +183,7 @@ class StatelessDialog extends Component<IProps> {
                 width={width || 'medium'}
             >
                 <div onKeyPress={this._onKeyPress} ref={this._onDialogRef}>
-                    <form
-                        className="modal-dialog-form"
-                        id="modal-dialog-form"
-                        onSubmit={this._onSubmit}
-                    >
+                    <form className="modal-dialog-form" id="modal-dialog-form" onSubmit={this._onSubmit}>
                         {children}
                     </form>
                 </div>
@@ -214,27 +202,19 @@ class StatelessDialog extends Component<IProps> {
     _renderFooter(propsFromModalFooter: any) {
         // Filter out falsy (null) values because {@code ButtonGroup} will error
         // if passed in anything but buttons with valid type props.
-        const buttons = [
-            this._renderCancelButton(),
-            this._renderOKButton()
-        ].filter(Boolean);
+        const buttons = [this._renderCancelButton(), this._renderOKButton()].filter(Boolean);
 
         if (this.props.disableFooter) {
             return null;
         }
 
         return (
-            <ModalFooter
-                className={this.props.classes.footer}
-                showKeyline={propsFromModalFooter.showKeyline}
-            >
+            <ModalFooter className={this.props.classes.footer} showKeyline={propsFromModalFooter.showKeyline}>
                 {/**
                  * Atlaskit has this empty span (JustifySim) so...
                  */}
                 <span />
-                <div className={this.props.classes.buttonContainer}>
-                    {buttons}
-                </div>
+                <div className={this.props.classes.buttonContainer}>{buttons}</div>
             </ModalFooter>
         );
     }
@@ -284,11 +264,7 @@ class StatelessDialog extends Component<IProps> {
      * not modal.
      */
     _renderCancelButton() {
-        if (
-            this.props.cancelDisabled ||
-            this.props.isModal ||
-            this.props.hideCancelButton
-        ) {
+        if (this.props.cancelDisabled || this.props.isModal || this.props.hideCancelButton) {
             return null;
         }
 
