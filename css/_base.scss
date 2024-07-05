@@ -82,8 +82,8 @@ svg path {
     fill: #0074e0 !important;
 }
 
-svg#close-notification path {
-    fill: black;
+div#notifications-container svg {
+    fill: inherit;
 }
 
 .overflow-menu-item:hover {
