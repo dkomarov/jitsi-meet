@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { WithTranslation } from 'react-i18next';
 import { connect as reduxConnect } from 'react-redux';
 // @ts-ignore  @ts-expect-error
-import { connect } from '../../../../../connection';
+// import { connect } from '../../../../../connection';
 
 import { IReduxState, IStore } from '../../../app/types';
 import { IJitsiConference } from '../../../base/conference/reducer';
 import { IConfig } from '../../../base/config/configType';
-// import { connect } from '../../../base/connection/actions.web';
+import { connect } from '../../../base/connection/actions.web';
 import { toJid } from '../../../base/connection/functions';
 import { translate, translateToHTML } from '../../../base/i18n/functions';
 import { JitsiConnectionErrors } from '../../../base/lib-jitsi-meet';
