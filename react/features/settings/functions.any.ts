@@ -10,13 +10,13 @@ import { getHideSelfView } from '../base/settings/functions.any';
 import { getLocalVideoTrack } from '../base/tracks/functions.any';
 import { parseStandardURIString } from '../base/util/uri';
 import { isStageFilmstripEnabled } from '../filmstrip/functions.web';
-import { isFollowMeActive } from '../follow-me/functions';
-import { isPrejoinEnabledInConfig } from '../prejoin/functions';
+import { isFollowMeActive, isFollowMeRecorderActive } from '../follow-me/functions';
+import { isPrejoinEnabledInConfig } from '../prejoin/functions.web';
 import { isReactionsEnabled } from '../reactions/functions.any';
 import { iAmVisitor } from '../visitors/functions';
 import { SS_DEFAULT_FRAME_RATE, SS_SUPPORTED_FRAMERATES } from './constants';
 
-import { shouldShowModeratorSettings } from './functions';
+import { shouldShowModeratorSettings } from './functions.web';
 
 /**
  * Returns true if user is allowed to change Server URL.
@@ -103,17 +103,14 @@ export function getNotificationsMap(stateful: IStateful): {
  */
 export function getMoreTabProps(stateful: IStateful) {
     const state = toState(stateful);
-    const framerate =
-        state['features/screen-share'].captureFrameRate ??
-        SS_DEFAULT_FRAME_RATE;
+    const framerate = state['features/screen-share'].captureFrameRate ?? SS_DEFAULT_FRAME_RATE;
     const enabledNotifications = getNotificationsMap(stateful);
     const stageFilmstripEnabled = isStageFilmstripEnabled(state);
     const language = i18next.language || DEFAULT_LANGUAGE;
     const configuredTabs: string[] = interfaceConfig.SETTINGS_SECTIONS || [];
 
     // when self view is controlled by the config we hide the settings
-    const { disableSelfView, disableSelfViewSettings } =
-        state['features/base/config'];
+    const { disableSelfView, disableSelfViewSettings } = state['features/base/config'];
 
     return {
         // showPrejoinPage:
@@ -128,11 +125,9 @@ export function getMoreTabProps(stateful: IStateful) {
         hideSelfView: getHideSelfView(state),
         iAmVisitor: iAmVisitor(state),
         languages: LANGUAGES,
-        maxStageParticipants:
-            state['features/base/settings'].maxStageParticipants,
+        maxStageParticipants: state['features/base/settings'].maxStageParticipants,
         showLanguageSettings: configuredTabs.includes('language'),
-        showPrejoinPage:
-            !state['features/base/settings'].userSelectedSkipPrejoin,
+        showPrejoinPage: !state['features/base/settings'].userSelectedSkipPrejoin,
         showPrejoinSettings: isPrejoinEnabledInConfig(state),
         stageFilmstripEnabled
     };
@@ -151,12 +146,14 @@ export function getModeratorTabProps(stateful: IStateful) {
     const {
         conference,
         followMeEnabled,
+        followMeRecorderEnabled,
         startAudioMutedPolicy,
         startVideoMutedPolicy,
         startReactionsMuted
     } = state['features/base/conference'];
     const { disableReactionsModeration } = state['features/base/config'];
     const followMeActive = isFollowMeActive(state);
+    const followMeRecorderActive = isFollowMeRecorderActive(state);
     const showModeratorSettings = shouldShowModeratorSettings(state);
 
     // The settings sections to display.
@@ -165,6 +162,8 @@ export function getModeratorTabProps(stateful: IStateful) {
         disableReactionsModeration: Boolean(disableReactionsModeration),
         followMeActive: Boolean(conference && followMeActive),
         followMeEnabled: Boolean(conference && followMeEnabled),
+        followMeRecorderActive: Boolean(conference && followMeRecorderActive),
+        followMeRecorderEnabled: Boolean(conference && followMeRecorderEnabled),
         startReactionsMuted: Boolean(conference && startReactionsMuted),
         startAudioMuted: Boolean(conference && startAudioMutedPolicy),
         startVideoMuted: Boolean(conference && startVideoMutedPolicy)
@@ -182,16 +181,12 @@ export function getModeratorTabProps(stateful: IStateful) {
  */
 export function getProfileTabProps(stateful: IStateful) {
     const state = toState(stateful);
-    const { authEnabled, authLogin, conference } =
-        state['features/base/conference'];
+    const { authEnabled, authLogin, conference } = state['features/base/conference'];
     const config = state['features/base/config'];
     let { hideEmailInSettings } = config;
     const localParticipant = getLocalParticipant(state);
 
-    if (
-        config.gravatar?.disabled ||
-        (localParticipant?.avatarURL && localParticipant?.avatarURL.length > 0)
-    ) {
+    if (config.gravatar?.disabled || (localParticipant?.avatarURL && localParticipant?.avatarURL.length > 0)) {
         hideEmailInSettings = true;
     }
 
@@ -216,10 +211,7 @@ export function getProfileTabProps(stateful: IStateful) {
  * @returns {Object} - The properties for the "Sounds" tab from settings
  * dialog.
  */
-export function getNotificationsTabProps(
-    stateful: IStateful,
-    showSoundsSettings?: boolean
-) {
+export function getNotificationsTabProps(stateful: IStateful, showSoundsSettings?: boolean) {
     const state = toState(stateful);
     const {
         soundsIncomingMessage,
@@ -231,8 +223,7 @@ export function getNotificationsTabProps(
     } = state['features/base/settings'];
 
     const enableReactions = isReactionsEnabled(state);
-    const moderatorMutedSoundsReactions =
-        state['features/base/conference'].startReactionsMuted ?? false;
+    const moderatorMutedSoundsReactions = state['features/base/conference'].startReactionsMuted ?? false;
     const enabledNotifications = getNotificationsMap(stateful);
 
     return {
@@ -285,9 +276,7 @@ export function getVirtualBackgroundTabProps(stateful: IStateful) {
 
     return {
         _virtualBackground: state['features/virtual-background'],
-        selectedThumbnail:
-            state['features/virtual-background'].selectedThumbnail,
-        _jitsiTrack: getLocalVideoTrack(state['features/base/tracks'])
-            ?.jitsiTrack
+        selectedThumbnail: state['features/virtual-background'].selectedThumbnail,
+        _jitsiTrack: getLocalVideoTrack(state['features/base/tracks'])?.jitsiTrack
     };
 }

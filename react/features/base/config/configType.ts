@@ -375,7 +375,6 @@ export interface IConfig {
     giphy?: {
         displayMode?: 'all' | 'tile' | 'chat';
         enabled?: boolean;
-        proxyUrl?: string;
         rating?: 'g' | 'pg' | 'pg-13' | 'r';
         sdkKey?: string;
         tileTime?: number;
@@ -477,6 +476,7 @@ export interface IConfig {
     };
     pcStatsInterval?: number;
     peopleSearchQueryTypes?: string[];
+    peopleSearchTokenLocation?: string;
     peopleSearchUrl?: string;
     preferBosh?: boolean;
     preferVisitor?: boolean;
@@ -487,6 +487,12 @@ export interface IConfig {
         hideExtraJoinButtons?: Array<string>;
     };
     prejoinPageEnabled?: boolean;
+    raisedHands?: {
+        disableLowerHandByModerator?: boolean;
+        disableLowerHandNotification?: boolean;
+        disableNextSpeakerNotification?: boolean;
+        disableRemoveRaisedHandOnFocus?: boolean;
+    };
     readOnlyName?: boolean;
     recordingLimit?: {
         appName?: string;
@@ -525,6 +531,7 @@ export interface IConfig {
         hideLobbyButton?: boolean;
     };
     serviceUrl?: string;
+    sharedVideoAllowedURLDomains?: Array<string>;
     sipInviteUrl?: string;
     speakerStats?: {
         disableSearch?: boolean;

@@ -156,6 +156,7 @@ export interface IDynamicBrandingState {
     logoImageUrl: string;
     muiBrandedTheme?: boolean;
     premeetingBackground: string;
+    sharedVideoAllowedURLDomains?: Array<string>;
     showGiphyIntegration?: boolean;
     useDynamicBrandingData: boolean;
     virtualBackgrounds: Array<Image>;
@@ -164,69 +165,68 @@ export interface IDynamicBrandingState {
 /**
  * Reduces redux actions for the purposes of the feature {@code dynamic-branding}.
  */
-ReducerRegistry.register<IDynamicBrandingState>(
-    STORE_NAME,
-    (state = DEFAULT_STATE, action): IDynamicBrandingState => {
-        switch (action.type) {
-            case SET_DYNAMIC_BRANDING_DATA: {
-                const {
-                    avatarBackgrounds,
-                    backgroundColor,
-                    backgroundImageUrl,
-                    brandedIcons,
-                    defaultBranding,
-                    didPageUrl,
-                    inviteDomain,
-                    labels,
-                    logoClickUrl,
-                    logoImageUrl,
-                    muiBrandedTheme,
-                    premeetingBackground,
-                    showGiphyIntegration,
-                    virtualBackgrounds
-                } = action.value;
+ReducerRegistry.register<IDynamicBrandingState>(STORE_NAME, (state = DEFAULT_STATE, action): IDynamicBrandingState => {
+    switch (action.type) {
+        case SET_DYNAMIC_BRANDING_DATA: {
+            const {
+                avatarBackgrounds,
+                backgroundColor,
+                backgroundImageUrl,
+                brandedIcons,
+                defaultBranding,
+                didPageUrl,
+                inviteDomain,
+                labels,
+                logoClickUrl,
+                logoImageUrl,
+                muiBrandedTheme,
+                premeetingBackground,
+                sharedVideoAllowedURLDomains,
+                showGiphyIntegration,
+                virtualBackgrounds
+            } = action.value;
 
-                return {
-                    avatarBackgrounds,
-                    backgroundColor,
-                    backgroundImageUrl,
-                    brandedIcons,
-                    defaultBranding,
-                    didPageUrl,
-                    inviteDomain,
-                    labels,
-                    logoClickUrl,
-                    logoImageUrl,
-                    muiBrandedTheme,
-                    premeetingBackground,
-                    showGiphyIntegration,
-                    customizationFailed: false,
-                    customizationReady: true,
-                    useDynamicBrandingData: true,
-                    virtualBackgrounds: formatImages(virtualBackgrounds || [])
-                };
-            }
-            case SET_DYNAMIC_BRANDING_FAILED: {
-                return {
-                    ...state,
-                    customizationReady: true,
-                    customizationFailed: true,
-                    useDynamicBrandingData: true
-                };
-            }
-            case SET_DYNAMIC_BRANDING_READY:
-                return {
-                    ...state,
-                    customizationReady: true
-                };
-
-            case UNSET_DYNAMIC_BRANDING:
-                return DEFAULT_STATE;
+            return {
+                avatarBackgrounds,
+                backgroundColor,
+                backgroundImageUrl,
+                brandedIcons,
+                defaultBranding,
+                didPageUrl,
+                inviteDomain,
+                labels,
+                logoClickUrl,
+                logoImageUrl,
+                muiBrandedTheme,
+                premeetingBackground,
+                sharedVideoAllowedURLDomains,
+                showGiphyIntegration,
+                customizationFailed: false,
+                customizationReady: true,
+                useDynamicBrandingData: true,
+                virtualBackgrounds: formatImages(virtualBackgrounds || [])
+            };
         }
+        case SET_DYNAMIC_BRANDING_FAILED: {
+            return {
+                ...state,
+                customizationReady: true,
+                customizationFailed: true,
+                useDynamicBrandingData: true
+            };
+        }
+        case SET_DYNAMIC_BRANDING_READY:
+            return {
+                ...state,
+                customizationReady: true
+            };
 
-        return state;
+        case UNSET_DYNAMIC_BRANDING:
+            return DEFAULT_STATE;
     }
-);
+
+    return state;
+});
 
 /**
  * Transforms the branding images into an array of Images objects ready
@@ -236,9 +236,7 @@ ReducerRegistry.register<IDynamicBrandingState>(
  * @private
  * @returns {{Props}}
  */
-function formatImages(
-    images: Array<string> | Array<{ src: string; tooltip?: string }>
-): Array<Image> {
+function formatImages(images: Array<string> | Array<{ src: string; tooltip?: string }>): Array<Image> {
     return images.map((img, i) => {
         let src;
         let tooltip;

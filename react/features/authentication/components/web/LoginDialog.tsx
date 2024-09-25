@@ -7,12 +7,12 @@ import { connect } from '../../../../../connection';
 import { IReduxState, IStore } from '../../../app/types';
 import { IJitsiConference } from '../../../base/conference/reducer';
 import { IConfig } from '../../../base/config/configType';
+// import { connect } from '../../../base/connection/actions.web';
 import { toJid } from '../../../base/connection/functions';
 import { translate, translateToHTML } from '../../../base/i18n/functions';
 import { JitsiConnectionErrors } from '../../../base/lib-jitsi-meet';
 import Dialog from '../../../base/ui/components/web/Dialog';
 import Input from '../../../base/ui/components/web/Input';
-import { joinConference } from '../../../prejoin/actions.web';
 import { authenticateAndUpgradeRole, cancelLogin } from '../../actions.web';
 
 /**
@@ -117,11 +117,7 @@ class LoginDialog extends Component<IProps, IState> {
      * @returns {void}
      */
     _onLogin() {
-        const {
-            _conference: conference,
-            _configHosts: configHosts,
-            dispatch
-        } = this.props;
+        const { _conference: conference, _configHosts: configHosts, dispatch } = this.props;
         const { password, username } = this.state;
         const jid = toJid(
             username,
@@ -134,9 +130,7 @@ class LoginDialog extends Component<IProps, IState> {
         if (conference) {
             dispatch(authenticateAndUpgradeRole(jid, password, conference));
         } else {
-            // dispatch(connect(jid, password));
-            // FIXME: Workaround for the web version. To be removed once we get rid of conference.js
-            dispatch(joinConference(undefined, false, jid, password));
+            dispatch(connect(jid, password));
         }
     }
 
@@ -192,11 +186,7 @@ class LoginDialog extends Component<IProps, IState> {
 
                 if (
                     credentials &&
-                    credentials.jid ===
-                        toJid(
-                            username,
-                            configHosts ?? { authdomain: '', domain: '' }
-                        ) &&
+                    credentials.jid === toJid(username, configHosts ?? { authdomain: '', domain: '' }) &&
                     credentials.password === password
                 ) {
                     messageKey = 'dialog.incorrectPassword';
@@ -210,9 +200,7 @@ class LoginDialog extends Component<IProps, IState> {
         }
 
         if (messageKey) {
-            return (
-                <span>{translateToHTML(t, messageKey, messageOptions)}</span>
-            );
+            return <span>{translateToHTML(t, messageKey, messageOptions)}</span>;
         }
 
         return null;
@@ -280,15 +268,10 @@ class LoginDialog extends Component<IProps, IState> {
  * @returns {IProps}
  */
 function mapStateToProps(state: IReduxState) {
-    const {
-        error: authenticateAndUpgradeRoleError,
-        progress,
-        thenableWithCancel
-    } = state['features/authentication'];
+    const { error: authenticateAndUpgradeRoleError, progress, thenableWithCancel } = state['features/authentication'];
     const { authRequired, conference } = state['features/base/conference'];
     const { hosts: configHosts } = state['features/base/config'];
-    const { connecting, error: connectionError } =
-        state['features/base/connection'];
+    const { connecting, error: connectionError } = state['features/base/connection'];
 
     return {
         _conference: authRequired || conference,

@@ -25,7 +25,7 @@ import {
     participantSourcesUpdated,
     participantUpdated
 } from '../participants/actions';
-import { getNormalizedDisplayName } from '../participants/functions';
+import { getNormalizedDisplayName, getParticipantByIdOrUndefined } from '../participants/functions';
 import { IJitsiParticipant } from '../participants/types';
 import { toState } from '../redux/functions';
 import {
@@ -61,6 +61,7 @@ import {
     SEND_TONES,
     SET_ASSUMED_BANDWIDTH_BPS,
     SET_FOLLOW_ME,
+    SET_FOLLOW_ME_RECORDER,
     SET_OBFUSCATED_ROOM,
     SET_PASSWORD,
     SET_PASSWORD_FAILED,
@@ -277,11 +278,18 @@ function _addConferenceListeners(conference: IJitsiConference, dispatch: IStore[
 
     conference.addCommandListener(
         AVATAR_URL_COMMAND,
-        (data: { value: string; }, id: string) => dispatch(participantUpdated({
-            conference,
-            id,
-            avatarURL: data.value
-        })));
+        (data: { value: string; }, id: string) => {
+            const participant = getParticipantByIdOrUndefined(state, id);
+
+            // if already set from presence(jwt), skip the command processing
+            if (!participant?.avatarURL) {
+                return dispatch(participantUpdated({
+                    conference,
+                    id,
+                    avatarURL: data.value
+                }));
+            }
+        });
     conference.addCommandListener(
         EMAIL_COMMAND,
         (data: { value: string; }, id: string) => dispatch(participantUpdated({
@@ -841,6 +849,22 @@ export function setFollowMe(enabled: boolean) {
 }
 
 /**
+ * Enables or disables the Follow Me feature used only for the recorder.
+ *
+ * @param {boolean} enabled - Whether Follow Me should be enabled and used only by the recorder.
+ * @returns {{
+ *     type: SET_FOLLOW_ME_RECORDER,
+ *     enabled: boolean
+ * }}
+ */
+export function setFollowMeRecorder(enabled: boolean) {
+    return {
+        type: SET_FOLLOW_ME_RECORDER,
+        enabled
+    };
+}
+
+/**
  * Enables or disables the Mute reaction sounds feature.
  *
  * @param {boolean} muted - Whether or not reaction sounds should be muted for all participants.
@@ -875,7 +899,7 @@ export function setPassword(
         password?: string) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         if (!conference) {
-            return;
+            return Promise.reject();
         }
         switch (method) {
         case conference.join: {
@@ -981,7 +1005,7 @@ export function setStartMutedPolicy(
             video: startVideoMuted
         });
 
-        return dispatch(
+        dispatch(
             onStartMutedPolicyChanged(startAudioMuted, startVideoMuted));
     };
 }
@@ -1058,14 +1082,20 @@ export function redirect(vnode: string, focusJid: string, username: string) {
             return;
         }
 
-        dispatch(overwriteConfig(newConfig)) // @ts-ignore
-            .then(() => dispatch(disconnect(true)))
-            .then(() => dispatch(setIAmVisitor(Boolean(vnode))))
+        dispatch(overwriteConfig(newConfig));
 
-            // we do not clear local tracks on error, so we need to manually clear them
-            .then(() => dispatch(destroyLocalTracks()))
-            .then(() => dispatch(conferenceWillInit()))
-            .then(() => dispatch(connect()))
+        dispatch(disconnect(true))
+            .then(() => {
+                dispatch(setIAmVisitor(Boolean(vnode)));
+
+                // we do not clear local tracks on error, so we need to manually clear them
+                return dispatch(destroyLocalTracks());
+            })
+            .then(() => {
+                dispatch(conferenceWillInit());
+
+                return dispatch(connect());
+            })
             .then(() => {
                 const media: Array<MediaType> = [];
 

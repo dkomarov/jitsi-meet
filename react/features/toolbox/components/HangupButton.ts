@@ -1,9 +1,8 @@
-import _ from 'lodash';
 import { connect } from 'react-redux';
 
 import { createToolbarEvent } from '../../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../../analytics/functions';
-import { leaveConference } from '../../base/conference/actions';
+import { leaveConference } from '../../base/conference/actions.web';
 import { translate } from '../../base/i18n/functions';
 import { IProps as AbstractButtonProps } from '../../base/toolbox/components/AbstractButton';
 import AbstractHangupButton from '../../base/toolbox/components/AbstractHangupButton';

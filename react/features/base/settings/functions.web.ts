@@ -70,8 +70,7 @@ export function getDisplayName(state: IReduxState): string {
  */
 export function getUserSelectedCameraDeviceId(stateful: IStateful) {
     const state = toState(stateful);
-    const { userSelectedCameraDeviceId, userSelectedCameraDeviceLabel } =
-        state['features/base/settings'];
+    const { userSelectedCameraDeviceId, userSelectedCameraDeviceLabel } = state['features/base/settings'];
     const { videoInput } = state['features/base/devices'].availableDevices;
 
     return _getUserSelectedDeviceId({
@@ -96,8 +95,7 @@ export function getUserSelectedCameraDeviceId(stateful: IStateful) {
  */
 export function getUserSelectedMicDeviceId(stateful: IStateful) {
     const state = toState(stateful);
-    const { userSelectedMicDeviceId, userSelectedMicDeviceLabel } =
-        state['features/base/settings'];
+    const { userSelectedMicDeviceId, userSelectedMicDeviceLabel } = state['features/base/settings'];
     const { audioInput } = state['features/base/devices'].availableDevices;
 
     return _getUserSelectedDeviceId({
@@ -122,10 +120,7 @@ export function getUserSelectedMicDeviceId(stateful: IStateful) {
  */
 export function getUserSelectedOutputDeviceId(stateful: IStateful) {
     const state = toState(stateful);
-    const {
-        userSelectedAudioOutputDeviceId,
-        userSelectedAudioOutputDeviceLabel
-    } = state['features/base/settings'];
+    const { userSelectedAudioOutputDeviceId, userSelectedAudioOutputDeviceLabel } = state['features/base/settings'];
     const { audioOutput } = state['features/base/devices'].availableDevices;
 
     return _getUserSelectedDeviceId({
@@ -174,19 +169,21 @@ function _getUserSelectedDeviceId(options: {
         replacement = ''
     } = options;
 
-    // If there is no label at all, there is no need to fall back to checking
-    // the label for a fuzzy match.
-    if (!userSelectedDeviceLabel || !userSelectedDeviceId) {
-        return userSelectedDeviceId;
+    if (userSelectedDeviceId) {
+        const foundMatchingBasedonDeviceId = availableDevices?.find(
+            (candidate) => candidate.deviceId === userSelectedDeviceId
+        );
+
+        // Prioritize matching the deviceId
+        if (foundMatchingBasedonDeviceId) {
+            return userSelectedDeviceId;
+        }
     }
 
-    const foundMatchingBasedonDeviceId = availableDevices?.find(
-        (candidate) => candidate.deviceId === userSelectedDeviceId
-    );
-
-    // Prioritize matching the deviceId
-    if (foundMatchingBasedonDeviceId) {
-        return userSelectedDeviceId;
+    // If there is no label at all, there is no need to fall back to checking
+    // the label for a fuzzy match.
+    if (!userSelectedDeviceLabel) {
+        return;
     }
 
     const strippedDeviceLabel = matchRegex
@@ -206,8 +203,6 @@ function _getUserSelectedDeviceId(options: {
         return strippedDeviceLabel === strippedCandidateLabel;
     });
 
-    return foundMatchBasedOnLabel
-        ? foundMatchBasedOnLabel.deviceId
-        : userSelectedDeviceId;
+    return foundMatchBasedOnLabel ? foundMatchBasedOnLabel.deviceId : userSelectedDeviceId;
     // return foundMatchBasedOnLabel?.deviceId;
 }

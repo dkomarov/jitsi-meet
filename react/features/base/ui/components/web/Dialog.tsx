@@ -262,14 +262,9 @@ const Dialog = ({
     // }, []);
 
     const submit = useCallback(() => {
-        if (
-            onSubmit &&
-            ((document.activeElement &&
-                !operatesWithEnterKey(document.activeElement)) ||
-                !document.activeElement)
-        ) {
+        if ((document.activeElement && !operatesWithEnterKey(document.activeElement)) || !document.activeElement) {
             !disableAutoHideOnSubmit && dispatch(hideDialog());
-            onSubmit();
+            onSubmit?.();
         }
     }, [onSubmit]);
 
@@ -295,9 +290,7 @@ const Dialog = ({
                 </h1>
                 {!hideCloseButton && (
                     <ClickableIcon
-                        accessibilityLabel={t(
-                            'dialog.accessibilityLabel.close'
-                        )}
+                        accessibilityLabel={t('dialog.accessibilityLabel.close')}
                         icon={IconCloseLarge}
                         id="modal-header-close-button"
                         onClick={onClose}

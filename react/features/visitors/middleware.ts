@@ -13,6 +13,7 @@ import { SET_CONFIG } from '../base/config/actionTypes';
 import { CONNECTION_FAILED } from '../base/connection/actionTypes';
 import { connect, setPreferVisitor } from '../base/connection/actions';
 import { disconnect } from '../base/connection/actions.any';
+import { openDialog } from '../base/dialog/actions';
 import { JitsiConferenceEvents, JitsiConnectionErrors } from '../base/lib-jitsi-meet';
 import { PARTICIPANT_UPDATED } from '../base/participants/actionTypes';
 import { raiseHand } from '../base/participants/actions';
@@ -48,6 +49,7 @@ import {
     updateVisitorsCount,
     updateVisitorsInQueueCount
 } from './actions';
+import { JoinMeetingDialog } from './components';
 import { getPromotionRequests, getVisitorsCount, getVisitorsInQueueCount } from './functions';
 import logger from './logger';
 import { WebsocketClient } from './websocket-client';
@@ -70,24 +72,26 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
         const { conference } = action;
 
         if (getState()['features/visitors'].iAmVisitor) {
+
             const { demoteActorDisplayName } = getState()['features/visitors'];
 
-            dispatch(setVisitorDemoteActor(undefined));
-
-            const notificationParams: INotificationProps = {
-                titleKey: 'visitors.notification.title',
-                descriptionKey: 'visitors.notification.description'
-            };
-
             if (demoteActorDisplayName) {
-                notificationParams.descriptionKey = 'visitors.notification.demoteDescription';
-                notificationParams.descriptionArguments = {
-                    actor: demoteActorDisplayName
+                const notificationParams: INotificationProps = {
+                    titleKey: 'visitors.notification.title',
+                    descriptionKey: 'visitors.notification.demoteDescription',
+                    descriptionArguments: {
+                        actor: demoteActorDisplayName
+                    }
                 };
+
+                batch(() => {
+                    dispatch(showNotification(notificationParams, NOTIFICATION_TIMEOUT_TYPE.STICKY));
+                    dispatch(setVisitorDemoteActor(undefined));
+                });
+            } else {
+                dispatch(openDialog(JoinMeetingDialog));
             }
 
-            // check for demote actor and update notification
-            dispatch(showNotification(notificationParams, NOTIFICATION_TIMEOUT_TYPE.STICKY));
         } else {
             dispatch(setVisitorsSupported(conference.isVisitorsSupported()));
             conference.on(JitsiConferenceEvents.VISITORS_SUPPORTED_CHANGED, (value: boolean) => {
@@ -106,8 +110,9 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
                 if (localParticipant && localParticipant.id === msg.id) {
                     // handle demote
                     dispatch(disconnect(true))
-                        .then(() => dispatch(setPreferVisitor(true)))
                         .then(() => {
+                            dispatch(setPreferVisitor(true));
+
                             // we need to set the name, so we can use it later in the notification
                             if (participantById) {
                                 dispatch(setVisitorDemoteActor(participantById.name));
@@ -160,8 +165,8 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
             break;
         }
 
-        const { hosts, preferVisitor, visitors: visitorsConfig } = getState()['features/base/config'];
-        const { locationURL } = getState()['features/base/connection'];
+        const { hosts, visitors: visitorsConfig } = getState()['features/base/config'];
+        const { locationURL, preferVisitor } = getState()['features/base/connection'];
 
         if (!visitorsConfig?.queueService || !locationURL || !preferVisitor) {
             break;
@@ -178,19 +183,25 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
                     if ('status' in msg && msg.status === 'live') {
                         logger.info('The conference is now live!');
 
-                        WebsocketClient.getInstance().disconnect();
+                        WebsocketClient.getInstance().disconnect()
+                            .then(() => {
+                                let delay = 0;
 
-                        let delay = 0;
+                                // now let's connect to meeting
+                                if ('randomDelayMs' in msg) {
+                                    delay = msg.randomDelayMs;
+                                }
 
-                        // now let's connect to meeting
-                        if ('randomDelayMs' in msg) {
-                            delay = msg.randomDelayMs;
-                        }
+                                if (WebsocketClient.getInstance().connectCount > 1) {
+                                    // if we keep connecting/disconnecting, let's slow it down
+                                    delay = 30 * 1000;
+                                }
 
-                        setTimeout(() => {
-                            dispatch(joinConference());
-                            dispatch(setInVisitorsQueue(false));
-                        }, delay);
+                                setTimeout(() => {
+                                    dispatch(joinConference());
+                                    dispatch(setInVisitorsQueue(false));
+                                }, Math.random() * delay);
+                            });
                     }
                 },
 

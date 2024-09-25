@@ -14,6 +14,7 @@ import BaseTheme from '../../../base/ui/components/BaseTheme.native';
 import Button from '../../../base/ui/components/native/Button';
 import IconButton from '../../../base/ui/components/native/IconButton';
 import { BUTTON_MODES, BUTTON_TYPES } from '../../../base/ui/constants.native';
+import { CHAR_LIMIT } from '../../../chat/constants';
 import { replaceNonUnicodeEmojis } from '../../../chat/functions';
 import { NOTIFICATION_ICON, NOTIFICATION_TYPE } from '../../constants';
 import { INotificationProps } from '../../types';
@@ -153,6 +154,7 @@ const Notification = ({
             return (
                 <>
                     <Text
+                        numberOfLines = { 1 }
                         style = { styles.contentTextTitle as TextStyle }>
                         { titleText }
                     </Text>
@@ -160,8 +162,9 @@ const Notification = ({
                         descriptionArray.map((line, index) => (
                             <Text
                                 key = { index }
+                                numberOfLines = { 3 }
                                 style = { styles.contentText }>
-                                { replaceNonUnicodeEmojis(line) }
+                                { line.length >= CHAR_LIMIT ? line : replaceNonUnicodeEmojis(line) }
                             </Text>
                         ))
                     }
@@ -170,7 +173,9 @@ const Notification = ({
         }
 
         return (
-            <Text style = { styles.contentTextTitle as TextStyle }>
+            <Text
+                numberOfLines = { 1 }
+                style = { styles.contentTextTitle as TextStyle }>
                 { titleText }
             </Text>
         );

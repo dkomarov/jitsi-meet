@@ -5,6 +5,7 @@ import { setTokenAuthUrlSuccess } from '../authentication/actions.web';
 import { isTokenAuthEnabled } from '../authentication/functions';
 import {
     setFollowMe,
+    setFollowMeRecorder,
     setStartMutedPolicy,
     setStartReactionsMuted
 } from '../base/conference/actions';
@@ -16,17 +17,11 @@ import { getNormalizedDisplayName } from '../base/participants/functions';
 import { updateSettings } from '../base/settings/actions';
 import { getLocalVideoTrack } from '../base/tracks/functions.web';
 import { appendURLHashParam } from '../base/util/uri';
-import {
-    disableKeyboardShortcuts,
-    enableKeyboardShortcuts
-} from '../keyboard-shortcuts/actions.web';
+import { disableKeyboardShortcuts, enableKeyboardShortcuts } from '../keyboard-shortcuts/actions.web';
 import { toggleBackgroundEffect } from '../virtual-background/actions';
 import virtualBackgroundLogger from '../virtual-background/logger';
 
-import {
-    SET_AUDIO_SETTINGS_VISIBILITY,
-    SET_VIDEO_SETTINGS_VISIBILITY
-} from './actionTypes';
+import { SET_AUDIO_SETTINGS_VISIBILITY, SET_VIDEO_SETTINGS_VISIBILITY } from './actionTypes';
 import LogoutDialog from './components/web/LogoutDialog';
 import SettingsDialog from './components/web/SettingsDialog';
 import {
@@ -55,21 +50,13 @@ export function openLogoutDialog() {
         dispatch(
             openDialog(LogoutDialog, {
                 onLogout() {
-                    if (
-                        isTokenAuthEnabled(config) &&
-                        config.tokenAuthUrlAutoRedirect &&
-                        jwt
-                    ) {
+                    if (isTokenAuthEnabled(config) && config.tokenAuthUrlAutoRedirect && jwt) {
                         // user is logging out remove auto redirect indication
                         dispatch(setTokenAuthUrlSuccess(false));
                     }
 
                     if (logoutUrl && browser.isElectron()) {
-                        const url = appendURLHashParam(
-                            logoutUrl,
-                            'electron',
-                            'true'
-                        );
+                        const url = appendURLHashParam(logoutUrl, 'electron', 'true');
 
                         window.open(url, '_blank');
                         dispatch(hangup(true));
@@ -80,9 +67,7 @@ export function openLogoutDialog() {
                             return;
                         }
 
-                        conference?.room.xmpp.moderator.logout(() =>
-                            dispatch(hangup(true))
-                        );
+                        conference?.room.xmpp.moderator.logout(() => dispatch(hangup(true)));
                     }
                 }
             })
@@ -99,10 +84,7 @@ export function openLogoutDialog() {
  * welcome page or not.
  * @returns {Function}
  */
-export function openSettingsDialog(
-    defaultTab?: string,
-    isDisplayedOnWelcomePage?: boolean
-) {
+export function openSettingsDialog(defaultTab?: string, isDisplayedOnWelcomePage?: boolean) {
     return openDialog(SettingsDialog, {
         defaultTab,
         isDisplayedOnWelcomePage
@@ -155,9 +137,7 @@ export function submitMoreTab(newState: any) {
             );
         }
 
-        if (
-            newState.maxStageParticipants !== currentState.maxStageParticipants
-        ) {
+        if (newState.maxStageParticipants !== currentState.maxStageParticipants) {
             dispatch(
                 updateSettings({
                     maxStageParticipants: Number(newState.maxStageParticipants)
@@ -166,9 +146,7 @@ export function submitMoreTab(newState: any) {
         }
 
         if (newState.hideSelfView !== currentState.hideSelfView) {
-            dispatch(
-                updateSettings({ disableSelfView: newState.hideSelfView })
-            );
+            dispatch(updateSettings({ disableSelfView: newState.hideSelfView }));
         }
 
         if (newState.currentLanguage !== currentState.currentLanguage) {
@@ -191,12 +169,14 @@ export function submitModeratorTab(newState: any) {
             dispatch(setFollowMe(newState.followMeEnabled));
         }
 
+        if (newState.followMeRecorderEnabled !== currentState.followMeRecorderEnabled) {
+            dispatch(setFollowMeRecorder(newState.followMeRecorderEnabled));
+        }
+
         if (newState.startReactionsMuted !== currentState.startReactionsMuted) {
             batch(() => {
                 // updating settings we want to update and backend (notify the rest of the participants)
-                dispatch(
-                    setStartReactionsMuted(newState.startReactionsMuted, true)
-                );
+                dispatch(setStartReactionsMuted(newState.startReactionsMuted, true));
                 dispatch(
                     updateSettings({
                         soundsReactions: !newState.startReactionsMuted
@@ -209,12 +189,7 @@ export function submitModeratorTab(newState: any) {
             newState.startAudioMuted !== currentState.startAudioMuted ||
             newState.startVideoMuted !== currentState.startVideoMuted
         ) {
-            dispatch(
-                setStartMutedPolicy(
-                    newState.startAudioMuted,
-                    newState.startVideoMuted
-                )
-            );
+            dispatch(setStartMutedPolicy(newState.startAudioMuted, newState.startVideoMuted));
         }
     };
 }
@@ -259,20 +234,13 @@ export function submitProfileTab(newState: any) {
 export function submitNotificationsTab(newState: any) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const currentState = getNotificationsTabProps(getState());
-        const shouldNotUpdateReactionSounds = getModeratorTabProps(
-            getState()
-        ).startReactionsMuted;
+        const shouldNotUpdateReactionSounds = getModeratorTabProps(getState()).startReactionsMuted;
         const shouldUpdate =
-            newState.soundsIncomingMessage !==
-                currentState.soundsIncomingMessage ||
-            newState.soundsParticipantJoined !==
-                currentState.soundsParticipantJoined ||
-            newState.soundsParticipantKnocking !==
-                currentState.soundsParticipantKnocking ||
-            newState.soundsParticipantLeft !==
-                currentState.soundsParticipantLeft ||
-            newState.soundsTalkWhileMuted !==
-                currentState.soundsTalkWhileMuted ||
+            newState.soundsIncomingMessage !== currentState.soundsIncomingMessage ||
+            newState.soundsParticipantJoined !== currentState.soundsParticipantJoined ||
+            newState.soundsParticipantKnocking !== currentState.soundsParticipantKnocking ||
+            newState.soundsParticipantLeft !== currentState.soundsParticipantLeft ||
+            newState.soundsTalkWhileMuted !== currentState.soundsTalkWhileMuted ||
             newState.soundsReactions !== currentState.soundsReactions;
 
         if (shouldUpdate) {
@@ -297,8 +265,7 @@ export function submitNotificationsTab(newState: any) {
             dispatch(
                 updateSettings({
                     userSelectedNotifications: {
-                        ...getState()['features/base/settings']
-                            .userSelectedNotifications,
+                        ...getState()['features/base/settings'].userSelectedNotifications,
                         ...enabledNotifications
                     }
                 })
@@ -343,10 +310,7 @@ export function submitShortcutsTab(newState: any) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const currentState = getShortcutsTabProps(getState());
 
-        if (
-            newState.keyboardShortcutsEnabled !==
-            currentState.keyboardShortcutsEnabled
-        ) {
+        if (newState.keyboardShortcutsEnabled !== currentState.keyboardShortcutsEnabled) {
             if (newState.keyboardShortcutsEnabled) {
                 dispatch(enableKeyboardShortcuts());
             } else {
@@ -364,15 +328,11 @@ export function submitShortcutsTab(newState: any) {
  * @returns {Function}
  */
 export function submitVirtualBackgroundTab(newState: any, isCancel = false) {
-    return async (
-        dispatch: IStore['dispatch'],
-        getState: IStore['getState']
-    ) => {
+    return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         //      const currentState = getVirtualBackgroundTabProps(getState());
         const state = getState();
-        const track = getLocalVideoTrack(
-            state['features/base/tracks']
-        )?.jitsiTrack;
+        const track = getLocalVideoTrack(state['features/base/tracks'])?.jitsiTrack;
+        const { localFlipX } = state['features/base/settings'];
 
         if (newState.options?.selectedThumbnail) {
             await dispatch(toggleBackgroundEffect(newState.options, track));
@@ -387,12 +347,11 @@ export function submitVirtualBackgroundTab(newState: any, isCancel = false) {
                 // Set x scale to default value.
                 dispatch(
                     updateSettings({
-                        localFlipX: true
+                        localFlipX
                     })
                 );
 
-                // virtualBackgroundLogger.info(
-                console.log(
+                virtualBackgroundLogger.info(
                     `Virtual background type: '${
                         typeof newState.options.backgroundType === 'undefined'
                             ? 'none'

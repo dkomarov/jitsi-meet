@@ -72,10 +72,10 @@ export default class AbstractLiveStreamButton<P extends IProps> extends Abstract
      * @protected
      * @returns {void}
      */
-    async _handleClick() {
+    _handleClick() {
         const { dispatch } = this.props;
 
-        const dialogShown = await dispatch(maybeShowPremiumFeatureDialog(MEET_FEATURES.RECORDING));
+        const dialogShown = dispatch(maybeShowPremiumFeatureDialog(MEET_FEATURES.RECORDING));
 
         if (!dialogShown) {
             this._onHandleClick();
@@ -133,9 +133,8 @@ export function _mapStateToProps(state: IReduxState, ownProps: IProps) {
         const liveStreaming = getLiveStreaming(state);
 
         visible = isLiveStreamingButtonVisible({
-            localParticipantIsModerator: isModerator,
+            liveStreamingAllowed: isJwtFeatureEnabled(state, 'livestreaming', isModerator, isModerator),
             liveStreamingEnabled: liveStreaming?.enabled,
-            liveStreamingEnabledInJwt: isJwtFeatureEnabled(state, 'livestreaming', true),
             isInBreakoutRoom: isInBreakoutRoom(state)
         });
     }

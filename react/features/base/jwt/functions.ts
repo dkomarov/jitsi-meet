@@ -46,7 +46,7 @@ export function getJwtName(state: IReduxState) {
  * @param {string} feature - The feature we want to check.
  * @param {boolean} ifNoToken - Default value if there is no token.
  * @param {boolean} ifNotInFeatures - Default value if features prop exists but does not have the {@code feature}.
- * @returns {bolean}
+ * @returns {boolean}
  */
 export function isJwtFeatureEnabled(state: IReduxState, feature: string, ifNoToken = false, ifNotInFeatures = false) {
     const { jwt } = state['features/base/jwt'];
@@ -176,10 +176,12 @@ export function validateJwt(jwt: string) {
             }
         }
 
-        if (!isValidUnixTimestamp(nbf)) {
-            errors.push({ key: JWT_VALIDATION_ERRORS.NBF_INVALID });
-        } else if (currentTimestamp < nbf * 1000) {
-            errors.push({ key: JWT_VALIDATION_ERRORS.NBF_FUTURE });
+        if (nbf) { // nbf value is optional
+            if (!isValidUnixTimestamp(nbf)) {
+                errors.push({ key: JWT_VALIDATION_ERRORS.NBF_INVALID });
+            } else if (currentTimestamp < nbf * 1000) {
+                errors.push({ key: JWT_VALIDATION_ERRORS.NBF_FUTURE });
+            }
         }
 
         if (!isValidUnixTimestamp(exp)) {
