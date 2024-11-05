@@ -14,6 +14,7 @@ import { JitsiConnectionErrors } from '../../../base/lib-jitsi-meet';
 import Dialog from '../../../base/ui/components/web/Dialog';
 import Input from '../../../base/ui/components/web/Input';
 import { authenticateAndUpgradeRole, cancelLogin } from '../../actions.web';
+import logger from '../../logger';
 
 /**
  * The type of the React {@code Component} props of {@link LoginDialog}.
@@ -130,6 +131,7 @@ class LoginDialog extends Component<IProps, IState> {
         if (conference) {
             dispatch(authenticateAndUpgradeRole(jid, password, conference));
         } else {
+            logger.info('Dispatching connect from LoginDialog.');
             dispatch(connect(jid, password));
         }
     }
