@@ -385,6 +385,8 @@ var config = {
     //    // If true, shows a warning label in the prejoin screen to point out the possibility that
     //    // the call you're joining might be recorded.
     //    // showPrejoinWarning: true,
+    //    // If true, the notification for recording start will display a link to download the cloud recording.
+    //    // showRecordingLink: true,
     // },
 
     // recordingService: {
@@ -457,7 +459,7 @@ var config = {
 
     //     // Translation languages.
     //     // Available languages can be found in
-    //     // ./src/react/features/transcribing/translation-languages.json.
+    //     // ./lang/translation-languages.json.
     //     translationLanguages: ['en', 'es', 'fr', 'ro'],
 
     //     // Important languages to show on the top of the language list.
@@ -507,11 +509,16 @@ var config = {
     // videoQuality: {
     //
     //    // Provides a way to set the codec preference on desktop based endpoints.
-    //    codecPreferenceOrder: [ 'VP9', 'VP8', 'H264' ],
+    //    codecPreferenceOrder: [ 'VP9', 'VP8', 'H264', 'AV1' ],
     //
     //    // Provides a way to set the codec for screenshare.
     //    screenshareCodec: 'AV1',
     //    mobileScreenshareCodec: 'VP8',
+    //
+    //    // Enables the adaptive mode in the client that will make runtime adjustments to selected codecs and received
+    //    // videos for a better user experience. This mode will kick in only when CPU overuse is reported in the
+    //    // WebRTC statistics for the outbound video streams.
+    //    enableAdaptiveMode: false,
     //
     //    // Codec specific settings for scalability modes and max bitrates.
     //    av1: {
@@ -900,7 +907,7 @@ var config = {
     // Overrides the buttons displayed in the main toolbar. Depending on the screen size the number of displayed
     // buttons varies from 2 buttons to 8 buttons. Every array in the mainToolbarButtons array will replace the
     // corresponding default buttons configuration matched by the number of buttons specified in the array. Arrays with
-    // more than 8 buttons or less then 2 buttons will be ignored. When there there isn't an override for a cerain
+    // more than 8 buttons or less then 2 buttons will be ignored. When there there isn't an override for a certain
     // configuration (for example when 3 buttons are displayed) the default jitsi-meet configuration will be used.
     // The order of the buttons in the array is preserved.
     // mainToolbarButtons: [
@@ -1728,7 +1735,7 @@ var config = {
     //     'notify.participantsWantToJoin', // shown when lobby is enabled and participants request to join meeting
     //     'notify.passwordRemovedRemotely', // shown when a password has been removed remotely
     //     'notify.passwordSetRemotely', // shown when a password has been set remotely
-    //     'notify.raisedHand', // shown when a partcipant used raise hand,
+    //     'notify.raisedHand', // shown when a participant used raise hand,
     //     'notify.screenShareNoAudio', // shown when the audio could not be shared for the selected screen
     //     'notify.screenSharingAudioOnlyTitle', // shown when the best performance has been affected by screen sharing
     //     'notify.selfViewTitle', // show "You can always un-hide the self-view from settings"
@@ -1759,7 +1766,7 @@ var config = {
     // disableFilmstripAutohiding: false,
 
     // filmstrip: {
-    //     // Disable the vertical/horizonal filmstrip.
+    //     // Disable the vertical/horizontal filmstrip.
     //     disabled: false,
     //     // Disables user resizable filmstrip. Also, allows configuration of the filmstrip
     //     // (width, tiles aspect ratios) through the interfaceConfig options.

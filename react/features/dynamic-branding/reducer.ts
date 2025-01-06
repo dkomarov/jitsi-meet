@@ -149,6 +149,7 @@ export interface IDynamicBrandingState {
     customizationFailed: boolean;
     customizationReady: boolean;
     defaultBranding: boolean;
+    defaultTranscriptionLanguage?: boolean;
     didPageUrl: string;
     inviteDomain: string;
     labels: Object | null;
@@ -158,6 +159,7 @@ export interface IDynamicBrandingState {
     premeetingBackground: string;
     sharedVideoAllowedURLDomains?: Array<string>;
     showGiphyIntegration?: boolean;
+    supportUrl?: string;
     useDynamicBrandingData: boolean;
     virtualBackgrounds: Array<Image>;
 }
@@ -167,59 +169,61 @@ export interface IDynamicBrandingState {
  */
 ReducerRegistry.register<IDynamicBrandingState>(STORE_NAME, (state = DEFAULT_STATE, action): IDynamicBrandingState => {
     switch (action.type) {
-        case SET_DYNAMIC_BRANDING_DATA: {
-            const {
-                avatarBackgrounds,
-                backgroundColor,
-                backgroundImageUrl,
-                brandedIcons,
-                defaultBranding,
-                didPageUrl,
-                inviteDomain,
-                labels,
-                logoClickUrl,
-                logoImageUrl,
-                muiBrandedTheme,
-                premeetingBackground,
-                sharedVideoAllowedURLDomains,
-                showGiphyIntegration,
-                virtualBackgrounds
-            } = action.value;
+    case SET_DYNAMIC_BRANDING_DATA: {
+        const {
+            avatarBackgrounds,
+            backgroundColor,
+            backgroundImageUrl,
+            brandedIcons,
+            defaultBranding,
+            didPageUrl,
+            inviteDomain,
+            labels,
+            logoClickUrl,
+            logoImageUrl,
+            muiBrandedTheme,
+            premeetingBackground,
+            sharedVideoAllowedURLDomains,
+            showGiphyIntegration,
+            supportUrl,
+            virtualBackgrounds
+        } = action.value;
 
-            return {
-                avatarBackgrounds,
-                backgroundColor,
-                backgroundImageUrl,
-                brandedIcons,
-                defaultBranding,
-                didPageUrl,
-                inviteDomain,
-                labels,
-                logoClickUrl,
-                logoImageUrl,
-                muiBrandedTheme,
-                premeetingBackground,
-                sharedVideoAllowedURLDomains,
-                showGiphyIntegration,
-                customizationFailed: false,
-                customizationReady: true,
-                useDynamicBrandingData: true,
-                virtualBackgrounds: formatImages(virtualBackgrounds || [])
-            };
-        }
-        case SET_DYNAMIC_BRANDING_FAILED: {
-            return {
-                ...state,
-                customizationReady: true,
-                customizationFailed: true,
-                useDynamicBrandingData: true
-            };
-        }
-        case SET_DYNAMIC_BRANDING_READY:
-            return {
-                ...state,
-                customizationReady: true
-            };
+        return {
+            avatarBackgrounds,
+            backgroundColor,
+            backgroundImageUrl,
+            brandedIcons,
+            defaultBranding,
+            didPageUrl,
+            inviteDomain,
+            labels,
+            logoClickUrl,
+            logoImageUrl,
+            muiBrandedTheme,
+            premeetingBackground,
+            sharedVideoAllowedURLDomains,
+            showGiphyIntegration,
+            supportUrl,
+            customizationFailed: false,
+            customizationReady: true,
+            useDynamicBrandingData: true,
+            virtualBackgrounds: formatImages(virtualBackgrounds || [])
+        };
+    }
+    case SET_DYNAMIC_BRANDING_FAILED: {
+        return {
+            ...state,
+            customizationReady: true,
+            customizationFailed: true,
+            useDynamicBrandingData: true
+        };
+    }
+    case SET_DYNAMIC_BRANDING_READY:
+        return {
+            ...state,
+            customizationReady: true
+        };
 
         case UNSET_DYNAMIC_BRANDING:
             return DEFAULT_STATE;
