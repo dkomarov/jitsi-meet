@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { IStore } from '../../app/types';
 import { hideDialog } from '../../base/dialog/actions';
 import { translate } from '../../base/i18n/functions';
+import { DesktopSharingSourceType } from '../../base/tracks/types';
 import Dialog from '../../base/ui/components/web/Dialog';
 import Tabs from '../../base/ui/components/web/Tabs';
 import { THUMBNAIL_SIZE } from '../constants';
@@ -32,7 +33,7 @@ const TAB_LABELS = {
     window: 'dialog.applicationWindow'
 };
 
-const VALID_TYPES = Object.keys(TAB_LABELS);
+const VALID_TYPES = Object.keys(TAB_LABELS) as DesktopSharingSourceType[];
 
 /**
  * The type of the React {@code Component} props of {@link DesktopPicker}.
@@ -41,7 +42,7 @@ interface IProps extends WithTranslation {
     /**
      * An array with desktop sharing sources to be displayed.
      */
-    desktopSharingSources: Array<string>;
+    desktopSharingSources: Array<DesktopSharingSourceType>;
 
     /**
      * Used to request DesktopCapturerSources.
@@ -82,7 +83,7 @@ interface IState {
     /**
      * The desktop source types to fetch previews for.
      */
-    types: Array<string>;
+    types: Array<DesktopSharingSourceType>;
 }
 
 /**
@@ -109,8 +110,9 @@ class DesktopPicker extends PureComponent<IProps, IState> {
      * @private
      * @returns {Array<string>} The filtered types.
      */
-    static _getValidTypes(types: string[] = []) {
-        return types.filter((type) => VALID_TYPES.includes(type));
+    static _getValidTypes(types: DesktopSharingSourceType[] = []) {
+        return types.filter(
+            type => VALID_TYPES.includes(type));
     }
 
     _poller: any = null;
@@ -355,16 +357,16 @@ class DesktopPicker extends PureComponent<IProps, IState> {
     _renderTabs() {
         const { types } = this.state;
         const { t } = this.props;
-        const tabs = types.map((type) => {
-            return {
-                accessibilityLabel: t(
-                    TAB_LABELS[type as keyof typeof TAB_LABELS]
-                ),
-                id: `${type}`,
-                controlsId: `${type}-panel`,
-                label: t(TAB_LABELS[type as keyof typeof TAB_LABELS])
-            };
-        });
+        const tabs
+            = types.map(
+                type => {
+                    return {
+                        accessibilityLabel: t(TAB_LABELS[type]),
+                        id: `${type}`,
+                        controlsId: `${type}-panel`,
+                        label: t(TAB_LABELS[type])
+                    };
+                });
 
         return (
             <Tabs

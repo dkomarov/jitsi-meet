@@ -266,18 +266,16 @@ const ContextMenu = ({
                     list: Element | null,
                     currentFocus: Element | null
                 ) => Element | null
-            ) => {
-                let wrappedOnce = false;
-                let nextFocus = traversalFunction(list, currentFocus);
+        ) => {
+            let wrappedOnce = false;
+            let nextFocus = traversalFunction(list, currentFocus);
 
-                /* eslint-disable no-unmodified-loop-condition */
-                while (list && nextFocus) {
-                    // Prevent infinite loop.
-                    if (nextFocus === list.firstChild) {
-                        if (wrappedOnce) {
-                            return;
-                        }
-                        wrappedOnce = true;
+            /* eslint-disable no-unmodified-loop-condition */
+            while (list && nextFocus) {
+                // Prevent infinite loop.
+                if (nextFocus === list.firstChild) {
+                    if (wrappedOnce) {
+                        return;
                     }
 
                     // Same logic as useAutocomplete.js

@@ -386,7 +386,7 @@ export default class AbstractButton<
 
         // blur after click to release focus from button to allow PTT.
         // @ts-ignore
-        e?.currentTarget?.blur && e.currentTarget.blur();
+        e?.currentTarget?.blur?.();
     }
 
     /**
