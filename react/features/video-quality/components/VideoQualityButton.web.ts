@@ -32,9 +32,7 @@ const VIDEO_QUALITY_TO_ICON = {
 
 import { translate } from '../../base/i18n/functions';
 import { IconPerformance } from '../../base/icons/svg';
-import AbstractButton, {
-    IProps as AbstractButtonProps
-} from '../../base/toolbox/components/AbstractButton';
+import AbstractButton, { IProps as AbstractButtonProps } from '../../base/toolbox/components/AbstractButton';
 import { IReduxState } from '../../app/types';
 
 // import {
@@ -90,9 +88,7 @@ class VideoQualityButton extends AbstractButton<Props> {
         const videoQualityLevel = findNearestQualityLevel(_videoQuality);
 
         const icon =
-            _audioOnly || !videoQualityLevel
-                ? IconVideoQualityAudioOnly
-                : VIDEO_QUALITY_TO_ICON[videoQualityLevel];
+            _audioOnly || !videoQualityLevel ? IconVideoQualityAudioOnly : VIDEO_QUALITY_TO_ICON[videoQualityLevel];
 
         return icon;
     }
@@ -114,30 +110,30 @@ class VideoQualityButton extends AbstractButton<Props> {
      * @protected
      * @returns {void}
      */
-    // _handleClick() {
-    //     const { handleClick } = this.props;
-// class VideoQualityButton extends AbstractButton<IProps> {
-//     override accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
-//     override label = 'videoStatus.performanceSettings';
-//     override tooltip = 'videoStatus.performanceSettings';
-//     override icon = IconPerformance;
+    _handleClick() {
+        const { handleClick } = this.props;
+        // class VideoQualityButton extends AbstractButton<IProps> {
+        //     override accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
+        //     override label = 'videoStatus.performanceSettings';
+        //     override tooltip = 'videoStatus.performanceSettings';
+        //     override icon = IconPerformance;
 
-//     /**
-//     * Handles clicking the button, and opens the video quality dialog.
-//     *
-//     * @private
-//     * @returns {void}
-//     */
-//     override _handleClick() {
-//         const { dispatch } = this.props;
+        //     /**
+        //     * Handles clicking the button, and opens the video quality dialog.
+        //     *
+        //     * @private
+        //     * @returns {void}
+        //     */
+        //     override _handleClick() {
+        //         const { dispatch } = this.props;
 
-//         if (handleClick) {
-//             handleClick();
+        if (handleClick) {
+            handleClick();
 
-//             return;
-//         }
-//     }
-// }
+            return;
+        }
+    }
+}
 
 /**
  * Maps (parts of) the Redux state to the associated props for the
