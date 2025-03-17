@@ -125,18 +125,9 @@ class ModalHeader extends React.Component<IProps> {
      * @inheritdoc
      * @returns {ReactElement}
      */
-    render() {
-        const {
-            id,
-            appearance,
-            heading,
-            hideCloseIconButton,
-            onClose,
-            showKeyline,
-            isHeadingMultiline,
-            testId,
-            t
-        } = this.props;
+    override render() {
+        const { id, appearance, heading, hideCloseIconButton, onClose, showKeyline, isHeadingMultiline, testId, t } =
+            this.props;
 
         if (!heading) {
             return null;

@@ -155,7 +155,7 @@ class StatelessDialog extends Component<IProps> {
      * @inheritdoc
      * @returns {ReactElement}
      */
-    render() {
+    override render() {
         const { customHeader, children, hideCloseIconButton, t, titleString, titleKey, width } = this.props;
 
         return (

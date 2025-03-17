@@ -99,16 +99,8 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
      * @inheritdoc
      * @returns {ReactElement}
      */
-    render() {
-        const {
-            _audioOnly,
-            _labelKey,
-            _tooltipKey,
-            _videoTrack,
-            _visible,
-            dispatch,
-            t
-        } = this.props;
+    override render() {
+        const { _audioOnly, _labelKey, _tooltipKey, _videoTrack, _visible, dispatch, t } = this.props;
 
         if (!_visible) {
             return null;
@@ -243,9 +235,7 @@ function _mapStateToProps(state: IReduxState) {
         participantId
     );
 
-    const translationKeys = audioOnly
-        ? {}
-        : _mapResolutionToTranslationsKeys(resolution);
+    const translationKeys = audioOnly ? {} : _mapResolutionToTranslationsKeys(resolution);
 
     return {
         ..._abstractMapStateToProps(state),

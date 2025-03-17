@@ -73,10 +73,10 @@ type Props = AbstractButtonProps & {
  * @augments Component
  */
 class VideoQualityButton extends AbstractButton<Props> {
-    accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
+    override accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
 
-    label = 'toolbar.accessibilityLabel.callQuality';
-    tooltip = 'toolbar.accessibilityLabel.callQuality';
+    override label = 'toolbar.accessibilityLabel.callQuality';
+    override tooltip = 'toolbar.accessibilityLabel.callQuality';
 
     /**
      * Dynamically retrieves the icon.
@@ -98,7 +98,7 @@ class VideoQualityButton extends AbstractButton<Props> {
      *
      * @param {string} value - The icon value.
      */
-    set icon(value: string) {
+    override set icon(value: string) {
         // @ts-ignore
         return value;
     }
@@ -110,7 +110,7 @@ class VideoQualityButton extends AbstractButton<Props> {
      * @protected
      * @returns {void}
      */
-    _handleClick() {
+    override _handleClick() {
         const { handleClick } = this.props;
         // class VideoQualityButton extends AbstractButton<IProps> {
         //     override accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
