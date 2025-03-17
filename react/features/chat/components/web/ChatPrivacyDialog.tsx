@@ -19,7 +19,7 @@ class ChatPrivacyDialog extends AbstractChatPrivacyDialog {
      * @inheritdoc
      * @returns {ReactElement}
      */
-    render() {
+    override render() {
         return (
             // @ts-ignore  @ts-expect-error
             <Dialog

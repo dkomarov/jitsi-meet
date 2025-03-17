@@ -213,7 +213,7 @@ class LoginDialog extends Component<IProps, IState> {
      *
      * @inheritdoc
      */
-    render() {
+    override render() {
         const { _connecting: connecting, t } = this.props;
         const { password, username } = this.state;
 

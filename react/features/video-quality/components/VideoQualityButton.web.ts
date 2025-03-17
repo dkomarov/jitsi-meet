@@ -114,16 +114,30 @@ class VideoQualityButton extends AbstractButton<Props> {
      * @protected
      * @returns {void}
      */
-    _handleClick() {
-        const { handleClick } = this.props;
+    // _handleClick() {
+    //     const { handleClick } = this.props;
+// class VideoQualityButton extends AbstractButton<IProps> {
+//     override accessibilityLabel = 'toolbar.accessibilityLabel.callQuality';
+//     override label = 'videoStatus.performanceSettings';
+//     override tooltip = 'videoStatus.performanceSettings';
+//     override icon = IconPerformance;
 
-        if (handleClick) {
-            handleClick();
+//     /**
+//     * Handles clicking the button, and opens the video quality dialog.
+//     *
+//     * @private
+//     * @returns {void}
+//     */
+//     override _handleClick() {
+//         const { dispatch } = this.props;
 
-            return;
-        }
-    }
-}
+//         if (handleClick) {
+//             handleClick();
+
+//             return;
+//         }
+//     }
+// }
 
 /**
  * Maps (parts of) the Redux state to the associated props for the

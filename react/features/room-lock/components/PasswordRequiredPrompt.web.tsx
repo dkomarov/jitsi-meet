@@ -42,7 +42,7 @@ interface IState {
  * required to join a conference.
  */
 class PasswordRequiredPrompt extends Component<IProps, IState> {
-    state = {
+    override state = {
         password: ''
     };
 
@@ -67,7 +67,7 @@ class PasswordRequiredPrompt extends Component<IProps, IState> {
      * @inheritdoc
      * @returns {ReactElement}
      */
-    render() {
+    override render() {
         return (
             // @ts-ignore  @ts-expect-error
             <Dialog
@@ -152,7 +152,7 @@ class PasswordRequiredPrompt extends Component<IProps, IState> {
 
         // We have used the password so let's clean it.
         this.setState({
-            password: undefined
+            password: ''
         });
 
         return true;

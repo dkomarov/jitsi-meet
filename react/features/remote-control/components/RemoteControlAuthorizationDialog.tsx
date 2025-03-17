@@ -61,7 +61,7 @@ class RemoteControlAuthorizationDialog extends Component<IProps> {
      *
      * @inheritdoc
      */
-    render() {
+    override render() {
         return (
             // @ts-ignore  @ts-expect-error
             <Dialog

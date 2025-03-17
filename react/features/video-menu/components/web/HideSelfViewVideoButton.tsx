@@ -70,7 +70,7 @@ class HideSelfViewVideoButton extends PureComponent<IProps> {
      * @inheritdoc
      * @returns {null|ReactElement}
      */
-    render() {
+    override render() {
         const { className, t } = this.props;
 
         return (

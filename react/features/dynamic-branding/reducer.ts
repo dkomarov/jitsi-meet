@@ -157,6 +157,7 @@ export interface IDynamicBrandingState {
     logoImageUrl: string;
     muiBrandedTheme?: boolean;
     premeetingBackground: string;
+    requireRecordingConsent?: boolean;
     sharedVideoAllowedURLDomains?: Array<string>;
     showGiphyIntegration?: boolean;
     supportUrl?: string;
@@ -185,6 +186,7 @@ ReducerRegistry.register<IDynamicBrandingState>(STORE_NAME, (state = DEFAULT_STA
             premeetingBackground,
             sharedVideoAllowedURLDomains,
             showGiphyIntegration,
+            requireRecordingConsent,
             supportUrl,
             virtualBackgrounds
         } = action.value;
@@ -204,6 +206,7 @@ ReducerRegistry.register<IDynamicBrandingState>(STORE_NAME, (state = DEFAULT_STA
             premeetingBackground,
             sharedVideoAllowedURLDomains,
             showGiphyIntegration,
+            requireRecordingConsent,
             supportUrl,
             customizationFailed: false,
             customizationReady: true,

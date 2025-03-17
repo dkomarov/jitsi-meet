@@ -39,7 +39,7 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
      * @inheritdoc
      * @returns {void}
      */
-    componentDidMount() {
+    override componentDidMount() {
         super.componentDidMount();
 
         const { navigation, t } = this.props;
@@ -63,7 +63,7 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
      * @inheritdoc
      * @returns {void}
      */
-    componentDidUpdate(prevProps: IProps) {
+    override componentDidUpdate(prevProps: IProps) {
         super.componentDidUpdate(prevProps);
 
         const { navigation, t } = this.props;
@@ -125,7 +125,7 @@ class StartRecordingDialog extends AbstractStartRecordingDialog {
      *
      * @inheritdoc
      */
-    render() {
+    override render() {
         const {
             isTokenValid,
             isValidating,

@@ -49,7 +49,7 @@ class StartLiveStreamDialog extends AbstractStartLiveStreamDialog<IProps> {
      * @inheritdoc
      * @returns {void}
      */
-    componentDidMount() {
+    override componentDidMount() {
         const { navigation, t } = this.props;
 
         navigation.setOptions({
@@ -77,7 +77,7 @@ class StartLiveStreamDialog extends AbstractStartLiveStreamDialog<IProps> {
      *
      * @inheritdoc
      */
-    render() {
+    override render() {
         return (
             <JitsiScreen style={styles.startLiveStreamContainer as StyleType}>
                 {/* @ts-ignore  @ts-expect-error */}

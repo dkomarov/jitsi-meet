@@ -17,7 +17,7 @@ export default class VideoQualityDialog extends Component {
      * @inheritdoc
      * @returns {ReactElement}
      */
-    render() {
+    override render() {
         return (
             // @ts-ignore  @ts-expect-error
             <Dialog

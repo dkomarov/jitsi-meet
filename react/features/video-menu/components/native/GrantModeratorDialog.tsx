@@ -17,7 +17,7 @@ class GrantModeratorDialog extends AbstractGrantModeratorDialog {
      * @inheritdoc
      * @returns {ReactElement}
      */
-    render() {
+    override render() {
         return (
             // @ts-ignore  @ts-expect-error
             <ConfirmDialog

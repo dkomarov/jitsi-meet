@@ -38,8 +38,7 @@ class ShareAudioDialog extends Component<IProps> {
         super(props);
 
         this._onContinue = this._onContinue.bind(this);
-        this._onSelectHideShareAudioHelper =
-            this._onSelectHideShareAudioHelper.bind(this);
+        this._onSelectHideShareAudioHelper = this._onSelectHideShareAudioHelper.bind(this);
     }
 
     /**
@@ -61,9 +60,7 @@ class ShareAudioDialog extends Component<IProps> {
      * @param {Object} e - The key event to handle.
      * @returns {void}
      */
-    _onSelectHideShareAudioHelper({
-        target: { checked }
-    }: React.ChangeEvent<HTMLInputElement>) {
+    _onSelectHideShareAudioHelper({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) {
         this.props.dispatch(updateSettings({ hideShareAudioHelper: checked }));
     }
 
@@ -72,7 +69,7 @@ class ShareAudioDialog extends Component<IProps> {
      *
      * @inheritdoc
      */
-    render() {
+    override render() {
         const { t } = this.props;
 
         return (

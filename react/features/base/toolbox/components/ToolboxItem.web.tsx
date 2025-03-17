@@ -128,7 +128,7 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
      * @protected
      * @returns {ReactElement}
      */
-    _renderItem() {
+    override _renderItem() {
         const {
             backgroundColor,
             // customIconColorClass,

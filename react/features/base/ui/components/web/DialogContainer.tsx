@@ -55,7 +55,7 @@ class DialogContainer extends Component<IProps> {
      * @inheritdoc
      * @returns {ReactElement}
      */
-    render() {
+    override render() {
         return (
             <DialogTransition>
                 {this.props._overflowDrawer ? (
