@@ -61,7 +61,7 @@ p {
     margin: 0;
 }
 
-svg path {
+svg path:not(.ToolIcon__icon svg path) {
     fill: white;
 }
 
