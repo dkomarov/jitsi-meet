@@ -75,6 +75,15 @@ const DEFAULT_STATE = {
     didPageUrl: '',
 
     /**
+     * Whether participant can only send group chat message if `send-groupchat`
+     * feature is enabled in jwt.
+     *
+     * @public
+     * @type {boolean}
+     */
+    groupChatRequiresPermission: false,
+
+    /**
      * The custom invite domain.
      *
      * @public
@@ -117,6 +126,14 @@ const DEFAULT_STATE = {
     muiBrandedTheme: undefined,
 
     /**
+     * Whether participant can only create polls if `create-polls` feature is enabled in jwt.
+     *
+     * @public
+     * @type {boolean}
+     */
+    pollCreationRequiresPermission: false,
+
+    /**
      * The lobby/prejoin background.
      *
      * @public
@@ -151,11 +168,13 @@ export interface IDynamicBrandingState {
     defaultBranding: boolean;
     defaultTranscriptionLanguage?: boolean;
     didPageUrl: string;
+    groupChatRequiresPermission: boolean;
     inviteDomain: string;
     labels: Object | null;
     logoClickUrl: string;
     logoImageUrl: string;
     muiBrandedTheme?: boolean;
+    pollCreationRequiresPermission: boolean;
     premeetingBackground: string;
     requireRecordingConsent?: boolean;
     sharedVideoAllowedURLDomains?: Array<string>;
@@ -178,11 +197,13 @@ ReducerRegistry.register<IDynamicBrandingState>(STORE_NAME, (state = DEFAULT_STA
             brandedIcons,
             defaultBranding,
             didPageUrl,
+            groupChatRequiresPermission,
             inviteDomain,
             labels,
             logoClickUrl,
             logoImageUrl,
             muiBrandedTheme,
+            pollCreationRequiresPermission,
             premeetingBackground,
             sharedVideoAllowedURLDomains,
             showGiphyIntegration,
@@ -198,11 +219,13 @@ ReducerRegistry.register<IDynamicBrandingState>(STORE_NAME, (state = DEFAULT_STA
             brandedIcons,
             defaultBranding,
             didPageUrl,
+            groupChatRequiresPermission,
             inviteDomain,
             labels,
             logoClickUrl,
             logoImageUrl,
             muiBrandedTheme,
+            pollCreationRequiresPermission,
             premeetingBackground,
             sharedVideoAllowedURLDomains,
             showGiphyIntegration,

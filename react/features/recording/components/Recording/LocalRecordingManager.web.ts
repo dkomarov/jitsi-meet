@@ -5,11 +5,8 @@ import fixWebmDuration from 'webm-duration-fix';
 import { IStore } from '../../../app/types';
 import { getRoomName } from '../../../base/conference/functions';
 import { MEDIA_TYPE } from '../../../base/media/constants';
-import {
-    getLocalTrack,
-    getTrackState
-} from '../../../base/tracks/functions.web';
-import { inIframe } from '../../../base/util/iframeUtils';
+import { getLocalTrack, getTrackState } from '../../../base/tracks/functions';
+import { isEmbedded } from '../../../base/util/embedUtils';
 import { stopLocalVideoRecording } from '../../actions.any';
 
 interface ISelfRecording {
@@ -85,8 +82,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
      */
     initializeAudioMixer() {
         this.audioContext = new AudioContext();
-        this.audioDestination =
-            this.audioContext.createMediaStreamDestination();
+        this.audioDestination = this.audioContext.createMediaStreamDestination();
     },
 
     /**
@@ -97,9 +93,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
      * */
     mixAudioStream(stream) {
         if (stream.getAudioTracks().length > 0 && this.audioDestination) {
-            this.audioContext
-                ?.createMediaStreamSource(stream)
-                .connect(this.audioDestination);
+            this.audioContext?.createMediaStreamSource(stream).connect(this.audioDestination);
         }
     },
 
@@ -150,10 +144,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
 
-        const extension = this.mediaType.slice(
-            this.mediaType.indexOf('/') + 1,
-            this.mediaType.indexOf(';')
-        );
+        const extension = this.mediaType.slice(this.mediaType.indexOf('/') + 1, this.mediaType.indexOf(';'));
 
         a.style.display = 'none';
         a.href = url;
@@ -192,10 +183,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
         const { dispatch, getState } = store;
 
         // @ts-ignore
-        const supportsCaptureHandle =
-            // @ts-ignore // @ts-expect-error
-            Boolean(navigator.mediaDevices.setCaptureHandleConfig) &&
-            !inIframe();
+        const supportsCaptureHandle = Boolean(navigator.mediaDevices.setCaptureHandleConfig) && !isEmbedded();
         const tabId = uuidV4();
 
         this.selfRecording.on = onlySelf;
@@ -205,14 +193,8 @@ const LocalRecordingManager: ILocalRecordingManager = {
         const tracks = getTrackState(getState());
 
         if (onlySelf) {
-            let audioTrack: MediaStreamTrack | undefined = getLocalTrack(
-                tracks,
-                MEDIA_TYPE.AUDIO
-            )?.jitsiTrack?.track;
-            let videoTrack: MediaStreamTrack | undefined = getLocalTrack(
-                tracks,
-                MEDIA_TYPE.VIDEO
-            )?.jitsiTrack?.track;
+            let audioTrack: MediaStreamTrack | undefined = getLocalTrack(tracks, MEDIA_TYPE.AUDIO)?.jitsiTrack?.track;
+            let videoTrack: MediaStreamTrack | undefined = getLocalTrack(tracks, MEDIA_TYPE.VIDEO)?.jitsiTrack?.track;
 
             if (!audioTrack) {
                 APP.conference.muteAudio(false);
@@ -224,10 +206,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
             if (videoTrack && videoTrack.readyState !== 'live') {
                 videoTrack = undefined;
             }
-            audioTrack = getLocalTrack(
-                getTrackState(getState()),
-                MEDIA_TYPE.AUDIO
-            )?.jitsiTrack?.track;
+            audioTrack = getLocalTrack(getTrackState(getState()), MEDIA_TYPE.AUDIO)?.jitsiTrack?.track;
             if (!audioTrack && !videoTrack) {
                 throw new Error('NoLocalStreams');
             }
@@ -245,8 +224,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
                     permittedOrigins: ['*']
                 });
             }
-            const localAudioTrack = getLocalTrack(tracks, MEDIA_TYPE.AUDIO)
-                ?.jitsiTrack?.track;
+            const localAudioTrack = getLocalTrack(tracks, MEDIA_TYPE.AUDIO)?.jitsiTrack?.track;
 
             // Starting chrome 107, the recorder does not record any data if the audio stream has no tracks
             // To fix this we create a track for the local user(muted track)
@@ -259,10 +237,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
             }
 
             // handle no mic permission
-            if (
-                !getLocalTrack(getTrackState(getState()), MEDIA_TYPE.AUDIO)
-                    ?.jitsiTrack?.track
-            ) {
+            if (!getLocalTrack(getTrackState(getState()), MEDIA_TYPE.AUDIO)?.jitsiTrack?.track) {
                 throw new Error('NoMicTrack');
             }
 
@@ -282,18 +257,14 @@ const LocalRecordingManager: ILocalRecordingManager = {
             // @ts-ignore
             const isBrowser =
                 // @ts-ignore // @ts-expect-error
-                gdmStream.getVideoTracks()[0].getSettings().displaySurface ===
-                'browser';
+                gdmStream.getVideoTracks()[0].getSettings().displaySurface === 'browser';
 
             if (
                 !isBrowser ||
                 (supportsCaptureHandle && // @ts-ignore
-                    gdmStream.getVideoTracks()[0].getCaptureHandle()?.handle !==
-                        `JitsiMeet-${tabId}`)
+                    gdmStream.getVideoTracks()[0].getCaptureHandle()?.handle !== `JitsiMeet-${tabId}`)
             ) {
-                gdmStream
-                    .getTracks()
-                    .forEach((track: MediaStreamTrack) => track.stop());
+                gdmStream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
                 throw new Error('WrongSurfaceSelected');
             }
 
@@ -330,12 +301,8 @@ const LocalRecordingManager: ILocalRecordingManager = {
 
         if (!onlySelf) {
             this.recorder.addEventListener('stop', () => {
-                this.stream
-                    ?.getTracks()
-                    .forEach((track: MediaStreamTrack) => track.stop());
-                gdmStream
-                    ?.getTracks()
-                    .forEach((track: MediaStreamTrack) => track.stop());
+                this.stream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+                gdmStream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
             });
 
             gdmStream?.addEventListener('inactive', () => {
