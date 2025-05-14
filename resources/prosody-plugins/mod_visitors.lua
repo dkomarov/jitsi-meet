@@ -65,7 +65,6 @@ local function send_visitors_iq(conference_service, room, type)
         password = type ~= 'disconnect' and room:get_password() or '',
         lobby = room._data.lobbyroom and 'true' or 'false',
         meetingId = room._data.meetingId,
-        moderatorId = room._data.moderator_id, -- can be used from external modules to set single moderator for meetings
         createdTimestamp = room.created_timestamp and tostring(room.created_timestamp) or nil
       });
 
@@ -311,6 +310,11 @@ process_host_module(main_muc_component_config, function(host_module, host)
         if occupant or not (visitors_nodes[to]
                             and visitors_nodes[to].nodes
                             and visitors_nodes[to].nodes[from_vnode]) then
+            return;
+        end
+
+        if host_module:fire_event('jitsi-visitor-groupchat-pre-route', event) then
+            -- message filtered
             return;
         end
 

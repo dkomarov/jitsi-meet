@@ -132,11 +132,7 @@ function get_room_from_jid(room_jid)
     local component = hosts[host];
     if component then
         local muc = component.modules.muc
-        if muc and rawget(muc,"rooms") then
-            -- We're running 0.9.x or 0.10 (old MUC API)
-            return muc.rooms[room_jid];
-        elseif muc and rawget(muc,"get_room_from_jid") then
-            -- We're running >0.10 (new MUC API)
+        if muc then
             return muc.get_room_from_jid(room_jid);
         else
             return
@@ -284,6 +280,11 @@ function extract_subdomain(room_node)
     end
 
     local subdomain, room_name = room_node:match("^%[([^%]]+)%](.+)$");
+
+    if not subdomain then
+        room_name = room_node;
+    end
+
     local _, customer_id = subdomain and subdomain:match("^(vpaas%-magic%-cookie%-)(.*)$") or nil, nil;
     local cache_value = { subdomain=subdomain, room=room_name, customer_id=customer_id };
     extract_subdomain_cache:set(room_node, cache_value);
@@ -320,8 +321,11 @@ function starts_with_one_of(str, prefixes)
     return false
 end
 
-
 function ends_with(str, ending)
+    if not str then
+        return false;
+    end
+
     return ending == "" or str:sub(-#ending) == ending
 end
 
@@ -595,6 +599,19 @@ function table_shallow_copy(t)
     return t2
 end
 
+local function table_find(tab, val)
+    if not tab then
+        return nil
+    end
+
+    for i, v in ipairs(tab) do
+        if v == val then
+            return i
+        end
+    end
+    return nil
+end
+
 -- Splits a string using delimiter
 function split_string(str, delimiter)
     str = str .. delimiter;
@@ -676,4 +693,5 @@ return {
     starts_with = starts_with;
     starts_with_one_of = starts_with_one_of;
     table_shallow_copy = table_shallow_copy;
+    table_find = table_find;
 };

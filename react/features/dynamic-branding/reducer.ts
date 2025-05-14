@@ -179,6 +179,7 @@ export interface IDynamicBrandingState {
     requireRecordingConsent?: boolean;
     sharedVideoAllowedURLDomains?: Array<string>;
     showGiphyIntegration?: boolean;
+    skipRecordingConsentInMeeting?: boolean;
     supportUrl?: string;
     useDynamicBrandingData: boolean;
     virtualBackgrounds: Array<Image>;
@@ -205,9 +206,10 @@ ReducerRegistry.register<IDynamicBrandingState>(STORE_NAME, (state = DEFAULT_STA
             muiBrandedTheme,
             pollCreationRequiresPermission,
             premeetingBackground,
+            requireRecordingConsent,
             sharedVideoAllowedURLDomains,
             showGiphyIntegration,
-            requireRecordingConsent,
+            skipRecordingConsentInMeeting,
             supportUrl,
             virtualBackgrounds
         } = action.value;
@@ -227,9 +229,10 @@ ReducerRegistry.register<IDynamicBrandingState>(STORE_NAME, (state = DEFAULT_STA
             muiBrandedTheme,
             pollCreationRequiresPermission,
             premeetingBackground,
+            requireRecordingConsent,
             sharedVideoAllowedURLDomains,
             showGiphyIntegration,
-            requireRecordingConsent,
+            skipRecordingConsentInMeeting,
             supportUrl,
             customizationFailed: false,
             customizationReady: true,

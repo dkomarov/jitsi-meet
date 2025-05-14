@@ -259,6 +259,8 @@ class AddPeopleDialog extends AbstractAddPeopleDialog<IProps, IState> {
         const { item } = flatListItem;
 
         switch (item.type) {
+
+        // isCORSAvatarURL in this case is false
         case INVITE_TYPES.PHONE:
             return {
                 avatar: IconPhoneRinging,

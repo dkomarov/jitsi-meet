@@ -9,6 +9,7 @@ import pretty from 'pretty';
 import WebhookProxy from './helpers/WebhookProxy';
 import { getLogs, initLogger, logInfo } from './helpers/browserLogger';
 import { IContext } from './helpers/types';
+import { getRandomNumberAsStr } from './helpers/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const allure = require('allure-commandline');
@@ -85,7 +86,8 @@ export const config: WebdriverIO.MultiremoteConfig = {
     },
 
     capabilities: {
-        participant1: {
+        // participant1
+        p1: {
             capabilities: {
                 browserName: 'chrome',
                 browserVersion: process.env.BROWSER_CHROME_BETA ? 'beta' : undefined,
@@ -95,7 +97,8 @@ export const config: WebdriverIO.MultiremoteConfig = {
                 }
             }
         },
-        participant2: {
+        // participant2
+        p2: {
             capabilities: {
                 browserName: 'chrome',
                 'goog:chromeOptions': {
@@ -107,7 +110,8 @@ export const config: WebdriverIO.MultiremoteConfig = {
                 ]
             }
         },
-        participant3: {
+        // participant3
+        p3: {
             capabilities: {
                 browserName: 'chrome',
                 'goog:chromeOptions': {
@@ -120,7 +124,8 @@ export const config: WebdriverIO.MultiremoteConfig = {
                 ]
             }
         },
-        participant4: {
+        // participant4
+        p4: {
             capabilities: {
                 browserName: 'chrome',
                 'goog:chromeOptions': {
@@ -183,6 +188,7 @@ export const config: WebdriverIO.MultiremoteConfig = {
         const globalAny: any = global;
 
         globalAny.ctx = {
+            data: {},
             times: {}
         } as IContext;
         globalAny.ctx.keepAlive = [];
@@ -208,14 +214,33 @@ export const config: WebdriverIO.MultiremoteConfig = {
             bInstance.iframePageBase = `file://${path.dirname(rpath)}`;
         }));
 
-        globalAny.ctx.roomName = `jitsimeettorture-${crypto.randomUUID()}`;
+        globalAny.ctx.roomName = `${testName}-${getRandomNumberAsStr(40, 3)}`;
+        if (process.env.ROOM_NAME_PREFIX) {
+            globalAny.ctx.roomName = `${process.env.ROOM_NAME_PREFIX.trim()}_${globalAny.ctx.roomName}`;
+        }
         if (process.env.ROOM_NAME_SUFFIX) {
             globalAny.ctx.roomName += `_${process.env.ROOM_NAME_SUFFIX.trim()}`;
         }
 
+        globalAny.ctx.roomName = globalAny.ctx.roomName.toLowerCase();
         globalAny.ctx.jwtPrivateKeyPath = process.env.JWT_PRIVATE_KEY_PATH;
         globalAny.ctx.jwtKid = process.env.JWT_KID;
         globalAny.ctx.isJaasAvailable = () => globalAny.ctx.jwtKid?.startsWith('vpaas-magic-cookie-');
+
+        // If we are running the iFrameApi tests, we need to mark it as such and if needed to create the proxy
+        // and connect to it.
+        if (testName.startsWith('iFrameApi')) {
+            globalAny.ctx.iframeAPI = true;
+
+            if (!globalAny.ctx.webhooksProxy
+                && process.env.WEBHOOKS_PROXY_URL && process.env.WEBHOOKS_PROXY_SHARED_SECRET) {
+                globalAny.ctx.webhooksProxy = new WebhookProxy(
+                    `${process.env.WEBHOOKS_PROXY_URL}&room=${globalAny.ctx.roomName}`,
+                    process.env.WEBHOOKS_PROXY_SHARED_SECRET,
+                    `${TEST_RESULTS_DIR}/webhooks-${cid}-${testName}.log`);
+                globalAny.ctx.webhooksProxy.connect();
+            }
+        }
     },
 
     after() {
@@ -249,22 +274,6 @@ export const config: WebdriverIO.MultiremoteConfig = {
      * @param {Object} suite - Suite details.
      */
     beforeSuite(suite) {
-        const { ctx }: any = global;
-
-        // If we are running the iFrameApi tests, we need to mark it as such and if needed to create the proxy
-        // and connect to it.
-        if (path.basename(suite.file).startsWith('iFrameApi')) {
-            ctx.iframeAPI = true;
-
-            if (!ctx.webhooksProxy
-                && process.env.WEBHOOKS_PROXY_URL && process.env.WEBHOOKS_PROXY_SHARED_SECRET) {
-                ctx.webhooksProxy = new WebhookProxy(
-                    `${process.env.WEBHOOKS_PROXY_URL}&room=${ctx.roomName}`,
-                    process.env.WEBHOOKS_PROXY_SHARED_SECRET);
-                ctx.webhooksProxy.connect();
-            }
-        }
-
         multiremotebrowser.instances.forEach((instance: string) => {
             logInfo(multiremotebrowser.getInstance(instance),
                 `---=== Begin ${suite.file.substring(suite.file.lastIndexOf('/') + 1)} ===---`);

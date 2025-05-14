@@ -190,10 +190,10 @@ export interface IConfig {
         obfuscateRoomName?: boolean;
         rtcstatsEnabled?: boolean;
         rtcstatsEndpoint?: string;
+        rtcstatsLogFlushSizeBytes?: number;
         rtcstatsPollInterval?: number;
         rtcstatsSendSdp?: boolean;
         rtcstatsStoreLogs?: boolean;
-        rtcstatsUseLegacy?: boolean;
         scriptURLs?: Array<string>;
         watchRTCEnabled?: boolean;
         whiteListedEvents?: string[];
@@ -542,10 +542,12 @@ export interface IConfig {
     };
     recordingSharingUrl?: string;
     recordings?: {
+        consentLearnMoreLink?: string;
         recordAudioAndVideo?: boolean;
         requireConsent?: boolean;
         showPrejoinWarning?: boolean;
         showRecordingLink?: boolean;
+        skipConsentInMeeting?: boolean;
         suggestRecording?: boolean;
     };
     remoteVideoMenu?: {
@@ -617,6 +619,7 @@ export interface IConfig {
     transcription?: {
         autoCaptionOnTranscribe?: boolean;
         autoTranscribeOnRecord?: boolean;
+        disableClosedCaptions?: boolean;
         enabled?: boolean;
         preferredLanguage?: string;
         translationLanguages?: Array<string>;

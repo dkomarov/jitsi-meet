@@ -61,6 +61,7 @@ interface IProps extends AbstractProps {
 }
 
 import VideoQualityDialog from './VideoQualityDialog.web';
+import { shouldDisplayVideoQualityLabel } from '../selector';
 
 /**
  * A map of video resolution (number) to translation key.

@@ -13,6 +13,7 @@ local get_room_from_jid = util.get_room_from_jid;
 local get_focus_occupant = util.get_focus_occupant;
 local get_room_by_name_and_subdomain = util.get_room_by_name_and_subdomain;
 local internal_room_jid_match_rewrite = util.internal_room_jid_match_rewrite;
+local table_find = util.table_find;
 local is_vpaas = util.is_vpaas;
 local is_sip_jibri_join = util.is_sip_jibri_join;
 local process_host_module = util.process_host_module;
@@ -71,13 +72,33 @@ function send_json_message(to_jid, json_message)
     module:send(stanza);
 end
 
-local function request_promotion_received(room, from_jid, from_vnode, nick, time, user_id, force_promote)
+local function request_promotion_received(room, from_jid, from_vnode, nick, time, user_id, group_id, force_promote_requested)
     -- if visitors is enabled for the room
     if visitors_promotion_map[room.jid] then
+        local force_promote = auto_allow_promotion;
+        if not force_promote and force_promote_requested == 'true' then
+            -- Let's do the force_promote checks if requested
+            -- if it is vpaas meeting we trust the moderator computation from visitor node (value of force_promote_requested)
+            -- if it is not vpaas we need to check further settings only if they exist
+            if is_vpaas(room) or (not room._data.moderator_id and not room._data.moderators)
+                -- _data.moderator_id can be used from external modules to set single moderator for a meeting
+                -- or a whole group of moderators
+                or (room._data.moderator_id
+                    and room._data.moderator_id == user_id or room._data.moderator_id == group_id)
+
+                -- all moderators are allowed to auto promote, the fact that user_id and force_promote_requested are set
+                -- means that the user has token and is moderator on visitor node side
+                or room._data.allModerators
+
+                -- can be used by external modules to set multiple moderator ids (table of values)
+                or table_find(room._data.moderators, user_id)
+            then
+                force_promote = true;
+            end
+        end
+
         -- only for raise hand, ignore lowering the hand
-        if time and time > 0 and (
-            auto_allow_promotion
-            or force_promote == 'true') then
+        if time and time > 0 and force_promote then
             --  we are in auto-allow mode, let's reply with accept
             -- we store where the request is coming from so we can send back the response
             local username = new_id():lower();
@@ -280,6 +301,7 @@ local function stanza_handler(event)
             display_name,
             tonumber(request_promotion.attr.time),
             request_promotion.attr.userId,
+            request_promotion.attr.groupId,
             request_promotion.attr.forcePromote
         );
     end

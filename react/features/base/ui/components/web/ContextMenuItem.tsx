@@ -232,7 +232,7 @@ const ContextMenuItem = ({
         tabIndex = selected ? 0 : -1;
     }
 
-    if (role === 'button' && !disabled) {
+    if ((role === 'button' || role === 'menuitem') && !disabled) {
         tabIndex = 0;
     }
 

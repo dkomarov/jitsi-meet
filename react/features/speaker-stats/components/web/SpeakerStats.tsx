@@ -17,11 +17,7 @@ import {
 import Tooltip from '../../../base/tooltip/components/Tooltip';
 import Dialog from '../../../base/ui/components/web/Dialog';
 import { escapeRegexp } from '../../../base/util/helpers';
-import {
-    initSearch,
-    resetSearchCriteria,
-    toggleFaceExpressions
-} from '../../actions.any';
+import { initSearch, resetSearchCriteria, toggleFaceExpressions } from '../../actions.any';
 import { DISPLAY_SWITCH_BREAKPOINT, MOBILE_BREAKPOINT } from '../../constants';
 
 import FaceExpressionsSwitch from './FaceExpressionsSwitch';
@@ -198,27 +194,16 @@ const EMOTIONS_LEGEND = [
 ];
 
 const SpeakerStats = () => {
-    const { faceLandmarks } = useSelector(
-        (state: IReduxState) => state['features/base/config']
-    );
-    const { showFaceExpressions } = useSelector(
-        (state: IReduxState) => state['features/speaker-stats']
-    );
-    const { clientWidth } = useSelector(
-        (state: IReduxState) => state['features/base/responsive-ui']
-    );
-    const displaySwitch =
-        faceLandmarks?.enableDisplayFaceExpressions &&
-        clientWidth > DISPLAY_SWITCH_BREAKPOINT;
-    const displayLabels = clientWidth > MOBILE_BREAKPOINT;
+    const { faceLandmarks } = useSelector((state: IReduxState) => state['features/base/config']);
+    const { showFaceExpressions } = useSelector((state: IReduxState) => state['features/speaker-stats']);
+    const { videoSpaceWidth } = useSelector((state: IReduxState) => state['features/base/responsive-ui']);
+    const displaySwitch = faceLandmarks?.enableDisplayFaceExpressions && videoSpaceWidth > DISPLAY_SWITCH_BREAKPOINT;
+    const displayLabels = videoSpaceWidth > MOBILE_BREAKPOINT;
     const dispatch = useDispatch();
     const { classes } = useStyles();
     const { t } = useTranslation();
 
-    const onToggleFaceExpressions = useCallback(
-        () => dispatch(toggleFaceExpressions()),
-        [dispatch]
-    );
+    const onToggleFaceExpressions = useCallback(() => dispatch(toggleFaceExpressions()), [dispatch]);
 
     const onSearch = useCallback(
         (criteria = '') => {
@@ -228,10 +213,8 @@ const SpeakerStats = () => {
     );
 
     useEffect(() => {
-        showFaceExpressions &&
-            !displaySwitch &&
-            dispatch(toggleFaceExpressions());
-    }, [clientWidth]);
+        showFaceExpressions && !displaySwitch && dispatch(toggleFaceExpressions());
+    }, [videoSpaceWidth]);
 
     useEffect(
         () => () => {
@@ -249,23 +232,13 @@ const SpeakerStats = () => {
             titleKey="speakerStats.speakerStats"
         >
             <div className={classes.speakerStats}>
-                <div
-                    className={`header ${
-                        showFaceExpressions ? 'large' : 'medium'
-                    }`}
-                >
+                <div className={`header ${showFaceExpressions ? 'large' : 'medium'}`}>
                     <div className="upper-header">
                         <div
                             className={`search-switch-container
                         ${showFaceExpressions ? 'expressions-on' : ''}`}
                         >
-                            <div
-                                className={
-                                    displaySwitch
-                                        ? 'search-container'
-                                        : 'search-container-full-width'
-                                }
-                            >
+                            <div className={displaySwitch ? 'search-container' : 'search-container-full-width'}>
                                 <SpeakerStatsSearch onSearch={onSearch} />
                             </div>
 
@@ -290,11 +263,7 @@ const SpeakerStats = () => {
                             </div>
                         )}
                     </div>
-                    {displayLabels && (
-                        <SpeakerStatsLabels
-                            showFaceExpressions={showFaceExpressions ?? false}
-                        />
-                    )}
+                    {displayLabels && <SpeakerStatsLabels showFaceExpressions={showFaceExpressions ?? false} />}
                 </div>
                 <SpeakerStatsList />
             </div>

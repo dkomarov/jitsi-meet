@@ -49,7 +49,9 @@ var config = {
     bosh: 'https://jitsi-meet.example.com/' + subdir + 'http-bind',
 
     // Websocket URL (XMPP)
-    // websocket: 'wss://jitsi-meet.example.com/' + subdir + 'xmpp-websocket',
+    websocket: 'wss://jitsi-meet.example.com/' + subdir + 'xmpp-websocket',
+
+    // websocketKeepAliveUrl: 'https://jitsi-meet.example.com/' + subdir + '_unlock',
 
     // Whether BOSH should be preferred over WebSocket if both are configured.
     // preferBosh: false,
@@ -86,6 +88,9 @@ var config = {
 
         // Enables use of getDisplayMedia in electron
         // electronUseGetDisplayMedia: false,
+
+        // Enables AV1 codec for FF. Note: By default it is disabled.
+        // enableAV1ForFF: false,
 
         // Enables the use of the codec selection API supported by the browsers .
         // enableCodecSelectionAPI: false,
@@ -396,6 +401,10 @@ var config = {
     //    // If true, mutes audio and video when a recording begins and displays a dialog
     //    // explaining the effect of unmuting.
     //    // requireConsent: true,
+    //    // If true consent will be skipped for users who are already in the meeting.
+    //    // skipConsentInMeeting: true,
+    //    // Link for the recording consent dialog's "Learn more" link.
+    //    // consentLearnMoreLink: 'https://jitsi.org/meet/consent',
     // },
 
     // recordingService: {
@@ -518,7 +527,7 @@ var config = {
     // videoQuality: {
     //
     //    // Provides a way to set the codec preference on desktop based endpoints.
-    //    codecPreferenceOrder: [ 'VP9', 'VP8', 'H264', 'AV1' ],
+    //    codecPreferenceOrder: [ 'AV1', 'VP9', 'VP8', 'H264' ],
     //
     //    // Provides a way to set the codec for screenshare.
     //    screenshareCodec: 'AV1',
@@ -595,7 +604,7 @@ var config = {
     //    },
     //
     //    // Provides a way to set the codec preference on mobile devices, both on RN and mobile browser based endpoint
-    //    mobileCodecPreferenceOrder: [ 'VP8', 'VP9', 'H264' ],
+    //    mobileCodecPreferenceOrder: [ 'VP8', 'VP9', 'H264', 'AV1' ],
     // },
 
     // Notification timeouts
@@ -1073,10 +1082,10 @@ var config = {
 
         // Provides a way to set the codec preference on mobile devices, both on RN and mobile browser based
         // endpoints.
-        // mobileCodecPreferenceOrder: [ 'H264', 'VP8', 'VP9' ],
+        // mobileCodecPreferenceOrder: [ 'H264', 'VP8', 'VP9', 'AV1' ],
         //
         // Provides a way to set the codec preference on desktop based endpoints.
-        // codecPreferenceOrder: [ 'VP9', 'VP8', 'H264 ],
+        // codecPreferenceOrder: [ 'AV1', 'VP9', 'VP8', 'H264 ],
 
         // Provides a way to set the codec for screenshare.
         // screenshareCodec: 'AV1',

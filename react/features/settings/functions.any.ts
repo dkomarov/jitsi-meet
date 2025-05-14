@@ -11,8 +11,8 @@ import { getLocalVideoTrack } from '../base/tracks/functions.any';
 import { parseStandardURIString } from '../base/util/uri';
 import { isStageFilmstripEnabled } from '../filmstrip/functions.web';
 import { isFollowMeActive, isFollowMeRecorderActive } from '../follow-me/functions';
-import { isPrejoinEnabledInConfig } from '../prejoin/functions.web';
 import { isReactionsEnabled } from '../reactions/functions.any';
+import { areClosedCaptionsEnabled } from '../subtitles/functions.any';
 import { iAmVisitor } from '../visitors/functions';
 import { SS_DEFAULT_FRAME_RATE, SS_SUPPORTED_FRAMERATES } from './constants';
 
@@ -113,13 +113,7 @@ export function getMoreTabProps(stateful: IStateful) {
     const { disableSelfView, disableSelfViewSettings } = state['features/base/config'];
 
     return {
-        // showPrejoinPage:
-        //     !state['features/base/settings'].userSelectedSkipPrejoin,
-        // showPrejoinSettings:
-        //     state['features/base/config'].prejoinConfig?.enabled,
-        // maxStageParticipants:
-        //     state['features/base/settings'].maxStageParticipants,
-
+        areClosedCaptionsEnabled: areClosedCaptionsEnabled(state),
         currentLanguage: language,
         disableHideSelfView: disableSelfViewSettings || disableSelfView,
         hideSelfView: getHideSelfView(state),
@@ -127,8 +121,7 @@ export function getMoreTabProps(stateful: IStateful) {
         languages: LANGUAGES,
         maxStageParticipants: state['features/base/settings'].maxStageParticipants,
         showLanguageSettings: configuredTabs.includes('language'),
-        showPrejoinPage: !state['features/base/settings'].userSelectedSkipPrejoin,
-        showPrejoinSettings: isPrejoinEnabledInConfig(state),
+        showSubtitlesOnStage: state['features/base/settings'].showSubtitlesOnStage,
         stageFilmstripEnabled
     };
 }
@@ -151,14 +144,18 @@ export function getModeratorTabProps(stateful: IStateful) {
         startVideoMutedPolicy,
         startReactionsMuted
     } = state['features/base/conference'];
+    const { groupChatWithPermissions } = state['features/chat'];
     const { disableReactionsModeration } = state['features/base/config'];
     const followMeActive = isFollowMeActive(state);
     const followMeRecorderActive = isFollowMeRecorderActive(state);
     const showModeratorSettings = shouldShowModeratorSettings(state);
+    const disableChatWithPermissions = !conference?.getMetadataHandler().getMetadata().allownersEnabled;
 
     // The settings sections to display.
     return {
+        chatWithPermissionsEnabled: Boolean(groupChatWithPermissions),
         showModeratorSettings: Boolean(conference && showModeratorSettings),
+        disableChatWithPermissions: Boolean(disableChatWithPermissions),
         disableReactionsModeration: Boolean(disableReactionsModeration),
         followMeActive: Boolean(conference && followMeActive),
         followMeEnabled: Boolean(conference && followMeEnabled),

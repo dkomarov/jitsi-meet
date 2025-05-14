@@ -28,9 +28,10 @@ interface IProps {
     hasError?: boolean;
 
     /**
-     * Flag indicating if there is a problem with the device.
+     * Index of the device item used to generate this entry.
+     * Indexes are 0 based.
      */
-    index?: number;
+    index: number;
 
     /**
      * Flag indicating the selection state.
@@ -158,12 +159,7 @@ const MicrophoneEntry = ({
      * @returns {void}
      */
     const startListening = () => {
-        jitsiTrack &&
-            measureAudioLevels &&
-            jitsiTrack.on(
-                JitsiTrackEvents.TRACK_AUDIO_LEVEL_CHANGED,
-                updateLevel
-            );
+        jitsiTrack && measureAudioLevels && jitsiTrack.on(JitsiTrackEvents.TRACK_AUDIO_LEVEL_CHANGED, updateLevel);
     };
 
     /**
@@ -194,7 +190,7 @@ const MicrophoneEntry = ({
     return (
         <li
             aria-checked={isSelected}
-            aria-posinset={index}
+            aria-posinset={index + 1} // Add one to offset the 0 based index.
             aria-setsize={length}
             className={classes.container}
             onClick={onClick}
@@ -208,26 +204,12 @@ const MicrophoneEntry = ({
                 overflowType={TEXT_OVERFLOW_TYPES.SCROLL_ON_HOVER}
                 selected={isSelected}
                 text={children}
-                textClassName={cx(
-                    classes.entryText,
-                    measureAudioLevels && 'withMeter',
-                    !isSelected && 'left-margin'
-                )}
+                textClassName={cx(classes.entryText, measureAudioLevels && 'withMeter', !isSelected && 'left-margin')}
             >
-                {hasError && (
-                    <Icon
-                        className={classes.icon}
-                        size={16}
-                        src={IconExclamationSolid}
-                    />
-                )}
+                {hasError && <Icon className={classes.icon} size={16} src={IconExclamationSolid} />}
             </ContextMenuItem>
             {Boolean(jitsiTrack) && measureAudioLevels && (
-                <Meter
-                    className={classes.meter}
-                    isDisabled={hasError}
-                    level={level}
-                />
+                <Meter className={classes.meter} isDisabled={hasError} level={level} />
             )}
         </li>
     );
