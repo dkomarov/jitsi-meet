@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { isMobileBrowser } from '../../../environment/utils';
+import Icon from '../../../icons/components/Icon';
 import { withPixelLineHeight } from '../../../styles/functions.web';
 
 interface ITabProps {
@@ -13,8 +14,9 @@ interface ITabProps {
         controlsId: string;
         countBadge?: number;
         disabled?: boolean;
+        icon?: Function;
         id: string;
-        label: string;
+        label?: string;
     }>;
 }
 
@@ -73,6 +75,10 @@ const useStyles = makeStyles()(theme => {
             borderRadius: '100%',
             backgroundColor: theme.palette.warning01,
             marginLeft: theme.spacing(2)
+        },
+
+        icon: {
+            marginRight: theme.spacing(1)
         }
     };
 });
@@ -132,6 +138,9 @@ const Tabs = ({
                     onKeyDown = { onKeyDown(index) }
                     role = 'tab'
                     tabIndex = { selected === tab.id ? undefined : -1 }>
+                    {tab.icon && <Icon
+                        className = { classes.icon }
+                        src = { tab.icon } />}
                     {tab.label}
                     {tab.countBadge && <span className = { classes.badge }>{tab.countBadge}</span>}
                 </button>

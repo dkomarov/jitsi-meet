@@ -1,17 +1,21 @@
+import { throttle } from 'lodash-es';
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
-import { throttle } from 'lodash-es';
 
 import { IReduxState } from '../../../app/types';
 import { translate } from '../../../base/i18n/functions';
+import { IconInfo, IconMessage, IconShareDoc, IconSubtitles } from '../../../base/icons/svg';
 import { getLocalParticipant } from '../../../base/participants/functions';
 import Tabs from '../../../base/ui/components/web/Tabs';
 import { arePollsDisabled } from '../../../conference/functions.any';
+import FileSharing from '../../../file-sharing/components/web/FileSharing';
+import { isFileSharingEnabled } from '../../../file-sharing/functions.any';
 import PollsPane from '../../../polls/components/web/PollsPane';
 import { isCCTabEnabled } from '../../../subtitles/functions.any';
-import { setChatIsResizing, setUserChatWidth, sendMessage, setFocusedTab, toggleChat } from '../../actions.web';
+import { sendMessage, setChatIsResizing, setFocusedTab, setUserChatWidth, toggleChat } from '../../actions.web';
 import { CHAT_SIZE, ChatTabs, SMALL_WIDTH_THRESHOLD } from '../../constants';
+import { getChatMaxSize } from '../../functions';
 import { IChatProps as AbstractProps } from '../../types';
 
 import ChatHeader from './ChatHeader';
@@ -21,7 +25,7 @@ import DisplayNameForm from './DisplayNameForm';
 import KeyboardAvoider from './KeyboardAvoider';
 import MessageContainer from './MessageContainer';
 import MessageRecipient from './MessageRecipient';
-import { getChatMaxSize } from '../../functions';
+
 
 interface IProps extends AbstractProps {
 
@@ -34,6 +38,11 @@ interface IProps extends AbstractProps {
      * True if the CC tab is enabled and false otherwise.
      */
     _isCCTabEnabled: boolean;
+
+    /**
+     * True if file sharing tab is enabled.
+     */
+    _isFileSharingTabEnabled: boolean;
 
     /**
      * Whether the chat is opened in a modal or not (computed based on window width).
@@ -141,6 +150,7 @@ const useStyles = makeStyles<{ _isResizing: boolean; width: number; }>()((theme,
             boxSizing: 'border-box',
             color: theme.palette.text01,
             ...theme.typography.heading6,
+            lineHeight: 'unset',
             fontWeight: theme.typography.heading6.fontWeight as any,
 
             '.jitsi-icon': {
@@ -215,6 +225,7 @@ const Chat = ({
     _isOpen,
     _isPollsEnabled,
     _isCCTabEnabled,
+    _isFileSharingTabEnabled,
     _focusedTab,
     _isResizing,
     _messages,
@@ -380,7 +391,10 @@ const Chat = ({
                     aria-labelledby = { ChatTabs.CHAT }
                     className = { cx(
                         classes.chatPanel,
-                        !_isPollsEnabled && !_isCCTabEnabled && classes.chatPanelNoTabs,
+                        !_isPollsEnabled
+                        && !_isCCTabEnabled
+                        && !_isFileSharingTabEnabled
+                        && classes.chatPanelNoTabs,
                         _focusedTab !== ChatTabs.CHAT && 'hide'
                     ) }
                     id = { `${ChatTabs.CHAT}-panel` }
@@ -413,6 +427,14 @@ const Chat = ({
                     tabIndex = { 2 }>
                     <ClosedCaptionsTab />
                 </div> }
+                { _isFileSharingTabEnabled && <div
+                    aria-labelledby = { ChatTabs.FILE_SHARING }
+                    className = { cx(classes.chatPanel, _focusedTab !== ChatTabs.FILE_SHARING && 'hide') }
+                    id = { `${ChatTabs.FILE_SHARING}-panel` }
+                    role = 'tabpanel'
+                    tabIndex = { 3 }>
+                    <FileSharing />
+                </div> }
             </>
         );
     }
@@ -432,7 +454,7 @@ const Chat = ({
                     _focusedTab !== ChatTabs.CHAT && _nbUnreadMessages > 0 ? _nbUnreadMessages : undefined,
                 id: ChatTabs.CHAT,
                 controlsId: `${ChatTabs.CHAT}-panel`,
-                label: t('chat.tabs.chat')
+                icon: IconMessage
             }
         ];
 
@@ -442,7 +464,7 @@ const Chat = ({
                 countBadge: _focusedTab !== ChatTabs.POLLS && _nbUnreadPolls > 0 ? _nbUnreadPolls : undefined,
                 id: ChatTabs.POLLS,
                 controlsId: `${ChatTabs.POLLS}-panel`,
-                label: t('chat.tabs.polls')
+                icon: IconInfo
             });
         }
 
@@ -452,13 +474,32 @@ const Chat = ({
                 countBadge: undefined,
                 id: ChatTabs.CLOSED_CAPTIONS,
                 controlsId: `${ChatTabs.CLOSED_CAPTIONS}-panel`,
-                label: t('chat.tabs.closedCaptions')
+                icon: IconSubtitles
+            });
+        }
+
+        if (_isFileSharingTabEnabled) {
+            tabs.push({
+                accessibilityLabel: t('chat.tabs.fileSharing'),
+                countBadge: undefined,
+                id: ChatTabs.FILE_SHARING,
+                controlsId: `${ChatTabs.FILE_SHARING}-panel`,
+                icon: IconShareDoc
             });
         }
 
         return (
             <Tabs
-                accessibilityLabel = { t(_isPollsEnabled ? 'chat.titleWithPolls' : 'chat.title') }
+                accessibilityLabel = { _isPollsEnabled || _isCCTabEnabled || _isFileSharingTabEnabled
+                    ? t('chat.titleWithFeatures', {
+                        features: [
+                            _isPollsEnabled ? t('chat.titleWithPolls') : '',
+                            _isCCTabEnabled ? t('chat.titleWithCC') : '',
+                            _isFileSharingTabEnabled ? t('chat.titleWithFileSharing') : ''
+                        ].filter(Boolean).join(', ')
+                    })
+                    : t('chat.title')
+                }
                 onChange = { onChangeTab }
                 selected = { _focusedTab }
                 tabs = { tabs } />
@@ -524,6 +565,7 @@ function _mapStateToProps(state: IReduxState, _ownProps: any) {
         _isOpen: isOpen,
         _isPollsEnabled: !arePollsDisabled(state),
         _isCCTabEnabled: isCCTabEnabled(state),
+        _isFileSharingTabEnabled: isFileSharingEnabled(state),
         _focusedTab: focusedTab,
         _messages: messages,
         _nbUnreadMessages: nbUnreadMessages,

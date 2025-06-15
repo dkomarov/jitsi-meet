@@ -1,6 +1,7 @@
-import type { Participant } from '../../helpers/Participant';
-import process from 'node:process';
 import https from 'node:https';
+import process from 'node:process';
+
+import type { Participant } from '../../helpers/Participant';
 
 /**
  * Helper functions for dial-in related operations.
@@ -98,4 +99,5 @@ export async function dialIn(participant: Participant) {
     });
 
     console.log(`dial-in.test.call_session_history_id:${JSON.parse(responseData).call_session_history_id}`);
+    console.log(`API response:${responseData}`);
 }

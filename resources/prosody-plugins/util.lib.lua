@@ -259,13 +259,10 @@ end
 -- Utility function to check whether feature is present and enabled. Allow
 -- a feature if there are features present in the session(coming from
 -- the token) and the value of the feature is true.
--- If features are missing but we have granted_features check that
 -- if features are missing from the token we check whether it is moderator
-function is_feature_allowed(ft, features, granted_features, is_moderator)
+function is_feature_allowed(ft, features, is_moderator)
     if features then
         return features[ft] == "true" or features[ft] == true;
-    elseif granted_features then
-        return granted_features[ft] == "true" or granted_features[ft] == true;
     else
         return is_moderator;
     end
@@ -612,6 +609,13 @@ local function table_find(tab, val)
     return nil
 end
 
+-- Adds second table values to the first table
+local function table_add(t1, t2)
+    for _,v in ipairs(t2) do
+       table.insert(t1, v);
+    end
+end
+
 -- Splits a string using delimiter
 function split_string(str, delimiter)
     str = str .. delimiter;
@@ -692,6 +696,7 @@ return {
     split_string = split_string;
     starts_with = starts_with;
     starts_with_one_of = starts_with_one_of;
+    table_add = table_add;
     table_shallow_copy = table_shallow_copy;
     table_find = table_find;
 };

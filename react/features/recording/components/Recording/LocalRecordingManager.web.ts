@@ -1,13 +1,16 @@
+// @ts-ignore
+import * as ebml from 'ts-ebml/dist/EBML.min.js';
 import { v4 as uuidV4 } from 'uuid';
 
 import { IStore } from '../../../app/types';
 import { getRoomName } from '../../../base/conference/functions';
-import { MEDIA_TYPE } from '../../../base/media/constants';
-import { getLocalTrack, getTrackState } from '../../../base/tracks/functions';
 import { isMobileBrowser } from '../../../base/environment/utils';
 import { browser } from '../../../base/lib-jitsi-meet';
+import { MEDIA_TYPE } from '../../../base/media/constants';
+import { getLocalTrack, getTrackState } from '../../../base/tracks/functions';
 import { isEmbedded } from '../../../base/util/embedUtils';
 import { stopLocalVideoRecording } from '../../actions.any';
+import logger from '../../logger';
 
 interface ISelfRecording {
     on: boolean;
@@ -19,6 +22,7 @@ interface ILocalRecordingManager {
     audioContext: AudioContext | undefined;
     audioDestination: MediaStreamAudioDestinationNode | undefined;
     fileHandle: FileSystemFileHandle | undefined;
+    firstChunk: Blob | undefined;
     getFilename: () => string;
     initializeAudioMixer: () => void;
     isRecordingLocally: () => boolean;
@@ -29,20 +33,22 @@ interface ILocalRecordingManager {
     roomName: string;
     selfRecording: ISelfRecording;
     startLocalRecording: (store: IStore, onlySelf: boolean) => Promise<void>;
+    startTime: number | undefined;
     stopLocalRecording: () => void;
     stream: MediaStream | undefined;
     writableStream: FileSystemWritableFileStream | undefined;
 }
 
 /**
- * We want to use the Matroska container due to it not suffering from the resulting file
- * not being seek-able.
+ * After a lot of trial and error, this is the preferred media type for
+ * local recording. It is the only one that works across all platforms, with the
+ * only caveat being that the resulting file wouldn't be seekable.
  *
- * The choice of VP9 as the video codec and Opus as the audio codec is for compatibility.
- * While Chrome does support avc1 and avc3 (we'd need the latter since the resolution can change)
- * it's not supported across the board.
+ * We solve that by fixing the first Blob in order to reserve the space for the
+ * corrected metadata, and after the recording is done, we do it again, this time with
+ * the real duration, and overwrite the first part of the file.
  */
-const PREFERRED_MEDIA_TYPE = 'video/x-matroska;codecs=vp8,opus';
+const PREFERRED_MEDIA_TYPE = 'video/webm;codecs=vp8,opus';
 
 const VIDEO_BIT_RATE = 2500000; // 2.5Mbps in bits
 
@@ -56,7 +62,9 @@ const LocalRecordingManager: ILocalRecordingManager = {
         on: false,
         withVideo: false
     },
+    firstChunk: undefined,
     fileHandle: undefined,
+    startTime: undefined,
     writableStream: undefined,
 
     get mediaType() {
@@ -142,7 +150,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
         // Get a handle to the file we are going to write.
         const options = {
             startIn: 'downloads',
-            suggestedName: `${this.getFilename()}.mkv`
+            suggestedName: `${this.getFilename()}.webm`
         };
 
         // @ts-expect-error
@@ -242,11 +250,23 @@ const LocalRecordingManager: ILocalRecordingManager = {
 
         this.recorder.addEventListener('dataavailable', async (e) => {
             if (this.recorder && e.data && e.data.size > 0) {
-                await this.writableStream?.write(e.data);
+                let data = e.data;
+
+                if (!this.firstChunk) {
+                    this.firstChunk = data = await fixDuration(data, 864000000); // Reserve 24h.
+                }
+
+                await this.writableStream?.write(data);
             }
         });
 
-        this.recorder.addEventListener('stop', () => {
+        this.recorder.addEventListener('start', () => {
+            this.startTime = Date.now();
+        });
+
+        this.recorder.addEventListener('stop', async () => {
+            const duration = Date.now() - this.startTime!;
+
             this.stream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
             gdmStream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
 
@@ -255,10 +275,23 @@ const LocalRecordingManager: ILocalRecordingManager = {
             this.recorder = undefined;
             this.audioContext = undefined;
             this.audioDestination = undefined;
-            this.writableStream?.close().then(() => {
-                this.fileHandle = undefined;
-                this.writableStream = undefined;
-            });
+            this.startTime = undefined;
+
+            if (this.writableStream) {
+                try {
+                    if (this.firstChunk) {
+                        await this.writableStream.seek(0);
+                        await this.writableStream.write(await fixDuration(this.firstChunk!, duration));
+                    }
+                    await this.writableStream.close();
+                } catch (e) {
+                    logger.error('Error while writing to the local recording file', e);
+                } finally {
+                    this.firstChunk = undefined;
+                    this.fileHandle = undefined;
+                    this.writableStream = undefined;
+                }
+            }
         });
 
         if (!onlySelf) {
@@ -271,7 +304,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
             });
         }
 
-        this.recorder.start(1000);
+        this.recorder.start(5000);
     },
 
     /**
@@ -302,5 +335,40 @@ const LocalRecordingManager: ILocalRecordingManager = {
         return Boolean(this.recorder);
     }
 };
+
+/**
+ * Fixes the duration in the WebM container metadata.
+ * Note: cues are omitted.
+ *
+ * @param {Blob} data - The first Blob of WebM data.
+ * @param {number} duration - Actual duration of the video in milliseconds.
+ * @returns {Promise<Blob>}
+ */
+async function fixDuration(data: Blob, duration: number): Promise<Blob> {
+    const decoder = new ebml.Decoder();
+    const reader = new ebml.Reader();
+
+    reader.logging = false;
+    reader.drop_default_duration = false;
+
+    const dataBuf = await data.arrayBuffer();
+    const elms = decoder.decode(dataBuf);
+
+    for (const elm of elms) {
+        reader.read(elm);
+    }
+    reader.stop();
+
+    const newMetadataBuf = ebml.tools.makeMetadataSeekable(
+        reader.metadatas,
+        duration,
+        [] // No cues
+    );
+
+    const body = new Uint8Array(dataBuf).subarray(reader.metadataSize);
+
+    // @ts-ignore
+    return new Blob([newMetadataBuf, body], { type: data.type });
+}
 
 export default LocalRecordingManager;
