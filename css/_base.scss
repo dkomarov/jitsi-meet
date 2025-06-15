@@ -74,6 +74,12 @@ p {
     fill: #000;
 }
 
+#modal-header-close-button,
+.chat-header div svg path,
+div#chat-input div svg path {
+    fill: white;
+}
+
 .settings-pane button {
     background-color: #fff !important;
 }
