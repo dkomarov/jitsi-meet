@@ -117,6 +117,11 @@ var config = {
 
         // Will replace ice candidates IPs with invalid ones in order to fail ice.
         // failICE: true,
+
+        // When running on Spot TV, this controls whether to show the recording consent dialog.
+        // If false (default), Spot instances will not show the recording consent dialog.
+        // If true, Spot instances will show the recording consent dialog like regular clients.
+        // showSpotConsentDialog: false,
     },
 
     // Disables moderator indicators.
@@ -511,7 +516,8 @@ var config = {
     //     // Note: Starting transcriptions from the recording dialog will still work.
     //     disableClosedCaptions: false,
 
-    //     // Whether to invite jigasi when backend transcriptions are enabled. By default, we invite it.
+    //     // Whether to invite jigasi when backend transcriptions are enabled (asyncTranscription is true in metadata).
+    //     // By default, we invite it.
     //     inviteJigasiOnBackendTranscribing: true,
     // },
 
@@ -1125,10 +1131,6 @@ var config = {
         // The Amplitude APP Key:
         // amplitudeAPPKey: '<APP_KEY>',
 
-        // Enables Amplitude UTM tracking:
-        // Default value is false.
-        // amplitudeIncludeUTM: false,
-
         // Obfuscates room name sent to analytics (amplitude, rtcstats)
         // Default value is false.
         // obfuscateRoomName: false,
@@ -1359,8 +1361,9 @@ var config = {
     //     disableKick: true,
     //     // If set to true the 'Grant moderator' button will be disabled.
     //     disableGrantModerator: true,
-    //     // If set to true the 'Send private message' button will be disabled.
-    //     disablePrivateChat: true,
+    //     // If set to 'all' the 'Private chat' button will be disabled for all participants.
+    //     // If set to 'allow-moderator-chat' the 'Private chat' button will be available for chats with moderators.
+    //     disablePrivateChat: 'all' | 'allow-moderator-chat',
     // },
 
 
@@ -1777,6 +1780,13 @@ var config = {
     //     // The minimum number of participants that must be in the call for
     //     // the top panel layout to be used.
     //     minParticipantCountForTopPanel: 50,
+
+    //     // The width of the filmstrip on joining meeting. Can be resized afterwards.
+    //     initialWidth: 400,
+
+    //     // Whether the draggable resize bar of the filmstrip is always visible. Setting this to true will make
+    //     // the filmstrip always visible in case `disableResizable` is false.
+    //     alwaysShowResizeBar: true,
     // },
 
     // Tile view related config options.

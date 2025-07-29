@@ -13,7 +13,7 @@ export interface IProps {
     /**
      * Label used for accessibility.
      */
-    accessibilityLabel: string;
+    accessibilityLabel?: string;
 
     /**
      * The context menu item background color.
@@ -209,12 +209,7 @@ const ContextMenuItem = ({
     const onKeyPressHandler = useCallback(
         (e) => {
             // only trigger the fallback behavior (onClick) if we dont have any explicit keyboard event handler
-            if (
-                onClick &&
-                !onKeyPress &&
-                !onKeyDown &&
-                (e.key === 'Enter' || e.key === ' ')
-            ) {
+            if (onClick && !onKeyPress && !onKeyDown && (e.key === 'Enter' || e.key === ' ')) {
                 e.preventDefault();
                 onClick(e);
             }
@@ -240,7 +235,7 @@ const ContextMenuItem = ({
         <div
             aria-controls={controls}
             aria-disabled={disabled}
-            aria-label={accessibilityLabel}
+            aria-label={accessibilityLabel || undefined}
             aria-selected={role === 'tab' ? selected : undefined}
             className={cx(
                 styles.contextMenuItem,
@@ -263,10 +258,7 @@ const ContextMenuItem = ({
                 ? customIcon
                 : icon && (
                       <Icon
-                          className={cx(
-                              styles.contextMenuItemIcon,
-                              disabled && styles.contextMenuItemIconDisabled
-                          )}
+                          className={cx(styles.contextMenuItemIcon, disabled && styles.contextMenuItemIconDisabled)}
                           size={20}
                           src={icon}
                       />

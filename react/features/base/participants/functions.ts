@@ -2,10 +2,12 @@
 import { getGravatarURL } from '@jitsi/js-utils/avatar';
 
 import { IReduxState, IStore } from '../../app/types';
+import { isVisitorChatParticipant } from '../../chat/functions';
 import { isStageFilmstripAvailable } from '../../filmstrip/functions';
 import { isAddPeopleEnabled, isDialOutEnabled } from '../../invite/functions';
 import { toggleShareDialog } from '../../share-room/actions';
 import { iAmVisitor } from '../../visitors/functions';
+import { IVisitorChatParticipant } from '../../visitors/types';
 import { IStateful } from '../app/types';
 import { GRAVATAR_BASE_URL } from '../avatar/constants';
 import { isCORSAvatarURL } from '../avatar/functions';
@@ -392,7 +394,7 @@ export function getMutedStateByParticipantAndMediaType(
     if (mediaType === MEDIA_TYPE.AUDIO) {
         return Array.from(sources.values())[0].muted;
     }
-    const videoType = mediaType === MEDIA_TYPE.VIDEO ? VIDEO_TYPE.CAMERA : VIDEO_TYPE.SCREENSHARE;
+    const videoType = mediaType === MEDIA_TYPE.VIDEO ? VIDEO_TYPE.CAMERA : VIDEO_TYPE.DESKTOP;
     const source = Array.from(sources.values()).find(src => src.videoType === videoType);
 
     return source?.muted ?? true;
@@ -823,3 +825,35 @@ export const setShareDialogVisiblity = (addPeopleFeatureEnabled: boolean, dispat
         dispatch(toggleShareDialog(true));
     }
 };
+
+/**
+ * Checks if private chat is enabled for the given participant.
+ *
+ * @param {IParticipant|IVisitorChatParticipant|undefined} participant - The participant to check.
+ * @param {IReduxState} state - The Redux state.
+ * @returns {boolean} - True if private chat is enabled, false otherwise.
+ */
+export function isPrivateChatEnabled(participant: IParticipant | IVisitorChatParticipant | undefined, state: IReduxState) {
+    const { remoteVideoMenu = {} } = state['features/base/config'];
+    const { disablePrivateChat } = remoteVideoMenu;
+
+    if ((!isVisitorChatParticipant(participant) && participant?.local) || disablePrivateChat === 'all') {
+        return false;
+    }
+
+    if (disablePrivateChat === 'disable-visitor-chat') {
+        // Block if the participant we're trying to message is a visitor
+        // OR if the local user is a visitor
+        if (isVisitorChatParticipant(participant) || iAmVisitor(state)) {
+            return false;
+        }
+
+        return true; // should allow private chat for other participants
+    }
+
+    if (disablePrivateChat === 'allow-moderator-chat') {
+        return isLocalParticipantModerator(state) || isParticipantModerator(participant);
+    }
+
+    return !disablePrivateChat;
+}

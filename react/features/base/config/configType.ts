@@ -172,7 +172,6 @@ export interface IConfig {
     _screenshotHistoryRegionUrl?: number;
     analytics?: {
         amplitudeAPPKey?: string;
-        amplitudeIncludeUTM?: boolean;
         blackListedEvents?: string[];
         disabled?: boolean;
         matomoEndpoint?: string;
@@ -384,10 +383,12 @@ export interface IConfig {
         maxFileSize?: number;
     };
     filmstrip?: {
+        alwaysShowResizeBar?: boolean;
         disableResizable?: boolean;
         disableStageFilmstrip?: boolean;
         disableTopPanel?: boolean;
         disabled?: boolean;
+        initialWidth?: number;
         minParticipantCountForTopPanel?: number;
     };
     flags?: {
@@ -552,7 +553,7 @@ export interface IConfig {
         disableDemote?: boolean;
         disableGrantModerator?: boolean;
         disableKick?: boolean;
-        disablePrivateChat?: boolean;
+        disablePrivateChat?: 'all' | 'allow-moderator-chat' | 'disable-visitor-chat';
         disabled?: boolean;
     };
     replaceParticipant?: string;
@@ -594,6 +595,7 @@ export interface IConfig {
         failICE?: boolean;
         noAutoPlayVideo?: boolean;
         p2pTestMode?: boolean;
+        showSpotConsentDialog?: boolean;
         skipInterimTranscriptions?: boolean;
         testMode?: boolean;
     };

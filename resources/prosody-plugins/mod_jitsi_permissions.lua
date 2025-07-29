@@ -16,7 +16,7 @@ local muc_domain_prefix = module:get_option_string('muc_mapper_domain_prefix', '
 
 local muc_domain_base = module:get_option_string('muc_mapper_domain_base');
 if not muc_domain_base then
-    module:log('warn', 'No "muc_domain_base" option set, disabling kick check endpoint.');
+    module:log('warn', 'No "muc_domain_base" option set, disabling module.');
     return ;
 end
 
@@ -78,6 +78,8 @@ function process_set_affiliation(event)
         end
         occupant_session.granted_jitsi_meet_context_group_id = actor_session.jitsi_meet_context_group
             or actor_session.granted_jitsi_meet_context_group_id;
+        -- even if token and features are set we may want to re-send permissions
+        occupant_session.force_permissions_update = true;
     elseif previous_affiliation == 'owner' and ( affiliation == 'member' or affiliation == 'none' ) then
         occupant_session.granted_jitsi_meet_context_user_id = nil;
         occupant_session.granted_jitsi_meet_context_group_id = nil;
