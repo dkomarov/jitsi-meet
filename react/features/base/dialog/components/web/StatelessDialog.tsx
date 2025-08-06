@@ -166,7 +166,8 @@ class StatelessDialog extends Component<IProps> {
                     // @ts-ignore
                     Header: customHeader
                         ? customHeader
-                        : (props) => (
+                        : // @ts-ignore
+                          (props) => (
                               // @ts-ignore
                               <ModalHeader
                                   {...props}

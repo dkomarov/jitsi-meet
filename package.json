@@ -18,6 +18,8 @@
   "dependencies": {
     "@amplitude/analytics-browser": "2.17.12",
     "@amplitude/analytics-react-native": "1.4.13",
+    "@atlaskit/icon": "^27.9.2",
+    "@atlaskit/modal-dialog": "^14.3.4",
     "@braintree/sanitize-url": "7.0.0",
     "@emotion/react": "11.10.6",
     "@emotion/styled": "11.10.6",
