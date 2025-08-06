@@ -162,6 +162,7 @@ class StatelessDialog extends Component<IProps> {
             // @ts-ignore
             <Modal
                 autoFocus={true}
+                // @ts-ignore
                 components={{
                     // @ts-ignore
                     Header: customHeader
@@ -210,6 +211,7 @@ class StatelessDialog extends Component<IProps> {
         }
 
         return (
+            // @ts-ignore
             <ModalFooter className={this.props.classes.footer} showKeyline={propsFromModalFooter.showKeyline}>
                 {/**
                  * Atlaskit has this empty span (JustifySim) so...
