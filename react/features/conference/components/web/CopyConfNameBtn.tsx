@@ -20,7 +20,7 @@ const CopyConfNameBtn = () => {
             if (video) {
                 console.log('Video element is:', video);
 
-                video.requestPictureInPicture();
+                // video.requestPictureInPicture();
             } else {
                 console.log('Video element is missing or null!');
             }
