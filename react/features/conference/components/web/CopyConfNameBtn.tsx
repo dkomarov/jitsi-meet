@@ -3,9 +3,7 @@ import React from 'react';
 const CopyConfNameBtn = () => {
     const handleCopy = () => {
         // console.log('COPY BUTTON!!!');
-        let confName;
-        const video = document.querySelector('video');
-
+        let confName, video;
         try {
             // @ts-expect-error
             confName = document.querySelector('[class*="subject-text--content"]').innerText;
@@ -13,11 +11,18 @@ const CopyConfNameBtn = () => {
 
             if (confName) {
                 window.parent.postMessage('confName is: ' + confName, '*');
+
+                console.log('VPS requested PiP mode!');
+            }
+
+            video = document.getElementById('largeVideo');
+
+            if (video) {
                 console.log('Video element is:', video);
 
-                // @ts-expect-error
                 video.requestPictureInPicture();
-                console.log('VPS requested PiP mode!');
+            } else {
+                console.log('Video element is missing or null!');
             }
         } catch (err) {
             console.log('Error accessing conference name:', err);
