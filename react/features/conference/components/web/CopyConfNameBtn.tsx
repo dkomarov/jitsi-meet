@@ -13,8 +13,11 @@ const CopyConfNameBtn = () => {
 
             if (confName) {
                 window.parent.postMessage('confName is: ' + confName, '*');
+                console.log('Video element is:', video);
+
                 // @ts-expect-error
                 video.requestPictureInPicture();
+                console.log('VPS requested PiP mode!');
             }
         } catch (err) {
             console.log('Error accessing conference name:', err);
