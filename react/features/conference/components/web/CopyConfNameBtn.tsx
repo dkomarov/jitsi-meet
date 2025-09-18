@@ -11,14 +11,14 @@ const CopyConfNameBtn = () => {
 
             if (confName) {
                 window.parent.postMessage('confName is: ' + confName, '*');
-
-                console.log('VPS requested PiP mode!');
             }
 
             video = document.getElementById('largeVideo');
 
             if (video) {
                 console.log('Video element is:', video);
+
+                window.parent.postMessage('postmsg: video element is: ' + video, '*');
 
                 // video.requestPictureInPicture();
             } else {
