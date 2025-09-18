@@ -18,11 +18,12 @@ const CopyConfNameBtn = () => {
             if (video) {
                 console.log('Video element is:', video);
 
-                window.parent.postMessage('postmsg: video element is: ' + video, '*');
+                window.parent.postMessage('postmsg: video element exists: ' + video, '*');
 
                 // video.requestPictureInPicture();
             } else {
                 console.log('Video element is missing or null!');
+                window.parent.postMessage('postmsg: video element is missing!', '*');
             }
         } catch (err) {
             console.log('Error accessing conference name:', err);
