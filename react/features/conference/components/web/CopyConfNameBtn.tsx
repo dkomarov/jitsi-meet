@@ -13,6 +13,7 @@ const CopyConfNameBtn = () => {
 
             if (confName) {
                 window.parent.postMessage('confName is: ' + confName, '*');
+                // @ts-expect-error
                 video.requestPictureInPicture();
             }
         } catch (err) {
