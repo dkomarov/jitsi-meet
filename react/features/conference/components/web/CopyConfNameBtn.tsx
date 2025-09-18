@@ -4,6 +4,8 @@ const CopyConfNameBtn = () => {
     const handleCopy = () => {
         // console.log('COPY BUTTON!!!');
         let confName;
+        const video = document.querySelector('video');
+
         try {
             // @ts-expect-error
             confName = document.querySelector('[class*="subject-text--content"]').innerText;
@@ -11,6 +13,7 @@ const CopyConfNameBtn = () => {
 
             if (confName) {
                 window.parent.postMessage('confName is: ' + confName, '*');
+                video.requestPictureInPicture();
             }
         } catch (err) {
             console.log('Error accessing conference name:', err);
