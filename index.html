@@ -278,7 +278,7 @@
         const video = document.querySelector('video');
 
         window.addEventListener('message', (event) => {
-            if (event.origin.indexOf('sidespeak') != -1) return;
+            // if (event.origin.indexOf('sidespeak') != -1) return;
             if (event.data && event.data.type === 'pip-result') {
                 video.requestPictureInPicture();
                 console.log('Picture-in-Picture request received! event.data is:', event.data);
