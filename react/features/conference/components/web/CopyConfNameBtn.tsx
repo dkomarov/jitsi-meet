@@ -3,7 +3,8 @@ import React from 'react';
 const CopyConfNameBtn = () => {
     const handleCopy = () => {
         // console.log('COPY BUTTON!!!');
-        let confName, video;
+        let confName;
+        //, video;
         try {
             // @ts-expect-error
             confName = document.querySelector('[class*="subject-text--content"]').innerText;
@@ -13,18 +14,18 @@ const CopyConfNameBtn = () => {
                 window.parent.postMessage('confName is: ' + confName, '*');
             }
 
-            video = document.getElementById('largeVideo');
+            // video = document.getElementById('largeVideo');
 
-            if (video) {
-                console.log('Video element is:', video);
+            // if (video) {
+            //     console.log('Video element is:', video);
 
-                window.parent.postMessage('postmsg: video element exists: ' + video, '*');
+            //     window.parent.postMessage('postmsg: video element exists: ' + video, '*');
 
-                // video.requestPictureInPicture();
-            } else {
-                console.log('Video element is missing or null!');
-                window.parent.postMessage('postmsg: video element is missing!', '*');
-            }
+            // video.requestPictureInPicture();
+            // } else {
+            //     console.log('Video element is missing or null!');
+            //     window.parent.postMessage('postmsg: video element is missing!', '*');
+            // }
         } catch (err) {
             console.log('Error accessing conference name:', err);
         }
