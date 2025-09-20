@@ -283,7 +283,9 @@
             video = document.querySelector('video');
             // if (event.origin.indexOf('sidespeak') != -1) return;
             if (typeof event.data === 'string' && event.data.includes('pip-request')) {
-                if (video) video.requestPictureInPicture();
+                if (video) 
+                    if (document.pictureInPictureElement === null) video.requestPictureInPicture();
+                    else document.exitPictureInPicture();
                 else console.log('Video element not recognized! Please make sure your camera video is turned on before trying PiP.');
                 
 
