@@ -286,11 +286,15 @@
                 if (video) 
                     if (document.pictureInPictureElement === null) 
                         video.requestPictureInPicture()
-                        .then(() => console.log('PiP request successful!')
+                        .then(() => console.log('PiP open request successful!')
                         )
                         .catch((err) => console.log('Error during requestPictureInPicture():', err)
                         )
-                    else document.exitPictureInPicture();
+                    else document.exitPictureInPicture()
+                        .then(() => console.log('PiP exit request successful!')
+                        )
+                        .catch((err) => console.log('Error during exitPictureInPicture():', err)
+                        )
                 else console.log('Video element not recognized! Please make sure your camera video is turned on before trying PiP.');
                 
 
