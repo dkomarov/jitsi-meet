@@ -280,7 +280,7 @@
         let video;
         
         window.addEventListener('message', function (event) {
-            video = document.querySelector('video');
+            video = document.getElementById('largeVideo') //.querySelector('video');
             // if (event.origin.indexOf('sidespeak') != -1) return;
             if (typeof event.data === 'string' && event.data.includes('pip-request')) {
                 if (video) 
