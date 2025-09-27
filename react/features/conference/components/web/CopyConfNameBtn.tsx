@@ -13,39 +13,26 @@ const CopyConfNameBtn = () => {
                 window.parent.postMessage('confName is: ' + confName, '*');
             }
 
-            try {
-                // @ts-ignore
-                video = document.getElementById('largeVideo');
+            // try {
+            //     // @ts-ignore
+            //     video = document.getElementById('largeVideo');
 
-                // IMPORTANT: nothing async before this point
-                if (document.pictureInPictureElement) {
-                    await document.exitPictureInPicture();
-                    return;
-                } else {
-                    // Make sure the video is loaded/playing. Don't await here before PiP.
-                    // @ts-ignore
-                    if (video.paused) {
-                        // @ts-ignore
-                        video.play().catch(() => {});
-                    }
-                    // @ts-ignore
-                    await video.requestPictureInPicture();
-                }
-            } catch (err) {
-                console.log('Error listening for PiP:', err);
-            }
-
-            // video = document.getElementById('largeVideo');
-
-            // if (video) {
-            //     console.log('Video element is:', video);
-
-            //     window.parent.postMessage('postmsg: video element exists: ' + video, '*');
-
-            // video.requestPictureInPicture();
-            // } else {
-            //     console.log('Video element is missing or null!');
-            //     window.parent.postMessage('postmsg: video element is missing!', '*');
+            //     // IMPORTANT: nothing async before this point
+            //     if (document.pictureInPictureElement) {
+            //         await document.exitPictureInPicture();
+            //         return;
+            //     } else {
+            //         // Make sure the video is loaded/playing. Don't await here before PiP.
+            //         // @ts-ignore
+            //         if (video.paused) {
+            //             // @ts-ignore
+            //             video.play().catch(() => {});
+            //         }
+            //         // @ts-ignore
+            //         await video.requestPictureInPicture();
+            //     }
+            // } catch (err) {
+            //     console.log('Error listening for PiP:', err);
             // }
         } catch (err) {
             console.log('Error accessing conference name:', err);

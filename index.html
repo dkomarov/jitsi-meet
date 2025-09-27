@@ -276,8 +276,6 @@
         // });
     
 
-        // let video;
-//         const video = document.getElementById('largeVideo');
 
 //                 /* === 3) Detection helpers: mark pipReady when the first frame is available === */
 // function armVideoReadyDetectors(videoEl, stream) {
@@ -364,30 +362,33 @@
 
 //         let localStream = null;
 
-    //     window.addEventListener('message', async function (event) {
-    //         // if (event.origin.indexOf('sidespeak') != -1) return;
-    //         if (typeof event.data === 'string' && event.data.includes('pip-request')) {
-    //             console.log('Picture-in-Picture request received! event.data is:', event.data);
+        let video;
+        window.addEventListener('message', async function (event) {
+            // if (event.origin.indexOf('sidespeak') != -1) return;
+            if (typeof event.data === 'string' && event.data.includes('pip-request')) {
+                console.log('Picture-in-Picture request received! event.data is:', event.data);
 
-    //             try {
-    //                 let video;
-    //                 video = document.getElementById('largeVideo');
+                try {
+                 
+                    video = document.getElementById('largeVideo');
 
-    //                  // IMPORTANT: nothing async before this point
-    //                 if (document.pictureInPictureElement) {
-    //                     await document.exitPictureInPicture();
-    //                     return;
-    //                 } else {
-    //                     // Make sure the video is loaded/playing. Don't await here before PiP.
-    //                     if (video.paused) { video.play().catch(()=>{}); }
-    //                     await video.requestPictureInPicture();
-    //                 }
+                     // IMPORTANT: nothing async before this point
+                    if (document.pictureInPictureElement) {
+                        await document.exitPictureInPicture();
+                        return;
+                    } else {
+                        // Make sure the video is loaded/playing. Don't await here before PiP.
+                        if (video.paused) { video.play().catch(()=>{}); }
+                        await video.requestPictureInPicture();
+                    }
 
-    //             } catch (err) {
-    //                 console.log('Error listening for PiP:', err);
+                } catch (err) {
+                    console.log('Error listening for PiP:', err);
                     
-    //             }
-
+                }
+            }
+        
+    })
              
     // //                 try {
     // //                     // If camera not started, prompt/get it now (this is user gesture)
@@ -433,9 +434,7 @@
     //             // else console.log('Video element not recognized! Please make sure your camera video is turned on before trying PiP.');
                 
 
-    //         }
-        
-    //     })
+  
 
     </script>
     <script><!--#include virtual="/config.js" --></script><!-- adapt to your needs, i.e. set hosts and bosh path -->
