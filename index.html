@@ -279,23 +279,35 @@
 
         let video;
         
-        window.addEventListener('message', function (event) {
+        window.addEventListener('message', async function (event) {
             video = document.getElementById('largeVideo') //.querySelector('video');
             // if (event.origin.indexOf('sidespeak') != -1) return;
             if (typeof event.data === 'string' && event.data.includes('pip-request')) {
-                if (video) 
-                    if (document.pictureInPictureElement === null) 
-                        video.requestPictureInPicture()
-                        .then(() => console.log('PiP open request successful!')
-                        )
-                        .catch((err) => console.log('Error during requestPictureInPicture():', err)
-                        )
-                    else document.exitPictureInPicture()
-                        .then(() => console.log('PiP exit request successful!')
-                        )
-                        .catch((err) => console.log('Error during exitPictureInPicture():', err)
-                        )
-                else console.log('Video element not recognized! Please make sure your camera video is turned on before trying PiP.');
+                try {
+                // IMPORTANT: nothing async before this point
+                if (document.pictureInPictureElement) {
+                    await document.exitPictureInPicture();
+                } else {
+                    // Make sure the video is loaded/playing. Don't await here before PiP.
+                    if (video.paused) { video.play().catch(()=>{}); }
+                    await video.requestPictureInPicture();
+                }
+                } catch (err) {
+                console.error('PiP failed:', err);
+                }
+                // if (video) 
+                //     if (document.pictureInPictureElement === null) 
+                //         await video.requestPictureInPicture()
+                //         .then(() => console.log('PiP open request successful!')
+                //         )
+                //         .catch((err) => console.log('Error during requestPictureInPicture():', err)
+                //         )
+                //     else await document.exitPictureInPicture()
+                //         .then(() => console.log('PiP exit request successful!')
+                //         )
+                //         .catch((err) => console.log('Error during exitPictureInPicture():', err)
+                //         )
+                // else console.log('Video element not recognized! Please make sure your camera video is turned on before trying PiP.');
                 
 
                 console.log('Picture-in-Picture request received! event.data is:', event.data);
