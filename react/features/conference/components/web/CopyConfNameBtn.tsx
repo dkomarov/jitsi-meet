@@ -3,8 +3,7 @@ import React from 'react';
 const CopyConfNameBtn = () => {
     const handleCopy = async () => {
         // console.log('COPY BUTTON!!!');
-        let confName;
-        //, video;
+        let confName, video;
         try {
             // @ts-expect-error
             confName = document.querySelector('[class*="subject-text--content"]').innerText;
@@ -15,7 +14,7 @@ const CopyConfNameBtn = () => {
             }
 
             try {
-                let video;
+                // @ts-ignore
                 video = document.getElementById('largeVideo');
 
                 // IMPORTANT: nothing async before this point
@@ -24,9 +23,12 @@ const CopyConfNameBtn = () => {
                     return;
                 } else {
                     // Make sure the video is loaded/playing. Don't await here before PiP.
+                    // @ts-ignore
                     if (video.paused) {
+                        // @ts-ignore
                         video.play().catch(() => {});
                     }
+                    // @ts-ignore
                     await video.requestPictureInPicture();
                 }
             } catch (err) {
