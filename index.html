@@ -276,7 +276,7 @@
         // });
     
 
-        let video = document.getElementById('largeVideo') //.querySelector('video');
+        let video;
 
         function attachLocalStreamToVideo(stream, video) {
             video.srcObject = stream;
@@ -323,6 +323,7 @@
             // if (event.origin.indexOf('sidespeak') != -1) return;
             if (typeof event.data === 'string' && event.data.includes('pip-request')) {
                 try {
+                    video = document.getElementById('largeVideo')
                     try {
                         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
                         attachLocalStreamToVideo(localStream, video);
@@ -337,16 +338,16 @@
                         }
 
                         if (document.pictureInPictureElement) {
-                        await document.exitPictureInPicture();
+                            await document.exitPictureInPicture();
                         } else {
-                        // Only call if we believe the video has a frame:
-                        if (video.videoWidth > 0) {
-                            await video.requestPictureInPicture();
-                        } else {
-                            // Fallback UX: prompt user to click again after preview appears
-                            console.warn('PiP not ready yet (no frame).');
-                        }
-                    }
+                            // Only call if we believe the video has a frame:
+                            if (video.videoWidth > 0) {
+                                await video.requestPictureInPicture();
+                            } else {
+                                // Fallback UX: prompt user to click again after preview appears
+                                console.warn('PiP not ready yet (no frame).');
+                            }
+                     }
                 } catch (e) {
                     console.error('PiP error:', e);
                 }
