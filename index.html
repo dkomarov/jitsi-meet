@@ -276,127 +276,147 @@
         // });
     
 
-        const video = document.getElementById('largeVideo')
+        // let video;
+//         const video = document.getElementById('largeVideo');
 
-                /* === 3) Detection helpers: mark pipReady when the first frame is available === */
-function armVideoReadyDetectors(videoEl, stream) {
-  function markReadyIfFrame() {
-    // Only mark ready if we have a real rendered frame size
-    if (videoEl.videoWidth && videoEl.videoHeight) {
-      pipReady = true;
-      console.log('PiP ready: video has dimensions', videoEl.videoWidth, videoEl.videoHeight);
-    }
-  }
+//                 /* === 3) Detection helpers: mark pipReady when the first frame is available === */
+// function armVideoReadyDetectors(videoEl, stream) {
+//   function markReadyIfFrame() {
+//     // Only mark ready if we have a real rendered frame size
+//     if (videoEl.videoWidth && videoEl.videoHeight) {
+//       pipReady = true;
+//       console.log('PiP ready: video has dimensions', videoEl.videoWidth, videoEl.videoHeight);
+//     }
+//   }
 
-  // loadeddata fires when the first frame is available in many cases
-  videoEl.addEventListener('loadeddata', markReadyIfFrame, { once: true });
+//   // loadeddata fires when the first frame is available in many cases
+//   videoEl.addEventListener('loadeddata', markReadyIfFrame, { once: true });
 
-  // resize fires when intrinsic size or decoded frames change (good for WebRTC)
-  videoEl.addEventListener('resize', markReadyIfFrame, { once: true });
+//   // resize fires when intrinsic size or decoded frames change (good for WebRTC)
+//   videoEl.addEventListener('resize', markReadyIfFrame, { once: true });
 
-  // playing is fired when playback actually started
-  videoEl.addEventListener('playing', markReadyIfFrame, { once: true });
+//   // playing is fired when playback actually started
+//   videoEl.addEventListener('playing', markReadyIfFrame, { once: true });
 
-  // For modern browsers, requestVideoFrameCallback is the most reliable way to detect first decoded frame
-  if ('requestVideoFrameCallback' in HTMLVideoElement.prototype) {
-    try {
-      videoEl.requestVideoFrameCallback(() => { markReadyIfFrame(); });
-    } catch (e) { /* ignore */ }
-  }
+//   // For modern browsers, requestVideoFrameCallback is the most reliable way to detect first decoded frame
+//   if ('requestVideoFrameCallback' in HTMLVideoElement.prototype) {
+//     try {
+//       videoEl.requestVideoFrameCallback(() => { markReadyIfFrame(); });
+//     } catch (e) { /* ignore */ }
+//   }
 
-  // Tracks: if track unmute happens later, that's a good signal too
-  if (stream && stream.getVideoTracks) {
-    stream.getVideoTracks().forEach(track => {
-      const onUnmute = () => { markReadyIfFrame(); track.removeEventListener('unmute', onUnmute); };
-      track.addEventListener('unmute', onUnmute);
-    });
-  }
+//   // Tracks: if track unmute happens later, that's a good signal too
+//   if (stream && stream.getVideoTracks) {
+//     stream.getVideoTracks().forEach(track => {
+//       const onUnmute = () => { markReadyIfFrame(); track.removeEventListener('unmute', onUnmute); };
+//       track.addEventListener('unmute', onUnmute);
+//     });
+//   }
 
-  // Fallback: poll a few times for videoWidth (very defensive)
-  let tries = 0;
-  const poll = () => {
-    if (!pipReady && tries < 15) {
-      tries++;
-      markReadyIfFrame();
-      if (!pipReady) setTimeout(poll, 200);
-    }
-  };
-  poll();
-}
-
-
-
-    /* === 2) Attach stream and "pre-warm" the video === */
-function attachLocalStream(stream, videoEl) {
-  videoEl.srcObject = stream;
-
-  // Helpful properties for autoplay & PiP:
-  videoEl.playsInline = true;
-  videoEl.muted = true;        // mute so autoplay doesn't get blocked
-  videoEl.autoplay = true;
-  videoEl.controls = false;
-
-  // Try to start playback immediately to get the first frame decoding.
-  // We don't await here because awaiting before PiP can lose user activation
-  videoEl.play().catch(() => {
-    // play() can fail if no user gesture yet; detection below will still catch first-frame later
-  });
-
-  // Setup detectors to mark the video as "ready" for PiP as soon as we have a real frame.
-  armVideoReadyDetectors(videoEl, stream);
-}
+//   // Fallback: poll a few times for videoWidth (very defensive)
+//   let tries = 0;
+//   const poll = () => {
+//     if (!pipReady && tries < 15) {
+//       tries++;
+//       markReadyIfFrame();
+//       if (!pipReady) setTimeout(poll, 200);
+//     }
+//   };
+//   poll();
+// }
 
 
-        let pipReady = false;
+
+//     /* === 2) Attach stream and "pre-warm" the video === */
+// function attachLocalStream(stream, videoEl) {
+//   videoEl.srcObject = stream;
+
+//   // Helpful properties for autoplay & PiP:
+//   videoEl.playsInline = true;
+//   videoEl.muted = true;        // mute so autoplay doesn't get blocked
+//   videoEl.autoplay = true;
+//   videoEl.controls = false;
+
+//   // Try to start playback immediately to get the first frame decoding.
+//   // We don't await here because awaiting before PiP can lose user activation
+//   videoEl.play().catch(() => {
+//     // play() can fail if no user gesture yet; detection below will still catch first-frame later
+//   });
+
+//   // Setup detectors to mark the video as "ready" for PiP as soon as we have a real frame.
+//   armVideoReadyDetectors(videoEl, stream);
+// }
 
 
-        /* === 1) Start camera and attach stream to video === */
-        async function startCamera() {
-            try {
-                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                attachLocalStream(localStream, video);
-            } catch (err) {
-                console.error('getUserMedia failed:', err);
-                alert('Camera access failed: ' + (err && err.message));
-            }
-        }
+//         let pipReady = false;
 
-        let localStream = null;
+
+//         /* === 1) Start camera and attach stream to video === */
+//         async function startCamera() {
+//             try {
+//                 localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+//                 attachLocalStream(localStream, video);
+//             } catch (err) {
+//                 console.error('getUserMedia failed:', err);
+//                 alert('Camera access failed: ' + (err && err.message));
+//             }
+//         }
+
+//         let localStream = null;
 
         window.addEventListener('message', async function (event) {
             // if (event.origin.indexOf('sidespeak') != -1) return;
             if (typeof event.data === 'string' && event.data.includes('pip-request')) {
-             
+                console.log('Picture-in-Picture request received! event.data is:', event.data);
+
+                try {
+                    let video;
+                    video = document.getElementById('largeVideo');
+
+                     // IMPORTANT: nothing async before this point
+                    if (document.pictureInPictureElement) {
+                        await document.exitPictureInPicture();
+                        return;
+                    } else {
+                        // Make sure the video is loaded/playing. Don't await here before PiP.
+                        if (video.paused) { video.play().catch(()=>{}); }
+                        await video.requestPictureInPicture();
+                    }
+
+                } catch (err) {
+                    console.log('Error listening for PiP:', err);
+                    
+                }
 
              
-                    try {
-                        // If camera not started, prompt/get it now (this is user gesture)
-                        if (!localStream) {
-                            await startCamera(); // user gesture active -> getUserMedia should show permission prompt
-                            // don't await anything else that would remove gesture before PiP call below
-                        }
+    //                 try {
+    //                     // If camera not started, prompt/get it now (this is user gesture)
+    //                     if (!localStream) {
+    //                         await startCamera(); // user gesture active -> getUserMedia should show permission prompt
+    //                         // don't await anything else that would remove gesture before PiP call below
+    //                     }
 
               
 
-                    if (!pipReady) {
-                        // Optional: nudge playback once more; still no awaits before PiP.
-                        if (video.paused) video.play().catch(()=>{});
-                        }
+    //                 if (!pipReady) {
+    //                     // Optional: nudge playback once more; still no awaits before PiP.
+    //                     if (video.paused) video.play().catch(()=>{});
+    //                     }
 
-                          // If already in PiP, exit:
-                            if (document.pictureInPictureElement) {
-                            await document.exitPictureInPicture();
-                            return;
-                            }
+    //                       // If already in PiP, exit:
+    //                         if (document.pictureInPictureElement) {
+    //                         await document.exitPictureInPicture();
+    //                         return;
+    //                         }
 
-                       // Now attempt PiP. Browsers require this call to be done while handling a user gesture.
-    // requestPictureInPicture() returns a Promise — awaiting it is fine here because we already
-    // are inside the click handler (the gesture).
-    await video.requestPictureInPicture();
-    console.log('PiP entered successfully');
-                } catch (err) {
-                    console.error('PiP failed:', err);
-                }
+    //                    // Now attempt PiP. Browsers require this call to be done while handling a user gesture.
+    // // requestPictureInPicture() returns a Promise — awaiting it is fine here because we already
+    // // are inside the click handler (the gesture).
+    // await video.requestPictureInPicture();
+    // console.log('PiP entered successfully');
+    //             } catch (err) {
+    //                 console.error('PiP failed:', err);
+    //             }
 
                 // if (video) 
                 //     if (document.pictureInPictureElement === null) 
@@ -413,7 +433,6 @@ function attachLocalStream(stream, videoEl) {
                 // else console.log('Video element not recognized! Please make sure your camera video is turned on before trying PiP.');
                 
 
-                console.log('Picture-in-Picture request received! event.data is:', event.data);
             }
         
         })
