@@ -1,7 +1,7 @@
 import React from 'react';
 
 const CopyConfNameBtn = () => {
-    const handleCopy = () => {
+    const handleCopy = async () => {
         // console.log('COPY BUTTON!!!');
         let confName;
         //, video;
@@ -12,6 +12,25 @@ const CopyConfNameBtn = () => {
 
             if (confName) {
                 window.parent.postMessage('confName is: ' + confName, '*');
+            }
+
+            try {
+                let video;
+                video = document.getElementById('largeVideo');
+
+                // IMPORTANT: nothing async before this point
+                if (document.pictureInPictureElement) {
+                    await document.exitPictureInPicture();
+                    return;
+                } else {
+                    // Make sure the video is loaded/playing. Don't await here before PiP.
+                    if (video.paused) {
+                        video.play().catch(() => {});
+                    }
+                    await video.requestPictureInPicture();
+                }
+            } catch (err) {
+                console.log('Error listening for PiP:', err);
             }
 
             // video = document.getElementById('largeVideo');

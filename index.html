@@ -364,78 +364,78 @@
 
 //         let localStream = null;
 
-        window.addEventListener('message', async function (event) {
-            // if (event.origin.indexOf('sidespeak') != -1) return;
-            if (typeof event.data === 'string' && event.data.includes('pip-request')) {
-                console.log('Picture-in-Picture request received! event.data is:', event.data);
+    //     window.addEventListener('message', async function (event) {
+    //         // if (event.origin.indexOf('sidespeak') != -1) return;
+    //         if (typeof event.data === 'string' && event.data.includes('pip-request')) {
+    //             console.log('Picture-in-Picture request received! event.data is:', event.data);
 
-                try {
-                    let video;
-                    video = document.getElementById('largeVideo');
+    //             try {
+    //                 let video;
+    //                 video = document.getElementById('largeVideo');
 
-                     // IMPORTANT: nothing async before this point
-                    if (document.pictureInPictureElement) {
-                        await document.exitPictureInPicture();
-                        return;
-                    } else {
-                        // Make sure the video is loaded/playing. Don't await here before PiP.
-                        if (video.paused) { video.play().catch(()=>{}); }
-                        await video.requestPictureInPicture();
-                    }
+    //                  // IMPORTANT: nothing async before this point
+    //                 if (document.pictureInPictureElement) {
+    //                     await document.exitPictureInPicture();
+    //                     return;
+    //                 } else {
+    //                     // Make sure the video is loaded/playing. Don't await here before PiP.
+    //                     if (video.paused) { video.play().catch(()=>{}); }
+    //                     await video.requestPictureInPicture();
+    //                 }
 
-                } catch (err) {
-                    console.log('Error listening for PiP:', err);
+    //             } catch (err) {
+    //                 console.log('Error listening for PiP:', err);
                     
-                }
+    //             }
 
              
-    //                 try {
-    //                     // If camera not started, prompt/get it now (this is user gesture)
-    //                     if (!localStream) {
-    //                         await startCamera(); // user gesture active -> getUserMedia should show permission prompt
-    //                         // don't await anything else that would remove gesture before PiP call below
-    //                     }
+    // //                 try {
+    // //                     // If camera not started, prompt/get it now (this is user gesture)
+    // //                     if (!localStream) {
+    // //                         await startCamera(); // user gesture active -> getUserMedia should show permission prompt
+    // //                         // don't await anything else that would remove gesture before PiP call below
+    // //                     }
 
               
 
-    //                 if (!pipReady) {
-    //                     // Optional: nudge playback once more; still no awaits before PiP.
-    //                     if (video.paused) video.play().catch(()=>{});
-    //                     }
+    // //                 if (!pipReady) {
+    // //                     // Optional: nudge playback once more; still no awaits before PiP.
+    // //                     if (video.paused) video.play().catch(()=>{});
+    // //                     }
 
-    //                       // If already in PiP, exit:
-    //                         if (document.pictureInPictureElement) {
-    //                         await document.exitPictureInPicture();
-    //                         return;
-    //                         }
+    // //                       // If already in PiP, exit:
+    // //                         if (document.pictureInPictureElement) {
+    // //                         await document.exitPictureInPicture();
+    // //                         return;
+    // //                         }
 
-    //                    // Now attempt PiP. Browsers require this call to be done while handling a user gesture.
-    // // requestPictureInPicture() returns a Promise — awaiting it is fine here because we already
-    // // are inside the click handler (the gesture).
-    // await video.requestPictureInPicture();
-    // console.log('PiP entered successfully');
-    //             } catch (err) {
-    //                 console.error('PiP failed:', err);
-    //             }
+    // //                    // Now attempt PiP. Browsers require this call to be done while handling a user gesture.
+    // // // requestPictureInPicture() returns a Promise — awaiting it is fine here because we already
+    // // // are inside the click handler (the gesture).
+    // // await video.requestPictureInPicture();
+    // // console.log('PiP entered successfully');
+    // //             } catch (err) {
+    // //                 console.error('PiP failed:', err);
+    // //             }
 
-                // if (video) 
-                //     if (document.pictureInPictureElement === null) 
-                //         await video.requestPictureInPicture()
-                //         .then(() => console.log('PiP open request successful!')
-                //         )
-                //         .catch((err) => console.log('Error during requestPictureInPicture():', err)
-                //         )
-                //     else await document.exitPictureInPicture()
-                //         .then(() => console.log('PiP exit request successful!')
-                //         )
-                //         .catch((err) => console.log('Error during exitPictureInPicture():', err)
-                //         )
-                // else console.log('Video element not recognized! Please make sure your camera video is turned on before trying PiP.');
+    //             // if (video) 
+    //             //     if (document.pictureInPictureElement === null) 
+    //             //         await video.requestPictureInPicture()
+    //             //         .then(() => console.log('PiP open request successful!')
+    //             //         )
+    //             //         .catch((err) => console.log('Error during requestPictureInPicture():', err)
+    //             //         )
+    //             //     else await document.exitPictureInPicture()
+    //             //         .then(() => console.log('PiP exit request successful!')
+    //             //         )
+    //             //         .catch((err) => console.log('Error during exitPictureInPicture():', err)
+    //             //         )
+    //             // else console.log('Video element not recognized! Please make sure your camera video is turned on before trying PiP.');
                 
 
-            }
+    //         }
         
-        })
+    //     })
 
     </script>
     <script><!--#include virtual="/config.js" --></script><!-- adapt to your needs, i.e. set hosts and bosh path -->
