@@ -1,12 +1,12 @@
 #### room._data fields
 - allModerators - If is set to true, all authenticated participants are moderators. You need a custom module to set participants as moderators based on the field.
+- allowUnauthenticatedAccess - Option that works only with tenants. When it is false only jwt authenticated participants(visitors) are allowed in the meeting and their token(or sub claim for jaas) should match the one in the room. Default value when missing is true.
 - av_can_unmute - Default value is missing/true. If set to false, when the first moderator joining the room we enable AV moderation and disable the ability for participants to unmute themselves.
 - av_first_moderator_joined - When av_can_unmute is set to false, this flag is used to indicate that the first moderator has joined the room and AV moderation is enabled.
 - breakout_rooms - A table containing breakout rooms created in the main room. The keys are the JIDs of the breakout rooms, and the values are their subjects.
 - breakout_rooms_active - Whether there was a breakout room created in the main room.
 - breakout_rooms_counter - A counter for breakout rooms created in the main room.
 - flip_participant_nick - Used in mod_muc_flip, when flipping a participant we store the nick of the second device/participant. Same processing as kicked_participant_nick.
-- hideDisplayNameForAll - TODO: drop.
 - hideDisplayNameForGuests - When set to true, the display name of participants is hidden for guests.
 - jicofo_lock - A boolean value, when set to true the room is locked waiting for Jicofo to join. All attempts to join will be queued until Jicofo joins.
 - kicked_participant_nick - Used in mod_muc_flip, when flipping a participant we store the nick of the initial device/participant so we can kick it after the second on joins, everything happens in the same pass when the second join presence is processed, so concurrency and overwriting are not a concern.

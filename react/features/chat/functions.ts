@@ -132,6 +132,16 @@ export function getUnreadCount(state: IReduxState) {
 }
 
 /**
+ * Gets the unread files count.
+ *
+ * @param {IReduxState} state - The redux state.
+ * @returns {number} The number of unread files.
+ */
+export function getUnreadFilesCount(state: IReduxState): number {
+    return state['features/chat']?.unreadFilesCount || 0;
+}
+
+/**
  * Get whether the chat smileys are disabled or not.
  *
  * @param {IReduxState} state - The redux state.
@@ -264,4 +274,22 @@ export function isVisitorChatParticipant(
         participant?: IParticipant | IVisitorChatParticipant
 ): participant is IVisitorChatParticipant {
     return Boolean(participant && 'isVisitor' in participant && participant.isVisitor === true);
+}
+
+/**
+ * Returns a suffix to be appended to the display name based on the message origin.
+ *
+ * @param {IMessage} message - The message.
+ * @returns {string} The suffix, if any.
+ */
+export function getDisplayNameSuffix(message: IMessage): string {
+    let suffix = '';
+
+    if (message.isFromVisitor) {
+        suffix = ` ${i18next.t('visitors.chatIndicator')}`;
+    } else if (message.isFromGuest) {
+        suffix = ` ${i18next.t('chat.guestsChatIndicator')}`;
+    }
+
+    return suffix;
 }

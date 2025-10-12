@@ -94,7 +94,7 @@ class WaitForOwnerDialog extends PureComponent<IProps> {
                 titleKey={t('dialog.WaitingForHostTitle')}
             >
                 <span>
-                    {this.props._hideLoginButton ? t('dialog.WaitForHostNoAuthMsg') : t('dialog.WaitForHostMsg')}
+                    {this.props._hideLoginButton ? t('dialog.WaitForHostNoAuthMsg') : t('lobby.waitForModerator')}
                 </span>
             </Dialog>
         );

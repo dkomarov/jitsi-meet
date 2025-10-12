@@ -26,7 +26,6 @@ import {
     IconVideoOff
 } from '../../../base/icons/svg';
 import { getRaiseHandsQueue } from '../../../base/participants/functions';
-import { withPixelLineHeight } from '../../../base/styles/functions.web';
 import ContextMenu from '../../../base/ui/components/web/ContextMenu';
 import ContextMenuItemGroup from '../../../base/ui/components/web/ContextMenuItemGroup';
 import { isInBreakoutRoom } from '../../../breakout-rooms/functions';
@@ -45,11 +44,18 @@ const useStyles = makeStyles()(theme => {
             right: 0,
             top: '-8px',
             transform: 'translateY(-100%)',
-            width: '283px'
+            width: '283px',
+
+            // Allow text in menu items to wrap to multiple lines.
+            '& [role="button"] > div > span, & [role="menuitem"] > div > span': {
+                whiteSpace: 'normal',
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word'
+            }
         },
 
         text: {
-            ...withPixelLineHeight(theme.typography.bodyShortRegular),
+            ...theme.typography.bodyShortRegular,
             color: theme.palette.text02,
             padding: '10px 16px',
             height: '40px',

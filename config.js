@@ -363,6 +363,7 @@ var config = {
     // Desktop sharing
 
     // Optional desktop sharing frame rate options. Default value: min:5, max:5.
+    // Setting higher min/max values will affect the resolution, it makes it worse.
     // desktopSharingFrameRate: {
     //     min: 5,
     //     max: 5,
@@ -722,6 +723,8 @@ var config = {
     //     autoKnock: false,
     //     // Enables the lobby chat. Replaces `enableLobbyChat`.
     //     enableChat: true,
+    //     // Shows the hangup button in the lobby screen.
+    //     showHangUp: true,
     // },
 
     // Configs for the security related UI elements.
@@ -791,7 +794,6 @@ var config = {
     // Configs for prejoin page.
     // prejoinConfig: {
     //     // When 'true', it shows an intermediate page before joining, where the user can configure their devices.
-    //     // This replaces `prejoinPageEnabled`. Defaults to true.
     //     enabled: true,
     //     // Hides the participant name editing field in the prejoin screen.
     //     // If requireDisplayName is also set as true, a name should still be provided through

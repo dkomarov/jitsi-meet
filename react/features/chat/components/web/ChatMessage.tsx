@@ -8,9 +8,8 @@ import { translate } from '../../../base/i18n/functions';
 import { getParticipantById, getParticipantDisplayName, isPrivateChatEnabled } from '../../../base/participants/functions';
 import Popover from '../../../base/popover/components/Popover.web';
 import Message from '../../../base/react/components/web/Message';
-import { withPixelLineHeight } from '../../../base/styles/functions.web';
 import { MESSAGE_TYPE_LOCAL } from '../../constants';
-import { getFormattedTimestamp, getMessageText, getPrivateNoticeMessage } from '../../functions';
+import { getDisplayNameSuffix, getFormattedTimestamp, getMessageText, getPrivateNoticeMessage } from '../../functions';
 import { IChatMessageProps } from '../../types';
 
 import MessageMenu from './MessageMenu';
@@ -130,7 +129,7 @@ const useStyles = makeStyles()((theme: Theme) => {
             minHeight: '32px'
         },
         displayName: {
-            ...withPixelLineHeight(theme.typography.labelBold),
+            ...theme.typography.labelBold,
             color: theme.palette.text02,
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
@@ -139,18 +138,18 @@ const useStyles = makeStyles()((theme: Theme) => {
             maxWidth: '130px'
         },
         userMessage: {
-            ...withPixelLineHeight(theme.typography.bodyShortRegular),
+            ...theme.typography.bodyShortRegular,
             color: theme.palette.text01,
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word'
         },
         privateMessageNotice: {
-            ...withPixelLineHeight(theme.typography.labelRegular),
+            ...theme.typography.labelRegular,
             color: theme.palette.text02,
             marginTop: theme.spacing(1)
         },
         timestamp: {
-            ...withPixelLineHeight(theme.typography.labelRegular),
+            ...theme.typography.labelRegular,
             color: theme.palette.text03,
             marginTop: theme.spacing(1),
             marginLeft: theme.spacing(1),
@@ -227,13 +226,13 @@ const ChatMessage = ({
      * @returns {React$Element<*>}
      */
     function _renderDisplayName() {
-        const { displayName, isFromVisitor = false } = message;
+        const { displayName } = message;
 
         return (
             <div
                 aria-hidden = { true }
                 className = { cx('display-name', classes.displayName) }>
-                {`${displayName}${isFromVisitor ? ` ${t('visitors.chatIndicator')}` : ''}`}
+                {`${displayName}${getDisplayNameSuffix(message)}`}
             </div>
         );
     }
@@ -388,7 +387,8 @@ const ChatMessage = ({
                 </div>
                 {shouldDisplayMenuOnRight && (
                     <div className = { classes.sideBySideContainer }>
-                        {!message.privateMessage && !message.lobbyChat && <div>
+                        {!message.privateMessage && !message.lobbyChat
+                        && !message.isReaction && <div>
                             <div className = { classes.optionsButtonContainer }>
                                 {isHovered && <ReactButton
                                     messageId = { message.messageId }

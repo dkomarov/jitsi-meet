@@ -1,20 +1,29 @@
 import { throttle } from 'lodash-es';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
 
 import { IReduxState } from '../../../app/types';
 import { translate } from '../../../base/i18n/functions';
 import { IconInfo, IconMessage, IconShareDoc, IconSubtitles } from '../../../base/icons/svg';
-import { getLocalParticipant } from '../../../base/participants/functions';
+import { getLocalParticipant, getRemoteParticipants } from '../../../base/participants/functions';
+import Select from '../../../base/ui/components/web/Select';
 import Tabs from '../../../base/ui/components/web/Tabs';
 import { arePollsDisabled } from '../../../conference/functions.any';
 import FileSharing from '../../../file-sharing/components/web/FileSharing';
 import { isFileSharingEnabled } from '../../../file-sharing/functions.any';
 import PollsPane from '../../../polls/components/web/PollsPane';
 import { isCCTabEnabled } from '../../../subtitles/functions.any';
-import { sendMessage, setChatIsResizing, setFocusedTab, setUserChatWidth, toggleChat } from '../../actions.web';
-import { CHAT_SIZE, ChatTabs, SMALL_WIDTH_THRESHOLD } from '../../constants';
+import {
+    sendMessage,
+    setChatIsResizing,
+    setFocusedTab,
+    setPrivateMessageRecipient,
+    setPrivateMessageRecipientById,
+    setUserChatWidth,
+    toggleChat
+} from '../../actions.web';
+import { CHAT_SIZE, ChatTabs, OPTION_GROUPCHAT, SMALL_WIDTH_THRESHOLD } from '../../constants';
 import { getChatMaxSize } from '../../functions';
 import { IChatProps as AbstractProps } from '../../types';
 
@@ -65,40 +74,19 @@ interface IProps extends AbstractProps {
     _isResizing: boolean;
 
     /**
-     * Number of unread poll messages.
-     */
-    _nbUnreadPolls: number;
-
-    /**
-     * Function to send a text message.
-     *
-     * @protected
-     */
-    _onSendMessage: Function;
-
-    /**
-     * Function to toggle the chat window.
-     */
-    _onToggleChat: Function;
-
-    /**
-     * Function to display the chat tab.
-     *
-     * @protected
-     */
-    _onToggleChatTab: Function;
-
-    /**
-     * Function to display the polls tab.
-     *
-     * @protected
-     */
-    _onTogglePollsTab: Function;
-
-    /**
      * Whether or not to block chat access with a nickname input form.
      */
     _showNamePrompt: boolean;
+
+    /**
+     * Number of unread file sharing messages.
+     */
+    _unreadFilesCount: number;
+
+    /**
+     * Number of unread poll messages.
+     */
+    _unreadPollsCount: number;
 
     /**
      * The current width of the chat panel.
@@ -216,6 +204,10 @@ const useStyles = makeStyles<{ _isResizing: boolean; width: number; }>()((theme,
             height: '100px',
             width: '3px',
             borderRadius: '1px'
+        },
+
+        privateMessageRecipientsList: {
+            padding: '0 16px 5px'
         }
     };
 });
@@ -229,12 +221,9 @@ const Chat = ({
     _focusedTab,
     _isResizing,
     _messages,
-    _nbUnreadMessages,
-    _nbUnreadPolls,
-    _onSendMessage,
-    _onToggleChat,
-    _onToggleChatTab,
-    _onTogglePollsTab,
+    _unreadMessagesCount,
+    _unreadPollsCount,
+    _unreadFilesCount,
     _showNamePrompt,
     _width,
     dispatch,
@@ -245,6 +234,34 @@ const Chat = ({
     const [ mousePosition, setMousePosition ] = useState<number | null>(null);
     const [ dragChatWidth, setDragChatWidth ] = useState<number | null>(null);
     const maxChatWidth = useSelector(getChatMaxSize);
+    const notifyTimestamp = useSelector((state: IReduxState) =>
+        state['features/chat'].notifyPrivateRecipientsChangedTimestamp
+    );
+    const {
+        defaultRemoteDisplayName = 'Fellow Jitster'
+    } = useSelector((state: IReduxState) => state['features/base/config']);
+    const privateMessageRecipient = useSelector((state: IReduxState) => state['features/chat'].privateMessageRecipient);
+    const participants = useSelector(getRemoteParticipants);
+
+    const options = useMemo(() => {
+        const o = Array.from(participants?.values() || [])
+                .filter(p => !p.fakeParticipant)
+                .map(p => {
+                    return {
+                        value: p.id,
+                        label: p.name ?? defaultRemoteDisplayName
+                    };
+                });
+
+        o.sort((a, b) => a.label.localeCompare(b.label));
+
+        o.unshift({
+            label: t('chat.everyone'),
+            value: OPTION_GROUPCHAT
+        });
+
+        return o;
+    }, [ participants, defaultRemoteDisplayName, t, notifyTimestamp ]);
 
     /**
      * Handles mouse down on the drag handle.
@@ -376,6 +393,17 @@ const Chat = ({
         dispatch(setFocusedTab(id as ChatTabs));
     }, [ dispatch ]);
 
+
+    const onSelectedRecipientChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selected = e.target.value;
+
+        if (selected === OPTION_GROUPCHAT) {
+            dispatch(setPrivateMessageRecipient());
+        } else {
+            dispatch(setPrivateMessageRecipientById(selected));
+        }
+    }, []);
+
     /**
      * Returns a React Element for showing chat messages and a form to send new
      * chat messages.
@@ -403,6 +431,12 @@ const Chat = ({
                     <MessageContainer
                         messages = { _messages } />
                     <MessageRecipient />
+                    <Select
+                        containerClassName = { cx(classes.privateMessageRecipientsList) }
+                        id = 'select-chat-recipient'
+                        onChange = { onSelectedRecipientChange }
+                        options = { options }
+                        value = { privateMessageRecipient?.id || OPTION_GROUPCHAT } />
                     <ChatInput
                         onSend = { onSendMessage } />
                 </div>
@@ -451,20 +485,22 @@ const Chat = ({
             {
                 accessibilityLabel: t('chat.tabs.chat'),
                 countBadge:
-                    _focusedTab !== ChatTabs.CHAT && _nbUnreadMessages > 0 ? _nbUnreadMessages : undefined,
+                    _focusedTab !== ChatTabs.CHAT && _unreadMessagesCount > 0 ? _unreadMessagesCount : undefined,
                 id: ChatTabs.CHAT,
                 controlsId: `${ChatTabs.CHAT}-panel`,
-                icon: IconMessage
+                icon: IconMessage,
+                title: t('chat.tabs.chat')
             }
         ];
 
         if (_isPollsEnabled) {
             tabs.push({
                 accessibilityLabel: t('chat.tabs.polls'),
-                countBadge: _focusedTab !== ChatTabs.POLLS && _nbUnreadPolls > 0 ? _nbUnreadPolls : undefined,
+                countBadge: _focusedTab !== ChatTabs.POLLS && _unreadPollsCount > 0 ? _unreadPollsCount : undefined,
                 id: ChatTabs.POLLS,
                 controlsId: `${ChatTabs.POLLS}-panel`,
-                icon: IconInfo
+                icon: IconInfo,
+                title: t('chat.tabs.polls')
             });
         }
 
@@ -474,17 +510,19 @@ const Chat = ({
                 countBadge: undefined,
                 id: ChatTabs.CLOSED_CAPTIONS,
                 controlsId: `${ChatTabs.CLOSED_CAPTIONS}-panel`,
-                icon: IconSubtitles
+                icon: IconSubtitles,
+                title: t('chat.tabs.closedCaptions')
             });
         }
 
         if (_isFileSharingTabEnabled) {
             tabs.push({
                 accessibilityLabel: t('chat.tabs.fileSharing'),
-                countBadge: undefined,
+                countBadge: _focusedTab !== ChatTabs.FILE_SHARING && _unreadFilesCount > 0 ? _unreadFilesCount : undefined,
                 id: ChatTabs.FILE_SHARING,
                 controlsId: `${ChatTabs.FILE_SHARING}-panel`,
-                icon: IconShareDoc
+                icon: IconShareDoc,
+                title: t('chat.tabs.fileSharing')
             });
         }
 
@@ -552,16 +590,17 @@ const Chat = ({
  *     _isCCTabEnabled: boolean,
  *     _focusedTab: string,
  *     _messages: Array<Object>,
- *     _nbUnreadMessages: number,
- *     _nbUnreadPolls: number,
+ *     _unreadMessagesCount: number,
+ *     _unreadPollsCount: number,
+ *     _unreadFilesCount: number,
  *     _showNamePrompt: boolean,
  *     _width: number,
  *     _isResizing: boolean
  * }}
  */
 function _mapStateToProps(state: IReduxState, _ownProps: any) {
-    const { isOpen, focusedTab, messages, nbUnreadMessages, width, isResizing } = state['features/chat'];
-    const { nbUnreadPolls } = state['features/polls'];
+    const { isOpen, focusedTab, messages, unreadMessagesCount, unreadFilesCount, width, isResizing } = state['features/chat'];
+    const { unreadPollsCount } = state['features/polls'];
     const _localParticipant = getLocalParticipant(state);
 
     return {
@@ -572,8 +611,9 @@ function _mapStateToProps(state: IReduxState, _ownProps: any) {
         _isFileSharingTabEnabled: isFileSharingEnabled(state),
         _focusedTab: focusedTab,
         _messages: messages,
-        _nbUnreadMessages: nbUnreadMessages,
-        _nbUnreadPolls: nbUnreadPolls,
+        _unreadMessagesCount: unreadMessagesCount,
+        _unreadPollsCount: unreadPollsCount,
+        _unreadFilesCount: unreadFilesCount,
         _showNamePrompt: !_localParticipant?.name,
         _width: width?.current || CHAT_SIZE,
         _isResizing: isResizing

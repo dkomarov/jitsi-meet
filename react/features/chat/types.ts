@@ -5,6 +5,7 @@ import { IStore } from '../app/types';
 export interface IMessage {
     displayName: string;
     error?: Object;
+    isFromGuest?: boolean;
     isFromVisitor?: boolean;
     isReaction: boolean;
     lobbyChat: boolean;
@@ -32,7 +33,7 @@ export interface IChatProps extends WithTranslation {
     /**
      * Number of unread chat messages.
      */
-    _nbUnreadMessages: number;
+    _unreadMessagesCount: number;
 
     /**
      * The Redux dispatch function.

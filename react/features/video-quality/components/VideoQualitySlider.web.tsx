@@ -12,7 +12,6 @@ import { setAudioOnly } from '../../base/audio-only/actions';
 import { translate } from '../../base/i18n/functions';
 import { setLastN } from '../../base/lastn/actions';
 import { getLastNForQualityLevel } from '../../base/lastn/functions';
-import { withPixelLineHeight } from '../../base/styles/functions.web';
 import { setPreferredVideoQuality } from '../actions';
 import { DEFAULT_LAST_N, VIDEO_QUALITY_LEVELS } from '../constants';
 import logger from '../logger';
@@ -84,7 +83,7 @@ const styles = (theme: Theme) => {
             color: theme.palette.text //01
         },
         dialogDetails: {
-            ...withPixelLineHeight(theme.typography.body1), // bodyShortRegularLarge
+            ...theme.typography.bodyShortRegularLarge,
             marginBottom: 16
         },
         dialogContents: {
@@ -92,7 +91,7 @@ const styles = (theme: Theme) => {
             padding: '16px 16px 48px 16px'
         },
         sliderDescription: {
-            ...withPixelLineHeight(theme.typography.h6), // heading6
+            ...theme.typography.heading6,
 
             display: 'flex',
             justifyContent: 'space-between',
@@ -128,10 +127,8 @@ class VideoQualitySlider extends Component<IProps> {
         this._enableAudioOnly = this._enableAudioOnly.bind(this);
         this._enableHighDefinition = this._enableHighDefinition.bind(this);
         this._enableLowDefinition = this._enableLowDefinition.bind(this);
-        this._enableStandardDefinition =
-            this._enableStandardDefinition.bind(this);
-        this._enableUltraHighDefinition =
-            this._enableUltraHighDefinition.bind(this);
+        this._enableStandardDefinition = this._enableStandardDefinition.bind(this);
+        this._enableUltraHighDefinition = this._enableUltraHighDefinition.bind(this);
         this._onSliderChange = this._onSliderChange.bind(this);
 
         /**
@@ -185,10 +182,7 @@ class VideoQualitySlider extends Component<IProps> {
                 </div>{' '}
                 {/** videoStatus.adjustFor */}
                 <div className={classes.dialogContents}>
-                    <div
-                        aria-hidden={true}
-                        className={classes.sliderDescription}
-                    >
+                    <div aria-hidden={true} className={classes.sliderDescription}>
                         <span>{t('videoStatus.bestPerformance')}</span>
                         <span>{t('videoStatus.highestQuality')}</span>
                     </div>
@@ -282,18 +276,14 @@ class VideoQualitySlider extends Component<IProps> {
         const { _sliderOptions } = this;
 
         if (_audioOnly) {
-            const audioOnlyOption = _sliderOptions.find(
-                ({ audioOnly }) => audioOnly
-            );
+            const audioOnlyOption = _sliderOptions.find(({ audioOnly }) => audioOnly);
 
             // @ts-ignore
             return _sliderOptions.indexOf(audioOnlyOption);
         }
 
         for (let i = 0; i < _sliderOptions.length; i++) {
-            if (
-                Number(_sliderOptions[i].videoQuality) >= _sendrecvVideoQuality
-            ) {
+            if (Number(_sliderOptions[i].videoQuality) >= _sendrecvVideoQuality) {
                 return i;
             }
         }
@@ -319,17 +309,11 @@ class VideoQualitySlider extends Component<IProps> {
 
             // @ts-ignore
             videoQuality
-        } =
-            this._sliderOptions[
-                event.target.value as keyof typeof this._sliderOptions
-            ];
+        } = this._sliderOptions[event.target.value as keyof typeof this._sliderOptions];
 
         // Take no action if the newly chosen option does not change audio only
         // or video quality state.
-        if (
-            (_audioOnly && audioOnly) ||
-            (!_audioOnly && videoQuality === _sendrecvVideoQuality)
-        ) {
+        if ((_audioOnly && audioOnly) || (!_audioOnly && videoQuality === _sendrecvVideoQuality)) {
             return;
         }
 

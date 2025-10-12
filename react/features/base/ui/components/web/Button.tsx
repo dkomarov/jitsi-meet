@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from 'tss-react/mui';
 
 import Icon from '../../../icons/components/Icon';
-import { withPixelLineHeight } from '../../../styles/functions.web';
 import { BUTTON_TYPES } from '../../constants.web';
 import { IButtonProps } from '../types';
 
@@ -56,7 +55,7 @@ const useStyles = makeStyles()((theme) => {
             alignItems: 'center',
             justifyContent: 'center',
             border: 0,
-            ...withPixelLineHeight(theme.typography.bodyShortBold),
+            ...theme.typography.bodyShortBold,
             transition: 'background .2s',
             cursor: 'pointer',
 
@@ -150,7 +149,7 @@ const useStyles = makeStyles()((theme) => {
 
         small: {
             padding: '8px 16px',
-            ...withPixelLineHeight(theme.typography.labelBold),
+            ...theme.typography.labelBold,
 
             '&.iconButton': {
                 padding: theme.spacing(1)
@@ -161,7 +160,7 @@ const useStyles = makeStyles()((theme) => {
 
         large: {
             padding: '13px 16px',
-            ...withPixelLineHeight(theme.typography.bodyShortBoldLarge),
+            ...theme.typography.bodyShortBoldLarge,
 
             '&.iconButton': {
                 padding: '12px'

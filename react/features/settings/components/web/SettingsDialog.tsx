@@ -14,14 +14,9 @@ import {
     IconVideo,
     IconVolumeUp
 } from '../../../base/icons/svg';
-import DialogWithTabs, {
-    IDialogTab
-} from '../../../base/ui/components/web/DialogWithTabs';
+import DialogWithTabs, { IDialogTab } from '../../../base/ui/components/web/DialogWithTabs';
 import { isCalendarEnabled } from '../../../calendar-sync/functions.web';
-import {
-    submitAudioDeviceSelectionTab,
-    submitVideoDeviceSelectionTab
-} from '../../../device-selection/actions.web';
+import { submitAudioDeviceSelectionTab, submitVideoDeviceSelectionTab } from '../../../device-selection/actions.web';
 import AudioDevicesSelection from '../../../device-selection/components/AudioDevicesSelection.web';
 import VideoDeviceSelection from '../../../device-selection/components/VideoDeviceSelection.web';
 import {
@@ -99,15 +94,12 @@ const useStyles = makeStyles()(() => {
 const SettingsDialog = ({ _tabs, defaultTab, dispatch }: IProps) => {
     const { classes } = useStyles();
 
-    const correctDefaultTab = _tabs.find(
-        (tab) => tab.name === defaultTab
-    )?.name;
+    const correctDefaultTab = _tabs.find((tab) => tab.name === defaultTab)?.name;
     const tabs = _tabs.map((tab) => {
         return {
             ...tab,
             className: `settings-pane ${classes.settingsDialog}`,
-            submit: (...args: any) =>
-                tab.submit && dispatch(tab.submit(...args))
+            submit: (...args: any) => tab.submit && dispatch(tab.submit(...args))
         };
     });
 
@@ -145,15 +137,11 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
     const moderatorTabProps = getModeratorTabProps(state);
     const { showModeratorSettings } = moderatorTabProps;
     const showMoreTab = configuredTabs.includes('more');
-    const showProfileSettings =
-        configuredTabs.includes('profile') &&
-        !state['features/base/config'].disableProfile;
-    const showCalendarSettings =
-        configuredTabs.includes('calendar') && isCalendarEnabled(state);
+    const showProfileSettings = configuredTabs.includes('profile') && !state['features/base/config'].disableProfile;
+    const showCalendarSettings = configuredTabs.includes('calendar') && isCalendarEnabled(state);
     const showSoundsSettings = configuredTabs.includes('sounds');
     const enabledNotifications = getNotificationsMap(state);
-    const showNotificationsSettings =
-        Object.keys(enabledNotifications).length > 0;
+    const showNotificationsSettings = Object.keys(enabledNotifications).length > 0;
     const virtualBackgroundSupported = checkBlurSupport();
     const enableVirtualBackground = checkVirtualBackgroundEnabled(state);
     const tabs: IDialogTab<any>[] = [];
@@ -164,14 +152,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             name: SETTINGS_TABS.AUDIO,
             component: AudioDevicesSelection,
             labelKey: 'settings.audio',
-            props: getAudioDeviceSelectionDialogProps(
-                state,
-                isDisplayedOnWelcomePage
-            ),
-            propsUpdateFunction: (
-                tabState: any,
-                newProps: ReturnType<typeof getAudioDeviceSelectionDialogProps>
-            ) => {
+            props: getAudioDeviceSelectionDialogProps(state, isDisplayedOnWelcomePage),
+            propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getAudioDeviceSelectionDialogProps>) => {
                 // Ensure the device selection tab gets updated when new devices
                 // are found by taking the new props and only preserving the
                 // current user selected devices. If this were not done, the
@@ -180,16 +162,13 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
 
                 return {
                     ...newProps,
+                    audioSettings: tabState.audioSettings,
                     noiseSuppressionEnabled: tabState.noiseSuppressionEnabled,
                     selectedAudioInputId: tabState.selectedAudioInputId,
                     selectedAudioOutputId: tabState.selectedAudioOutputId
                 };
             },
-            submit: (newState: any) =>
-                submitAudioDeviceSelectionTab(
-                    newState,
-                    isDisplayedOnWelcomePage
-                ),
+            submit: (newState: any) => submitAudioDeviceSelectionTab(newState, isDisplayedOnWelcomePage),
             icon: IconVolumeUp
         });
         !_iAmVisitor &&
@@ -197,15 +176,10 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
                 name: SETTINGS_TABS.VIDEO,
                 component: VideoDeviceSelection,
                 labelKey: 'settings.video',
-                props: getVideoDeviceSelectionDialogProps(
-                    state,
-                    isDisplayedOnWelcomePage
-                ),
+                props: getVideoDeviceSelectionDialogProps(state, isDisplayedOnWelcomePage),
                 propsUpdateFunction: (
                     tabState: any,
-                    newProps: ReturnType<
-                        typeof getVideoDeviceSelectionDialogProps
-                    >
+                    newProps: ReturnType<typeof getVideoDeviceSelectionDialogProps>
                 ) => {
                     // Ensure the device selection tab gets updated when new devices
                     // are found by taking the new props and only preserving the
@@ -220,11 +194,7 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
                         selectedVideoInputId: tabState.selectedVideoInputId
                     };
                 },
-                submit: (newState: any) =>
-                    submitVideoDeviceSelectionTab(
-                        newState,
-                        isDisplayedOnWelcomePage
-                    ),
+                submit: (newState: any) => submitVideoDeviceSelectionTab(newState, isDisplayedOnWelcomePage),
                 icon: IconVideo
             });
     }
@@ -235,9 +205,12 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             component: VirtualBackgroundTab,
             labelKey: 'virtualBackground.title',
             props: getVirtualBackgroundTabProps(state, isDisplayedOnWelcomePage),
-            propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getVirtualBackgroundTabProps>,
-                    tabStates: any) => {
-                const videoTabState = tabStates[tabs.findIndex(tab => tab.name === SETTINGS_TABS.VIDEO)];
+            propsUpdateFunction: (
+                tabState: any,
+                newProps: ReturnType<typeof getVirtualBackgroundTabProps>,
+                tabStates: any
+            ) => {
+                const videoTabState = tabStates[tabs.findIndex((tab) => tab.name === SETTINGS_TABS.VIDEO)];
 
                 return {
                     ...newProps,
@@ -277,17 +250,13 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             name: SETTINGS_TABS.NOTIFICATIONS,
             component: NotificationsTab,
             labelKey: 'settings.notifications',
-            propsUpdateFunction: (
-                tabState: any,
-                newProps: ReturnType<typeof getNotificationsTabProps>
-            ) => {
+            propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getNotificationsTabProps>) => {
                 return {
                     ...newProps,
                     enabledNotifications: tabState?.enabledNotifications || {},
                     soundsIncomingMessage: tabState?.soundsIncomingMessage,
                     soundsParticipantJoined: tabState?.soundsParticipantJoined,
-                    soundsParticipantKnocking:
-                        tabState?.soundsParticipantKnocking,
+                    soundsParticipantKnocking: tabState?.soundsParticipantKnocking,
                     soundsParticipantLeft: tabState?.soundsParticipantLeft,
                     soundsReactions: tabState?.soundsReactions,
                     soundsTalkWhileMuted: tabState?.soundsTalkWhileMuted
@@ -305,10 +274,7 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             component: ModeratorTab,
             labelKey: 'settings.moderator',
             props: moderatorTabProps,
-            propsUpdateFunction: (
-                tabState: any,
-                newProps: typeof moderatorTabProps
-            ) => {
+            propsUpdateFunction: (tabState: any, newProps: typeof moderatorTabProps) => {
                 // Updates tab props, keeping users selection
 
                 return {
@@ -352,10 +318,7 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             component: ShortcutsTab,
             labelKey: 'settings.shortcuts',
             props: getShortcutsTabProps(state, isDisplayedOnWelcomePage),
-            propsUpdateFunction: (
-                tabState: any,
-                newProps: ReturnType<typeof getShortcutsTabProps>
-            ) => {
+            propsUpdateFunction: (tabState: any, newProps: ReturnType<typeof getShortcutsTabProps>) => {
                 // Updates tab props, keeping users selection
 
                 return {
@@ -373,10 +336,7 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             component: MoreTab,
             labelKey: 'settings.more',
             props: moreTabProps,
-            propsUpdateFunction: (
-                tabState: any,
-                newProps: typeof moreTabProps
-            ) => {
+            propsUpdateFunction: (tabState: any, newProps: typeof moreTabProps) => {
                 // Updates tab props, keeping users selection
 
                 return {
