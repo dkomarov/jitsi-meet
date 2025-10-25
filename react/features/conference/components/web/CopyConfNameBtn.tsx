@@ -21,8 +21,9 @@ const CopyConfNameBtn = () => {
 
                 // IMPORTANT: nothing async before this point
                 if (document.pictureInPictureElement) {
-                    await document.exitPictureInPicture();
-                    console.log('No PiP mode, exiting...');
+                    await document.exitPictureInPicture().catch((err) => {
+                        console.error('exitPictureInPicture failed:', err);
+                    });
                     return;
                 } else {
                     // Make sure the video is loaded/playing. Don't await here before PiP.
@@ -33,7 +34,10 @@ const CopyConfNameBtn = () => {
                     }
                     console.log('Entering PiP mode...');
                     // @ts-ignore
-                    await video.requestPictureInPicture();
+                    await video.requestPictureInPicture().catch((err) => {
+                        console.error('requestPictureInPicture failed:', err);
+                    });
+                    return;
                 }
             } catch (err) {
                 console.log('Error attempting PiP (via Copy btn):', err);
