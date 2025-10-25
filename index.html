@@ -362,33 +362,38 @@
 
 //         let localStream = null;
 
-        let video;
-        window.addEventListener('message', async function (event) {
-            // if (event.origin.indexOf('sidespeak') != -1) return;
-            if (typeof event.data === 'string' && event.data.includes('pip-request')) {
-                console.log('Picture-in-Picture request received! event.data is:', event.data);
+// PiP logic starts here ---
 
-                try {
+    //     // let video;
+    //     // window.addEventListener('message', async function (event) {
+    //         // if (event.origin.indexOf('sidespeak') != -1) return;
+    //         if (typeof event.data === 'string' && event.data.includes('pip-request')) {
+    //             console.log('Picture-in-Picture request received! event.data is:', event.data);
+
+    //             try {
                  
-                    video = document.getElementById('largeVideo');
+    //                 video = document.getElementById('largeVideo');
 
-                     // IMPORTANT: nothing async before this point
-                    if (document.pictureInPictureElement) {
-                        await document.exitPictureInPicture();
-                        return;
-                    } else {
-                        // Make sure the video is loaded/playing. Don't await here before PiP.
-                        if (video.paused) { video.play().catch(()=>{}); }
-                        await video.requestPictureInPicture();
-                    }
+    //                  // IMPORTANT: nothing async before this point
+    //                 if (document.pictureInPictureElement) {
+    //                     await document.exitPictureInPicture();
+    //                     return;
+    //                 } else {
+    //                     // Make sure the video is loaded/playing. Don't await here before PiP.
+    //                     if (video.paused) { video.play().catch(()=>{}); }
+    //                     await video.requestPictureInPicture();
+    //                 }
 
-                } catch (err) {
-                    console.log('Error listening for PiP:', err);
+    //             } catch (err) {
+    //                 console.log('Error listening for PiP:', err);
                     
-                }
-            }
+    //             }
+    //         }
         
-    })
+    // })
+
+    // PiP logic ends here ---
+    
              
     // //                 try {
     // //                     // If camera not started, prompt/get it now (this is user gesture)

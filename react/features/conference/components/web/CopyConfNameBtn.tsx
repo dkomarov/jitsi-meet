@@ -13,27 +13,31 @@ const CopyConfNameBtn = () => {
                 window.parent.postMessage('confName is: ' + confName, '*');
             }
 
-            // try {
-            //     // @ts-ignore
-            //     video = document.getElementById('largeVideo');
+            try {
+                // @ts-ignore
+                video = document.getElementById('largeVideo');
 
-            //     // IMPORTANT: nothing async before this point
-            //     if (document.pictureInPictureElement) {
-            //         await document.exitPictureInPicture();
-            //         return;
-            //     } else {
-            //         // Make sure the video is loaded/playing. Don't await here before PiP.
-            //         // @ts-ignore
-            //         if (video.paused) {
-            //             // @ts-ignore
-            //             video.play().catch(() => {});
-            //         }
-            //         // @ts-ignore
-            //         await video.requestPictureInPicture();
-            //     }
-            // } catch (err) {
-            //     console.log('Error listening for PiP:', err);
-            // }
+                console.log('before trying PiP function... & video is:', video);
+
+                // IMPORTANT: nothing async before this point
+                if (document.pictureInPictureElement) {
+                    await document.exitPictureInPicture();
+                    console.log('No PiP mode, exiting...');
+                    return;
+                } else {
+                    // Make sure the video is loaded/playing. Don't await here before PiP.
+                    // @ts-ignore
+                    if (video.paused) {
+                        // @ts-ignore
+                        video.play().catch(() => {});
+                    }
+                    console.log('Entering PiP mode...');
+                    // @ts-ignore
+                    await video.requestPictureInPicture();
+                }
+            } catch (err) {
+                console.log('Error attempting PiP (via Copy btn):', err);
+            }
         } catch (err) {
             console.log('Error accessing conference name:', err);
         }
