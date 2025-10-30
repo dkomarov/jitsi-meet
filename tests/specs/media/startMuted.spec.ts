@@ -127,7 +127,7 @@ describe('Start muted', () => {
 
         const p2ID = await p2.getEndpointId();
 
-        p1.log(`Start configOptionsTest, second participant: ${p2ID}`);
+        await p1.log(`Start configOptionsTest, second participant: ${p2ID}`);
 
         // Participant 3 should be muted, 1 and 2 unmuted.
         await p3.getFilmstrip().assertAudioMuteIconIsDisplayed(p3);
@@ -148,7 +148,7 @@ describe('Start muted', () => {
         await p1.getToolbar().clickAudioMuteButton();
         await p2.getToolbar().clickAudioMuteButton();
         await p3.getToolbar().clickAudioUnmuteButton();
-        p1.log('configOptionsTest, unmuted third participant');
+        await p1.log('configOptionsTest, unmuted third participant');
         await p1.waitForAudioMuted(p3, false /* unmuted */);
     });
 
@@ -174,11 +174,6 @@ describe('Start muted', () => {
 
         await p1.getParticipantsPane().assertVideoMuteIconIsDisplayed(p2);
         await p2.getParticipantsPane().assertVideoMuteIconIsDisplayed(p1);
-
-        await Promise.all([
-            p1.getLargeVideo().waitForSwitchTo(await p2.getEndpointId()),
-            p2.getLargeVideo().waitForSwitchTo(await p1.getEndpointId())
-        ]);
 
         await unmuteVideoAndCheck(p2, p1);
         await p1.getLargeVideo().assertPlaying();

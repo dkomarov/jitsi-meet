@@ -18,12 +18,14 @@ describe('Desktop sharing', () => {
         await ensureTwoParticipants({
             configOverwrite: {
                 p2p: {
+                    backToP2PDelay: 3,
                     enabled: true
                 }
             }
         });
         const { p1, p2 } = ctx;
 
+        await p1.waitForP2PIceConnected();
         await p2.getToolbar().clickDesktopSharingButton();
 
         // Check if a remote screen share tile is created on p1.
@@ -53,13 +55,33 @@ describe('Desktop sharing', () => {
     it('p2p to jvb switch', async () => {
         await ctx.p2.getToolbar().clickDesktopSharingButton();
 
-        await ensureThreeParticipants();
+        await ensureThreeParticipants({
+            configOverwrite: {
+                p2p: {
+                    enabled: true
+                }
+            }
+        });
         const { p1, p2, p3 } = ctx;
 
         // Check if a remote screen share tile is created on all participants.
         await checkForScreensharingTile(p2, p1);
         await checkForScreensharingTile(p2, p2);
-        await checkForScreensharingTile(p2, p2);
+        await checkForScreensharingTile(p2, p3);
+
+        // Verify that all participant camera tiles remain visible in filmstrip
+        const p2EndpointId = await p2.getEndpointId();
+        const p3EndpointId = await p3.getEndpointId();
+
+        // Check from p1's perspective that camera tiles are visible
+        await p1.driver.$(`//span[@id='participant_${p2EndpointId}']`).waitForDisplayed({
+            timeout: 3_000,
+            timeoutMsg: 'P2 camera tile should be visible on P1 during screenshare'
+        });
+        await p1.driver.$(`//span[@id='participant_${p3EndpointId}']`).waitForDisplayed({
+            timeout: 3_000,
+            timeoutMsg: 'P3 camera tile should be visible on P1 during P2 screenshare'
+        });
 
         expect(await p3.execute(() => JitsiMeetJS.app.testing.isLargeVideoReceived())).toBe(true);
     });
@@ -71,6 +93,10 @@ describe('Desktop sharing', () => {
         const { p1, p2, p3 } = ctx;
 
         await p3.hangup();
+
+        // Wait for p1 and p2 to switch back to p2p.
+        await p1.waitForP2PIceConnected();
+        await p2.waitForP2PIceConnected();
 
         // Check if a remote screen share tile is created on p1 and p2 after switching back to p2p.
         await checkForScreensharingTile(p2, p1);
@@ -86,7 +112,14 @@ describe('Desktop sharing', () => {
         await checkForScreensharingTile(p1, p1);
         await checkForScreensharingTile(p1, p2);
 
-        await ensureThreeParticipants();
+        await ensureThreeParticipants({
+            configOverwrite: {
+                p2p: {
+                    backToP2PDelay: 3,
+                    enabled: true
+                }
+            }
+        });
 
         await checkForScreensharingTile(p1, p3);
         await checkForScreensharingTile(p2, p3);
@@ -108,6 +141,10 @@ describe('Desktop sharing', () => {
 
         await p3.hangup();
 
+        // Wait for p1 and p2 to switch back to p2p.
+        await p1.waitForP2PIceConnected();
+        await p2.waitForP2PIceConnected();
+
         // Start share on both p1 and p2.
         await p1.getToolbar().clickDesktopSharingButton();
         await p2.getToolbar().clickDesktopSharingButton();
@@ -117,7 +154,14 @@ describe('Desktop sharing', () => {
         await checkForScreensharingTile(p2, p1);
 
         // Add p3 back to the conference and check if p1 and p2's shares are visible on p3.
-        await ensureThreeParticipants();
+        await ensureThreeParticipants({
+            configOverwrite: {
+                p2p: {
+                    backToP2PDelay: 3,
+                    enabled: true
+                }
+            }
+        });
 
         await checkForScreensharingTile(p1, p3);
         await checkForScreensharingTile(p2, p3);
@@ -137,6 +181,7 @@ describe('Desktop sharing', () => {
         await ensureOneParticipant({
             configOverwrite: {
                 p2p: {
+                    backToP2PDelay: 3,
                     enabled: true
                 }
             }
@@ -151,7 +196,14 @@ describe('Desktop sharing', () => {
         await p1.getToolbar().clickStopDesktopSharingButton();
 
         // Call switches to jvb.
-        await ensureThreeParticipants();
+        await ensureThreeParticipants({
+            configOverwrite: {
+                p2p: {
+                    backToP2PDelay: 3,
+                    enabled: true
+                }
+            }
+        });
         const { p2, p3 } = ctx;
 
         // p1 starts share again when call switches to jvb.
@@ -166,6 +218,10 @@ describe('Desktop sharing', () => {
 
         // p3 leaves the call.
         await p3.hangup();
+
+        // Wait for p1 and p2 to switch back to p2p.
+        await p1.waitForP2PIceConnected();
+        await p2.waitForP2PIceConnected();
 
         // Make sure p2 see's p1's share after the call switches back to p2p.
         await checkForScreensharingTile(p1, p2);

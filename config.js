@@ -805,7 +805,9 @@ var config = {
     //     // By setting preCallTestEnabled, you enable the pre-call test in the prejoin page.
     //     // ICE server credentials need to be provided over the preCallTestICEUrl
     //     preCallTestEnabled: false,
-    //     preCallTestICEUrl: ''
+    //     preCallTestICEUrl: '',
+    //     // Shows the hangup button in the lobby screen.
+    //     showHangUp: true,
     // },
 
     // When 'true', the user cannot edit the display name.
@@ -1605,6 +1607,10 @@ var config = {
     //         audio: true,
     //         video: true
     //     },
+    //     // Hides the visitor count for visitors.
+    //     // hideVisitorCountForVisitors: false,
+    //     // Whether to show the join meeting dialog when joining as a visitor.
+    //     // showJoinMeetingDialog: true,
     // },
     // The default type of desktop sharing sources that will be used in the electron app.
     // desktopSharingSources: ['screen', 'window'],
