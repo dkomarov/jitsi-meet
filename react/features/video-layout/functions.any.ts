@@ -2,21 +2,16 @@ import { IReduxState, IStore } from '../app/types';
 import { TILE_VIEW_ENABLED } from '../base/flags/constants';
 import { getFeatureFlag } from '../base/flags/functions';
 import { pinParticipant } from '../base/participants/actions';
-import {
-    getParticipantCount,
-    getPinnedParticipant
-} from '../base/participants/functions';
+import { getParticipantCount, getPinnedParticipant } from '../base/participants/functions';
 import { FakeParticipant } from '../base/participants/types';
-import {
-    isStageFilmstripAvailable,
-    isTileViewModeDisabled
-} from '../filmstrip/functions';
+import { isStageFilmstripAvailable, isTileViewModeDisabled } from '../filmstrip/functions.web';
 import { isVideoPlaying } from '../shared-video/functions';
 import { VIDEO_QUALITY_LEVELS } from '../video-quality/constants';
 import { getReceiverVideoQualityLevel } from '../video-quality/functions';
 import { getMinHeightForQualityLvlMap } from '../video-quality/selector';
 
 import { LAYOUTS } from './constants';
+import logger from './logger';
 
 /**
  * A selector for retrieving the current automatic pinning setting.
@@ -28,9 +23,7 @@ import { LAYOUTS } from './constants';
  * pin any screen shares.
  */
 export function getAutoPinSetting() {
-    return typeof interfaceConfig === 'object'
-        ? interfaceConfig.AUTO_PIN_LATEST_SCREEN_SHARE
-        : 'remote-only';
+    return typeof interfaceConfig === 'object' ? interfaceConfig.AUTO_PIN_LATEST_SCREEN_SHARE : 'remote-only';
 }
 
 /**
@@ -80,11 +73,7 @@ export function shouldDisplayTileView(state: IReduxState) {
         return tileViewEnabled;
     }
 
-    const tileViewEnabledFeatureFlag = getFeatureFlag(
-        state,
-        TILE_VIEW_ENABLED,
-        true
-    );
+    const tileViewEnabledFeatureFlag = getFeatureFlag(state, TILE_VIEW_ENABLED, true);
     const { disableTileView } = state['features/base/config'];
 
     if (disableTileView || !tileViewEnabledFeatureFlag) {
@@ -118,46 +107,50 @@ export function shouldDisplayTileView(state: IReduxState) {
  * Private helper to automatically pin the latest screen share stream or unpin
  * if there are no more screen share streams.
  *
- * @param {Array<string>} screenShares - Array containing the list of all the screen sharing endpoints
+ * @param {Array<string>} previousScreenShares - Array containing the list of all the screen sharing endpoints
  * before the update was triggered (including the ones that have been removed from redux because of the update).
+ * @param {Array<string>} currentScreenShares - Array containing the current list of screen sharing endpoints.
  * @param {Store} store - The redux store.
  * @returns {void}
  */
 export function updateAutoPinnedParticipant(
-    screenShares: Array<string>,
+    previousScreenShares: Array<string>,
+    currentScreenShares: Array<string>,
     { dispatch, getState }: IStore
 ) {
-    const state = getState();
-    const remoteScreenShares =
-        state['features/video-layout'].remoteScreenShares;
     const pinned = getPinnedParticipant(getState);
 
     // if the pinned participant is shared video or some other fake participant we want to skip auto-pinning
-    if (
-        pinned?.fakeParticipant &&
-        pinned.fakeParticipant !== FakeParticipant.RemoteScreenShare
-    ) {
+    if (pinned?.fakeParticipant && pinned.fakeParticipant !== FakeParticipant.RemoteScreenShare) {
+        logger.debug('Skipping auto-pin: pinned participant is non-screenshare virtual participant', pinned.id);
+
         return;
     }
 
     // Unpin the screen share when the screen sharing participant leaves. Switch to tile view if no other
     // participant was pinned before screen share was auto-pinned, pin the previously pinned participant otherwise.
-    if (!remoteScreenShares?.length) {
-        let participantId;
+    if (!currentScreenShares?.length) {
+        let participantId = null;
 
-        if (pinned && !screenShares.find((share) => share === pinned.id)) {
+        if (pinned && !previousScreenShares.find((share: string) => share === pinned.id)) {
             participantId = pinned.id;
         }
+
+        logger.debug('No more screenshares, unpinning or restoring previous pin', participantId);
         dispatch(pinParticipant(participantId));
 
         return;
     }
 
-    const latestScreenShareParticipantId =
-        remoteScreenShares[remoteScreenShares.length - 1];
+    const latestScreenShareParticipantId = currentScreenShares[currentScreenShares.length - 1];
 
     if (latestScreenShareParticipantId) {
-        dispatch(pinParticipant(latestScreenShareParticipantId));
+        const alreadyPinned = pinned?.id === latestScreenShareParticipantId;
+
+        if (!alreadyPinned) {
+            logger.debug(`Auto pinning latest screen share participant: ${latestScreenShareParticipantId}`);
+            dispatch(pinParticipant(latestScreenShareParticipantId));
+        }
     }
 }
 
@@ -201,18 +194,12 @@ function getVideoQualityForHeight(height: number) {
  * @param {Object} state - Redux state.
  * @returns {number}
  */
-export function getVideoQualityForResizableFilmstripThumbnails(
-    height: number,
-    state: IReduxState
-) {
+export function getVideoQualityForResizableFilmstripThumbnails(height: number, state: IReduxState) {
     if (!height) {
         return VIDEO_QUALITY_LEVELS.LOW;
     }
 
-    return getReceiverVideoQualityLevel(
-        height,
-        getMinHeightForQualityLvlMap(state)
-    );
+    return getReceiverVideoQualityLevel(height, getMinHeightForQualityLvlMap(state));
 }
 
 /**
@@ -222,18 +209,12 @@ export function getVideoQualityForResizableFilmstripThumbnails(
  * @param {Object} state - Redux state.
  * @returns {number}
  */
-export function getVideoQualityForScreenSharingFilmstrip(
-    height: number,
-    state: IReduxState
-) {
+export function getVideoQualityForScreenSharingFilmstrip(height: number, state: IReduxState) {
     if (!height) {
         return VIDEO_QUALITY_LEVELS.LOW;
     }
 
-    return getReceiverVideoQualityLevel(
-        height,
-        getMinHeightForQualityLvlMap(state)
-    );
+    return getReceiverVideoQualityLevel(height, getMinHeightForQualityLvlMap(state));
 }
 
 /**
@@ -253,16 +234,10 @@ export function getVideoQualityForLargeVideo(largeVideoHeight: number) {
  * @param {Object} state - Redux state.
  * @returns {number}
  */
-export function getVideoQualityForStageThumbnails(
-    height: number,
-    state: IReduxState
-) {
+export function getVideoQualityForStageThumbnails(height: number, state: IReduxState) {
     if (!height) {
         return VIDEO_QUALITY_LEVELS.LOW;
     }
 
-    return getReceiverVideoQualityLevel(
-        height,
-        getMinHeightForQualityLvlMap(state)
-    );
+    return getReceiverVideoQualityLevel(height, getMinHeightForQualityLvlMap(state));
 }

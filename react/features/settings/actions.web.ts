@@ -2,8 +2,8 @@ import { batch } from 'react-redux';
 
 import { IStore } from '../app/types';
 import { setTokenAuthUrlSuccess } from '../authentication/actions.web';
-import { isTokenAuthEnabled } from '../authentication/functions';
-import { setStartMutedPolicy, setStartReactionsMuted } from '../base/conference/actions';
+import { isTokenAuthEnabled } from '../authentication/functions.web';
+import { setStartMutedPolicy, setStartReactionsMuted } from '../base/conference/actions.web';
 import { getConferenceState } from '../base/conference/functions';
 import { hangup } from '../base/connection/actions.web';
 import { openDialog } from '../base/dialog/actions';
@@ -50,13 +50,9 @@ export function openLogoutDialog() {
         const { conference } = state['features/base/conference'];
         const { jwt } = state['features/base/jwt'];
 
-        dispatch(
-            openDialog(LogoutDialog, {
-                onLogout() {
-                    if (isTokenAuthEnabled(config) && config.tokenAuthUrlAutoRedirect && jwt) {
-                        // user is logging out remove auto redirect indication
-                        dispatch(setTokenAuthUrlSuccess(false));
-                    }
+        dispatch(openDialog('LogoutDialog', LogoutDialog, {
+            onLogout() {
+                if (isTokenAuthEnabled(config) && config.tokenAuthUrlAutoRedirect && jwt) {
 
                     if (logoutUrl && browser.isElectron()) {
                         const url = appendURLHashParam(logoutUrl, 'electron', 'true');
@@ -88,7 +84,7 @@ export function openLogoutDialog() {
  * @returns {Function}
  */
 export function openSettingsDialog(defaultTab?: string, isDisplayedOnWelcomePage?: boolean) {
-    return openDialog(SettingsDialog, {
+    return openDialog('SettingsDialog', SettingsDialog, {
         defaultTab,
         isDisplayedOnWelcomePage
     });

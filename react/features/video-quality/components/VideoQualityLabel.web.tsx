@@ -159,6 +159,8 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
     }
 }
 
+const dispatch = useDispatch();
+
 /**
  * Matches the passed in resolution with a translation keys for describing
  * the resolution. The passed in resolution will be matched with a known
@@ -234,6 +236,24 @@ function _mapStateToProps(state: IReduxState) {
         state['features/base/tracks'],
         MEDIA_TYPE.VIDEO,
         participantId
+    );
+
+    const onClick = () => dispatch(openDialog('VideoQualityDialog', VideoQualityDialog));
+
+    return (
+        <Tooltip content={t(tooltipKey)} position={'bottom'}>
+            <Label
+                accessibilityText={t(tooltipKey)}
+                className={className}
+                color={COLORS.white}
+                icon={icon}
+                iconColor="#fff"
+                id="videoResolutionLabel"
+                // eslint-disable-next-line react/jsx-no-bind
+                onClick={onClick}
+                text={labelContent}
+            />
+        </Tooltip>
     );
 
     const translationKeys = audioOnly ? {} : _mapResolutionToTranslationsKeys(resolution);

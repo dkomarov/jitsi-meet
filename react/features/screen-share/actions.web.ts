@@ -4,10 +4,7 @@ import { browser } from '../base/lib-jitsi-meet';
 import { shouldHideShareAudioHelper } from '../base/settings/functions.any';
 import { toggleScreensharing } from '../base/tracks/actions.web';
 
-import {
-    SET_SCREENSHARE_TRACKS,
-    SET_SCREEN_AUDIO_SHARE_STATE
-} from './actionTypes';
+import { SET_SCREENSHARE_TRACKS, SET_SCREEN_AUDIO_SHARE_STATE } from './actionTypes';
 import ShareAudioDialog from './components/web/ShareAudioDialog';
 import ShareMediaWarningDialog from './components/web/ShareScreenWarningDialog';
 import { isAudioOnlySharing, isScreenVideoShared } from './functions';
@@ -60,9 +57,7 @@ export function startAudioScreenShareFlow() {
         // If we're already in a normal screen sharing session, warn the user.
         if (isScreenVideoShared(state)) {
             dispatch(
-                openDialog(ShareMediaWarningDialog, {
-                    _isAudioScreenShareWarning: true
-                })
+                openDialog('ShareMediaWarningDialog', ShareMediaWarningDialog, { _isAudioScreenShareWarning: true })
             );
 
             return;
@@ -72,11 +67,7 @@ export function startAudioScreenShareFlow() {
         // If we're in an electron environment the helper dialog is not needed as there's only one option
         // available for audio screen sharing, namely full window audio.
         // If we're already sharing audio, toggle off.
-        if (
-            shouldHideShareAudioHelper(state) ||
-            browser.isElectron() ||
-            audioOnlySharing
-        ) {
+        if (shouldHideShareAudioHelper(state) || browser.isElectron() || audioOnlySharing) {
             // We don't want to explicitly set the screens share state, by passing undefined we let the
             // underlying logic decide if it's on or off.
             dispatch(toggleScreensharing(undefined, true));
@@ -84,7 +75,7 @@ export function startAudioScreenShareFlow() {
             return;
         }
 
-        dispatch(openDialog(ShareAudioDialog));
+        dispatch(openDialog('ShareAudioDialog', ShareAudioDialog));
     };
 }
 
@@ -103,9 +94,7 @@ export function startScreenShareFlow(enabled: boolean) {
         // If we're in an audio screen sharing session, warn the user.
         if (audioOnlySharing) {
             dispatch(
-                openDialog(ShareMediaWarningDialog, {
-                    _isAudioScreenShareWarning: false
-                })
+                openDialog('ShareMediaWarningDialog', ShareMediaWarningDialog, { _isAudioScreenShareWarning: false })
             );
 
             return;

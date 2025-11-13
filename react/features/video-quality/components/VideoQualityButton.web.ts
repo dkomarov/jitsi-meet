@@ -16,6 +16,7 @@ import { openDialog } from '../../base/dialog/actions';
 
 import { VIDEO_QUALITY_LEVELS } from '../constants';
 import { findNearestQualityLevel } from '../functions';
+import { useDispatch, Dispatch } from 'react-redux';
 
 /**
  * A map of of selectable receive resolutions to corresponding icons.
@@ -64,6 +65,8 @@ type Props = AbstractButtonProps & {
      */
     t: Function;
 };
+
+const dispatch = useDispatch();
 
 /**
  * React {@code Component} responsible for displaying a button in the overflow
@@ -130,8 +133,7 @@ class VideoQualityButton extends AbstractButton<Props> {
         if (handleClick) {
             handleClick();
 
-            return;
-        }
+        dispatch(openDialog('VideoQualityDialog', VideoQualityDialog));
     }
 }
 
