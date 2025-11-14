@@ -138,7 +138,7 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
 
         // let className, icon, labelContent, tooltipKey;
 
-        const onClick = () => dispatch(openDialog(VideoQualityDialog));
+        // const onClick = () => dispatch(openDialog(VideoQualityDialog));
 
         return (
             <Tooltip content={t(tooltipKey)} position={'bottom'}>
