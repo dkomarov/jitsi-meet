@@ -16,7 +16,7 @@ import { openDialog } from '../../base/dialog/actions';
 
 import { VIDEO_QUALITY_LEVELS } from '../constants';
 import { findNearestQualityLevel } from '../functions';
-import { useDispatch, Dispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 /**
  * A map of of selectable receive resolutions to corresponding icons.
@@ -133,7 +133,8 @@ class VideoQualityButton extends AbstractButton<Props> {
         if (handleClick) {
             handleClick();
 
-        dispatch(openDialog('VideoQualityDialog', VideoQualityDialog));
+            dispatch(openDialog('VideoQualityDialog', VideoQualityDialog));
+        }
     }
 }
 

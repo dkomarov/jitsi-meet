@@ -50,23 +50,24 @@ export function openLogoutDialog() {
         const { conference } = state['features/base/conference'];
         const { jwt } = state['features/base/jwt'];
 
-        dispatch(openDialog('LogoutDialog', LogoutDialog, {
-            onLogout() {
-                if (isTokenAuthEnabled(config) && config.tokenAuthUrlAutoRedirect && jwt) {
+        dispatch(
+            openDialog('LogoutDialog', LogoutDialog, {
+                onLogout() {
+                    if (isTokenAuthEnabled(config) && config.tokenAuthUrlAutoRedirect && jwt) {
+                        if (logoutUrl && browser.isElectron()) {
+                            const url = appendURLHashParam(logoutUrl, 'electron', 'true');
 
-                    if (logoutUrl && browser.isElectron()) {
-                        const url = appendURLHashParam(logoutUrl, 'electron', 'true');
+                            window.open(url, '_blank');
+                            dispatch(hangup(true));
+                        } else {
+                            if (logoutUrl) {
+                                window.location.href = logoutUrl;
 
-                        window.open(url, '_blank');
-                        dispatch(hangup(true));
-                    } else {
-                        if (logoutUrl) {
-                            window.location.href = logoutUrl;
+                                return;
+                            }
 
-                            return;
+                            conference?.room.xmpp.moderator.logout(() => dispatch(hangup(true)));
                         }
-
-                        conference?.room.xmpp.moderator.logout(() => dispatch(hangup(true)));
                     }
                 }
             })
