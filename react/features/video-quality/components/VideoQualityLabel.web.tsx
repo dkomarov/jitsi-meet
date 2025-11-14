@@ -138,7 +138,7 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
 
         // let className, icon, labelContent, tooltipKey;
 
-        // const onClick = () => dispatch(openDialog(VideoQualityDialog));
+        const onClick = () => dispatch(openDialog('', VideoQualityDialog));
 
         return (
             <Tooltip content={t(tooltipKey)} position={'bottom'}>
@@ -275,35 +275,3 @@ function _mapStateToProps(state: IReduxState) {
 
 // @ts-ignore
 export default translate(connect(_mapStateToProps)(VideoQualityLabel));
-
-//     if (_audioOnly) {
-//         className = 'audio-only';
-//         labelContent = t('videoStatus.audioOnly');
-//         tooltipKey = 'videoStatus.labelTooltipAudioOnly';
-//     } else {
-//         className = 'current-video-quality';
-//         icon = IconPerformance;
-//         tooltipKey = 'videoStatus.performanceSettings';
-//     }
-
-//     const onClick = () => dispatch(openDialog(VideoQualityDialog));
-
-//     return (
-//         <Tooltip
-//             content = { t(tooltipKey) }
-//             position = { 'bottom' }>
-//             <Label
-//                 accessibilityText = { t(tooltipKey) }
-//                 className = { className }
-//                 color = { COLORS.white }
-//                 icon = { icon }
-//                 iconColor = '#fff'
-//                 id = 'videoResolutionLabel'
-//                 // eslint-disable-next-line react/jsx-no-bind
-//                 onClick = { onClick }
-//                 text = { labelContent } />
-//         </Tooltip>
-//     );
-// };
-
-// export default VideoQualityLabel;
