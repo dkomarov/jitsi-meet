@@ -66,7 +66,7 @@ type Props = AbstractButtonProps & {
     t: Function;
 };
 
-const dispatch = useDispatch();
+// const dispatch = useDispatch();
 
 /**
  * React {@code Component} responsible for displaying a button in the overflow
@@ -133,7 +133,9 @@ class VideoQualityButton extends AbstractButton<Props> {
         if (handleClick) {
             handleClick();
 
-            dispatch(openDialog('VideoQualityDialog', VideoQualityDialog));
+            // dispatch(
+            openDialog('VideoQualityDialog', VideoQualityDialog);
+            // );
         }
     }
 }
