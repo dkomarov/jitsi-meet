@@ -5,8 +5,10 @@ import { ENDPOINT_MESSAGE_RECEIVED, NON_PARTICIPANT_MESSAGE_RECEIVED } from '../
 import { MEET_FEATURES } from '../base/jwt/constants';
 import { isJwtFeatureEnabled } from '../base/jwt/functions';
 import JitsiMeetJS from '../base/lib-jitsi-meet';
+import { TRANSCRIBER_ID } from '../base/participants/constants';
 import MiddlewareRegistry from '../base/redux/MiddlewareRegistry';
 import { showErrorNotification } from '../notifications/actions';
+import { RECORDING_METADATA_ID } from '../recording/constants';
 import { TRANSCRIBER_JOINED } from '../transcribing/actionTypes';
 
 import {
@@ -118,7 +120,18 @@ MiddlewareRegistry.register(store => next => action => {
  * @returns {Object} The value returned by {@code next(action)}.
  */
 function _endpointMessageReceived(store: IStore, next: Function, action: AnyAction) {
-    const { data: json } = action;
+    let json: any = {};
+
+    if (action.type === ENDPOINT_MESSAGE_RECEIVED) {
+        if (!action.participant.isHidden()) {
+            return next(action);
+        }
+        json = action.data;
+    } else if (action.type === NON_PARTICIPANT_MESSAGE_RECEIVED && action.id === TRANSCRIBER_ID) {
+        json = action.json;
+    } else {
+        return next(action);
+    }
 
     if (![ JSON_TYPE_TRANSCRIPTION_RESULT, JSON_TYPE_TRANSLATION_RESULT ].includes(json?.type)) {
         return next(action);
@@ -342,20 +355,15 @@ function _requestingSubtitlesChange(
         backendRecordingOn = false) {
     const state = getState();
     const { conference } = state['features/base/conference'];
-    const { transcription } = state['features/base/config'];
 
     conference?.setLocalParticipantProperty(
         P_NAME_REQUESTING_TRANSCRIPTION,
         enabled);
 
-    if (enabled && conference?.getTranscriptionStatus() === JitsiMeetJS.constants.transcriptionStatus.OFF) {
-        const featureAllowed = isJwtFeatureEnabled(getState(), MEET_FEATURES.TRANSCRIPTION, false);
+    if (enabled && conference?.getTranscriptionStatus() === JitsiMeetJS.constants.transcriptionStatus.OFF
+        && isJwtFeatureEnabled(getState(), MEET_FEATURES.TRANSCRIPTION, false)) {
 
-        // the default value for inviteJigasiOnBackendTranscribing is true (when undefined)
-        const inviteJigasi = conference?.getMetadataHandler()?.getMetadata()?.asyncTranscription
-            ? (transcription?.inviteJigasiOnBackendTranscribing ?? true) : true;
-
-        if (featureAllowed && (!backendRecordingOn || inviteJigasi)) {
+        if (!conference?.getMetadataHandler()?.getMetadata()?.asyncTranscription) {
             conference?.dial(TRANSCRIBER_DIAL_NUMBER)
                 .catch((e: any) => {
                     logger.error('Error dialing', e);
@@ -369,12 +377,25 @@ function _requestingSubtitlesChange(
                     dispatch(setSubtitlesError(true));
                 });
         }
+
+        if (backendRecordingOn) {
+            conference?.getMetadataHandler()?.setMetadata(RECORDING_METADATA_ID, {
+                isTranscribingEnabled: true
+            });
+        }
     }
 
     if (enabled && language) {
         conference?.setLocalParticipantProperty(
             P_NAME_TRANSLATION_LANGUAGE,
             language.replace('translation-languages:', ''));
+    }
+
+    if (!enabled && backendRecordingOn
+        && conference?.getMetadataHandler()?.getMetadata()[RECORDING_METADATA_ID]?.isTranscribingEnabled) {
+        conference?.getMetadataHandler()?.setMetadata(RECORDING_METADATA_ID, {
+            isTranscribingEnabled: false
+        });
     }
 }
 

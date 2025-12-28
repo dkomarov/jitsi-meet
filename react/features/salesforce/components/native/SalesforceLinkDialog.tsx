@@ -1,13 +1,7 @@
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    Text,
-    View,
-    ViewStyle
-} from 'react-native';
+import { Platform, ScrollView, Text, View, ViewStyle } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 
 import { IReduxState } from '../../../app/types';
@@ -19,12 +13,7 @@ import Input from '../../../base/ui/components/native/Input';
 import { BUTTON_TYPES } from '../../../base/ui/constants.native';
 import { navigate } from '../../../mobile/navigation/components/conference/ConferenceNavigationContainerRef';
 import { screen } from '../../../mobile/navigation/routes';
-import {
-    CONTENT_HEIGHT_OFFSET,
-    LIST_HEIGHT_OFFSET,
-    NOTES_LINES,
-    NOTES_MAX_LENGTH
-} from '../../constants';
+import { CONTENT_HEIGHT_OFFSET, LIST_HEIGHT_OFFSET, NOTES_LINES, NOTES_MAX_LENGTH } from '../../constants';
 import { useSalesforceLinkDialog } from '../../useSalesforceLinkDialog';
 
 import { RecordItem } from './RecordItem';
@@ -37,9 +26,7 @@ import styles from './styles';
  */
 const SalesforceLinkDialog = () => {
     const { t } = useTranslation();
-    const { clientHeight } = useSelector(
-        (state: IReduxState) => state['features/base/responsive-ui']
-    );
+    const { clientHeight } = useSelector((state: IReduxState) => state['features/base/responsive-ui']);
     const {
         hasDetailsErrors,
         hasRecordsErrors,
@@ -64,14 +51,7 @@ const SalesforceLinkDialog = () => {
 
     const renderSpinner = () => (
         // @ts-ignore  @ts-expect-error
-        <View
-            style={
-                [
-                    styles.recordsSpinner,
-                    { height: clientHeight - CONTENT_HEIGHT_OFFSET }
-                ] as ViewStyle[]
-            }
-        >
+        <View style={[styles.recordsSpinner, { height: clientHeight - CONTENT_HEIGHT_OFFSET }] as ViewStyle[]}>
             {/* @ts-ignore @ts-expect-error */}
             <LoadingIndicator />
         </View>
@@ -79,9 +59,7 @@ const SalesforceLinkDialog = () => {
 
     const renderDetailsErrors = () => (
         // @ts-ignore  @ts-expect-errore
-        <Text style={styles.detailsError}>
-            {t('dialog.searchResultsDetailsError')}
-        </Text>
+        <Text style={styles.detailsError}>{t('dialog.searchResultsDetailsError')}</Text>
     );
 
     const renderSelection = () => (
@@ -90,38 +68,23 @@ const SalesforceLinkDialog = () => {
             {/*  @ts-ignore @ts-expect-error */}
             <ScrollView
                 bounces={false}
-                style={
-                    [
-                        styles.selectedRecord,
-                        { height: clientHeight - CONTENT_HEIGHT_OFFSET }
-                    ] as ViewStyle[]
-                }
+                style={[styles.selectedRecord, { height: clientHeight - CONTENT_HEIGHT_OFFSET }] as ViewStyle[]}
             >
                 {/*  @ts-ignore @ts-expect-error */}
                 <View style={styles.recordInfo as ViewStyle}>
                     <RecordItem {...selectedRecord} />
-                    {selectedRecordOwner && (
-                        <RecordItem {...selectedRecordOwner} />
-                    )}
+                    {selectedRecordOwner && <RecordItem {...selectedRecordOwner} />}
                     {hasDetailsErrors && renderDetailsErrors()}
                 </View>
                 {/*  @ts-ignore @ts-expect-error */}
-                <Text style={styles.addNote}>
-                    {t('dialog.addOptionalNote')}
-                </Text>
+                <Text style={styles.addNote}>{t('dialog.addOptionalNote')}</Text>
                 {/*  @ts-ignore @ts-expect-error */}
                 <Input
                     customStyles={{ container: styles.notes }}
                     maxLength={NOTES_MAX_LENGTH}
-                    minHeight={
-                        Platform.OS === 'ios' && NOTES_LINES
-                            ? 20 * NOTES_LINES
-                            : undefined
-                    }
+                    minHeight={Platform.OS === 'ios' && NOTES_LINES ? 20 * NOTES_LINES : undefined}
                     multiline={true}
-                    numberOfLines={
-                        Platform.OS === 'ios' ? undefined : NOTES_LINES
-                    }
+                    numberOfLines={Platform.OS === 'ios' ? undefined : NOTES_LINES}
                     /* eslint-disable-next-line react/jsx-no-bind */
                     onChange={(value) => setNotes(value)}
                     placeholder={t('dialog.addMeetingNote')}
@@ -157,39 +120,19 @@ const SalesforceLinkDialog = () => {
     const renderNoRecords = () =>
         showNoResults && (
             //  @ts-ignore @ts-expect-error
-            <View
-                style={
-                    [
-                        styles.noRecords,
-                        { height: clientHeight - CONTENT_HEIGHT_OFFSET }
-                    ] as ViewStyle[]
-                }
-            >
+            <View style={[styles.noRecords, { height: clientHeight - CONTENT_HEIGHT_OFFSET }] as ViewStyle[]}>
                 {/* @ts-ignore @ts-expect-error */}
-                <Text style={styles.noRecordsText}>
-                    {t('dialog.searchResultsNotFound')}
-                </Text>
+                <Text style={styles.noRecordsText}>{t('dialog.searchResultsNotFound')}</Text>
                 {/* @ts-ignore @ts-expect-error */}
-                <Text style={styles.noRecordsText}>
-                    {t('dialog.searchResultsTryAgain')}
-                </Text>
+                <Text style={styles.noRecordsText}>{t('dialog.searchResultsTryAgain')}</Text>
             </View>
         );
 
     const renderRecordsError = () => (
         // @ts-ignore @ts-expect-error
-        <View
-            style={
-                [
-                    styles.recordsError,
-                    { height: clientHeight - CONTENT_HEIGHT_OFFSET }
-                ] as ViewStyle[]
-            }
-        >
+        <View style={[styles.recordsError, { height: clientHeight - CONTENT_HEIGHT_OFFSET }] as ViewStyle[]}>
             {/* @ts-ignore @ts-expect-error */}
-            <Text style={styles.recordsErrorText}>
-                {t('dialog.searchResultsError')}
-            </Text>
+            <Text style={styles.recordsErrorText}>{t('dialog.searchResultsError')}</Text>
         </View>
     );
 
@@ -213,12 +156,7 @@ const SalesforceLinkDialog = () => {
                 {/* @ts-ignore @ts-expect-error */}
                 <ScrollView
                     bounces={false}
-                    style={
-                        [
-                            styles.recordList,
-                            { height: clientHeight - LIST_HEIGHT_OFFSET }
-                        ] as ViewStyle[]
-                    }
+                    style={[styles.recordList, { height: clientHeight - LIST_HEIGHT_OFFSET }] as ViewStyle[]}
                 >
                     {records.map((item: any) => (
                         <RecordItem

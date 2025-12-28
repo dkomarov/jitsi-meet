@@ -520,9 +520,6 @@ var config = {
     //     // Note: Starting transcriptions from the recording dialog will still work.
     //     disableClosedCaptions: false,
 
-    //     // Whether to invite jigasi when backend transcriptions are enabled (asyncTranscription is true in metadata).
-    //     // By default, we invite it.
-    //     inviteJigasiOnBackendTranscribing: true,
     // },
 
     // Misc
@@ -926,6 +923,11 @@ var config = {
     //     [ 'microphone', 'camera', 'chat' ],
     //     [ 'microphone', 'camera' ]
     // ],
+
+    // Overrides the buttons displayed in the main toolbar for reduced UI.
+    // When there isn't an override for a certain configuration the default jitsi-meet configuration will be used.
+    // The order of the buttons in the array is preserved.
+    // reducedUImainToolbarButtons: [ 'microphone', 'camera' ],
 
     // Toolbar buttons which have their click/tap event exposed through the API on
     // `toolbarButtonClicked`. Passing a string for the button key will
