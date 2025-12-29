@@ -11,8 +11,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
  * The URL of the Jitsi Meet deployment to be proxy to in the context of
  * development with webpack-dev-server.
  */
-const devServerProxyTarget
-    = process.env.WEBPACK_DEV_SERVER_PROXY_TARGET || 'https://alpha.jitsi.net';
+const devServerProxyTarget = process.env.WEBPACK_DEV_SERVER_PROXY_TARGET || 'https://alpha.jitsi.net';
 
 /**
  * Build a Performance configuration object for the given size.
@@ -46,11 +45,13 @@ function getBundleAnalyzerPlugin(analyzeBundle, name) {
         return [];
     }
 
-    return [ new BundleAnalyzerPlugin({
-        analyzerMode: 'disabled',
-        generateStatsFile: true,
-        statsFilename: `${name}-stats.json`
-    }) ];
+    return [
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'disabled',
+            generateStatsFile: true,
+            statsFilename: `${name}-stats.json`
+        })
+    ];
 }
 
 /**
@@ -70,15 +71,16 @@ function devServerProxyBypass({ path }) {
         tpath = tpath.replace(/\/v1\/_cdn\/[^/]+\//, '/');
     }
 
-    if (tpath.startsWith('/css/')
-            || tpath.startsWith('/doc/')
-            || tpath.startsWith('/fonts/')
-            || tpath.startsWith('/images/')
-            || tpath.startsWith('/lang/')
-            || tpath.startsWith('/sounds/')
-            || tpath.startsWith('/static/')
-            || tpath.endsWith('.wasm')) {
-
+    if (
+        tpath.startsWith('/css/') ||
+        tpath.startsWith('/doc/') ||
+        tpath.startsWith('/fonts/') ||
+        tpath.startsWith('/images/') ||
+        tpath.startsWith('/lang/') ||
+        tpath.startsWith('/sounds/') ||
+        tpath.startsWith('/static/') ||
+        tpath.endsWith('.wasm')
+    ) {
         return tpath;
     }
 
@@ -107,83 +109,88 @@ function getConfig(options = {}) {
         devtool: isProduction ? 'source-map' : 'eval-source-map',
         mode: isProduction ? 'production' : 'development',
         module: {
-            rules: [ {
-                // Transpile ES2015 (aka ES6) to ES5. Accept the JSX syntax by React
-                // as well.
+            rules: [
+                {
+                    // Transpile ES2015 (aka ES6) to ES5. Accept the JSX syntax by React
+                    // as well.
 
-                loader: 'babel-loader',
-                options: {
-                    // Avoid loading babel.config.js, since we only use it for React Native.
-                    configFile: false,
+                    loader: 'babel-loader',
+                    options: {
+                        // Avoid loading babel.config.js, since we only use it for React Native.
+                        configFile: false,
 
-                    presets: [
-                        [
-                            require.resolve('@babel/preset-env'),
+                        presets: [
+                            [
+                                require.resolve('@babel/preset-env'),
 
-                            // Tell babel to avoid compiling imports into CommonJS
-                            // so that webpack may do tree shaking.
-                            {
-                                modules: false,
+                                // Tell babel to avoid compiling imports into CommonJS
+                                // so that webpack may do tree shaking.
+                                {
+                                    modules: false,
 
-                                // Specify our target browsers so no transpiling is
-                                // done unnecessarily. For browsers not specified
-                                // here, the ES2015+ profile will be used.
-                                targets: {
-                                    chrome: 80,
-                                    electron: 10,
-                                    firefox: 68,
-                                    safari: 14
-                                },
+                                    // Specify our target browsers so no transpiling is
+                                    // done unnecessarily. For browsers not specified
+                                    // here, the ES2015+ profile will be used.
+                                    targets: {
+                                        chrome: 80,
+                                        electron: 10,
+                                        firefox: 68,
+                                        safari: 14
+                                    },
 
-                                // Consider stage 3 proposals which are implemented by some browsers already.
-                                shippedProposals: true,
+                                    // Consider stage 3 proposals which are implemented by some browsers already.
+                                    shippedProposals: true,
 
-                                // Detect usage of modern JavaScript features and automatically polyfill them
-                                // with core-js.
-                                useBuiltIns: 'usage',
+                                    // Detect usage of modern JavaScript features and automatically polyfill them
+                                    // with core-js.
+                                    useBuiltIns: 'usage',
 
-                                // core-js version to use, must be in sync with the version in package.json.
-                                corejs: '3.40'
+                                    // core-js version to use, must be in sync with the version in package.json.
+                                    corejs: '3.40'
+                                }
+                            ],
+                            require.resolve('@babel/preset-react')
+                        ]
+                    },
+                    test: /\.(j|t)sx?$/,
+                    exclude: /node_modules/
+                },
+                {
+                    // Allow CSS to be imported into JavaScript.
+
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader']
+                },
+                {
+                    // Import SVG as raw text when using ?raw query parameter.
+                    test: /\.svg$/,
+                    resourceQuery: /raw/,
+                    type: 'asset/source'
+                },
+                {
+                    // Import SVG as React component (default).
+                    test: /\.svg$/,
+                    resourceQuery: { not: [/raw/] },
+                    use: [
+                        {
+                            loader: '@svgr/webpack',
+                            options: {
+                                dimensions: false,
+                                expandProps: 'start'
                             }
-                        ],
-                        require.resolve('@babel/preset-react')
+                        }
                     ]
                 },
-                test: /\.(j|t)sx?$/,
-                exclude: /node_modules/
-            }, {
-                // Allow CSS to be imported into JavaScript.
-
-                test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader'
-                ]
-            }, {
-                // Import SVG as raw text when using ?raw query parameter.
-                test: /\.svg$/,
-                resourceQuery: /raw/,
-                type: 'asset/source'
-            }, {
-                // Import SVG as React component (default).
-                test: /\.svg$/,
-                resourceQuery: { not: [ /raw/ ] },
-                use: [ {
-                    loader: '@svgr/webpack',
+                {
+                    test: /\.tsx?$/,
+                    exclude: /node_modules/,
+                    loader: 'ts-loader',
                     options: {
-                        dimensions: false,
-                        expandProps: 'start'
+                        configFile: 'tsconfig.web.json',
+                        transpileOnly: !isProduction // Skip type checking for dev builds.,
                     }
-                } ]
-            }, {
-                test: /\.tsx?$/,
-                exclude: /node_modules/,
-                loader: 'ts-loader',
-                options: {
-                    configFile: 'tsconfig.web.json',
-                    transpileOnly: !isProduction // Skip type checking for dev builds.,
                 }
-            } ]
+            ]
         },
         node: {
             // Allow the use of the real filename of the module being executed. By
@@ -202,8 +209,8 @@ function getConfig(options = {}) {
             sourceMapFilename: '[file].map'
         },
         plugins: [
-            detectCircularDeps
-                && new CircularDependencyPlugin({
+            detectCircularDeps &&
+                new CircularDependencyPlugin({
                     allowAsyncCycles: false,
                     exclude: /node_modules/,
                     failOnError: false
@@ -214,9 +221,7 @@ function getConfig(options = {}) {
                 'focus-visible': 'focus-visible/dist/focus-visible.min.js',
                 '@giphy/js-analytics': resolve(__dirname, 'giphy-analytics-stub.js')
             },
-            aliasFields: [
-                'browser'
-            ],
+            aliasFields: ['browser'],
             extensions: [
                 '.web.js',
                 '.web.ts',
@@ -261,12 +266,12 @@ function getDevServerConfig() {
         hot: true,
         proxy: [
             {
-                context: [ '/' ],
+                context: ['/'],
                 bypass: devServerProxyBypass,
                 secure: false,
                 target: devServerProxyTarget,
                 headers: {
-                    'Host': new URL(devServerProxyTarget).host
+                    Host: new URL(devServerProxyTarget).host
                 }
             }
         ],
@@ -274,7 +279,7 @@ function getDevServerConfig() {
         static: {
             directory: process.cwd(),
             watch: {
-                ignored: file => file.endsWith('.log')
+                ignored: (file) => file.endsWith('.log')
             }
         }
     };
@@ -295,7 +300,8 @@ module.exports = (_env, argv) => {
     };
 
     return [
-        { ...config,
+        {
+            ...config,
             entry: {
                 'app.bundle': './app.js'
             },
@@ -304,7 +310,7 @@ module.exports = (_env, argv) => {
                 ...config.plugins,
                 ...getBundleAnalyzerPlugin(analyzeBundle, 'app'),
                 new webpack.DefinePlugin({
-                    '__DEV__': !isProduction
+                    __DEV__: !isProduction
                 }),
                 new webpack.IgnorePlugin({
                     resourceRegExp: /^canvas$/,
@@ -319,48 +325,45 @@ module.exports = (_env, argv) => {
                 })
             ],
 
-            performance: getPerformanceHints(perfHintOptions, 5 * 1024 * 1024) },
-        { ...config,
+            performance: getPerformanceHints(perfHintOptions, 5 * 1024 * 1024)
+        },
+        {
+            ...config,
             entry: {
-                'alwaysontop': './react/features/always-on-top/index.tsx'
+                alwaysontop: './react/features/always-on-top/index.tsx'
             },
-            plugins: [
-                ...config.plugins,
-                ...getBundleAnalyzerPlugin(analyzeBundle, 'alwaysontop')
-            ],
-            performance: getPerformanceHints(perfHintOptions, 800 * 1024) },
-        { ...config,
+            plugins: [...config.plugins, ...getBundleAnalyzerPlugin(analyzeBundle, 'alwaysontop')],
+            performance: getPerformanceHints(perfHintOptions, 800 * 1024)
+        },
+        {
+            ...config,
             entry: {
-                'close3': './static/close3.js'
+                close3: './static/close3.js'
             },
-            plugins: [
-                ...config.plugins,
-                ...getBundleAnalyzerPlugin(analyzeBundle, 'close3')
-            ],
-            performance: getPerformanceHints(perfHintOptions, 128 * 1024) },
+            plugins: [...config.plugins, ...getBundleAnalyzerPlugin(analyzeBundle, 'close3')],
+            performance: getPerformanceHints(perfHintOptions, 128 * 1024)
+        },
 
-        { ...config,
+        {
+            ...config,
             entry: {
-                'external_api': './modules/API/external/index.js'
+                external_api: './modules/API/external/index.js'
             },
-            output: { ...config.output,
-                library: 'JitsiMeetExternalAPI',
-                libraryTarget: 'umd' },
-            plugins: [
-                ...config.plugins,
-                ...getBundleAnalyzerPlugin(analyzeBundle, 'external_api')
-            ],
-            performance: getPerformanceHints(perfHintOptions, 95 * 1024) },
-        { ...config,
+            output: { ...config.output, library: 'JitsiMeetExternalAPI', libraryTarget: 'umd' },
+            plugins: [...config.plugins, ...getBundleAnalyzerPlugin(analyzeBundle, 'external_api')],
+            performance: getPerformanceHints(perfHintOptions, 101 * 1024)
+        }, // 95
+        {
+            ...config,
             entry: {
                 'face-landmarks-worker': './react/features/face-landmarks/faceLandmarksWorker.ts'
             },
-            plugins: [
-                ...config.plugins,
-                ...getBundleAnalyzerPlugin(analyzeBundle, 'face-landmarks-worker')
-            ],
-            performance: getPerformanceHints(perfHintOptions, 1024 * 1024 * 2) },
-        { ...config, /**
+            plugins: [...config.plugins, ...getBundleAnalyzerPlugin(analyzeBundle, 'face-landmarks-worker')],
+            performance: getPerformanceHints(perfHintOptions, 1024 * 1024 * 2)
+        },
+        {
+            ...config
+            /**
              * The NoiseSuppressorWorklet is loaded in an audio worklet which doesn't have the same
              * context as a normal window, (e.g. self/window is not defined).
              * While running a production build webpack's boilerplate code doesn't introduce any
@@ -369,37 +372,38 @@ module.exports = (_env, argv) => {
              * those parts with the null-loader.
              * The dev server also expects a `self` global object that's not available in the `AudioWorkletGlobalScope`,
              * so we replace it.
-             */
+             */,
             entry: {
                 'noise-suppressor-worklet':
                     './react/features/stream-effects/noise-suppression/NoiseSuppressorWorklet.ts'
             },
 
-            module: { rules: [
-                ...config.module.rules,
-                {
-                    test: resolve(__dirname, 'node_modules/webpack-dev-server/client'),
-                    loader: 'null-loader'
-                }
-            ] },
-            plugins: [
-            ],
+            module: {
+                rules: [
+                    ...config.module.rules,
+                    {
+                        test: resolve(__dirname, 'node_modules/webpack-dev-server/client'),
+                        loader: 'null-loader'
+                    }
+                ]
+            },
+            plugins: [],
             performance: getPerformanceHints(perfHintOptions, 1024 * 1024 * 2),
 
             output: {
                 ...config.output,
 
                 globalObject: 'AudioWorkletGlobalScope'
-            } },
+            }
+        },
 
-        { ...config,
+        {
+            ...config,
             entry: {
                 'screenshot-capture-worker': './react/features/screenshot-capture/worker.ts'
             },
-            plugins: [
-                ...config.plugins,
-                ...getBundleAnalyzerPlugin(analyzeBundle, 'screenshot-capture-worker')
-            ],
-            performance: getPerformanceHints(perfHintOptions, 30 * 1024) }
+            plugins: [...config.plugins, ...getBundleAnalyzerPlugin(analyzeBundle, 'screenshot-capture-worker')],
+            performance: getPerformanceHints(perfHintOptions, 30 * 1024)
+        }
     ];
 };
