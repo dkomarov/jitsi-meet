@@ -118,3 +118,5 @@ react-native-sdk/sounds
 tests/.env
 test-results
 
+css/all.css
+css/all.bundle.css.map
