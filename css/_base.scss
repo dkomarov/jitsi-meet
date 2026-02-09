@@ -43,6 +43,12 @@ body {
     outline: none;
 }
 
+.jitsi-icon {
+    &-default svg {
+        fill: var(--icon-default-color, white);
+    }
+}
+
 .disabled .jitsi-icon svg {
     fill: #929292;
 }

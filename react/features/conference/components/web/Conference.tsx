@@ -14,6 +14,7 @@ import { setColorAlpha } from '../../../base/util/helpers';
 import { openChat, setFocusedTab } from '../../../chat/actions.web';
 import Chat from '../../../chat/components/web/Chat';
 import { ChatTabs } from '../../../chat/constants';
+import CustomPanel from '../../../custom-panel/components/web/CustomPanel';
 import { isFileUploadingEnabled, processFiles } from '../../../file-sharing/functions.any';
 import MainFilmstrip from '../../../filmstrip/components/web/MainFilmstrip';
 import ScreenshareFilmstrip from '../../../filmstrip/components/web/ScreenshareFilmstrip';
@@ -257,6 +258,9 @@ class Conference extends AbstractConference<IProps, any> {
                             id = 'videospace'
                             onTouchStart = { this._onVideospaceTouchStart }>
                             <LargeVideo />
+                            <StageFilmstrip />
+                            <ScreenshareFilmstrip />
+                            <MainFilmstrip />
                         </div>
                         <span
                             aria-level = { 1 }
@@ -323,6 +327,7 @@ class Conference extends AbstractConference<IProps, any> {
                     { _showVisitorsQueue && <VisitorsQueue />}
                 </div>
                 <ParticipantsPane />
+                <CustomPanel />
                 <ReactionAnimations />
             </div>
         );
