@@ -3,10 +3,7 @@ import { batch } from 'react-redux';
 import { IStore } from '../app/types';
 import { silentLogout } from '../authentication/actions.web';
 import { isTokenAuthInline } from '../authentication/functions';
-import {
-    setStartMutedPolicy,
-    setStartReactionsMuted
-} from '../base/conference/actions';
+import { setStartMutedPolicy, setStartReactionsMuted } from '../base/conference/actions';
 import { getConferenceState } from '../base/conference/functions';
 import { hangup } from '../base/connection/actions.web';
 import { openDialog } from '../base/dialog/actions';
@@ -71,13 +68,22 @@ export function openLogoutDialog() {
             return;
         }
 
-        dispatch(openDialog('LogoutDialog', LogoutDialog, {
-            onLogout() {
-                if (logoutUrl && browser.isElectron()) {
-                    const url = appendURLHashParam(logoutUrl, 'electron', 'true');
+        dispatch(
+            openDialog('LogoutDialog', LogoutDialog, {
+                onLogout() {
+                    if (logoutUrl && browser.isElectron()) {
+                        const url = appendURLHashParam(logoutUrl, 'electron', 'true');
 
-                            conference?.room.xmpp.moderator.logout(() => dispatch(hangup(true)));
+                        window.open(url, '_blank');
+                        dispatch(hangup(true));
+                    } else {
+                        if (logoutUrl) {
+                            window.location.href = logoutUrl;
+
+                            return;
                         }
+
+                        conference?.room.xmpp.moderator.logout(() => dispatch(hangup(true)));
                     }
                 }
             })
@@ -139,11 +145,7 @@ export function submitMoreTab(newState: any) {
         const currentState = getMoreTabProps(state);
 
         if (newState.maxStageParticipants !== currentState.maxStageParticipants) {
-            dispatch(
-                updateSettings({
-                    maxStageParticipants: Number(newState.maxStageParticipants)
-                })
-            );
+            dispatch(updateSettings({ maxStageParticipants: Number(newState.maxStageParticipants) }));
         }
 
         if (newState.hideSelfView !== currentState.hideSelfView) {
@@ -186,11 +188,7 @@ export function submitModeratorTab(newState: any) {
             batch(() => {
                 // updating settings we want to update and backend (notify the rest of the participants)
                 dispatch(setStartReactionsMuted(newState.startReactionsMuted, true));
-                dispatch(
-                    updateSettings({
-                        soundsReactions: !newState.startReactionsMuted
-                    })
-                );
+                dispatch(updateSettings({ soundsReactions: !newState.startReactionsMuted }));
             });
         }
 
@@ -231,17 +229,6 @@ export function submitProfileTab(newState: any) {
         if (newState.email !== currentState.email) {
             APP.conference.changeLocalEmail(newState.email);
         }
-
-        //
-        // if (newState.hideSelfView !== currentState.hideSelfView) {
-        //     dispatch(
-        //         updateSettings({ disableSelfView: newState.hideSelfView })
-        //     );
-        // }
-        //
-        // if (newState.currentLanguage !== currentState.currentLanguage) {
-        //     i18next.changeLanguage(newState.currentLanguage);
-        // }
     };
 }
 
@@ -349,19 +336,12 @@ export function submitShortcutsTab(newState: any) {
  */
 export function submitVirtualBackgroundTab(newState: any, isCancel = false) {
     return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
-        //      const currentState = getVirtualBackgroundTabProps(getState());
         const state = getState();
         const track = getLocalVideoTrack(state['features/base/tracks'])?.jitsiTrack;
         const { localFlipX } = state['features/base/settings'];
 
         if (newState.options?.selectedThumbnail) {
             await dispatch(toggleBackgroundEffect(newState.options, track));
-            // await dispatch(
-            //     toggleBackgroundEffect(
-            //         newState.options,
-            //         currentState._jitsiTrack
-            //     )
-            // );
 
             if (!isCancel) {
                 // Set x scale to default value.
