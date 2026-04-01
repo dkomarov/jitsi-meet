@@ -156,6 +156,20 @@ function getConfig(options = {}) {
                     exclude: /node_modules/
                 },
                 {
+                    // Emit woff2 fonts to excalidraw/fonts/ preserving the subdirectory
+                    // structure so they land at the same path that deploy-excalidraw copies
+                    // them to (libs/excalidraw/fonts/...) and CSS @font-face URLs resolve.
+                    test: /\.woff2$/,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: (pathData) => {
+                            const match = pathData.filename?.match(/\/fonts\/(.*)/);
+
+                            return match ? `excalidraw/fonts/${match[1]}` : 'excalidraw/fonts/[name][ext]';
+                        }
+                    }
+                },
+                {
                     // Allow CSS to be imported into JavaScript.
 
                     test: /\.css$/,
@@ -180,41 +194,11 @@ function getConfig(options = {}) {
                             }
                         }
                     ]
-                }, {
-                test: /\.(j|t)sx?$/,
-                exclude: /node_modules/
-            }, {
-                // Emit woff2 fonts to excalidraw/fonts/ preserving the subdirectory
-                // structure so they land at the same path that deploy-excalidraw copies
-                // them to (libs/excalidraw/fonts/...) and CSS @font-face URLs resolve.
-                test: /\.woff2$/,
-                type: 'asset/resource',
-                generator: {
-                    filename: pathData => {
-                        const match = pathData.filename?.match(/\/fonts\/(.*)/);
-
-                        return match ? `excalidraw/fonts/${match[1]}` : 'excalidraw/fonts/[name][ext]';
-                    }
-                }
-            }, {
-                // Allow CSS to be imported into JavaScript.
-
-                test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader'
-                ]
-            }, {
-                // Import SVG as raw text when using ?raw query parameter.
-                test: /\.svg$/,
-                resourceQuery: /raw/,
-                type: 'asset/source'
-            }, {
-                // Import SVG as React component (default).
-                test: /\.svg$/,
-                resourceQuery: { not: [ /raw/ ] },
-                use: [ {
-                    loader: '@svgr/webpack',
+                },
+                {
+                    test: /\.tsx?$/,
+                    exclude: /node_modules/,
+                    loader: 'ts-loader',
                     options: {
                         configFile: 'tsconfig.web.json',
                         transpileOnly: !isProduction // Skip type checking for dev builds.,
@@ -251,7 +235,7 @@ function getConfig(options = {}) {
             alias: {
                 'focus-visible': 'focus-visible/dist/focus-visible.min.js',
                 '@giphy/js-analytics': resolve(__dirname, 'giphy-analytics-stub.js'),
-                'react': resolve(__dirname, 'node_modules/react'),
+                react: resolve(__dirname, 'node_modules/react'),
                 'react-dom': resolve(__dirname, 'node_modules/react-dom'),
                 'roughjs/bin/rough': 'roughjs/bin/rough.js',
                 'roughjs/bin/generator': 'roughjs/bin/generator.js',
@@ -316,9 +300,8 @@ function getDevServerConfig() {
             }
         ],
         server: process.env.CODESPACES ? 'http' : 'https',
-        setupMiddlewares: (middlewares, _devServer) => middlewares.filter(
-            m => m.name !== 'cross-origin-header-check'
-        ),
+        setupMiddlewares: (middlewares, _devServer) =>
+            middlewares.filter((m) => m.name !== 'cross-origin-header-check'),
         static: {
             directory: process.cwd(),
             watch: {
@@ -368,8 +351,10 @@ module.exports = (_env, argv) => {
                 })
             ],
 
-            performance: getPerformanceHints(perfHintOptions, 3.5 * 1024 * 1024) },
-        { ...config,
+            performance: getPerformanceHints(perfHintOptions, 3.5 * 1024 * 1024)
+        },
+        {
+            ...config,
             entry: {
                 alwaysontop: './react/features/always-on-top/index.tsx'
             },
@@ -392,8 +377,8 @@ module.exports = (_env, argv) => {
             },
             output: { ...config.output, library: 'JitsiMeetExternalAPI', libraryTarget: 'umd' },
             plugins: [...config.plugins, ...getBundleAnalyzerPlugin(analyzeBundle, 'external_api')],
-            performance: getPerformanceHints(perfHintOptions, 101 * 1024)
-        }, // 95
+            performance: getPerformanceHints(perfHintOptions, 95 * 1024)
+        },
         {
             ...config,
             entry: {
@@ -403,7 +388,7 @@ module.exports = (_env, argv) => {
             performance: getPerformanceHints(perfHintOptions, 1024 * 1024 * 2)
         },
         {
-            ...config
+            ...config,
             /**
              * The NoiseSuppressorWorklet is loaded in an audio worklet which doesn't have the same
              * context as a normal window, (e.g. self/window is not defined).
@@ -413,8 +398,7 @@ module.exports = (_env, argv) => {
              * those parts with the null-loader.
              * The dev server also expects a `self` global object that's not available in the `AudioWorkletGlobalScope`,
              * so we replace it.
-             */,
-            entry: {
+             */ entry: {
                 'noise-suppressor-worklet':
                     './react/features/stream-effects/noise-suppression/NoiseSuppressorWorklet.ts'
             },
