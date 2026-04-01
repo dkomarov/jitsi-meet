@@ -36,10 +36,7 @@ export function dockToolbox(dock: boolean) {
 
             dispatch(clearToolboxTimeout());
         } else if (visible) {
-            dispatch(
-                setToolboxTimeout(
-                    () => dispatch(hideToolbox()),
-                    toolbarTimeout));
+            dispatch(setToolboxTimeout(() => dispatch(hideToolbox()), toolbarTimeout));
         } else {
             dispatch(showToolbox());
         }
@@ -90,15 +87,14 @@ export function hideToolbox(force = false) {
             : '.filmstrip:hover,.remotevideomenu:hover';
         const hoveredElem = document.querySelector(hoverSelector);
 
-        if (!force
-                && (hovered
-                    || state['features/invite'].calleeInfoVisible
-                    || (state['features/chat'].isOpen && !autoHideWhileChatIsOpen)
-                    || hoveredElem)) {
-            dispatch(
-                setToolboxTimeout(
-                    () => dispatch(hideToolbox()),
-                    toolbarTimeout));
+        if (
+            !force &&
+            (hovered ||
+                state['features/invite'].calleeInfoVisible ||
+                (state['features/chat'].isOpen && !autoHideWhileChatIsOpen) ||
+                hoveredElem)
+        ) {
+            dispatch(setToolboxTimeout(() => dispatch(hideToolbox()), toolbarTimeout));
         } else {
             dispatch(setToolboxVisible(false));
         }
@@ -135,10 +131,7 @@ export function showToolbox(timeout = 0) {
         const initialTimeout = toolbarConfig?.initialTimeout;
         const alwaysVisible = toolbarConfig?.alwaysVisible;
 
-        const {
-            enabled,
-            visible
-        } = state['features/toolbox'];
+        const { enabled, visible } = state['features/toolbox'];
 
         if (enabled && !visible) {
             dispatch(setToolboxVisible(true));
@@ -148,15 +141,16 @@ export function showToolbox(timeout = 0) {
             if (!alwaysVisible) {
                 if (typeof initialTimeout === 'number') {
                     // reset `initialTimeout` once it is consumed once
-                    dispatch(overwriteConfig({ toolbarConfig: {
-                        ...toolbarConfig,
-                        initialTimeout: null
-                    } }));
+                    dispatch(
+                        overwriteConfig({
+                            toolbarConfig: {
+                                ...toolbarConfig,
+                                initialTimeout: null
+                            }
+                        })
+                    );
                 }
-                dispatch(
-                    setToolboxTimeout(
-                        () => dispatch(hideToolbox()),
-                        timeout || initialTimeout || toolbarTimeout));
+                dispatch(setToolboxTimeout(() => dispatch(hideToolbox()), timeout || initialTimeout || toolbarTimeout));
             }
         }
     };
@@ -252,7 +246,7 @@ export function setToolbarHovered(hovered: boolean) {
  * }}
  */
 export function setToolboxTimeout(handler: Function, timeoutMS: number) {
-    return function(dispatch: IStore['dispatch']) {
+    return function (dispatch: IStore['dispatch']) {
         if (isMobileBrowser()) {
             return;
         }
@@ -266,11 +260,11 @@ export function setToolboxTimeout(handler: Function, timeoutMS: number) {
 }
 
 /**
-     * Closes the overflow menu if opened.
-     *
-     * @private
-     * @returns {void}
-     */
+ * Closes the overflow menu if opened.
+ *
+ * @private
+ * @returns {void}
+ */
 export function closeOverflowMenuIfOpen() {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const { overflowMenuVisible } = getState()['features/toolbox'];
