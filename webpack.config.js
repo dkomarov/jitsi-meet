@@ -180,7 +180,7 @@ function getConfig(options = {}) {
                             }
                         }
                     ]
-                },
+                }, {
                 test: /\.(j|t)sx?$/,
                 exclude: /node_modules/
             }, {
