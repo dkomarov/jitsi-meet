@@ -7,6 +7,7 @@ import { JitsiRecordingConstants } from '../../../base/lib-jitsi-meet';
 import E2EELabel from '../../../e2ee/components/E2EELabel';
 import HighlightButton from '../../../recording/components/Recording/web/HighlightButton';
 import RecordingLabel from '../../../recording/components/web/RecordingLabel';
+import TranscribingLabel from '../../../recording/components/web/TranscribingLabel';
 import { showToolbox } from '../../../toolbox/actions.web';
 import { isToolboxVisible } from '../../../toolbox/functions.web';
 import VideoQualityLabel from '../../../video-quality/components/VideoQualityLabel.web';
@@ -83,6 +84,7 @@ const COMPONENTS: Array<{
             <>
                 <RecordingLabel mode={JitsiRecordingConstants.mode.FILE} />
                 <RecordingLabel mode={JitsiRecordingConstants.mode.STREAM} />
+                <TranscribingLabel />
             </>
         ),
         id: 'recording'
@@ -223,7 +225,7 @@ function _mapStateToProps(state: IReduxState) {
     return {
         _conferenceInfo: getConferenceInfo(state),
         _reducedUI: reducedUI,
-        _visible: isToolboxVisible(state),
+        _visible: isToolboxVisible(state)
     };
 }
 

@@ -18,6 +18,11 @@ interface IProps extends WithTranslation {
     ariaControls: String;
 
     /**
+     * Aria label for the Button.
+     */
+    ariaLabel?: string;
+
+    /**
      * A child React Element to display within {@code InlineDialog}.
      */
     children: React.ReactNode;

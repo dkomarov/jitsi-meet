@@ -10,7 +10,7 @@ import { withStyles } from 'tss-react/mui';
 import { ACTION_SHORTCUT_TRIGGERED, createShortcutEvent, createToolbarEvent } from '../../../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../../../analytics/functions';
 import { IReduxState, IStore } from '../../../app/types';
-import { isMobileBrowser, isTouchDevice, shouldEnableResize } from '../../../base/environment/utils';
+import { isMobileBrowser, isTouchDevice, shouldEnableResize } from '../../../base/environment/utils.web';
 import { translate } from '../../../base/i18n/functions';
 import Icon from '../../../base/icons/components/Icon';
 import { IconArrowDown, IconArrowUp } from '../../../base/icons/svg';
@@ -44,6 +44,7 @@ import {
     TOP_FILMSTRIP_HEIGHT,
     TOUCH_DRAG_HANDLE_PADDING
 } from '../../constants';
+import { calculateFullyVisibleParticipantsCount } from '../../functions.any';
 import {
     getVerticalViewMaxWidth,
     isFilmstripDisabled,
@@ -51,7 +52,6 @@ import {
     shouldRemoteVideosBeVisible
 } from '../../functions.web';
 
-import AudioTracksContainer from './AudioTracksContainer';
 import Thumbnail from './Thumbnail';
 import ThumbnailWrapper from './ThumbnailWrapper';
 
@@ -385,11 +385,6 @@ export interface IProps extends WithTranslation {
     _maxTopPanelHeight: number;
 
     /**
-     * Whethere reduced UI feature is enabled or not.
-     */
-    _reducedUI: boolean;
-
-    /**
      * The participants in the call.
      */
     _remoteParticipants: Array<string>;
@@ -604,7 +599,6 @@ class Filmstrip extends PureComponent <IProps, IState> {
             _filmstripDisabled,
             _localScreenShareId,
             _mainFilmstripVisible,
-            _reducedUI,
             _resizableFilmstrip,
             _topPanelFilmstrip,
             _topPanelMaxHeight,
@@ -646,13 +640,6 @@ class Filmstrip extends PureComponent <IProps, IState> {
             if (!_mainFilmstripVisible) {
                 filmstripStyle.right = `-${filmstripStyle.maxWidth}px`;
             }
-        }
-
-        // FIX: Until we move AudioTracksContainer to a more global place,
-        // we apply this css hot fix to hide Filmstrip but keep AudioTracksContainer in the DOM,
-        // so we don't have audio problems when reduced UI is enabled.
-        if (_reducedUI) {
-            filmstripStyle.display = 'none';
         }
 
         let toolbar: React.ReactNode = null;
@@ -740,7 +727,6 @@ class Filmstrip extends PureComponent <IProps, IState> {
                     </div>
                     : filmstrip
                 }
-                <AudioTracksContainer />
             </div>
         );
     }
@@ -944,10 +930,32 @@ class Filmstrip extends PureComponent <IProps, IState> {
      */
     _onListItemsRendered({ visibleStartIndex, visibleStopIndex }: {
         visibleStartIndex: number; visibleStopIndex: number; }) {
-        const { dispatch } = this.props;
+        const {
+            dispatch,
+            _currentLayout,
+            _filmstripWidth,
+            _filmstripHeight,
+            _thumbnailWidth,
+            _thumbnailHeight,
+        } = this.props;
+
+        // Calculate fully visible count (excluding partially visible tiles)
+        const isHorizontal = _currentLayout === LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW;
+        const itemSize = isHorizontal
+            ? _thumbnailWidth + TILE_HORIZONTAL_MARGIN
+            : _thumbnailHeight + TILE_VERTICAL_MARGIN;
+        const containerSize = isHorizontal ? _filmstripWidth : _filmstripHeight;
+
+        const fullyVisibleCount = calculateFullyVisibleParticipantsCount(
+            visibleStartIndex,
+            visibleStopIndex,
+            containerSize,
+            itemSize
+        );
+
         const { startIndex, stopIndex } = this._calculateIndices(visibleStartIndex, visibleStopIndex);
 
-        dispatch(setVisibleRemoteParticipants(startIndex, stopIndex));
+        dispatch(setVisibleRemoteParticipants(startIndex, stopIndex, fullyVisibleCount));
     }
 
     /**
@@ -1220,7 +1228,6 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
     const _currentLayout = getCurrentLayout(state);
     const _isVerticalFilmstrip = _currentLayout === LAYOUTS.VERTICAL_FILMSTRIP_VIEW
         || (filmstripType === FILMSTRIP_TYPE.MAIN && _currentLayout === LAYOUTS.STAGE_FILMSTRIP_VIEW);
-    const { reducedUI } = state['features/base/responsive-ui'];
 
     return {
         _className: className,
@@ -1238,7 +1245,6 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         _mainFilmstripVisible: notDisabled,
         _maxFilmstripWidth: videoSpaceWidth - MIN_STAGE_VIEW_WIDTH,
         _maxTopPanelHeight: clientHeight - MIN_STAGE_VIEW_HEIGHT,
-        _reducedUI: reducedUI,
         _remoteParticipantsLength: _remoteParticipants?.length ?? 0,
         _topPanelHeight: topPanelHeight.current,
         _topPanelMaxHeight: topPanelHeight.current || TOP_FILMSTRIP_HEIGHT,

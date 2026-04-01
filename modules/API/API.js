@@ -843,12 +843,8 @@ function initCommands() {
 
             const activeSession = getActiveSession(state, mode);
 
-            if (activeSession && activeSession.id) {
-                APP.store.dispatch(toggleScreenshotCaptureSummary(false));
-                conference.stopRecording(activeSession.id);
-            } else {
-                logger.error('No recording or streaming session found');
-            }
+            APP.store.dispatch(toggleScreenshotCaptureSummary(false));
+            conference.stopRecording(activeSession?.id);
         },
         'initiate-private-chat': participantId => {
             const state = APP.store.getState();
@@ -1493,19 +1489,29 @@ class API {
      * @returns {void}
      */
     notifyReceivedChatMessage(
-            { body, from, nick, privateMessage, ts } = {}) {
+            { body, from, nick, privateMessage, ts, messageId, replyToMessageId } = {}) {
         if (APP.conference.isLocalId(from)) {
             return;
         }
 
-        this._sendEvent({
+        const event = {
             name: 'incoming-message',
             from,
             message: body,
             nick,
             privateMessage,
             stamp: ts
-        });
+        };
+
+        if (typeof messageId === 'string' && messageId !== '') {
+            event.messageId = messageId;
+        }
+
+        if (typeof replyToMessageId === 'string' && replyToMessageId !== '') {
+            event.replyToMessageId = replyToMessageId;
+        }
+
+        this._sendEvent(event);
     }
 
     /**
@@ -2325,6 +2331,7 @@ class API {
      * @returns {void}
      */
     notifyPictureInPictureRequested() {
+        logger.debug('Sending _pip-requested event to External API');
         this._sendEvent({
             name: '_pip-requested'
         });
@@ -2336,6 +2343,7 @@ class API {
      * @returns {void}
      */
     notifyPictureInPictureEntered() {
+        logger.debug('Sending pip-entered event to External API');
         this._sendEvent({
             name: 'pip-entered'
         });
@@ -2347,6 +2355,7 @@ class API {
      * @returns {void}
      */
     notifyPictureInPictureLeft() {
+        logger.debug('Sending pip-left event to External API');
         this._sendEvent({
             name: 'pip-left'
         });

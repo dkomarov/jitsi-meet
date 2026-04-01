@@ -1,13 +1,17 @@
 import { batch } from 'react-redux';
 
 import { IStore } from '../app/types';
-import { setTokenAuthUrlSuccess } from '../authentication/actions.web';
-import { isTokenAuthEnabled } from '../authentication/functions.web';
-import { setStartMutedPolicy, setStartReactionsMuted } from '../base/conference/actions.web';
+import { silentLogout } from '../authentication/actions.web';
+import { isTokenAuthInline } from '../authentication/functions';
+import {
+    setStartMutedPolicy,
+    setStartReactionsMuted
+} from '../base/conference/actions';
 import { getConferenceState } from '../base/conference/functions';
 import { hangup } from '../base/connection/actions.web';
 import { openDialog } from '../base/dialog/actions';
 import i18next from '../base/i18n/i18next';
+import { setJWT } from '../base/jwt/actions';
 import { browser } from '../base/lib-jitsi-meet';
 import { getNormalizedDisplayName } from '../base/participants/functions';
 import { updateSettings } from '../base/settings/actions';
@@ -34,6 +38,7 @@ import {
     getProfileTabProps,
     getShortcutsTabProps
 } from './functions.web';
+import logger from './logger';
 
 /**
  * Opens {@code LogoutDialog}.
@@ -48,23 +53,28 @@ export function openLogoutDialog() {
         const logoutUrl = config.tokenLogoutUrl;
 
         const { conference } = state['features/base/conference'];
-        const { jwt } = state['features/base/jwt'];
+        const { idToken } = state['features/base/jwt'];
 
-        dispatch(
-            openDialog('LogoutDialog', LogoutDialog, {
-                onLogout() {
-                    if (isTokenAuthEnabled(config) && config.tokenAuthUrlAutoRedirect && jwt) {
-                        if (logoutUrl && browser.isElectron()) {
-                            const url = appendURLHashParam(logoutUrl, 'electron', 'true');
+        if (!browser.isElectron() && logoutUrl && isTokenAuthInline(config)) {
+            let url = logoutUrl;
 
-                            window.open(url, '_blank');
-                            dispatch(hangup(true));
-                        } else {
-                            if (logoutUrl) {
-                                window.location.href = logoutUrl;
+            if (idToken) {
+                url += `${logoutUrl.indexOf('?') === -1 ? '?' : '&'}id_token_hint=${idToken}`;
+            }
 
-                                return;
-                            }
+            silentLogout(url)
+                .then(() => {
+                    dispatch(setJWT());
+                })
+                .catch(() => logger.error('logout failed'));
+
+            return;
+        }
+
+        dispatch(openDialog('LogoutDialog', LogoutDialog, {
+            onLogout() {
+                if (logoutUrl && browser.isElectron()) {
+                    const url = appendURLHashParam(logoutUrl, 'electron', 'true');
 
                             conference?.room.xmpp.moderator.logout(() => dispatch(hangup(true)));
                         }
