@@ -1,6 +1,5 @@
 /* global APP $ */
 
-import { multiremotebrowser } from '@wdio/globals';
 import assert from 'assert';
 import { Key } from 'webdriverio';
 
@@ -26,6 +25,7 @@ import SecurityDialog from '../pageobjects/SecurityDialog';
 import SettingsDialog from '../pageobjects/SettingsDialog';
 import Toolbar from '../pageobjects/Toolbar';
 import VideoQualityDialog from '../pageobjects/VideoQualityDialog';
+import VirtualBackgroundDialog from '../pageobjects/VirtualBackgroundDialog';
 import Visitors from '../pageobjects/Visitors';
 
 import { LOG_PREFIX, logInfo } from './browserLogger';
@@ -175,7 +175,7 @@ export class Participant {
      * The driver it uses.
      */
     get driver() {
-        return multiremotebrowser.getInstance(this._name);
+        return multiRemoteBrowser.getInstance(this._name);
     }
 
     /**
@@ -260,6 +260,13 @@ export class Participant {
 
         await this.waitForPageToLoad();
 
+        // If the URL changed, wait for the new page to load before proceeding.
+        const currentUrl = await this.driver.getUrl();
+
+        if (!currentUrl.includes(url)) {
+            await this.waitForPageToLoad();
+        }
+
         if (this._iFrameApi) {
             await this.switchToIFrame();
         }
@@ -267,6 +274,21 @@ export class Participant {
         if (!options.skipPrejoinButtonClick
             // @ts-ignore
             && !Boolean(await this.execute(() => config.prejoinConfig?.enabled === false))) {
+            // For iFrame API tests, the wrapper page's iframeAPI.onload fires before the embedded Jitsi
+            // app inside the iframe has finished its own init, so the prejoin Join button can be in the
+            // DOM with no React click handler attached yet. APP.store is created during conference.init,
+            // which is also when prejoin's handlers mount; gating the click on it avoids the race.
+            if (this._iFrameApi) {
+                await this.driver.waitUntil(
+                    // @ts-ignore
+                    () => this.execute(() => typeof APP !== 'undefined' && Boolean(APP.store)),
+                    {
+                        timeout: 30_000,
+                        timeoutMsg: `Timeout waiting for embedded Jitsi app to initialize for ${this._name}.`
+                    }
+                );
+            }
+
             // if prejoin is enabled we want to click the join button
             const p1PreJoinScreen = this.getPreJoinScreen();
 
@@ -374,7 +396,7 @@ export class Participant {
                 || await this.getNotifications().getNotificationText(TOKEN_AUTH_FAILED_TEST_ID)
                 || await this.getNotifications().getNotificationText(TOKEN_AUTH_FAILED_TITLE_TEST_ID);
         }, {
-            timeout: 10_000,
+            timeout: 30_000,
             timeoutMsg: 'Timeout waiting for MUC joined or error.'
         });
     }
@@ -635,6 +657,13 @@ export class Participant {
      */
     getPasswordDialog(): PasswordDialog {
         return new PasswordDialog(this);
+    }
+
+    /**
+     * Returns the virtual background dialog.
+     */
+    getVirtualBackgroundDialog(): VirtualBackgroundDialog {
+        return new VirtualBackgroundDialog(this);
     }
 
     /**

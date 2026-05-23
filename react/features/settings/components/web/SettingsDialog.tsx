@@ -139,6 +139,7 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
     const showMoreTab = configuredTabs.includes('more');
     const showProfileSettings = configuredTabs.includes('profile') && !state['features/base/config'].disableProfile;
     const showCalendarSettings = configuredTabs.includes('calendar') && isCalendarEnabled(state);
+    const showShortcutsSettings = configuredTabs.includes('shortcuts');
     const showSoundsSettings = configuredTabs.includes('sounds');
     const enabledNotifications = getNotificationsMap(state);
     const showNotificationsSettings = Object.keys(enabledNotifications).length > 0;
@@ -319,7 +320,7 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         });
     }
 
-    !_iAmVisitor &&
+    if (showShortcutsSettings && !_iAmVisitor) {
         tabs.push({
             name: SETTINGS_TABS.SHORTCUTS,
             component: ShortcutsTab,
@@ -336,6 +337,7 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             submit: submitShortcutsTab,
             icon: IconShortcuts
         });
+    }
 
     if (showMoreTab && !_iAmVisitor) {
         tabs.push({

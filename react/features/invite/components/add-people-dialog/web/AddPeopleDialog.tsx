@@ -18,6 +18,7 @@ import {
     getInviteText,
     getInviteTextiOS,
     isAddPeopleEnabled,
+    isDialInEnabled,
     isDialOutEnabled,
     isSharingEnabled,
     sharingFeatures
@@ -147,16 +148,10 @@ function AddPeopleDialog({
 
     return (
         // @ts-ignore  @ts-expect-error
-        <Dialog
-            cancel={{ hidden: true }}
-            ok={{ hidden: true }}
-            titleKey="addPeople.inviteMorePrompt"
-        >
+        <Dialog cancel={{ hidden: true }} ok={{ hidden: true }} titleKey="addPeople.inviteMorePrompt">
             <div className="invite-more-dialog">
                 {_inviteContactsVisible && <InviteContactsSection />}
-                {_urlSharingVisible ? (
-                    <CopyMeetingLinkSection url={_inviteUrl} />
-                ) : null}
+                {_urlSharingVisible ? <CopyMeetingLinkSection url={_inviteUrl} /> : null}
                 {_emailSharingVisible ? (
                     <InviteByEmailSection
                         inviteSubject={inviteSubject}
@@ -169,9 +164,7 @@ function AddPeopleDialog({
                     // @ts-ignore  @ts-expect-error
                     <LiveStreamSection liveStreamViewURL={_liveStreamViewURL} />
                 )}
-                {_phoneNumber && _dialInVisible && (
-                    <DialInSection phoneNumber={_phoneNumber} />
-                )}
+                {_phoneNumber && _dialInVisible && <DialInSection phoneNumber={_phoneNumber} />}
                 {!_phoneNumber && _dialInVisible && _isDialInOverLimit && (
                     // @ts-ignore  @ts-expect-error
                     <DialInLimit />
@@ -191,29 +184,22 @@ function AddPeopleDialog({
  * @returns {IProps}
  */
 function mapStateToProps(state: IReduxState, ownProps: Partial<IProps>) {
-    const currentLiveStreamingSession = getActiveSession(
-        state,
-        JitsiRecordingConstants.mode.STREAM
-    );
+    const currentLiveStreamingSession = getActiveSession(state, JitsiRecordingConstants.mode.STREAM);
     const { iAmRecorder, inviteAppName } = state['features/base/config'];
     const addPeopleEnabled = isAddPeopleEnabled(state);
     const dialOutEnabled = isDialOutEnabled(state);
-    const hideInviteContacts =
-        iAmRecorder || (!addPeopleEnabled && !dialOutEnabled);
+    const hideInviteContacts = iAmRecorder || (!addPeopleEnabled && !dialOutEnabled);
     const dialIn = state['features/invite']; // @ts-ignore
     const phoneNumber = dialIn?.numbers
         ? // @ts-ignore  @ts-expect-error
           _getDefaultPhoneNumber(dialIn.numbers)
         : undefined;
-    const isDialInOverLimit =
-        dialIn?.error?.status === StatusCode.PaymentRequired;
+    const isDialInOverLimit = dialIn?.error?.status === StatusCode.PaymentRequired;
 
     return {
         _dialIn: dialIn,
-        _dialInVisible: isSharingEnabled(sharingFeatures.dialIn),
-        _urlSharingVisible:
-            isDynamicBrandingDataLoaded(state) &&
-            isSharingEnabled(sharingFeatures.url),
+        _dialInVisible: isSharingEnabled(sharingFeatures.dialIn) && isDialInEnabled(state),
+        _urlSharingVisible: isDynamicBrandingDataLoaded(state) && isSharingEnabled(sharingFeatures.url),
         _emailSharingVisible: isSharingEnabled(sharingFeatures.email),
         _invitationText: getInviteText({ state, phoneNumber, t: ownProps.t }),
         _invitationTextiOS: getInviteTextiOS({
@@ -222,8 +208,7 @@ function mapStateToProps(state: IReduxState, ownProps: Partial<IProps>) {
             t: ownProps.t
         }),
         _inviteAppName: inviteAppName,
-        _inviteContactsVisible:
-            interfaceConfig.ENABLE_DIAL_OUT && !hideInviteContacts,
+        _inviteContactsVisible: interfaceConfig.ENABLE_DIAL_OUT && !hideInviteContacts,
         _inviteUrl: getInviteURL(state),
         _isDialInOverLimit: isDialInOverLimit,
         _liveStreamViewURL: currentLiveStreamingSession?.liveStreamViewURL,
@@ -241,6 +226,4 @@ const mapDispatchToProps = {
     updateNumbers: () => updateDialInNumbers()
 };
 
-export default translate(
-    connect(mapStateToProps, mapDispatchToProps)(AddPeopleDialog)
-);
+export default translate(connect(mapStateToProps, mapDispatchToProps)(AddPeopleDialog));

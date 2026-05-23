@@ -2,6 +2,7 @@
 import { API_ID } from '../../../modules/API';
 import { setRoom } from '../base/conference/actions';
 import { configWillLoad, setConfig } from '../base/config/actions';
+import { buildConfigURL } from '../base/config/functions.any';
 import { setLocationURL } from '../base/connection/actions.web';
 import { loadConfig } from '../base/lib-jitsi-meet/functions.web';
 import { isEmbedded } from '../base/util/embedUtils';
@@ -33,10 +34,7 @@ export * from './actions.any';
  * @returns {Function}
  */
 export function appNavigate(uri?: string) {
-    return async (
-        dispatch: IStore['dispatch'],
-        getState: IStore['getState']
-    ) => {
+    return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         let location = parseURIString(uri);
 
         // If the specified location (URI) does not identify a host, use the app's
@@ -50,8 +48,7 @@ export function appNavigate(uri?: string) {
                 // FIXME Turn location's host, hostname, and port properties into
                 // setters in order to reduce the risks of inconsistent state.
                 location.hostname = defaultLocation.hostname;
-                location.pathname =
-                    defaultLocation.pathname + location.pathname.substr(1);
+                location.pathname = defaultLocation.pathname + location.pathname.substr(1);
                 location.port = defaultLocation.port;
                 location.protocol = defaultLocation.protocol;
             } else {
@@ -68,11 +65,25 @@ export function appNavigate(uri?: string) {
         // the conference, but we're still on the conference screen.
         dispatch(clearNotifications());
 
-        dispatch(configWillLoad(locationURL, room));
-
-        const config = await loadConfig();
-
+        dispatch(configWillLoad(locationURL));
         dispatch(setLocationURL(locationURL));
+
+        let config = window.config;
+
+        if (!config) {
+            const url = buildConfigURL(locationURL, room);
+
+            try {
+                config = await loadConfig(url);
+
+                // Mirror to window.config so legacy bare `config` global
+                // references (UI.js, etc.) resolve when SSI did not inject it.
+                window.config = config;
+            } catch (err) {
+                logger.error(`Failed to load config from ${url}`, err);
+            }
+        }
+
         dispatch(setConfig(config));
         dispatch(setRoom(room));
     };
@@ -91,9 +102,7 @@ export function appNavigate(uri?: string) {
  * @param {boolean} options.feedbackSubmitted - Whether feedback was submitted.
  * @returns {Function}
  */
-export function maybeRedirectToWelcomePage(
-    options: { feedbackSubmitted?: boolean; showThankYou?: boolean } = {}
-) {
+export function maybeRedirectToWelcomePage(options: { feedbackSubmitted?: boolean; showThankYou?: boolean } = {}) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const { enableClosePage } = getState()['features/base/config'];
 

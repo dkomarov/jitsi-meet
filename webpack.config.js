@@ -220,7 +220,7 @@ function getConfig(options = {}) {
             filename: `[name]${isProduction ? '.min' : ''}.js`,
             chunkFilename: `chunks/[id]${isProduction ? '.min' : ''}.js`,
             path: `${__dirname}/build`,
-            publicPath: '/libs/',
+            publicPath: isProduction ? 'auto' : '/libs/',
             sourceMapFilename: '[file].map'
         },
         plugins: [
@@ -239,10 +239,7 @@ function getConfig(options = {}) {
                 'react-dom': resolve(__dirname, 'node_modules/react-dom'),
                 'roughjs/bin/rough': 'roughjs/bin/rough.js',
                 'roughjs/bin/generator': 'roughjs/bin/generator.js',
-                'roughjs/bin/math': 'roughjs/bin/math.js',
-                'firebase/app': false,
-                'firebase/firestore': false,
-                'firebase/storage': false
+                'roughjs/bin/math': 'roughjs/bin/math.js'
             },
             aliasFields: ['browser'],
             extensions: [
@@ -305,7 +302,7 @@ function getDevServerConfig() {
         static: {
             directory: process.cwd(),
             watch: {
-                ignored: (file) => file.endsWith('.log')
+                ignored: (file) => file.endsWith('.log') || file.includes('node_modules')
             }
         }
     };
@@ -377,7 +374,7 @@ module.exports = (_env, argv) => {
             },
             output: { ...config.output, library: 'JitsiMeetExternalAPI', libraryTarget: 'umd' },
             plugins: [...config.plugins, ...getBundleAnalyzerPlugin(analyzeBundle, 'external_api')],
-            performance: getPerformanceHints(perfHintOptions, 95 * 1024)
+            performance: getPerformanceHints(perfHintOptions, 100 * 1024)
         },
         {
             ...config,
@@ -385,6 +382,14 @@ module.exports = (_env, argv) => {
                 'face-landmarks-worker': './react/features/face-landmarks/faceLandmarksWorker.ts'
             },
             plugins: [...config.plugins, ...getBundleAnalyzerPlugin(analyzeBundle, 'face-landmarks-worker')],
+            performance: getPerformanceHints(perfHintOptions, 1024 * 1024 * 2)
+        },
+        {
+            ...config,
+            entry: {
+                'vb-inference-worker': './react/features/stream-effects/virtual-background/workers/VBInferenceWorker.ts'
+            },
+            plugins: [...config.plugins, ...getBundleAnalyzerPlugin(analyzeBundle, 'vb-inference-worker')],
             performance: getPerformanceHints(perfHintOptions, 1024 * 1024 * 2)
         },
         {

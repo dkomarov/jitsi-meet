@@ -17,7 +17,6 @@
 package org.jitsi.meet.sdk;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -27,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.facebook.react.ReactRootView;
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlags;
 
 import org.jitsi.meet.sdk.log.JitsiMeetLogger;
 
@@ -91,6 +91,8 @@ public class JitsiMeetView extends FrameLayout {
                 // Convert String[] to ArrayList<String> for React Native bridge compatibility
                 String[] stringArray = (String[]) bValue;
                 result.putStringArrayList(key, new ArrayList<>(Arrays.asList(stringArray)));
+            } else if (valueType.contentEquals("ArrayList")) {
+                result.putParcelableArrayList(key, (ArrayList<Bundle>) bValue);
             } else {
                 throw new RuntimeException("Unsupported type: " + valueType);
             }
@@ -185,6 +187,10 @@ public class JitsiMeetView extends FrameLayout {
 
         if (reactRootView == null) {
             reactRootView = new ReactRootView(getContext());
+
+            boolean isFabricEnabled = ReactNativeFeatureFlags.enableFabricRenderer();
+            reactRootView.setIsFabric(isFabricEnabled);
+            
             reactRootView.startReactApplication(
                 ReactInstanceManagerHolder.getReactInstanceManager(),
                 appName,

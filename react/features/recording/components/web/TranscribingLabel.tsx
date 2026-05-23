@@ -10,12 +10,18 @@ import { IconTranscription } from '../../../base/icons/svg';
 import Label from '../../../base/label/components/web/Label';
 import Tooltip from '../../../base/tooltip/components/Tooltip';
 import { isRecorderTranscriptionsRunning } from '../../../transcribing/functions';
+import { hasRecordingOrTranscriptionFeature } from '../../functions';
 import AbstractRecordingLabel, {
     IProps as AbstractProps
 } from '../AbstractRecordingLabel';
 import StopRecordingDialog from '../Recording/web/StopRecordingDialog';
 
 interface IProps extends AbstractProps {
+
+    /**
+     * Whether the local participant can control recording/transcription (has either feature enabled).
+     */
+    _canControlRecording: boolean;
 
     /**
      * An object containing the CSS classes.
@@ -68,7 +74,9 @@ class TranscribingLabel extends AbstractRecordingLabel<IProps> {
      * @returns {void}
      */
     _onClick() {
-        this.props.dispatch(openDialog('StopRecordingDialog', StopRecordingDialog));
+        if (this.props._canControlRecording) {
+            this.props.dispatch(openDialog('StopRecordingDialog', StopRecordingDialog));
+        }
     }
 
     /**
@@ -112,6 +120,7 @@ function _mapStateToProps(state: IReduxState) {
     return {
         _isVisible: _isTranscribing,
         _iAmRecorder: Boolean(state['features/base/config'].iAmRecorder),
+        _canControlRecording: hasRecordingOrTranscriptionFeature(state),
         _isTranscribing,
         mode: 'transcribing' // Custom mode for transcription
     };
