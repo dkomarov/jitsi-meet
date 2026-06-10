@@ -493,6 +493,9 @@ var config = {
     //     // Translation languages.
     //     // Available languages can be found in
     //     // ./lang/translation-languages.json.
+    //     // Whether to enable translation (language selection) UI. Defaults to true.
+    //     translationEnabled: true,
+
     //     translationLanguages: ['en', 'es', 'fr', 'ro'],
 
     //     // Important languages to show on the top of the language list.
@@ -865,7 +868,6 @@ var config = {
     //    'embedmeeting',
     //    'etherpad',
     //    'feedback',
-    //    'filmstrip',
     //    'fullscreen',
     //    'hangup',
     //    'help',
@@ -1584,7 +1586,7 @@ var config = {
     // If a label's id is not in any of the 2 arrays, it will not be visible at all on the header.
     // conferenceInfo: {
     //     // those labels will not be hidden in tandem with the toolbox.
-    //     alwaysVisible: ['recording', 'raised-hands-count'],
+    //     alwaysVisible: ['recording', 'raised-hands-count', 'time-timer'],
     //     // those labels will be auto-hidden in tandem with the toolbox buttons.
     //     autoHide: [
     //         'subject',
@@ -1841,9 +1843,6 @@ var config = {
     // List of notifications to be disabled. Works in tandem with the above setting.
     // disabledNotifications: [],
 
-    // Prevent the filmstrip from autohiding when screen width is under a certain threshold
-    // disableFilmstripAutohiding: false,
-
     // filmstrip: {
     //     // Disable the vertical/horizontal filmstrip.
     //     disabled: false,
@@ -1919,6 +1918,15 @@ var config = {
 
     // Application logo url
     // defaultLogoUrl: 'images/watermark.svg',
+
+    // Meeting-pace timer shown in the conference info bar. It only appears
+    // once a meeting duration is known — from a calendar event (calendar
+    // sync) or pushed at runtime via the `setMeetingTimer` iframe API
+    // command. With no such info nothing is shown, so it is enabled by
+    // default; set `enabled: false` to hide it even when that info exists.
+    // timeTimer: {
+    //     enabled: true,
+    // },
 
     // Settings for the Excalidraw whiteboard integration.
     // whiteboard: {
