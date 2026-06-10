@@ -15,7 +15,7 @@ import { Theme } from '@mui/material';
 import React from 'react';
 import { WithTranslation } from 'react-i18next';
 
-import { translate } from '../../../i18n/functions';
+import { translate } from '../../../i18n/functions.any';
 import { IconCloseLarge } from '../../../icons/svg';
 import { withPixelLineHeight } from '../../../styles/functions.web';
 import Button from '../../../ui/components/web/Button';
