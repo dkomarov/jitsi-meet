@@ -5,7 +5,7 @@ import { withStyles } from '@mui/styles';
 import React, { Component, ReactElement } from 'react';
 import { WithTranslation } from 'react-i18next';
 
-import { translate } from '../../../i18n/functions';
+import { translate } from '../../../i18n/functions.any';
 import Button from '../../../ui/components/web/Button';
 import { BUTTON_TYPES } from '../../../ui/constants.web';
 import type { DialogProps } from '../../constants';
@@ -161,6 +161,7 @@ class StatelessDialog extends Component<IProps> {
         return (
             // @ts-ignore
             <Modal
+                // @ts-ignore
                 autoFocus={true}
                 // @ts-ignore
                 components={{
