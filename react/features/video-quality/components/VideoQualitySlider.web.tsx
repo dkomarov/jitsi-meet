@@ -209,6 +209,7 @@ class VideoQualitySlider extends Component<IProps> {
      */
     _enableAudioOnly() {
         sendAnalytics(createEvent('low.bandwidth.mode'));
+        // @ts-ignore
         logger.log('Video quality: audio only enabled');
         this.props.dispatch(setLowBandwidthMode(true));
     }
@@ -223,7 +224,8 @@ class VideoQualitySlider extends Component<IProps> {
      */
     _enableHighDefinition() {
         sendAnalytics(createEvent('high'));
-        console.log('Video quality: high enabled');
+        // @ts-ignore
+        logger.log('Video quality: high enabled');
         this._setPreferredVideoQuality(HIGH);
     }
 

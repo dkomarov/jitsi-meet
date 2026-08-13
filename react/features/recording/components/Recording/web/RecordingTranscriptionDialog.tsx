@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { IReduxState } from '../../../../app/types';
-import { translate } from '../../../../base/i18n/functions';
+import { translate } from '../../../../base/i18n/functions.any';
 import Dialog from '../../../../base/ui/components/web/Dialog';
 import { toggleScreenshotCaptureSummary } from '../../../../screenshot-capture/actions';
 import { isScreenshotCaptureEnabled } from '../../../../screenshot-capture/functions';
@@ -13,7 +13,6 @@ import AbstractStartRecordingDialog, {
 
 import StartRecordingDialogContent from './StartRecordingDialogContent';
 
-
 /**
  * React Component for getting confirmation to start a file recording session in
  * progress.
@@ -21,7 +20,6 @@ import StartRecordingDialogContent from './StartRecordingDialogContent';
  * @augments Component
  */
 class RecordingTranscriptionDialog extends AbstractStartRecordingDialog {
-
     /**
      * Returns true when the primary button should be disabled.
      *
@@ -83,34 +81,36 @@ class RecordingTranscriptionDialog extends AbstractStartRecordingDialog {
 
         return (
             <Dialog
-                ok = {{
+                ok={{
                     // On first open (nothing running) the primary action starts a service; once a
                     // service is active the dialog manages it, so the button applies the changes.
                     translationKey: sessionRunning ? 'dialog.applyChanges' : 'dialog.startRecording',
                     disabled: this.isStartRecordingDisabled()
                 }}
-                onSubmit = { this._onSubmit }
-                titleKey = { _canTranscribe ? 'dialog.recordAndTranscribe' : 'toolbar.record' }>
+                onSubmit={this._onSubmit}
+                titleKey={_canTranscribe ? 'dialog.recordAndTranscribe' : 'toolbar.record'}
+            >
                 <StartRecordingDialogContent
-                    fileRecordingsServiceEnabled = { _fileRecordingsServiceEnabled }
-                    fileRecordingsServiceSharingEnabled = { _fileRecordingsServiceSharingEnabled }
-                    integrationsEnabled = { this._areIntegrationsEnabled() }
-                    isTokenValid = { isTokenValid }
-                    isValidating = { isValidating }
-                    localRecordingOnlySelf = { localRecordingOnlySelf }
-                    onChange = { this._onSelectedRecordingServiceChanged }
-                    onLocalRecordingSelfChange = { this._onLocalRecordingSelfChange }
-                    onRecordAudioAndVideoChange = { this._onRecordAudioAndVideoChange }
-                    onSharingSettingChanged = { this._onSharingSettingChanged }
-                    onTranscriptionChange = { this._onTranscriptionChange }
-                    recordingRunning = { Boolean(_recordingRunning) }
-                    selectedRecordingService = { selectedRecordingService }
-                    servicesRunning = { Boolean(_recordingRunning || _transcriptionRunning) }
-                    sharingSetting = { sharingEnabled }
-                    shouldRecordAudioAndVideo = { shouldRecordAudioAndVideo }
-                    shouldRecordTranscription = { shouldRecordTranscription }
-                    spaceLeft = { spaceLeft }
-                    userName = { userName } />
+                    fileRecordingsServiceEnabled={_fileRecordingsServiceEnabled}
+                    fileRecordingsServiceSharingEnabled={_fileRecordingsServiceSharingEnabled}
+                    integrationsEnabled={this._areIntegrationsEnabled()}
+                    isTokenValid={isTokenValid}
+                    isValidating={isValidating}
+                    localRecordingOnlySelf={localRecordingOnlySelf}
+                    onChange={this._onSelectedRecordingServiceChanged}
+                    onLocalRecordingSelfChange={this._onLocalRecordingSelfChange}
+                    onRecordAudioAndVideoChange={this._onRecordAudioAndVideoChange}
+                    onSharingSettingChanged={this._onSharingSettingChanged}
+                    onTranscriptionChange={this._onTranscriptionChange}
+                    recordingRunning={Boolean(_recordingRunning)}
+                    selectedRecordingService={selectedRecordingService}
+                    servicesRunning={Boolean(_recordingRunning || _transcriptionRunning)}
+                    sharingSetting={sharingEnabled}
+                    shouldRecordAudioAndVideo={shouldRecordAudioAndVideo}
+                    shouldRecordTranscription={shouldRecordTranscription}
+                    spaceLeft={spaceLeft}
+                    userName={userName}
+                />
             </Dialog>
         );
     }

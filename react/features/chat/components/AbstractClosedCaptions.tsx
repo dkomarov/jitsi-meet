@@ -5,8 +5,10 @@ import { IReduxState } from '../../app/types';
 import { openDialog } from '../../base/dialog/actions';
 import { MEET_FEATURES } from '../../base/jwt/constants';
 import { IMessageGroup, groupMessagesBySender } from '../../base/util/messageGrouping';
-import { maybeShowPremiumFeatureDialog } from '../../jaas/actions';
-import { RecordingTranscriptionDialog } from '../../recording/components/Recording';
+import { maybeShowPremiumFeatureDialog } from '../../jaas/actions.web';
+import { RecordingTranscriptionDialog } from '../../recording/components/Recording/index.web';
+
+//'../../recording/components/Recording/RecordingTranscriptionDialog.';
 import { setRequestingSubtitles } from '../../subtitles/actions.any';
 import { canStartSubtitles } from '../../subtitles/functions.any';
 import { ISubtitle } from '../../subtitles/types';
@@ -28,18 +30,16 @@ const AbstractClosedCaptions = (Component: ComponentType<AbstractProps>) => () =
     const selectedLanguage = language?.replace('translation-languages:', '');
     const _isTranscribing = useSelector(isTranscribing);
     const _canStartSubtitles = useSelector(canStartSubtitles);
-    const [ isButtonPressed, setButtonPressed ] = useState(false);
+    const [isButtonPressed, setButtonPressed] = useState(false);
     const subtitlesError = useSelector((state: IReduxState) => state['features/subtitles']._hasError);
-    const isAsyncTranscriptionEnabled = useSelector((state: IReduxState) =>
-        state['features/base/conference'].conference?.getMetadataHandler()?.getMetadata()?.asyncTranscription);
+    const isAsyncTranscriptionEnabled = useSelector(
+        (state: IReduxState) =>
+            state['features/base/conference'].conference?.getMetadataHandler()?.getMetadata()?.asyncTranscription
+    );
 
     const filteredSubtitles = useMemo(() => {
         // First, create a map of transcription messages by message ID
-        const transcriptionMessages = new Map(
-            subtitles
-                .filter(s => s.isTranscription)
-                .map(s => [ s.id, s ])
-        );
+        const transcriptionMessages = new Map(subtitles.filter((s) => s.isTranscription).map((s) => [s.id, s]));
 
         if (!selectedLanguage) {
             // When no language is selected, show all original transcriptions
@@ -48,9 +48,7 @@ const AbstractClosedCaptions = (Component: ComponentType<AbstractProps>) => () =
 
         // Then, create a map of translation messages by message ID
         const translationMessages = new Map(
-            subtitles
-                .filter(s => !s.isTranscription && s.language === selectedLanguage)
-                .map(s => [ s.id, s ])
+            subtitles.filter((s) => !s.isTranscription && s.language === selectedLanguage).map((s) => [s.id, s])
         );
 
         // When a language is selected, for each transcription message:
@@ -58,11 +56,10 @@ const AbstractClosedCaptions = (Component: ComponentType<AbstractProps>) => () =
         // 2. Fall back to the original transcription if no translation exists
         return Array.from(transcriptionMessages.values())
             .filter((m: ISubtitle) => !m.interim)
-            .map(m => translationMessages.get(m.id) ?? m);
-    }, [ subtitles, selectedLanguage ]);
+            .map((m) => translationMessages.get(m.id) ?? m);
+    }, [subtitles, selectedLanguage]);
 
-    const groupedSubtitles = useMemo(() =>
-        groupMessagesBySender(filteredSubtitles), [ filteredSubtitles ]);
+    const groupedSubtitles = useMemo(() => groupMessagesBySender(filteredSubtitles), [filteredSubtitles]);
 
     const startClosedCaptions = useCallback(() => {
         if (dispatch(maybeShowPremiumFeatureDialog(MEET_FEATURES.RECORDING))) {
@@ -70,9 +67,11 @@ const AbstractClosedCaptions = (Component: ComponentType<AbstractProps>) => () =
         }
 
         if (isAsyncTranscriptionEnabled) {
-            dispatch(openDialog('RecordingTranscriptionDialog', RecordingTranscriptionDialog, {
-                recordAudioAndVideo: false
-            }));
+            dispatch(
+                openDialog('RecordingTranscriptionDialog', RecordingTranscriptionDialog, {
+                    recordAudioAndVideo: false
+                })
+            );
         } else {
             if (isButtonPressed) {
                 return;
@@ -80,37 +79,36 @@ const AbstractClosedCaptions = (Component: ComponentType<AbstractProps>) => () =
             dispatch(setRequestingSubtitles(true, false, null));
             setButtonPressed(true);
         }
-
-    }, [ isAsyncTranscriptionEnabled, dispatch, isButtonPressed, openDialog, setButtonPressed ]);
+    }, [isAsyncTranscriptionEnabled, dispatch, isButtonPressed, openDialog, setButtonPressed]);
 
     useEffect(() => {
         if (subtitlesError && isButtonPressed && !isAsyncTranscriptionEnabled) {
             setButtonPressed(false);
         }
-    }, [ subtitlesError, isButtonPressed, isAsyncTranscriptionEnabled ]);
+    }, [subtitlesError, isButtonPressed, isAsyncTranscriptionEnabled]);
 
     useEffect(() => {
         if (!_isTranscribing && isButtonPressed && !isAsyncTranscriptionEnabled) {
             setButtonPressed(false);
         }
-    }, [ _isTranscribing, isButtonPressed, isAsyncTranscriptionEnabled ]);
+    }, [_isTranscribing, isButtonPressed, isAsyncTranscriptionEnabled]);
 
     useEffect(() => {
         if (isButtonPressed && !isAsyncTranscriptionEnabled) {
             setButtonPressed(false);
         }
-    }, [ isButtonPressed, isAsyncTranscriptionEnabled ]);
+    }, [isButtonPressed, isAsyncTranscriptionEnabled]);
 
     return (
         <Component
-            canStartSubtitles = { _canStartSubtitles }
-            filteredSubtitles = { filteredSubtitles }
-            groupedSubtitles = { groupedSubtitles }
-            isButtonPressed = { isButtonPressed }
-            isTranscribing = { _isTranscribing }
-            startClosedCaptions = { startClosedCaptions } />
+            canStartSubtitles={_canStartSubtitles}
+            filteredSubtitles={filteredSubtitles}
+            groupedSubtitles={groupedSubtitles}
+            isButtonPressed={isButtonPressed}
+            isTranscribing={_isTranscribing}
+            startClosedCaptions={startClosedCaptions}
+        />
     );
 };
 
 export default AbstractClosedCaptions;
-

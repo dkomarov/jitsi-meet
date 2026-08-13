@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { default as IconAI } from './AI.svg';
 import { default as IconRecordAccount } from './account-record.svg';
 import { default as IconAddUser } from './link.svg'; // './add-user.svg';

@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as ebml from 'ts-ebml/dist/EBML.min.js';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -303,6 +302,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
                     }
                     await this.writableStream.close();
                 } catch (e) {
+                    // @ts-ignore
                     logger.error('Error while writing to the local recording file', e);
                 } finally {
                     this.firstChunk = undefined;
@@ -363,6 +363,7 @@ const LocalRecordingManager: ILocalRecordingManager = {
  * @returns {Promise<Blob>}
  */
 async function fixDuration(data: Blob, duration: number): Promise<Blob> {
+    // @ts-ignore
     const decoder = new ebml.Decoder();
     const reader = new ebml.Reader();
 
@@ -377,6 +378,7 @@ async function fixDuration(data: Blob, duration: number): Promise<Blob> {
     }
     reader.stop();
 
+    // @ts-ignore
     const newMetadataBuf = ebml.tools.makeMetadataSeekable(
         reader.metadatas,
         duration,

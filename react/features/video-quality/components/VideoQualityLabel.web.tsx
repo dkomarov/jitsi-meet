@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { translate } from '../../base/i18n/functions';
+import { translate } from '../../base/i18n/functions.web';
 // import { Label } from "../../base/label";
 import { MEDIA_TYPE } from '../../base/media/constants';
 // import { connect } from "../../base/redux";

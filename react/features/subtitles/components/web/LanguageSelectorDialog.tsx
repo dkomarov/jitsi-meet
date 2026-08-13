@@ -3,9 +3,9 @@ import React, { useCallback } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { openDialog } from '../../../base/dialog/actions';
-import { translate, translateToHTML } from '../../../base/i18n/functions';
+import { translate, translateToHTML } from '../../../base/i18n/functions.web';
 import Dialog from '../../../base/ui/components/web/Dialog';
-import { RecordingTranscriptionDialog } from '../../../recording/components/Recording';
+import { RecordingTranscriptionDialog } from '../../../recording/components/Recording/index.web';
 import { openSettingsDialog } from '../../../settings/actions.web';
 import { SETTINGS_TABS } from '../../../settings/constants';
 import { toggleLanguageSelectorDialog } from '../../actions.web';
