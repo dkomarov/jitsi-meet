@@ -7,7 +7,7 @@ import { AudioSupportedLanguage, VIDEO_MUTISM_AUTHORITY } from './constants';
 // XXX The configurations/preferences/settings startWithAudioMuted and startWithVideoMuted were introduced for
 // conferences/meetings. So it makes sense for these to not be considered outside of conferences/meetings
 // (e.g. WelcomePage). Later on, though, we introduced a "Video <-> Voice" toggle on the WelcomePage which utilizes
-// startAudioOnly outside of conferences/meetings so that particular configuration/preference/setting employs slightly
+// startLowBandwidthMode outside of conferences/meetings so that particular configuration/preference/setting employs slightly
 // exclusive logic.
 const START_WITH_AUDIO_VIDEO_MUTED_SOURCES = {
     // We have startWithAudioMuted and startWithVideoMuted here:
@@ -41,11 +41,8 @@ export function isAudioMuted(stateful: IStateful) {
  * {@code getState} function.
  * @returns {boolean}
  */
-export function isVideoMutedByAudioOnly(stateful: IStateful) {
-    return _isVideoMutedByAuthority(
-        stateful,
-        VIDEO_MUTISM_AUTHORITY.AUDIO_ONLY
-    );
+export function isVideoMutedByLowBandwidthMode(stateful: IStateful) {
+    return _isVideoMutedByAuthority(stateful, VIDEO_MUTISM_AUTHORITY.LOW_BANDWIDTH_MODE);
 }
 
 /**
@@ -59,10 +56,7 @@ export function isVideoMutedByAudioOnly(stateful: IStateful) {
  * @returns {boolean} If video is currently muted by the specified
  * {@code videoMutismAuthority}, then {@code true}; otherwise, {@code false}.
  */
-function _isVideoMutedByAuthority(
-    stateful: IStateful,
-    videoMutismAuthority: number
-) {
+function _isVideoMutedByAuthority(stateful: IStateful, videoMutismAuthority: number) {
     const { muted } = toState(stateful)['features/base/media'].video;
 
     // eslint-disable-next-line no-bitwise
@@ -77,20 +71,8 @@ function _isVideoMutedByAuthority(
  */
 export function getStartWithAudioMuted(stateful: IStateful) {
     return (
-        Boolean(
-            getPropertyValue(
-                stateful,
-                'startWithAudioMuted',
-                START_WITH_AUDIO_VIDEO_MUTED_SOURCES
-            )
-        ) ||
-        Boolean(
-            getPropertyValue(
-                stateful,
-                'startSilent',
-                START_WITH_AUDIO_VIDEO_MUTED_SOURCES
-            )
-        )
+        Boolean(getPropertyValue(stateful, 'startWithAudioMuted', START_WITH_AUDIO_VIDEO_MUTED_SOURCES)) ||
+        Boolean(getPropertyValue(stateful, 'startSilent', START_WITH_AUDIO_VIDEO_MUTED_SOURCES))
     );
 }
 
@@ -101,13 +83,7 @@ export function getStartWithAudioMuted(stateful: IStateful) {
  * @returns {boolean} - The computed startWithVideoMuted value that will be used.
  */
 export function getStartWithVideoMuted(stateful: IStateful) {
-    return Boolean(
-        getPropertyValue(
-            stateful,
-            'startWithVideoMuted',
-            START_WITH_AUDIO_VIDEO_MUTED_SOURCES
-        )
-    );
+    return Boolean(getPropertyValue(stateful, 'startWithVideoMuted', START_WITH_AUDIO_VIDEO_MUTED_SOURCES));
 }
 
 /**
@@ -155,11 +131,7 @@ export function shouldRenderVideoTrack(
     videoTrack: { muted: boolean; videoStarted: boolean } | undefined,
     waitForVideoStarted: boolean
 ) {
-    return (
-        videoTrack &&
-        !videoTrack.muted &&
-        (!waitForVideoStarted || videoTrack.videoStarted)
-    );
+    return videoTrack && !videoTrack.muted && (!waitForVideoStarted || videoTrack.videoStarted);
 }
 
 /**
@@ -177,8 +149,10 @@ export const getSoundFileSrc = (file: string, language: string): string => {
     // Normalize language code: 'fr-CA' -> 'frCA' to match AudioSupportedLanguage enum and file naming
     const normalizedLanguage = language.replace('-', '');
 
-    if (!AudioSupportedLanguage[normalizedLanguage as keyof typeof AudioSupportedLanguage]
-        || normalizedLanguage === AudioSupportedLanguage.en) {
+    if (
+        !AudioSupportedLanguage[normalizedLanguage as keyof typeof AudioSupportedLanguage] ||
+        normalizedLanguage === AudioSupportedLanguage.en
+    ) {
         return file;
     }
     const fileTokens = file.split('.');

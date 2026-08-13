@@ -2,8 +2,10 @@ import i18next from 'i18next';
 import React, { useCallback } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { openDialog } from '../../../base/dialog/actions';
 import { translate, translateToHTML } from '../../../base/i18n/functions';
 import Dialog from '../../../base/ui/components/web/Dialog';
+import { RecordingTranscriptionDialog } from '../../../recording/components/Recording';
 import { openSettingsDialog } from '../../../settings/actions.web';
 import { SETTINGS_TABS } from '../../../settings/constants';
 import { toggleLanguageSelectorDialog } from '../../actions.web';
@@ -32,20 +34,25 @@ const useStyles = makeStyles()((theme) => {
     };
 });
 
-const LanguageSelectorDialog = (
-    props: IAbstractLanguageSelectorDialogProps
-) => {
-    const { dispatch, language, listItems, onLanguageSelected, subtitles, t } =
-        props;
+const LanguageSelectorDialog = (props: IAbstractLanguageSelectorDialogProps) => {
+    const { asyncTranscription, dispatch, language, listItems, onLanguageSelected, subtitles, t } = props;
 
     const { classes: styles } = useStyles();
 
     const onSelected = useCallback(
         (e: string) => {
-            onLanguageSelected(e);
+            if (asyncTranscription) {
+                dispatch(
+                    openDialog('RecordingTranscriptionDialog', RecordingTranscriptionDialog, {
+                        recordAudioAndVideo: false
+                    })
+                );
+            } else {
+                onLanguageSelected(e);
+            }
             dispatch(toggleLanguageSelectorDialog());
         },
-        [language]
+        [asyncTranscription, language]
     );
 
     const onSourceLanguageClick = useCallback(() => {
@@ -53,30 +60,16 @@ const LanguageSelectorDialog = (
     }, []);
 
     return (
-        // @ts-ignore  @ts-expect-error
-        <Dialog
-            cancel={{ hidden: true }}
-            ok={{ hidden: true }}
-            titleKey="transcribing.subtitles"
-        >
+        <Dialog cancel={{ hidden: true }} ok={{ hidden: true }} titleKey="transcribing.subtitles">
             <p className={styles.paragraphWrapper}>
                 {translateToHTML(t, 'transcribing.sourceLanguageDesc', {
-                    sourceLanguage: t(
-                        `languages:${i18next.language}`
-                    ).toLowerCase()
+                    sourceLanguage: t(`languages:${i18next.language}`).toLowerCase()
                 })}
-                <span
-                    className={styles.spanWrapper}
-                    onClick={onSourceLanguageClick}
-                >
+                <span className={styles.spanWrapper} onClick={onSourceLanguageClick}>
                     {t('transcribing.sourceLanguageHere')}.
                 </span>
             </p>
-            <LanguageList
-                items={listItems}
-                onLanguageSelected={onSelected}
-                selectedLanguage={subtitles}
-            />
+            <LanguageList items={listItems} onLanguageSelected={onSelected} selectedLanguage={subtitles} />
         </Dialog>
     );
 };
@@ -86,6 +79,4 @@ const LanguageSelectorDialog = (
  * to both the web and native implementations.
  */
 // eslint-disable-next-line new-cap
-export default translate(
-    AbstractLanguageSelectorDialog(LanguageSelectorDialog)
-);
+export default translate(AbstractLanguageSelectorDialog(LanguageSelectorDialog));

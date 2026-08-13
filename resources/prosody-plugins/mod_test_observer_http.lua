@@ -24,6 +24,11 @@ local jid_lib = require "util.jid";
 -- Reset to the default (allow, 200) between tests via POST /test-observer/access-manager.
 local access_manager_state = { access = true, status = 200, non_json = false };
 
+-- Mock OTLP trace receiver for mod_trace tests. Stores every exported
+-- resource_spans payload POSTed by the module's Exporter so tests can assert
+-- a span was (or was not) exported without needing a real OTLP collector.
+local otlp_traces = {};
+
 -- ASAP public key servers: serve test RSA public keys so that Prosody can
 -- fetch them when verifying RS256 tokens signed by the matching private keys.
 -- util.lib.lua constructs the URL as: <asap_key_server>/<sha256hex(kid)>.pem
@@ -381,6 +386,39 @@ module:provides("http", {
             };
         end;
 
+        -- POST /test-observer/otlp-traces
+        -- Called by mod_trace's Exporter. Body is the raw OTLP
+        -- ExportTraceServiceRequest JSON; stored verbatim for test assertions.
+        ["POST /otlp-traces"] = function(event)
+            local data = json.decode(event.request.body or "{}");
+            if data then
+                table.insert(otlp_traces, data);
+            end
+            return {
+                status_code = 200;
+                headers = { ["Content-Type"] = "application/json" };
+                body = "{}";
+            };
+        end;
+
+        -- GET /test-observer/otlp-traces
+        -- Returns every ExportTraceServiceRequest body received so far.
+        ["GET /otlp-traces"] = function()
+            local body = #otlp_traces == 0 and "[]" or json.encode(otlp_traces);
+            return {
+                status_code = 200;
+                headers = { ["Content-Type"] = "application/json" };
+                body = body;
+            };
+        end;
+
+        -- DELETE /test-observer/otlp-traces
+        -- Clears the recorded export list. Call before each test.
+        ["DELETE /otlp-traces"] = function()
+            otlp_traces = {};
+            return { status_code = 204 };
+        end;
+
         -- GET /test-observer/access-manager
         -- Mock access-manager endpoint called by mod_muc_auth_ban.
         -- Returns {"access": true} or {"access": false} based on the current
@@ -515,6 +553,35 @@ module:provides("http", {
             local encoded, err = json.encode({
                 jid = room.jid;
                 metadata = room.jitsiMetadata or {};
+            });
+            if not encoded then
+                return { status_code = 500; body = json.encode({ error = 'encode failed: ' .. tostring(err) }) };
+            end
+            return {
+                status_code = 200;
+                headers = { ["Content-Type"] = "application/json" };
+                body = encoded;
+            };
+        end;
+
+        -- GET /test-observer/rooms/audio-translation-requests?jid=room@conference.localhost
+        -- Returns: { jid, audioTranslationRequests } where the value is the
+        -- aggregated map stored on room._data by mod_audio_translation_component
+        -- (omitted when there are no subscriptions).
+        ["GET /rooms/audio-translation-requests"] = function(event)
+            local params = parse_query(event.request.url.query);
+            local room_jid = params["jid"];
+            if not room_jid then
+                return { status_code = 400; body = '{"error":"missing jid param"}' };
+            end
+            local rooms = shared.rooms or {};
+            local room = rooms[room_jid];
+            if not room then
+                return { status_code = 404; body = '{"error":"room not found"}' };
+            end
+            local encoded, err = json.encode({
+                jid = room.jid;
+                audioTranslationRequests = room._data.audioTranslationRequests;
             });
             if not encoded then
                 return { status_code = 500; body = json.encode({ error = 'encode failed: ' .. tostring(err) }) };

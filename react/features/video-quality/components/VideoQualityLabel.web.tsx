@@ -195,6 +195,15 @@ function _mapResolutionToTranslationsKeys(resolution) {
         tooltipKey: `${labelKey}Tooltip`
     };
 }
+// if (_lowBandwidthMode) {
+//     className = 'low-bandwidth-mode';
+//     labelContent = t('videoStatus.lowBandwidthMode');
+//     tooltipKey = 'videoStatus.labelTooltipLowBandwidthMode';
+// } else {
+//     className = 'current-video-quality';
+//     icon = IconPerformance;
+//     tooltipKey = 'videoStatus.performanceSettings';
+// }
 
 // /**
 //  * Maps (parts of) the Redux state to the associated {@code VideoQualityLabel}'s

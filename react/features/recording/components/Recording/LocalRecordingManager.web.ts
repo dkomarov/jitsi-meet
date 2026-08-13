@@ -4,11 +4,11 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { IStore } from '../../../app/types';
 import { getRoomName } from '../../../base/conference/functions';
-import { isMobileBrowser } from '../../../base/environment/utils';
+import { isMobileBrowser } from '../../../base/environment/utils.any';
 import { browser } from '../../../base/lib-jitsi-meet';
 import { MEDIA_TYPE } from '../../../base/media/constants';
-import { getLocalTrack, getTrackState } from '../../../base/tracks/functions';
-import { isEmbedded } from '../../../base/util/embedUtils';
+import { getLocalTrack, getTrackState } from '../../../base/tracks/functions.any';
+import { isEmbedded } from '../../../base/util/embedUtils.web';
 import { stopLocalVideoRecording } from '../../actions.any';
 import logger from '../../logger';
 
@@ -251,15 +251,25 @@ const LocalRecordingManager: ILocalRecordingManager = {
             videoBitsPerSecond: VIDEO_BIT_RATE
         });
 
-        this.recorder.addEventListener('dataavailable', async (e) => {
-            if (this.recorder && e.data && e.data.size > 0) {
-                let data = e.data;
+        // Serialize all chunk writes so the stop handler can await them before closing the
+        // stream. Without this, the stop event fires concurrently with the last dataavailable
+        // callback's async fixDuration call, and close() races the write — leaving an empty
+        // file for recordings shorter than the 5-second timeslice.
+        let writeQueue: Promise<void> = Promise.resolve();
 
-                if (!this.firstChunk) {
-                    this.firstChunk = data = await fixDuration(data, 864000000); // Reserve 24h.
-                }
+        this.recorder.addEventListener('dataavailable', (e) => {
+            if (e.data && e.data.size > 0) {
+                const chunk = e.data;
 
-                await this.writableStream?.write(data);
+                writeQueue = writeQueue.then(async () => {
+                    let data = chunk;
+
+                    if (!this.firstChunk) {
+                        this.firstChunk = data = await fixDuration(chunk, 864000000); // Reserve 24h.
+                    }
+
+                    await this.writableStream?.write(data);
+                });
             }
         });
 
@@ -273,8 +283,6 @@ const LocalRecordingManager: ILocalRecordingManager = {
             this.stream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
             gdmStream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
 
-            // The stop event is emitted when the recorder is done, and _after_ the last buffered
-            // data has been handed over to the dataavailable event.
             this.recorder = undefined;
             this.audioContext?.close();
             this.audioContext = undefined;
@@ -283,6 +291,9 @@ const LocalRecordingManager: ILocalRecordingManager = {
             this.stream = undefined;
             this.selfRecording.on = false;
             this.selfRecording.withVideo = false;
+
+            // Wait for all pending dataavailable writes before closing the stream.
+            await writeQueue;
 
             if (this.writableStream) {
                 try {

@@ -90,6 +90,7 @@ import { default as IconStop } from './stop.svg';
 import { default as IconSubtitles } from './subtitles.svg';
 import { default as IconTileView } from './tiles-many.svg'; // './tile-view.svg';
 import { default as IconTranscription } from './transcription.svg';
+import { default as IconTranslate } from './translate.svg';
 import { default as IconTrash } from './trash.svg';
 import { default as IconUserDeleted } from './user-deleted.svg';
 import { default as IconUser } from './user.svg';
@@ -102,6 +103,8 @@ import { default as IconVideoQualityAudioOnly } from './AUD.svg';
 import { default as IconVideoQualityHD } from './HD.svg';
 import { default as IconVideoQualityLD } from './LD.svg';
 import { default as IconVideoQualitySD } from './SD.svg';
+import { default as IconLowBandwidthModeOff } from './visibility-off.svg';
+import { default as IconLowBandwidthMode } from './visibility.svg';
 import { default as IconVolumeOff } from './volume-off.svg';
 import { default as IconVolumeUp } from './volume-up.svg';
 import { default as IconWarningCircle } from './warning-circle.svg';
@@ -125,8 +128,8 @@ export const DEFAULT_ICON: Record<string, any> = {
     IconArrowLeft,
     IconArrowUp,
     IconArrowUpLarge,
-    IconAudioOnly,
-    IconAudioOnlyOff,
+    IconLowBandwidthMode,
+    IconLowBandwidthModeOff,
     IconBluetooth,
     IconBell,
     IconCalendar,
@@ -189,6 +192,7 @@ export const DEFAULT_ICON: Record<string, any> = {
     IconRaiseHand,
     IconRecord,
     IconTranscription,
+    IconTranslate,
     IconRecordAccount,
     IconRecordContact,
     IconRecordLead,
