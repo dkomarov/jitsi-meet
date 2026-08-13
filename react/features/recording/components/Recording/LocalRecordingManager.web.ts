@@ -1,4 +1,5 @@
-import * as ebml from '../../../../../node_modules/ts-ebml/dist/EBML.min.js';
+// @ts-ignore
+import * as ebml from 'ts-ebml/dist/EBML.min.js';
 import { v4 as uuidV4 } from 'uuid';
 
 import { IStore } from '../../../app/types';
