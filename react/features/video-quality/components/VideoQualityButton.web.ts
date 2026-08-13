@@ -55,6 +55,11 @@ type Props = AbstractButtonProps & {
     _lowBandwidthMode: boolean;
 
     /**
+     * Whether or not audioOnly mode is currently enabled.
+     */
+    _audioOnly: boolean;
+
+    /**
      * The currently configured maximum quality resolution to be received from
      * and sent to remote participants.
      */
