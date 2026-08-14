@@ -98,19 +98,6 @@ export function createApiEvent(action: string, attributes = {}) {
  * @returns {Object} The event in a format suitable for sending via
  * sendAnalytics.
  */
-export function createAudioOnlyChangedEvent(enabled: boolean) {
-    return {
-        action: `audio.only.${enabled ? 'enabled' : 'disabled'}`
-    };
-}
-
-/**
- * Creates an event which indicates that the audio-only mode has been changed.
- *
- * @param {boolean} enabled - True if audio-only is enabled, false otherwise.
- * @returns {Object} The event in a format suitable for sending via
- * sendAnalytics.
- */
 export function createLowBandwidthModeChangedEvent(enabled: boolean) {
     return {
         action: `low.bandwidth.mode.${enabled ? 'enabled' : 'disabled'}`
@@ -246,7 +233,8 @@ export function createRecentSelectedEvent(attributes = {}) {
  * @returns {Object} The event in a format suitable for sending via
  * sendAnalytics.
  */
-export function createDeepLinkingPageEvent(action: string, actionSubject: string, attributes = {}) {
+export function createDeepLinkingPageEvent(
+        action: string, actionSubject: string, attributes = {}) {
     return {
         action,
         actionSubject,
@@ -268,8 +256,8 @@ export function createDeviceChangedEvent(mediaType: string, deviceType: string) 
     return {
         action: 'device.changed',
         attributes: {
-            device_type: deviceType,
-            media_type: mediaType
+            'device_type': deviceType,
+            'media_type': mediaType
         }
     };
 }
@@ -309,7 +297,8 @@ export function createFeedbackOpenEvent() {
  * @returns {Object} The event in a format suitable for sending via
  * sendAnalytics.
  */
-export function createInviteDialogEvent(action: string, actionSubject: string, attributes = {}) {
+export function createInviteDialogEvent(
+        action: string, actionSubject: string, attributes = {}) {
     return {
         action,
         actionSubject,
@@ -326,15 +315,8 @@ export function createInviteDialogEvent(action: string, actionSubject: string, a
  * @param {Object} [details] - Extra info, see {@code NetworkInfo} type defined by the 'base/net-info' feature.
  * @returns {Object}
  */
-export function createNetworkInfoEvent({
-    isOnline,
-    networkType,
-    details
-}: {
-    details?: Object;
-    isOnline: boolean;
-    networkType?: string;
-}) {
+export function createNetworkInfoEvent({ isOnline, networkType, details }:
+{ details?: Object; isOnline: boolean; networkType?: string; }) {
     const attributes: {
         details?: Object;
         isOnline: boolean;
@@ -474,7 +456,8 @@ export function createProfilePanelButtonEvent(buttonName: string, attributes = {
  * @returns {Object} The event in a format suitable for sending via
  * sendAnalytics.
  */
-export function createRecordingDialogEvent(dialogName: string, buttonName: string, attributes = {}) {
+export function createRecordingDialogEvent(
+        dialogName: string, buttonName: string, attributes = {}) {
     return {
         action: 'clicked',
         actionSubject: buttonName,
@@ -511,11 +494,11 @@ export function createLiveStreamingDialogEvent(dialogName: string, buttonName: s
  * sendAnalytics.
  */
 export function createLocalTracksDurationEvent(duration: {
-    audio: { value: number };
-    conference: { value: number };
+    audio: { value: number; };
+    conference: { value: number; };
     video: {
-        camera: { value: number };
-        desktop: { value: number };
+        camera: { value: number; };
+        desktop: { value: number; };
     };
 }) {
     const { audio, video, conference } = duration;
@@ -561,11 +544,7 @@ export function createRecordingEvent(action: string, type: string, value?: numbe
  * @param {number} timeSinceLeft - How many seconds since the last conference was left.
  * @returns {Object} The event in a format suitable for sending via sendAnalytics.
  */
-export function createRejoinedEvent({
-    url,
-    lastConferenceDuration,
-    timeSinceLeft
-}: {
+export function createRejoinedEvent({ url, lastConferenceDuration, timeSinceLeft }: {
     lastConferenceDuration: number;
     timeSinceLeft: number;
     url: string;
@@ -594,8 +573,8 @@ export function createRemoteMuteConfirmedEvent(participantId: string, mediaType:
     return {
         action: 'clicked',
         attributes: {
-            participant_id: participantId,
-            media_type: mediaType
+            'participant_id': participantId,
+            'media_type': mediaType
         },
         source: 'remote.mute.button',
         type: TYPE_UI
@@ -686,33 +665,16 @@ export function createSharedVideoEvent(action: string, attributes = {}) {
  * sendAnalytics.
  */
 export function createShortcutEvent(
-    shortcut: string,
-    action = ACTION_SHORTCUT_TRIGGERED,
-    attributes = {},
-    source = 'keyboard.shortcut'
-) {
+        shortcut: string,
+        action = ACTION_SHORTCUT_TRIGGERED,
+        attributes = {},
+        source = 'keyboard.shortcut') {
     return {
         action,
         actionSubjectId: shortcut,
         attributes,
         source,
         type: TYPE_UI
-    };
-}
-
-/**
- * Creates an event which indicates the "start audio only" configuration.
- *
- * @param {boolean} audioOnly - Whether "start audio only" is enabled or not.
- * @returns {Object} The event in a format suitable for sending via
- * sendAnalytics.
- */
-export function createStartAudioOnlyEvent(audioOnly: boolean) {
-    return {
-        action: 'start.audio.only',
-        attributes: {
-            enabled: audioOnly
-        }
     };
 }
 
@@ -787,13 +749,16 @@ export function createAudioPlaySuccessEvent(elementID: string) {
  * @returns {Object} The event in a format suitable for sending via
  * sendAnalytics.
  */
-export function createStartMutedConfigurationEvent(source: string, audioMute: boolean, videoMute: boolean) {
+export function createStartMutedConfigurationEvent(
+        source: string,
+        audioMute: boolean,
+        videoMute: boolean) {
     return {
         action: 'start.muted.configuration',
         attributes: {
             source,
-            audio_mute: audioMute,
-            video_mute: videoMute
+            'audio_mute': audioMute,
+            'video_mute': videoMute
         }
     };
 }
@@ -812,7 +777,7 @@ export function createSyncTrackStateEvent(mediaType: string, muted: boolean) {
     return {
         action: 'sync.track.state',
         attributes: {
-            media_type: mediaType,
+            'media_type': mediaType,
             muted
         }
     };
@@ -888,7 +853,7 @@ export function createTrackMutedEvent(mediaType: string, reason: string, muted =
     return {
         action: 'track.muted',
         attributes: {
-            media_type: mediaType,
+            'media_type': mediaType,
             muted,
             reason
         }

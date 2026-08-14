@@ -38,15 +38,14 @@ const createEvent = function (quality: string) {
  * The type of the React {@code Component} props of {@link VideoQualitySlider}.
  */
 interface IProps extends WithTranslation {
-    // /**
-    //  * The channelLastN value configured for the conference.
-    //  */
-    // _channelLastN?: number;
+    /**
+     * The channelLastN value configured for the conference.
+     */
+    _channelLastN?: number;
 
     /**
      * Whether or not the conference is in audio only mode.
      */
-
     _lowBandwidthMode: Boolean;
 
     /**
