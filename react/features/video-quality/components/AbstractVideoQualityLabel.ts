@@ -26,7 +26,7 @@ export default class AbstractVideoQualityLabel<P extends IProps> extends Compone
  * }}
  */
 export function _abstractMapStateToProps(state: IReduxState) {
-    const { enabled: lowBandwidthMode } = state['features/base/audio-only'];
+    const { enabled: lowBandwidthMode } = state['features/base/low-bandwidth-mode'];
 
     return {
         _lowBandwidthMode: lowBandwidthMode

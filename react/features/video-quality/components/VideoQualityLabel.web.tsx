@@ -265,7 +265,7 @@ function _mapStateToProps(state: IReduxState) {
     //     </Tooltip>
     // );
 
-    const translationKeys = audioOnly ? {} : _mapResolutionToTranslationsKeys(resolution);
+    const translationKeys = lowBandwidthMode ? {} : _mapResolutionToTranslationsKeys(resolution);
 
     return {
         ..._abstractMapStateToProps(state),
