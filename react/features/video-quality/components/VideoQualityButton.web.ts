@@ -31,7 +31,7 @@ const VIDEO_QUALITY_TO_ICON = {
     [VIDEO_QUALITY_LEVELS.LOW]: IconVideoQualityLD
 };
 
-import { translate } from '../../base/i18n/functions';
+import { translate } from '../../base/i18n/functions.any';
 import { IconPerformance } from '../../base/icons/svg';
 import AbstractButton, { IProps as AbstractButtonProps } from '../../base/toolbox/components/AbstractButton';
 import { IReduxState } from '../../app/types';
