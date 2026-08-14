@@ -1,19 +1,18 @@
 import { connect } from 'react-redux';
 
 import { IReduxState } from '../../../app/types';
-import { translate } from '../../../base/i18n/functions';
+import { translate } from '../../../base/i18n/functions.any';
 import { IconCameraRefresh } from '../../../base/icons/svg';
 import { MEDIA_TYPE } from '../../../base/media/constants';
 import AbstractButton, { IProps as AbstractButtonProps } from '../../../base/toolbox/components/AbstractButton';
-import { toggleCamera } from '../../../base/tracks/actions';
-import { isLocalTrackMuted, isToggleCameraEnabled } from '../../../base/tracks/functions';
+import { toggleCamera } from '../../../base/tracks/actions.web';
+import { isLocalTrackMuted, isToggleCameraEnabled } from '../../../base/tracks/functions.web';
 import { setOverflowMenuVisible } from '../../actions.web';
 
 /**
  * The type of the React {@code Component} props of {@link ToggleCameraButton}.
  */
 interface IProps extends AbstractButtonProps {
-
     /**
      * Whether the current conference is in audio only mode or not.
      */
@@ -63,11 +62,11 @@ class ToggleCameraButton extends AbstractButton<IProps> {
  * @returns {IProps}
  */
 function mapStateToProps(state: IReduxState) {
-    const { enabled: audioOnly } = state['features/base/low-bandwidth-mode'];
+    const { enabled: lowBandwidthMode } = state['features/base/low-bandwidth-mode'];
     const tracks = state['features/base/tracks'];
 
     return {
-        _lowBandwidthMode: Boolean(audioOnly),
+        _lowBandwidthMode: Boolean(lowBandwidthMode),
         _videoMuted: isLocalTrackMuted(tracks, MEDIA_TYPE.VIDEO),
         visible: isToggleCameraEnabled(state)
     };

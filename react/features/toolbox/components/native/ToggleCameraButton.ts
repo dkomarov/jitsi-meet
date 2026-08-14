@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { IReduxState } from '../../../app/types';
-import { translate } from '../../../base/i18n/functions';
+import { translate } from '../../../base/i18n/functions.any';
 import { IconCameraRefresh } from '../../../base/icons/svg';
 import { toggleCameraFacingMode } from '../../../base/media/actions';
 import { MEDIA_TYPE } from '../../../base/media/constants';
@@ -12,7 +12,6 @@ import { isLocalTrackMuted } from '../../../base/tracks/functions.native';
  * The type of the React {@code Component} props of {@link ToggleCameraButton}.
  */
 interface IProps extends AbstractButtonProps {
-
     /**
      * Whether the current conference is in audio only mode or not.
      */
@@ -67,11 +66,11 @@ class ToggleCameraButton extends AbstractButton<IProps> {
  * }}
  */
 function _mapStateToProps(state: IReduxState) {
-    const { enabled: audioOnly } = state['features/base/low-bandwidth-mode'];
+    const { enabled: _lowBandwidthMode } = state['features/base/low-bandwidth-mode'];
     const tracks = state['features/base/tracks'];
 
     return {
-        _lowBandwidthMode: Boolean(audioOnly),
+        _lowBandwidthMode: Boolean(_lowBandwidthMode),
         _videoMuted: isLocalTrackMuted(tracks, MEDIA_TYPE.VIDEO)
     };
 }

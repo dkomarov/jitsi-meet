@@ -1,7 +1,7 @@
 // @flow
 
 import {
-    IconVideoQualityAudioOnly,
+    IconVideoQualityLowBandwidthMode,
     IconVideoQualityHD,
     IconVideoQualityLD,
     IconVideoQualitySD
@@ -56,8 +56,9 @@ type Props = AbstractButtonProps & {
 
     /**
      * Whether or not audioOnly mode is currently enabled.
-     */
+     
     _audioOnly: boolean;
+    */
 
     /**
      * The currently configured maximum quality resolution to be received from
@@ -91,12 +92,14 @@ class VideoQualityButton extends AbstractButton<Props> {
      */
     // @ts-ignore
     get icon() {
-        const { _audioOnly, _videoQuality } = this.props;
+        const { _lowBandwidthMode, _videoQuality } = this.props;
 
         const videoQualityLevel = findNearestQualityLevel(_videoQuality);
 
         const icon =
-            _audioOnly || !videoQualityLevel ? IconVideoQualityAudioOnly : VIDEO_QUALITY_TO_ICON[videoQualityLevel];
+            _lowBandwidthMode || !videoQualityLevel
+                ? IconVideoQualityLowBandwidthMode
+                : VIDEO_QUALITY_TO_ICON[videoQualityLevel];
 
         return icon;
     }
@@ -152,13 +155,13 @@ class VideoQualityButton extends AbstractButton<Props> {
  * @param {Object} state - The Redux state.
  * @private
  * @returns {{
- *     _audioOnly: boolean,
+ *     _lowBandwidthMode: boolean,
  *     _videoQuality: number
  * }}
  */
 function _mapStateToProps(state: IReduxState) {
     return {
-        _audioOnly: state['features/base/audio-only'].enabled,
+        _lowBandwidthMode: state['features/base/low-bandwidth-mode'].enabled, // /audio-only
         _videoQuality: state['features/video-quality'].preferredVideoQuality
     };
 }

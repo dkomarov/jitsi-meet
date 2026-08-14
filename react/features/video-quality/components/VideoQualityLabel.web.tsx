@@ -101,7 +101,7 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
      * @returns {ReactElement}
      */
     override render() {
-        const { _audioOnly, _labelKey, _tooltipKey, _videoTrack, _visible, dispatch, t } = this.props;
+        const { _lowBandwidthMode, _labelKey, _tooltipKey, _videoTrack, _visible, dispatch, t } = this.props;
 
         if (!_visible) {
             return null;
@@ -109,15 +109,15 @@ export class VideoQualityLabel extends AbstractVideoQualityLabel<IProps> {
 
         let className, icon, labelContent, tooltipKey;
 
-        if (_audioOnly) {
+        if (_lowBandwidthMode) {
             className = 'audio-only';
-            labelContent = t('videoStatus.audioOnly');
-            tooltipKey = 'videoStatus.labelTooltipAudioOnly';
+            labelContent = t('videoStatus.lowBandwidthMode');
+            tooltipKey = 'videoStatus.labelTooltipLowBandwidthMode';
             // @ts-ignore
         } else if (!_videoTrack || _videoTrack.muted) {
             className = 'no-video';
-            labelContent = t('videoStatus.audioOnly');
-            tooltipKey = 'videoStatus.labelTooiltipNoVideo';
+            labelContent = t('videoStatus.lowBandwidthMode');
+            tooltipKey = 'videoStatus.labelTooltipNoVideo';
         } else {
             className = 'current-video-quality';
             icon = IconPerformance;
@@ -239,7 +239,7 @@ function _mapResolutionToTranslationsKeys(resolution) {
  * }}
  */
 function _mapStateToProps(state: IReduxState) {
-    const { enabled: audioOnly } = state['features/base/audio-only'];
+    const { enabled: lowBandwidthMode } = state['features/base/low-bandwidth-mode'];
     const { resolution, participantId } = state['features/large-video'];
     const videoTrackOnLargeVideo = getTrackByMediaTypeAndParticipant(
         state['features/base/tracks'],

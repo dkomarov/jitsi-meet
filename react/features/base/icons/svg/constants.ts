@@ -100,7 +100,7 @@ import { default as IconVideoOff } from './camera-empty-disabled.svg'; //'./vide
 import { default as IconVideo } from './camera-empty.svg'; // './video.svg';
 import { default as IconAudioOnlyOff } from './visibility-off.svg';
 import { default as IconAudioOnly } from './visibility.svg';
-import { default as IconVideoQualityAudioOnly } from './AUD.svg';
+import { default as IconVideoQualityLowBandwidthMode } from './AUD.svg';
 import { default as IconVideoQualityHD } from './HD.svg';
 import { default as IconVideoQualityLD } from './LD.svg';
 import { default as IconVideoQualitySD } from './SD.svg';
@@ -221,7 +221,7 @@ export const DEFAULT_ICON: Record<string, any> = {
     IconUsers,
     IconUser,
     IconVideo,
-    IconVideoQualityAudioOnly,
+    IconVideoQualityLowBandwidthMode,
     IconVideoQualityHD,
     IconVideoQualityLD,
     IconVideoQualitySD,

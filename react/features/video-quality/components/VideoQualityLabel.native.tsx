@@ -64,10 +64,10 @@ class VideoQualityLabel extends Component<IProps> {
  * }}
  */
 function _mapStateToProps(state: IReduxState) {
-    const { enabled: audioOnly } = state['features/base/low-bandwidth-mode'];
+    const { enabled: lowBandwidthMode } = state['features/base/low-bandwidth-mode'];
 
     return {
-        _lowBandwidthMode: audioOnly
+        _lowBandwidthMode: lowBandwidthMode
     };
 }
 

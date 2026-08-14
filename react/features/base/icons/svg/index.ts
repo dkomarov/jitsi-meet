@@ -103,7 +103,7 @@ const {
     IconUsers,
     IconUser,
     IconVideo,
-    IconVideoQualityAudioOnly,
+    IconVideoQualityLowBandwidthMode,
     IconVideoQualityHD,
     IconVideoQualityLD,
     IconVideoQualitySD,
@@ -118,18 +118,15 @@ const {
     IconWifi2Bars,
     IconWifi3Bars,
     IconYahoo
-} = Object.keys(DEFAULT_ICON).reduce(
-    (exportedIcons: Record<string, any>, key) => {
-        return {
-            ...exportedIcons,
-            [key]: withBranding({
-                iconName: key,
-                DefaultIcon: DEFAULT_ICON[key]
-            })
-        };
-    },
-    {}
-);
+} = Object.keys(DEFAULT_ICON).reduce((exportedIcons: Record<string, any>, key) => {
+    return {
+        ...exportedIcons,
+        [key]: withBranding({
+            iconName: key,
+            DefaultIcon: DEFAULT_ICON[key]
+        })
+    };
+}, {});
 
 export {
     IconAddUser,
@@ -232,7 +229,7 @@ export {
     IconUsers,
     IconUser,
     IconVideo,
-    IconVideoQualityAudioOnly,
+    IconVideoQualityLowBandwidthMode,
     IconVideoQualityHD,
     IconVideoQualityLD,
     IconVideoQualitySD,
