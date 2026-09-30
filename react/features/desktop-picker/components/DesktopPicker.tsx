@@ -111,8 +111,7 @@ class DesktopPicker extends PureComponent<IProps, IState> {
      * @returns {Array<string>} The filtered types.
      */
     static _getValidTypes(types: DesktopSharingSourceType[] = []) {
-        return types.filter(
-            type => VALID_TYPES.includes(type));
+        return types.filter((type) => VALID_TYPES.includes(type));
     }
 
     _poller: any = null;
@@ -142,9 +141,7 @@ class DesktopPicker extends PureComponent<IProps, IState> {
         this._onTabSelected = this._onTabSelected.bind(this);
         this._updateSources = this._updateSources.bind(this);
 
-        this.state.types = DesktopPicker._getValidTypes(
-            this.props.desktopSharingSources
-        );
+        this.state.types = DesktopPicker._getValidTypes(this.props.desktopSharingSources);
     }
 
     /**
@@ -204,9 +201,7 @@ class DesktopPicker extends PureComponent<IProps, IState> {
                                 onDoubleClick={this._onSubmit}
                                 onShareAudioChecked={this._onShareAudioChecked}
                                 selectedSourceId={selectedSource.id}
-                                sources={
-                                    sources[selectedTab as keyof typeof sources]
-                                }
+                                sources={sources[selectedTab as keyof typeof sources]}
                                 type={selectedTab}
                             />
                         )}
@@ -233,9 +228,7 @@ class DesktopPicker extends PureComponent<IProps, IState> {
          * we can't select anything.
          */
         if (
-            !Array.isArray(
-                sources[currentSelectedTab as keyof typeof sources]
-            ) ||
+            !Array.isArray(sources[currentSelectedTab as keyof typeof sources]) ||
             sources[currentSelectedTab as keyof typeof sources].length <= 0
         ) {
             return {};
@@ -286,7 +279,7 @@ class DesktopPicker extends PureComponent<IProps, IState> {
         const { sources } = this.state;
 
         // @ts-ignore
-        const source = (sources?.screen ?? []).concat(sources?.window ?? []).find(s => s.id === id);
+        const source = (sources?.screen ?? []).concat(sources?.window ?? []).find((s) => s.id === id);
 
         this.props.onSourceChoose(id, type, screenShareAudio, source);
         this.props.dispatch(hideDialog());
@@ -364,16 +357,14 @@ class DesktopPicker extends PureComponent<IProps, IState> {
     _renderTabs() {
         const { types } = this.state;
         const { t } = this.props;
-        const tabs
-            = types.map(
-                type => {
-                    return {
-                        accessibilityLabel: t(TAB_LABELS[type]),
-                        id: `${type}`,
-                        controlsId: `${type}-panel`,
-                        label: t(TAB_LABELS[type])
-                    };
-                });
+        const tabs = types.map((type) => {
+            return {
+                accessibilityLabel: t(TAB_LABELS[type]),
+                id: `${type}`,
+                controlsId: `${type}-panel`,
+                label: t(TAB_LABELS[type])
+            };
+        });
 
         return (
             <Tabs

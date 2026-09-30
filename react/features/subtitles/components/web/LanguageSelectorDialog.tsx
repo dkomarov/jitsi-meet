@@ -35,13 +35,13 @@ const useStyles = makeStyles()((theme) => {
 });
 
 const LanguageSelectorDialog = (props: IAbstractLanguageSelectorDialogProps) => {
-    const { asyncTranscription, dispatch, language, listItems, onLanguageSelected, subtitles, t } = props;
+    const { dispatch, language, listItems, onLanguageSelected, startWithRecordingDialog, subtitles, t } = props;
 
     const { classes: styles } = useStyles();
 
     const onSelected = useCallback(
         (e: string) => {
-            if (asyncTranscription) {
+            if (startWithRecordingDialog) {
                 dispatch(
                     openDialog('RecordingTranscriptionDialog', RecordingTranscriptionDialog, {
                         recordAudioAndVideo: false
@@ -52,7 +52,7 @@ const LanguageSelectorDialog = (props: IAbstractLanguageSelectorDialogProps) => 
             }
             dispatch(toggleLanguageSelectorDialog());
         },
-        [asyncTranscription, language]
+        [startWithRecordingDialog, language]
     );
 
     const onSourceLanguageClick = useCallback(() => {

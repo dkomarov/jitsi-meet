@@ -1,14 +1,16 @@
 import { IStateful } from '../base/app/types';
-import { createLocalTrack } from '../base/lib-jitsi-meet/functions';
+import { browser } from '../base/lib-jitsi-meet';
+import { createLocalTrack } from '../base/lib-jitsi-meet/functions.any';
 import { isLocalParticipantModerator } from '../base/participants/functions';
 import { toState } from '../base/redux/functions';
 import { getUserSelectedCameraDeviceId } from '../base/settings/functions.web';
 import {
+    areCtrlAltReactionShortcutsEnabled,
     areKeyboardShortcutsEnabled,
     getKeyboardShortcutsHelpDescriptions
 } from '../keyboard-shortcuts/functions';
 import { getParticipantsPaneConfig } from '../participants-pane/functions';
-import { isPrejoinPageVisible } from '../prejoin/functions';
+import { isPrejoinPageVisible } from '../prejoin/functions.any';
 
 export * from './functions.any';
 
@@ -55,10 +57,7 @@ export function createLocalVideoTracks(ids: string[], timeout?: number) {
  *   label: string
  * }[]>}
  */
-export function createLocalAudioTracks(
-    devices: Array<{ deviceId: string; label: string }>,
-    timeout?: number
-) {
+export function createLocalAudioTracks(devices: Array<{ deviceId: string; label: string }>, timeout?: number) {
     return Promise.all(
         devices.map(async ({ deviceId, label }) => {
             let jitsiTrack = null;
@@ -91,18 +90,15 @@ export function createLocalAudioTracks(
  * @returns {Object} - The properties for the "Shortcuts" tab from settings
  * dialog.
  */
-export function getShortcutsTabProps(
-    stateful: IStateful,
-    isDisplayedOnWelcomePage?: boolean
-) {
+export function getShortcutsTabProps(stateful: IStateful, isDisplayedOnWelcomePage?: boolean) {
     const state = toState(stateful);
 
     return {
-        displayShortcuts:
-            !isDisplayedOnWelcomePage && !isPrejoinPageVisible(state),
+        ctrlAltReactionShortcutsEnabled: areCtrlAltReactionShortcutsEnabled(state),
+        displayShortcuts: !isDisplayedOnWelcomePage && !isPrejoinPageVisible(state),
         keyboardShortcutsEnabled: areKeyboardShortcutsEnabled(state),
-        keyboardShortcutsHelpDescriptions:
-            getKeyboardShortcutsHelpDescriptions(state)
+        keyboardShortcutsHelpDescriptions: getKeyboardShortcutsHelpDescriptions(state),
+        showCtrlAltReactionShortcuts: browser.isFirefox()
     };
 }
 
@@ -117,10 +113,7 @@ export function getShortcutsTabProps(
  * @returns {Object} - The properties for the "Shortcuts" tab from settings
  * dialog.
  */
-export function getVirtualBackgroundTabProps(
-    stateful: IStateful,
-    isDisplayedOnWelcomePage?: boolean
-) {
+export function getVirtualBackgroundTabProps(stateful: IStateful, isDisplayedOnWelcomePage?: boolean) {
     const state = toState(stateful);
     const settings = state['features/base/settings'];
     const userSelectedCamera = getUserSelectedCameraDeviceId(state);
@@ -158,9 +151,7 @@ export function isSettingEnabled(settingName: string) {
 export function shouldShowModeratorSettings(stateful: IStateful) {
     const state = toState(stateful);
     const { hideModeratorSettingsTab } = getParticipantsPaneConfig(state);
-    const hasModeratorRights = Boolean(
-        isSettingEnabled('moderator') && isLocalParticipantModerator(state)
-    );
+    const hasModeratorRights = Boolean(isSettingEnabled('moderator') && isLocalParticipantModerator(state));
 
     return hasModeratorRights && !hideModeratorSettingsTab;
 }
