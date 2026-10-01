@@ -1,5 +1,5 @@
 import { createInstance } from '@amplitude/analytics-browser';
-import { EnrichmentPlugin, Event, PluginType } from '@amplitude/analytics-types';
+import { EnrichmentPlugin, Event } from '@amplitude/analytics-types';
 
 const amplitude = createInstance();
 
@@ -22,7 +22,7 @@ function stripParam(url?: string): string | undefined {
 
 class StripParamsPlugin implements EnrichmentPlugin {
     name: 'strip-params-plugin';
-    type: PluginType.ENRICHMENT;
+    type: 'enrichment';
 
     async setup(): Promise<void> {
         return undefined;
@@ -52,9 +52,7 @@ class StripParamsPlugin implements EnrichmentPlugin {
  * @param {string | undefined} user - The user ID.
  * @returns {Promise} The initialized Amplitude instance.
  */
-export function initAmplitude(
-        amplitudeAPPKey: string, user: string | undefined): Promise<unknown> {
-
+export function initAmplitude(amplitudeAPPKey: string, user: string | undefined): Promise<unknown> {
     // Forces sending all events on exit (flushing) via sendBeacon.
     window.addEventListener('pagehide', () => {
         // Set https transport to use sendBeacon API.
@@ -71,7 +69,7 @@ export function initAmplitude(
             fileDownloads: false,
             formInteractions: false,
             elementInteractions: false
-        },
+        }
     };
 
     amplitude.add(new StripParamsPlugin());
