@@ -226,6 +226,7 @@
         "@types/react-dom": "17.0.14"
     },
     "overrides": {
-        "hermes-compiler": "0.16.0"
+        "hermes-compiler": "0.16.0",
+        "@giphy/js-brand": "2.2.2"
     }
 }
